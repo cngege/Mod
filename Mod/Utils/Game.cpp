@@ -30,40 +30,6 @@ auto Game::init() -> void
 		
 	}
 
-
-	//F3 0F 11 4B ? 33 F6 48 8B 45 ? 48 39 43 ? 0F 8D ? ? ? ? 48 69 8B ? ? ? ? ? ? ? ? 48 03 C8
-	SpeedDestroyBlock = FindSignature("F3 0F 11 4B ? 33 F6 48 8B 45 ? 48 39 43 ? 0F 8D ? ? ? ? 48 69 8B ? ? ? ? ? ? ? ? 48 03 C8");
-	if (SpeedDestroyBlock == 0x00) {
-		logF("Survival mode SpeedDestroyBlock not working!!!");
-	}
-	else {
-		//申请空间
-		auto space = VirtualAlloc(0, 22, MEM_COMMIT | MEM_TOP_DOWN, PAGE_EXECUTE_READWRITE);
-		if (space != 0x00) {
-			//向申请的空间写入汇编数据
-			//std::vector<BYTE> run = { 0xC7, 0x43, 0x24,0x00,0x00,0x00,0x00,0x33,0xF6,0x48,0x8B,0x45,0x08,0xEA,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
-			Utils::WriteMemBytes(space, { 0xC7, 0x43, 0x24,0x00,0x00,0x00,0x00,0xE9,0x00,0x00,0x00,0x00 });
-			*(float*)(reinterpret_cast<INT64>(space) + 3) = 1.0f;
-			*(int*)(reinterpret_cast<INT64>(space) + 8) = static_cast<int>(static_cast<INT64>(SpeedDestroyBlock) + 5 - (reinterpret_cast<INT64>(space) + 7) - 5);
-			//memcpy((void*)space, &run, 21);
-			logF("space HMODULE: %llX", space);
-			
-			DWORD old_Page;
-			DWORD old_Page2;
-			bool b = VirtualProtect((void*)SpeedDestroyBlock, 5, PAGE_EXECUTE_READWRITE, &old_Page);
-			if (b) {
-				Utils::WriteMemBytes((void*)SpeedDestroyBlock, { 0xE9, 0x00, 0x00,0x00,0x00 });
-				*(int*)(SpeedDestroyBlock + 1) = static_cast<int>(reinterpret_cast<INT64>(space) - SpeedDestroyBlock - 5);
-				VirtualProtect((void*)SpeedDestroyBlock, 5, old_Page, &old_Page2);
-			}
-		}
-		else {
-			logF("[SpeedDestroyBlock] VirtualAlloc free zone is error");
-		}
-
-	}
-	
-
 }
 
 
