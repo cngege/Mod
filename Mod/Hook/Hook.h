@@ -20,4 +20,5 @@ public:
 	static auto Is_ShowCoordinates_Tick(void*)->bool;
 	static auto GetHungerValAddress_Tick(void*, const char*, void*)->void*;
 	static auto DestroyBlocking(void*,void*,int, float)->float;
+	static auto NoFallDamage_Tick(void*,float*)->void*;
 };
