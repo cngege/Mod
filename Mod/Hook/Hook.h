@@ -21,4 +21,6 @@ public:
 	static auto GetHungerValAddress_Tick(void*, const char*, void*)->void*;
 	static auto DestroyBlocking(void*,void*,int, float)->float;
 	static auto NoFallDamage_Tick(void*,float*)->void*;
+	static auto Covers_HitBox_Parts(void*, void*, void*)->void*;
+	static auto Player_Tick(class Player*)->double;
 };

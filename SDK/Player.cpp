@@ -1,6 +1,8 @@
 #include "Player.h"
 
 
+Player* Player::LocalPlayer = nullptr;
+
 int Player::SpeedXOffset = 0;
 int Player::SpeedYOffset = 0;
 int Player::SpeedZOffset = 0;
@@ -19,4 +21,9 @@ auto Player::setSpeed(vec3_t v) ->void {
 	*Xspeed = v.x;
 	*Yspeed = v.y;
 	*Zspeed = v.z;
+}
+
+
+auto Player::onLocalPlayerTick()->void {
+	LocalPlayer = this;
 }

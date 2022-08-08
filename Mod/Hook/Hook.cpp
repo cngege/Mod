@@ -34,6 +34,16 @@ using NoFallDamage_tick = void* (__fastcall*)(void* _this, float* a1);
 NoFallDamage_tick noFallDamage_Tickcall;
 uintptr_t noFallDamage_tick;
 
+//0.6 0.2 4
+//48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA
+using Covers_HitBox_Parts = void* (__fastcall*)(void* _this, void* a1, void* a2);
+Covers_HitBox_Parts covers_HitBox_Partscall;
+uintptr_t covers_HitBox_Parts;
+
+
+using Player_Tick = double(__fastcall*)(Player* _this);
+Player_Tick player_Tickcall;
+uintptr_t player_Tick;
 
 auto Hook::init() -> void
 {
@@ -100,6 +110,26 @@ auto Hook::init() -> void
 		logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
 	}
 
+	//获取 HitBox所要用的关键指针
+	covers_HitBox_Parts = FindSignature("48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA");
+	if (covers_HitBox_Parts != 0x00) {
+		MH_CreateHookEx((LPVOID)covers_HitBox_Parts, &Hook::Covers_HitBox_Parts, &covers_HitBox_Partscall);
+		MH_EnableHook((LPVOID)covers_HitBox_Parts);
+	}
+	else {
+		logF("[Hook error] [%s] is no found Hook point", "covers_HitBox_Parts");
+	}
+
+
+	// 本地玩家 Tick
+	player_Tick = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
+	if (player_Tick != 0x00) {
+		MH_CreateHookEx((LPVOID)player_Tick, &Hook::Player_Tick, &player_Tickcall);
+		MH_EnableHook((LPVOID)player_Tick);
+	}
+	else {
+		logF("[Hook error] [%s] is no found Hook point", "player_Tick");
+	}
 }
 
 auto Hook::exit() -> void {
@@ -175,4 +205,31 @@ auto Hook::NoFallDamage_Tick(void* _this, float* a1)->void*
 	//this + 1D4
 	*reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x1D4) = 0.0f;
 	return noFallDamage_Tickcall(_this, a1);
+}
+
+
+//HitBox
+auto Hook::Covers_HitBox_Parts(void* _this, void* a1, void* a2)->void*
+{
+	// a1 + 4D0 无效
+	// ret + 4D0
+	auto ret = covers_HitBox_Partscall(_this, a1, a2);
+	float* hitboxaddr = reinterpret_cast<float*>(reinterpret_cast<INT64>(ret) + 0x4D0);
+	if (*hitboxaddr == 0.6000000238f) {
+		*hitboxaddr = 4.0f;
+	}
+	return ret;
+}
+
+
+auto Hook::Player_Tick(Player* _this)->double
+{
+	static INT64 p = 0;
+	auto thisp = reinterpret_cast<INT64>(_this);
+	if (thisp != p) {
+		p = thisp;
+		logF("Player_Tick localplayer ptr : %llX", thisp);
+	}
+	_this->onLocalPlayerTick();
+	return player_Tickcall(_this);
 }
