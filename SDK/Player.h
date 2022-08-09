@@ -21,6 +21,11 @@ public:
 	static int XHitBoxOffset;
 	static int YHitBoxOffset;
 
+	static int YView1;
+	static int XView1;
+	static int YView2;
+	static int XView2;
+
 public:
 	auto getSpeed()->vec3_t;
 	auto setSpeed(vec3_t)->void;
@@ -32,6 +37,9 @@ public:
 	auto getHitBox()->vec2_t;
 	auto setHitBox(vec2_t)->void;
 	auto resetHitBox()->void;
+
+	auto getViewYX()->const vec2_t;
+	auto getViewYX2()->const vec2_t;
 
 public:
 	auto onLocalPlayerTick()->void;

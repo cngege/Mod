@@ -140,9 +140,10 @@ auto Hook::exit() -> void {
 //无击退效果
 auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 {
-	//kb->y *= 3;
-	//player->setSpeed(vec3_t(0.0f,5.0f,0.0f));
-	//playercall(player,kb);
+	kb->x *= 0.1f;
+	kb->y *= 0.1f;
+	kb->z *= 0.1f;
+	playercall(player,kb);
 	/*
 	auto p = (Player*)(instance->LocalPlayer());
 	if(p != nullptr)
@@ -156,9 +157,6 @@ auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 		logF("no offset");
 	}
 	*/
-	//316 72 62
-	player->setPos(vec3_t(316.0f, 73.0f, 62.0f));
-	player->setHitBox(vec2_t(6.0f, 6.0f));
 }
 //2.Hook后的函数 3.具有原来的功能的可以调用的函数
 //MH_CreateHook(&MessageBoxW, &DetourMessageBoxW, reinterpret_cast<LPVOID*>(&fpMessageBoxW))
@@ -202,7 +200,7 @@ auto Hook::DestroyBlocking(void* _this, void* a1, int a2, float a3)->float
 	return ret;
 }
 
-//仅仅对本地有效
+//仅仅在本地房间时有效
 auto Hook::NoFallDamage_Tick(void* _this, float* a1)->void*
 {
 	//this + 1D4
@@ -231,7 +229,7 @@ auto Hook::Player_Tick(Player* _this)->double
 	auto thisp = reinterpret_cast<INT64>(_this);
 	if (thisp != p) {
 		p = thisp;
-		logF("Player_Tick localplayer ptr : %llX", thisp);
+		logF("Player_Tick localplayer ptr : %llX，Clientinstance ptr : %llX", thisp, instance);
 	}
 	_this->onLocalPlayerTick();
 	return player_Tickcall(_this);

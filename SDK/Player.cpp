@@ -17,6 +17,10 @@ int Player::PosZOffset2 = 0;
 int Player::XHitBoxOffset = 0;
 int Player::YHitBoxOffset = 0;
 
+int Player::YView1 = 0;
+int Player::XView1 = 0;
+int Player::YView2 = 0;
+int Player::XView2 = 0;
 
 auto Player::getSpeed()->vec3_t {
 	float* Xspeed = (float*)(this + SpeedXOffset);
@@ -78,6 +82,18 @@ auto Player::setHitBox(vec2_t hb)->void {
 
 auto Player::resetHitBox()->void {
 	Player::setHitBox(vec2_t(0.6000000238f, 1.799999952f));
+}
+
+auto Player::getViewYX()->const vec2_t {
+	auto viewy = *(float*)(this + YView1);
+	auto viewx = *(float*)(this + XView1);
+	return vec2_t(viewy, viewx);
+}
+
+auto Player::getViewYX2()->const vec2_t {
+	auto viewy = *(float*)(this + YView2);
+	auto viewx = *(float*)(this + XView2);
+	return vec2_t(viewy, viewx);
 }
 
 auto Player::onLocalPlayerTick()->void {
