@@ -208,9 +208,11 @@ auto Hook::GetHungerValAddress_Tick(void* _this, const char* a1, void* a2)->void
 
 auto Hook::DestroyBlocking(void* _this, void* a1, int a2, float a3)->float
 {
-	auto speedDestroy = reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x24);
-	if (*speedDestroy>0.0f&&*speedDestroy<1.0f) {
-		*speedDestroy = 1.0f;
+	if (KEY_DOWN(VK_SHIFT)) {
+		auto speedDestroy = reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x24);
+		if (*speedDestroy > 0.0f && *speedDestroy < 1.0f) {
+			*speedDestroy = 1.0f;
+		}
 	}
 	auto ret = destroyBlockingAddresscall(_this, a1,a2,a3);
 	return ret;
@@ -251,10 +253,16 @@ auto Hook::Player_Tick(Player* _this)->double
 	return player_Tickcall(_this);
 }
 
+//一直调用 且每位玩家都调用
 auto Hook::AllPlayer_Tick(Player* _this, float* a1, float a2)->float* {
-
-	if (_this != Player::LocalPlayer) {
-		_this->setHitBox(vec2_t(6.0f, 6.0f));
+	/*if (GetKeyState(VK_CAPITAL)) {
+		if (_this != Player::LocalPlayer) {
+			_this->setHitBox(vec2_t(6.0f, 6.0f));
+		}
 	}
+	else {
+		_this->resetHitBox();
+	}*/
+
 	return allPlayer_Tickcall(_this, a1, a2);
 }
