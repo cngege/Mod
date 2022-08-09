@@ -48,7 +48,7 @@ auto Game::init() -> void
 		Player::XHitBoxOffset = Xoffset + 24;
 		Player::YHitBoxOffset = Xoffset + 28;
 		if (PlayerPos_sigOffset == 0x00) {
-			logF("[Game::init] [Error]Find Player SetPostion Offset is no working!!!,PlayerPos_sigOffset=0");
+			logF("[Game::init] [Error]Find Player SetPostion/HitBox Offset is no working!!!,PlayerPos_sigOffset=0");
 		}
 	}
 
