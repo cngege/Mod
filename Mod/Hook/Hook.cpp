@@ -255,14 +255,15 @@ auto Hook::Player_Tick(Player* _this)->double
 
 //一直调用 且每位玩家都调用
 auto Hook::AllPlayer_Tick(Player* _this, float* a1, float a2)->float* {
-	/*if (GetKeyState(VK_CAPITAL)) {
+
+	//判断是否大写锁定
+	if ((GetKeyState(VK_CAPITAL) & 0x0001) ? 1:0) {
 		if (_this != Player::LocalPlayer) {
 			_this->setHitBox(vec2_t(6.0f, 6.0f));
 		}
 	}
 	else {
 		_this->resetHitBox();
-	}*/
-
+	}
 	return allPlayer_Tickcall(_this, a1, a2);
 }
