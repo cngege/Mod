@@ -156,6 +156,9 @@ auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 		logF("no offset");
 	}
 	*/
+	//316 72 62
+	player->setPos(vec3_t(316.0f, 73.0f, 62.0f));
+	player->setHitBox(vec2_t(6.0f, 6.0f));
 }
 //2.Hook后的函数 3.具有原来的功能的可以调用的函数
 //MH_CreateHook(&MessageBoxW, &DetourMessageBoxW, reinterpret_cast<LPVOID*>(&fpMessageBoxW))

@@ -1,6 +1,7 @@
 ﻿#include "Game.h"
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
+#include "Player.h"
 
 float* Game::ArmsLength = nullptr;
 
@@ -28,6 +29,24 @@ auto Game::init() -> void
 			VirtualProtect(ArmsLength, sizeof(float), old_Page, &old_Page);
 		}
 		
+	}
+
+
+	//获取玩家位置指针的偏移
+	//48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81
+	auto PlayerPos_sigOffset = FindSignature("48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81");
+	auto Xoffset = *reinterpret_cast<int*>(PlayerPos_sigOffset + 21);
+	Player::PosXOffset1 = Xoffset;
+	Player::PosYOffset1 = Xoffset+4;
+	Player::PosZOffset1 = Xoffset+8;
+	Player::PosXOffset2 = Xoffset+12;
+	Player::PosYOffset2 = Xoffset+16;
+	Player::PosZOffset2 = Xoffset+20;
+
+	Player::XHitBoxOffset = Xoffset + 24;
+	Player::YHitBoxOffset = Xoffset + 28;
+	if (PlayerPos_sigOffset == 0x00) {
+		logF("[Game::init] [Error]Find Player SetPostion Offset is no working!!!,PlayerPos_sigOffset=0");
 	}
 
 }
