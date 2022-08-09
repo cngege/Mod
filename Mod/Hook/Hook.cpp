@@ -45,6 +45,11 @@ using Player_Tick = double(__fastcall*)(Player* _this);
 Player_Tick player_Tickcall;
 uintptr_t player_Tick;
 
+
+using AllPlayer_Tick = float* (__fastcall*)(Player*, float*, float);
+AllPlayer_Tick allPlayer_Tickcall;
+uintptr_t allPlayer_Tick;
+
 auto Hook::init() -> void
 {
 	logF("Hook::init is start runner……");
@@ -129,6 +134,17 @@ auto Hook::init() -> void
 	}
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "player_Tick");
+	}
+
+
+	//所有玩家TICK
+	allPlayer_Tick = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2");
+	if (allPlayer_Tick != 0x00) {
+		MH_CreateHookEx((LPVOID)allPlayer_Tick, &Hook::AllPlayer_Tick, &allPlayer_Tickcall);
+		MH_EnableHook((LPVOID)allPlayer_Tick);
+	}
+	else {
+		logF("[Hook error] [%s] is no found Hook point", "allPlayer_Tick");
 	}
 }
 
@@ -233,4 +249,12 @@ auto Hook::Player_Tick(Player* _this)->double
 	}
 	_this->onLocalPlayerTick();
 	return player_Tickcall(_this);
+}
+
+auto Hook::AllPlayer_Tick(Player* _this, float* a1, float a2)->float* {
+
+	if (_this != Player::LocalPlayer) {
+		_this->setHitBox(vec2_t(6.0f, 6.0f));
+	}
+	return allPlayer_Tickcall(_this, a1, a2);
 }
