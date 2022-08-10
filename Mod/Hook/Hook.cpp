@@ -208,7 +208,7 @@ auto Hook::GetHungerValAddress_Tick(void* _this, const char* a1, void* a2)->void
 
 auto Hook::DestroyBlocking(void* _this, void* a1, int a2, float a3)->float
 {
-	if (KEY_DOWN(VK_SHIFT)) {
+	if (KEY_DOWN(VK_SHIFT) && KEY_DOWN(VK_CONTROL)) {
 		auto speedDestroy = reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x24);
 		if (*speedDestroy > 0.0f && *speedDestroy < 1.0f) {
 			*speedDestroy = 1.0f;
