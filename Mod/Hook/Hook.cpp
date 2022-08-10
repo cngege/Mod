@@ -199,11 +199,11 @@ auto Hook::Is_ShowCoordinates_Tick(void* _this)->bool
 auto Hook::GetHungerValAddress_Tick(void* _this, const char* a1, void* a2)->void*
 {
 	auto ret = getHungerValAddress_Tickcall(_this, a1, a2);	// +0x84 = 132
-	auto hunger = reinterpret_cast<float*>(reinterpret_cast<INT64>(ret) + 0x84);
+	/*auto hunger = reinterpret_cast<float*>(reinterpret_cast<INT64>(ret) + 0x84);
 	//速度
 	if (*hunger == 0.1299999952f) {
 		*hunger = 0.133f;
-	}
+	}*/
 	return ret;
 }
 
