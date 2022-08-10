@@ -212,7 +212,8 @@ static const char* const KeyNames[] = {
 #define INRANGE(x, a, b) (x >= a && x <= b)
 #define GET_BYTE(x) (GET_BITS(x[0]) << 4 | GET_BITS(x[1]))
 #define GET_BITS(x) (INRANGE((x & (~0x20)), 'A', 'F') ? ((x & (~0x20)) - 'A' + 0xa) : (INRANGE(x, '0', '9') ? x - '0' : 0))
-#define KEY_DOWN(VK_NONAME) ((GetAsyncKeyState(VK_NONAME) & 0x8000) ? 1:0)
+#define KEY_DOWN(VK_NONAME) ((GetAsyncKeyState(VK_NONAME) & 0x8000) ? 1 : 0)
+#define GETKEYSTATE(VK_NONAME) ((GetKeyState(VK_NONAME) & 0x0001) ? 1 : 0)
 
 static inline float ImFmod(float x, float y) { return fmodf(x, y); }
 static inline float ImFabs(float x) { return fabsf(x); }

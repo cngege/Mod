@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include "../Mod/Utils/Utils.h"
 
 Player* Player::LocalPlayer = nullptr;
 
@@ -98,4 +98,16 @@ auto Player::getViewYX2()->const vec2_t {
 
 auto Player::onLocalPlayerTick()->void {
 	LocalPlayer = this;
+}
+
+auto Player::onAllPlayerTick()->void {
+	//ÅÐ¶ÏÊÇ·ñ´óÐ´Ëø¶¨
+	if (GETKEYSTATE(VK_CAPITAL)){
+		if (this != Player::LocalPlayer) {
+			this->setHitBox(vec2_t(6.0f, 6.0f));
+		}
+	}
+	else {
+		this->resetHitBox();
+	}
 }
