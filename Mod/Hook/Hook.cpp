@@ -60,7 +60,7 @@ auto Hook::init() -> void
 		Player::SpeedYOffset = *reinterpret_cast<int*>(playerkb + 13);
 		Player::SpeedZOffset = *reinterpret_cast<int*>(playerkb + 22);
 		MH_CreateHookEx((LPVOID)playerkb, &Hook::PlayerKB, &playercall);
-		MH_EnableHook((LPVOID)playerkb);
+		//MH_EnableHook((LPVOID)playerkb);
 	}else {
 		logF("[Hook error] [%s] is no found Hook point", "playerkb");
 	}
@@ -69,7 +69,7 @@ auto Hook::init() -> void
 	clientInstanceTick = FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F9 48 8B 01");
 	if (clientInstanceTick != 0x00) {
 		MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
-		MH_EnableHook((LPVOID)clientInstanceTick);
+		//MH_EnableHook((LPVOID)clientInstanceTick);
 	}
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "clientInstanceTick");
@@ -80,7 +80,7 @@ auto Hook::init() -> void
 	is_ShowCoordinatesTick = FindSignature("48 83 EC ? 48 8B 49 ? 48 8B 01 FF 90 ? ? ? ? 48 85 C0 74 ? 48 8B 88");
 	if (is_ShowCoordinatesTick != 0x00) {
 		MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
-		MH_EnableHook((LPVOID)is_ShowCoordinatesTick);
+		//MH_EnableHook((LPVOID)is_ShowCoordinatesTick);
 	}
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
@@ -90,7 +90,7 @@ auto Hook::init() -> void
 	getHungerValAddressTick = FindSignature("4C 8B D1 44 0F B6 CA 49 BB ? ? ? ? ? ? ? ? 48 B8 ? ? ? ? ? ? ? ? 4C 33 C8 8B C2 4D 0F AF CB C1 E8 08 44 0F B6 C0 8B C2 4D 33 C8 C1 E8 10 4D 8B 42 08 4D 0F AF CB 0F B6 C8 4C 33 C9 8B C2 49 8B 4A 30 4D 0F AF CB 48 C1 E8 18 4C 33 C8 4D 0F AF CB 49 23 C9 48 C1 E1 04 49 03 4A 18 48 8B 41 08 49 3B C0 74 27 48 8B 09 3B 50 10 74 0E 48 3B C1 74 1A 48 8B 40 08 3B 50 10 75 F2 48 85 C0 49 0F 44 C0 49 3B C0 74 05 ? ? ? ? C3 48 8D 05 ? ? ? ? C3");
 	if (getHungerValAddressTick != 0x00) {
 		MH_CreateHookEx((LPVOID)getHungerValAddressTick, &Hook::GetHungerValAddress_Tick, &getHungerValAddress_Tickcall);
-		MH_EnableHook((LPVOID)getHungerValAddressTick);
+		//MH_EnableHook((LPVOID)getHungerValAddressTick);
 	}
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "getHungerValAddressTick");
@@ -101,7 +101,7 @@ auto Hook::init() -> void
 	destroyBlockingAddress = FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 83 EC 30 48 8B D9 0F 29 74 24 ? 48 8B 49 08");
 	if (destroyBlockingAddress != 0x00) {
 		MH_CreateHookEx((LPVOID)destroyBlockingAddress, &Hook::DestroyBlocking, &destroyBlockingAddresscall);
-		MH_EnableHook((LPVOID)destroyBlockingAddress);
+		//MH_EnableHook((LPVOID)destroyBlockingAddress);
 	}else {
 		logF("[Hook error] [%s] is no found Hook point", "destroyBlockingAddress");
 	}
@@ -110,7 +110,7 @@ auto Hook::init() -> void
 	noFallDamage_tick = FindSignature("48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01");
 	if (noFallDamage_tick != 0x00) {
 		MH_CreateHookEx((LPVOID)noFallDamage_tick, &Hook::NoFallDamage_Tick, &noFallDamage_Tickcall);
-		MH_EnableHook((LPVOID)noFallDamage_tick);
+		//MH_EnableHook((LPVOID)noFallDamage_tick);
 	}else {
 		logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
 	}
@@ -119,7 +119,7 @@ auto Hook::init() -> void
 	covers_HitBox_Parts = FindSignature("48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA");
 	if (covers_HitBox_Parts != 0x00) {
 		MH_CreateHookEx((LPVOID)covers_HitBox_Parts, &Hook::Covers_HitBox_Parts, &covers_HitBox_Partscall);
-		MH_EnableHook((LPVOID)covers_HitBox_Parts);
+		//MH_EnableHook((LPVOID)covers_HitBox_Parts);
 	}
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "covers_HitBox_Parts");
@@ -130,7 +130,7 @@ auto Hook::init() -> void
 	player_Tick = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
 	if (player_Tick != 0x00) {
 		MH_CreateHookEx((LPVOID)player_Tick, &Hook::Player_Tick, &player_Tickcall);
-		MH_EnableHook((LPVOID)player_Tick);
+		//MH_EnableHook((LPVOID)player_Tick);
 	}
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "player_Tick");
@@ -141,7 +141,7 @@ auto Hook::init() -> void
 	allPlayer_Tick = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2");
 	if (allPlayer_Tick != 0x00) {
 		MH_CreateHookEx((LPVOID)allPlayer_Tick, &Hook::AllPlayer_Tick, &allPlayer_Tickcall);
-		MH_EnableHook((LPVOID)allPlayer_Tick);
+		//MH_EnableHook((LPVOID)allPlayer_Tick);
 	}
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "allPlayer_Tick");
@@ -208,12 +208,13 @@ auto Hook::GetHungerValAddress_Tick(void* _this, const char* a1, void* a2)->void
 
 auto Hook::DestroyBlocking(void* _this, void* a1, int a2, float a3)->float
 {
-	if (KEY_DOWN(VK_SHIFT) && KEY_DOWN(VK_CONTROL)) {
+	if (KEY_DOWN(VK_SHIFT) == 1 && KEY_DOWN(VK_CONTROL) == 1) {
 		auto speedDestroy = reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x24);
 		if (*speedDestroy > 0.0f && *speedDestroy < 1.0f) {
 			*speedDestroy = 1.0f;
 		}
 	}
+
 	auto ret = destroyBlockingAddresscall(_this, a1,a2,a3);
 	return ret;
 }

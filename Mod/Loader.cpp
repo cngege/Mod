@@ -21,6 +21,8 @@ void Loader::init(void* hmoudle)
 	}
 	
 	Hook::init();
+	MH_EnableHook(MH_ALL_HOOKS);
+
 	Game::init();
 }
 
