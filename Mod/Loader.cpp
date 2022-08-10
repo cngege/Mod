@@ -21,7 +21,12 @@ void Loader::init(void* hmoudle)
 	}
 	
 	Hook::init();
-	MH_EnableHook(MH_ALL_HOOKS);
+	auto enableHook = MH_EnableHook(MH_ALL_HOOKS);
+	logF("MH_EnableHook = %i", enableHook);
+	if (enableHook != MH_OK) {
+		logF("MH_EnableHook Error");
+	}
+	
 
 	Game::init();
 }
