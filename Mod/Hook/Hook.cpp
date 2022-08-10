@@ -157,12 +157,9 @@ auto Hook::exit() -> void {
 auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 {
 	//长按鼠标右键
-	if (KEY_DOWN(VK_CONTROL)) {
-		kb->x *= 0.1f;
-		kb->y *= 0.1f;
-		kb->z *= 0.1f;
+	if (!KEY_DOWN(VK_CONTROL)) {
+		playercall(player, kb);
 	}
-	playercall(player, kb);
 	/*
 	auto p = (Player*)(instance->LocalPlayer());
 	if(p != nullptr)
