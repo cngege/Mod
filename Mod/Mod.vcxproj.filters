@@ -36,9 +36,6 @@
     <ClInclude Include="Utils\Logger.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\SDK\Player.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\Utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -55,6 +52,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\SDK\Actor.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\Player.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,9 +77,6 @@
     <ClCompile Include="Hook\Hook.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\SDK\Player.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -87,6 +84,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\Actor.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\Player.cpp">
       <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>
