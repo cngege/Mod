@@ -1,7 +1,8 @@
 #pragma once
 #include "..\Mod\Utils\HMath.h"
+#include "Actor.h"
 
-class Player
+class Player : Actor
 {
 public:
 	static Player* LocalPlayer;

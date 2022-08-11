@@ -175,6 +175,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\SDK\Actor.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
     <ClInclude Include="..\SDK\GuiData.h" />
     <ClInclude Include="..\SDK\Player.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\SDK\Actor.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
     <ClCompile Include="..\SDK\Player.cpp" />
     <ClCompile Include="dllmain.cpp" />

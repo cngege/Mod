@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{b75e53ef-e5c3-4648-bc7f-fe582127e180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\头文件">
+      <UniqueIdentifier>{38f92c0f-b2d9-44bb-8611-ff07b9b8f50b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\源文件">
+      <UniqueIdentifier>{b41046b3-a111-41fa-a017-163205d65120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -45,6 +54,9 @@
     <ClInclude Include="..\SDK\GuiData.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SDK\Actor.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -73,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="..\SDK\ClientInstance.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\Actor.cpp">
+      <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

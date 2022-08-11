@@ -4,12 +4,14 @@
 #include "Player.h"
 
 float* Game::ArmsLength = nullptr;
+bool Game::ModState = false;
 
 uintptr_t SpeedDestroyBlock;
 
 auto Game::init() -> void
 {
 	logF("Game::init is start runner……");
+	Game::ModState = true;
 
 	{
 		//84 C0 74 ? C7 45 ? ? ? ? ? 48 8D 85 ? ? ? ? 48 8D 4D ? 44 0F 2F 25 ? ? ? ? 48 0F 43 C1
@@ -81,4 +83,7 @@ auto Game::exit() -> void
 			VirtualProtect(ArmsLength, sizeof(float), old_Page, &old_Page);
 		}
 	}
+
+
+	Game::ModState = false;
 }

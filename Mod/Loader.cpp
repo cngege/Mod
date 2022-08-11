@@ -29,6 +29,10 @@ void Loader::init(void* hmoudle)
 	
 
 	Game::init();
+
+	//开启一个线程捕获按键
+
+
 }
 
 void Loader::exit(void* hmoudle)
