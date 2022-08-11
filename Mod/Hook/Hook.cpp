@@ -2,6 +2,7 @@
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "Player.h"
+#include "Actor.h"
 
 
 ClientInstance* instance;
@@ -56,9 +57,9 @@ auto Hook::init() -> void
 
 	playerkb = FindSignature("8B 02 89 81 ? ? 00 00 8B 42 04 89 81 ? ? 00 00 8B 42 08 89 81 ? ? 00 00 C3");
 	if (playerkb != 0x00) {
-		Player::SpeedXOffset = *reinterpret_cast<int*>(playerkb + 4);
-		Player::SpeedYOffset = *reinterpret_cast<int*>(playerkb + 13);
-		Player::SpeedZOffset = *reinterpret_cast<int*>(playerkb + 22);
+		Actor::SpeedXOffset = *reinterpret_cast<int*>(playerkb + 4);
+		Actor::SpeedYOffset = *reinterpret_cast<int*>(playerkb + 13);
+		Actor::SpeedZOffset = *reinterpret_cast<int*>(playerkb + 22);
 		MH_CreateHookEx((LPVOID)playerkb, &Hook::PlayerKB, &playercall);
 		//MH_EnableHook((LPVOID)playerkb);
 	}else {
