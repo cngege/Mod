@@ -51,6 +51,13 @@ using AllPlayer_Tick = float* (__fastcall*)(Player*, float*, float);
 AllPlayer_Tick allPlayer_Tickcall;
 uintptr_t allPlayer_Tick;
 
+
+//48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81
+//这里第二个参数是三个float（三个四字节）
+using Actor_moveBBs = void* (__fastcall*)(Actor*, vec3_t*);
+Actor_moveBBs actor_moveBBscall;
+uintptr_t actor_moveBBs;
+
 auto Hook::init() -> void
 {
 	logF("Hook::init is start runner……");
@@ -117,7 +124,7 @@ auto Hook::init() -> void
 	}
 
 	//获取 HitBox所要用的关键指针
-	covers_HitBox_Parts = FindSignature("48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA");
+	/*covers_HitBox_Parts = FindSignature("48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA");
 	if (covers_HitBox_Parts != 0x00) {
 		MH_CreateHookEx((LPVOID)covers_HitBox_Parts, &Hook::Covers_HitBox_Parts, &covers_HitBox_Partscall);
 		//MH_EnableHook((LPVOID)covers_HitBox_Parts);
@@ -125,7 +132,7 @@ auto Hook::init() -> void
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "covers_HitBox_Parts");
 	}
-
+	*/
 
 	// 本地玩家 Tick
 	player_Tick = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
@@ -146,6 +153,26 @@ auto Hook::init() -> void
 	}
 	else {
 		logF("[Hook error] [%s] is no found Hook point", "allPlayer_Tick");
+	}
+
+
+	//生物移动消息
+	actor_moveBBs = FindSignature("48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81");
+	if (actor_moveBBs != 0x00) {
+		auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 21);
+		Actor::PosXOffset1 = Xoffset;
+		Actor::PosYOffset1 = Xoffset + 4;
+		Actor::PosZOffset1 = Xoffset + 8;
+		Actor::PosXOffset2 = Xoffset + 12;
+		Actor::PosYOffset2 = Xoffset + 16;
+		Actor::PosZOffset2 = Xoffset + 20;
+
+		Actor::XHitBoxOffset = Xoffset + 24;
+		Actor::YHitBoxOffset = Xoffset + 28;
+		MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
+	}
+	else {
+		logF("[Hook error] [%s] is no found Hook point", "actor_moveBBs");
 	}
 }
 
@@ -235,10 +262,10 @@ auto Hook::Covers_HitBox_Parts(void* _this, void* a1, void* a2)->void*
 	// a1 + 4D0 无效
 	// ret + 4D0
 	auto ret = covers_HitBox_Partscall(_this, a1, a2);
-	float* hitboxaddr = reinterpret_cast<float*>(reinterpret_cast<INT64>(ret) + 0x4D0);
+	/*float* hitboxaddr = reinterpret_cast<float*>(reinterpret_cast<INT64>(ret) + 0x4D0);
 	if (*hitboxaddr == 0.6000000238f) {
 		*hitboxaddr = 4.0f;
-	}
+	}*/
 	return ret;
 }
 
@@ -260,4 +287,10 @@ auto Hook::AllPlayer_Tick(Player* _this, float* a1, float a2)->float* {
 
 	_this->onAllPlayerTick();
 	return allPlayer_Tickcall(_this, a1, a2);
+}
+
+//就是把生物当前位置加上这个值 v3
+auto Hook::Actor_moveBBs(Actor* _this, vec3_t* v3)->void* {
+	_this->onMoveBBs(*v3);
+	return actor_moveBBscall(_this, v3);
 }

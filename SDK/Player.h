@@ -14,8 +14,6 @@ public:
 
 public:
 
-
-
 	auto getViewYX()->const vec2_t;
 	auto getViewYX2()->const vec2_t;
 

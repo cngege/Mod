@@ -1,7 +1,8 @@
-#pragma once
+﻿#pragma once
 #include "..\Mod\Utils\HMath.h"
 
-class Actor {
+class Actor
+{
 
 public:
 	static int SpeedXOffset;
@@ -30,4 +31,7 @@ public:
 	auto getHitBox()->vec2_t;
 	auto setHitBox(vec2_t)->void;
 	auto resetHitBox()->void;
+
+public:
+	auto onMoveBBs(vec3_t)->void;
 };

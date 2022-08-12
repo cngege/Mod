@@ -38,8 +38,9 @@ auto Game::init() -> void
 
 	//获取生物位置指针的偏移
 	{
+		
 		//48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81
-		auto ActorPos_sigOffset = FindSignature("48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81");
+		/*auto ActorPos_sigOffset = FindSignature("48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81");
 		auto Xoffset = *reinterpret_cast<int*>(ActorPos_sigOffset + 21);
 		Actor::PosXOffset1 = Xoffset;
 		Actor::PosYOffset1 = Xoffset + 4;
@@ -52,7 +53,7 @@ auto Game::init() -> void
 		Actor::YHitBoxOffset = Xoffset + 28;
 		if (ActorPos_sigOffset == 0x00) {
 			logF("[Game::init] [Error]Find Actor SetPostion/HitBox Offset is no working!!!,ActorPos_sigOffset=0");
-		}
+		}*/
 	}
 
 	//获取玩家视角的偏移地址 +15

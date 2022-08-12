@@ -1,4 +1,4 @@
-#include "Actor.h"
+ï»¿#include "Actor.h"
 
 int Actor::SpeedXOffset = 0;
 int Actor::SpeedYOffset = 0;
@@ -57,7 +57,7 @@ auto Actor::getPos2()->vec3_t {
 }
 
 auto Actor::setPos(vec3_t p)->void {
-	if (PosXOffset1 == 0) {				//ºóÃæµÄÆ«ÒÆ¶¼ÊÇ¸ù¾ÝÕâ¸öÀ´µÄ£¬ËùÒÔÖ»ÐèÒªÅÐ¶ÏÕâÒ»¸ö¾Í¿ÉÒÔ
+	if (PosXOffset1 == 0) {				//åŽé¢çš„åç§»éƒ½æ˜¯æ ¹æ®è¿™ä¸ªæ¥çš„ï¼Œæ‰€ä»¥åªéœ€è¦åˆ¤æ–­è¿™ä¸€ä¸ªå°±å¯ä»¥
 		return;
 	}
 	float* Xpos1 = (float*)(this + PosXOffset1);
@@ -95,4 +95,9 @@ auto Actor::setHitBox(vec2_t hb)->void {
 
 auto Actor::resetHitBox()->void {
 	Actor::setHitBox(vec2_t(0.6000000238f, 1.799999952f));
+}
+
+
+auto Actor::onMoveBBs(vec3_t p)->void {
+
 }
