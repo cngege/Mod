@@ -181,6 +181,7 @@
     <ClInclude Include="..\SDK\Player.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Hook\Hook.h" />
+    <ClInclude Include="Hook\KeyBoard.hpp" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Utils\Game.h" />

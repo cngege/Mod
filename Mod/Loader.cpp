@@ -5,6 +5,8 @@
 #include "Utils/Utils.h"
 #include "Player.h"
 
+#include "Hook/KeyBoard.hpp"
+
 Player* LocalPlayer = nullptr;
 int hookret;
 //C2 A9 4D 6F 6A 61 6E 67 20 41 42 00 00 00 00 00 0B 00 00 00 00 00 00 00 0F 00 00 00 00 00 00 00 C2 A9 4D 6F 6A 61 6E 67 20 41 42 00  +32
@@ -30,8 +32,8 @@ void Loader::init(void* hmoudle)
 
 	Game::init();
 
-	//开启一个线程捕获按键
-
+	//捕获按键
+	KeyBoard::init((HMODULE)hmoudle);
 
 }
 
@@ -43,6 +45,8 @@ void Loader::exit(void* hmoudle)
 		Hook::exit();
 	}
 	Game::exit();
+
+	KeyBoard::exit((HMODULE)hmoudle);
 
 	logF("Removing logger");
 	Logger::Disable();

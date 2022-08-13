@@ -14,6 +14,7 @@ auto Game::init() -> void
 	logF("Game::init is start runner……");
 	Game::ModState = true;
 
+	//定位修改攻击距离
 	{
 		//84 C0 74 ? C7 45 ? ? ? ? ? 48 8D 85 ? ? ? ? 48 8D 4D ? 44 0F 2F 25 ? ? ? ? 48 0F 43 C1
 		auto sigOffset = FindSignature("84 C0 74 ? C7 45 ? ? ? ? ? 48 8D 85 ? ? ? ? 48 8D 4D ? 44 0F 2F 25 ? ? ? ? 48 0F 43 C1");
