@@ -42,9 +42,9 @@ Covers_HitBox_Parts covers_HitBox_Partscall;
 uintptr_t covers_HitBox_Parts;
 
 
-using Player_Tick = double(__fastcall*)(Player* _this);
-Player_Tick player_Tickcall;
-uintptr_t player_Tick;
+using Player_getCameraOffset = vec2_t*(__fastcall*)(Player* _this);
+Player_getCameraOffset player_getCameraOffsetcall;
+uintptr_t player_getCameraOffset;
 
 
 using AllPlayer_Tick = float* (__fastcall*)(Player*, float*, float);
@@ -135,13 +135,13 @@ auto Hook::init() -> void
 	*/
 
 	// 本地玩家 Tick
-	player_Tick = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
-	if (player_Tick != 0x00) {
-		MH_CreateHookEx((LPVOID)player_Tick, &Hook::Player_Tick, &player_Tickcall);
+	player_getCameraOffset = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
+	if (player_getCameraOffset != 0x00) {
+		MH_CreateHookEx((LPVOID)player_getCameraOffset, &Hook::Player_getCameraOffset, &player_getCameraOffsetcall);
 		//MH_EnableHook((LPVOID)player_Tick);
 	}
 	else {
-		logF("[Hook error] [%s] is no found Hook point", "player_Tick");
+		logF("[Hook error] [%s] is no found Hook point", "player_getCameraOffset");
 	}
 
 
@@ -270,7 +270,7 @@ auto Hook::Covers_HitBox_Parts(void* _this, void* a1, void* a2)->void*
 }
 
 
-auto Hook::Player_Tick(Player* _this)->double
+auto Hook::Player_getCameraOffset(Player* _this)->vec2_t*
 {
 	static INT64 p = 0;
 	auto thisp = reinterpret_cast<INT64>(_this);
@@ -279,7 +279,7 @@ auto Hook::Player_Tick(Player* _this)->double
 		logF("Player_Tick localplayer ptr : %llX，Clientinstance ptr : %llX", thisp, instance);
 	}
 	_this->onLocalPlayerTick();
-	return player_Tickcall(_this);
+	return player_getCameraOffsetcall(_this);
 }
 
 //一直调用 且每位玩家都调用
