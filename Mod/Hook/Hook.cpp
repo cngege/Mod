@@ -47,9 +47,9 @@ Player_getCameraOffset player_getCameraOffsetcall;
 uintptr_t player_getCameraOffset;
 
 
-using AllPlayer_Tick = float* (__fastcall*)(Player*, float*, float);
-AllPlayer_Tick allPlayer_Tickcall;
-uintptr_t allPlayer_Tick;
+using AllActor_Tick = float* (__fastcall*)(Actor*, float*, float);
+AllActor_Tick allActor_Tickcall;
+uintptr_t allActor_Tick;
 
 
 //48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81
@@ -146,9 +146,9 @@ auto Hook::init() -> void
 
 
 	//所有玩家TICK
-	allPlayer_Tick = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2");
-	if (allPlayer_Tick != 0x00) {
-		MH_CreateHookEx((LPVOID)allPlayer_Tick, &Hook::AllPlayer_Tick, &allPlayer_Tickcall);
+	allActor_Tick = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2");
+	if (allActor_Tick != 0x00) {
+		MH_CreateHookEx((LPVOID)allActor_Tick, &Hook::AllActor_Tick, &allActor_Tickcall);
 		//MH_EnableHook((LPVOID)allPlayer_Tick);
 	}
 	else {
@@ -283,10 +283,10 @@ auto Hook::Player_getCameraOffset(Player* _this)->vec2_t*
 }
 
 //一直调用 且每位玩家都调用
-auto Hook::AllPlayer_Tick(Player* _this, float* a1, float a2)->float* {
+auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 
-	_this->onAllPlayerTick();
-	return allPlayer_Tickcall(_this, a1, a2);
+	_this->onAllActorTick();
+	return allActor_Tickcall(_this, a1, a2);
 }
 
 //就是把生物当前位置加上这个值 v3

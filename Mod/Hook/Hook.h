@@ -23,6 +23,6 @@ public:
 	static auto NoFallDamage_Tick(void*,float*)->void*;
 	static auto Covers_HitBox_Parts(void*, void*, void*)->void*;
 	static auto Player_getCameraOffset(class Player*)->vec2_t*;
-	static auto AllPlayer_Tick(class Player*, float*, float)->float*;
+	static auto AllActor_Tick(class Actor*, float*, float)->float*;
 	static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
 };

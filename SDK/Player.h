@@ -19,5 +19,5 @@ public:
 
 public:
 	auto onLocalPlayerTick()->void;
-	auto onAllPlayerTick()->void;
+
 };

@@ -1,4 +1,6 @@
 ﻿#include "Actor.h"
+#include "Player.h"
+#include "../Mod/Utils/Utils.h"
 
 int Actor::SpeedXOffset = 0;
 int Actor::SpeedYOffset = 0;
@@ -13,6 +15,8 @@ int Actor::PosZOffset2 = 0;
 
 int Actor::XHitBoxOffset = 0;
 int Actor::YHitBoxOffset = 0;
+
+uintptr_t* Actor::VTable = nullptr;
 
 auto Actor::getSpeed()->vec3_t {
 	if (SpeedXOffset == 0 || SpeedYOffset == 0 || SpeedZOffset == 0) {
@@ -93,6 +97,17 @@ auto Actor::setHitBox(vec2_t hb)->void {
 	*(float*)(this + YHitBoxOffset) = hb.y;
 }
 
+auto Actor::isPlayer()->bool {
+	if (!this || !Player::LocalPlayer) {
+		return false;
+	}
+	if (*(void**)this == *(void**)Player::LocalPlayer) {
+		return true;
+	}
+	return false;
+}
+
+
 auto Actor::resetHitBox()->void {
 	Actor::setHitBox(vec2_t(0.6000000238f, 1.799999952f));
 }
@@ -100,4 +115,18 @@ auto Actor::resetHitBox()->void {
 
 auto Actor::onMoveBBs(vec3_t p)->void {
 
+}
+
+auto Actor::onAllActorTick()->void {
+	//判断是否是玩家 大写锁定
+	//if (!this->isPlayer())
+	//	return;
+	if (GETKEYSTATE(VK_CAPITAL)) {
+		if (this != (Actor*)Player::LocalPlayer) {
+			this->setHitBox(vec2_t(6.0f, 6.0f));
+		}
+	}
+	else {
+		this->resetHitBox();
+	}
 }
