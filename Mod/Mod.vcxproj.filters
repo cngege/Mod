@@ -60,6 +60,9 @@
     <ClInclude Include="Hook\KeyBoard.hpp">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SDK\LocalPlayer.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -90,6 +93,9 @@
       <Filter>SDK\源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\Player.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\LocalPlayer.cpp">
       <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>

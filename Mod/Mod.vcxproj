@@ -178,6 +178,7 @@
     <ClInclude Include="..\SDK\Actor.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
     <ClInclude Include="..\SDK\GuiData.h" />
+    <ClInclude Include="..\SDK\LocalPlayer.h" />
     <ClInclude Include="..\SDK\Player.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Hook\Hook.h" />
@@ -191,6 +192,7 @@
   <ItemGroup>
     <ClCompile Include="..\SDK\Actor.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
+    <ClCompile Include="..\SDK\LocalPlayer.cpp" />
     <ClCompile Include="..\SDK\Player.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Hook\Hook.cpp" />
