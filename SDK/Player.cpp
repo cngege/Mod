@@ -1,8 +1,6 @@
 #include "Player.h"
 #include "../Mod/Utils/Utils.h"
 
-Player* Player::LocalPlayer = nullptr;
-
 int Player::YView1 = 0;
 int Player::XView1 = 0;
 int Player::YView2 = 0;
@@ -24,8 +22,4 @@ auto Player::getViewYX2()->const vec2_t {
 	auto viewy = *(float*)(this + YView2);
 	auto viewx = *(float*)(this + XView2);
 	return vec2_t(viewy, viewx);
-}
-
-auto Player::onLocalPlayerTick()->void {
-	LocalPlayer = this;
 }

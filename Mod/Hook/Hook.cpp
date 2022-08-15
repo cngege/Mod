@@ -2,6 +2,7 @@
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "Player.h"
+#include "LocalPlayer.h"
 #include "Actor.h"
 
 
@@ -42,9 +43,9 @@ Covers_HitBox_Parts covers_HitBox_Partscall;
 uintptr_t covers_HitBox_Parts;
 
 
-using Player_getCameraOffset = vec2_t*(__fastcall*)(Player* _this);
-Player_getCameraOffset player_getCameraOffsetcall;
-uintptr_t player_getCameraOffset;
+using LocalPlayer_getCameraOffset = vec2_t*(__fastcall*)(LocalPlayer* _this);
+LocalPlayer_getCameraOffset localplayer_getCameraOffsetcall;
+uintptr_t localplayer_getCameraOffset;
 
 
 using AllActor_Tick = float* (__fastcall*)(Actor*, float*, float);
@@ -135,9 +136,9 @@ auto Hook::init() -> void
 	*/
 
 	// 本地玩家 Tick
-	player_getCameraOffset = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
-	if (player_getCameraOffset != 0x00) {
-		MH_CreateHookEx((LPVOID)player_getCameraOffset, &Hook::Player_getCameraOffset, &player_getCameraOffsetcall);
+	localplayer_getCameraOffset = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
+	if (localplayer_getCameraOffset != 0x00) {
+		MH_CreateHookEx((LPVOID)localplayer_getCameraOffset, &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
 		//MH_EnableHook((LPVOID)player_Tick);
 	}
 	else {
@@ -270,7 +271,7 @@ auto Hook::Covers_HitBox_Parts(void* _this, void* a1, void* a2)->void*
 }
 
 
-auto Hook::Player_getCameraOffset(Player* _this)->vec2_t*
+auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 {
 	static INT64 p = 0;
 	auto thisp = reinterpret_cast<INT64>(_this);
@@ -279,7 +280,7 @@ auto Hook::Player_getCameraOffset(Player* _this)->vec2_t*
 		logF("Player_Tick localplayer ptr : %llX，Clientinstance ptr : %llX", thisp, instance);
 	}
 	_this->onLocalPlayerTick();
-	return player_getCameraOffsetcall(_this);
+	return localplayer_getCameraOffsetcall(_this);
 }
 
 //一直调用 且每位玩家都调用

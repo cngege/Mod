@@ -1,5 +1,5 @@
 ﻿#include "Actor.h"
-#include "Player.h"
+#include "LocalPlayer.h"
 #include "../Mod/Utils/Utils.h"
 
 int Actor::SpeedXOffset = 0;
@@ -98,10 +98,10 @@ auto Actor::setHitBox(vec2_t hb)->void {
 }
 
 auto Actor::isPlayer()->bool {
-	if (!this || !Player::LocalPlayer) {
+	if (!this || !LocalPlayer::GetLocalPlayer()) {
 		return false;
 	}
-	if (*(void**)this == *(void**)Player::LocalPlayer) {
+	if (*(void**)this == *(void**)LocalPlayer::GetLocalPlayer()) {
 		return true;
 	}
 	return false;
@@ -122,7 +122,7 @@ auto Actor::onAllActorTick()->void {
 	//if (!this->isPlayer())
 	//	return;
 	if (GETKEYSTATE(VK_CAPITAL)) {
-		if (this != (Actor*)Player::LocalPlayer) {
+		if (this != (Actor*)LocalPlayer::GetLocalPlayer()) {
 			this->setHitBox(vec2_t(6.0f, 6.0f));
 		}
 	}

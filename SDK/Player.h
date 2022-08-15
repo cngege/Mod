@@ -5,8 +5,7 @@
 class Player : Actor
 {
 public:
-	static Player* LocalPlayer;
-
+	
 	static int YView1;
 	static int XView1;
 	static int YView2;
@@ -16,8 +15,5 @@ public:
 
 	auto getViewYX()->const vec2_t;
 	auto getViewYX2()->const vec2_t;
-
-public:
-	auto onLocalPlayerTick()->void;
 
 };

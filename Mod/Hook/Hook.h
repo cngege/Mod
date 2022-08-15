@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "../../Memory/MinHook.h"
-
 #include "../Utils/HMath.h"
 #include "ClientInstance.h"
 
@@ -22,7 +21,7 @@ public:
 	static auto DestroyBlocking(void*,void*,int, float)->float;
 	static auto NoFallDamage_Tick(void*,float*)->void*;
 	static auto Covers_HitBox_Parts(void*, void*, void*)->void*;
-	static auto Player_getCameraOffset(class Player*)->vec2_t*;
+	static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
 	static auto AllActor_Tick(class Actor*, float*, float)->float*;
 	static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
 };
