@@ -31,9 +31,11 @@ bool Logger::isActive() {
 
 std::wstring Logger::GetRoamingFolderPath() {
 
+#ifdef _DEBUG
 	std::string s("C:\\Users\\CNGEGE\\Desktop");
 	std::wstring ws(s.begin(), s.end());
 	return ws;
+#endif
 
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);
