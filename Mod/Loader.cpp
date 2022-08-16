@@ -22,6 +22,8 @@ void Loader::init(void* hmoudle)
 		return;
 	}
 	
+	Game::init();
+
 	Hook::init();
 	auto enableHook = MH_EnableHook(MH_ALL_HOOKS);
 	logF("MH_EnableHook = %i", enableHook);
@@ -29,9 +31,6 @@ void Loader::init(void* hmoudle)
 		logF("MH_EnableHook Error");
 	}
 	
-
-	Game::init();
-
 	//捕获按键
 	KeyBoard::init((HMODULE)hmoudle);
 

@@ -179,6 +179,7 @@
   <ItemGroup>
     <ClInclude Include="..\SDK\Actor.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
+    <ClInclude Include="..\SDK\GameMode.h" />
     <ClInclude Include="..\SDK\GuiData.h" />
     <ClInclude Include="..\SDK\LocalPlayer.h" />
     <ClInclude Include="..\SDK\Player.h" />
@@ -194,6 +195,7 @@
   <ItemGroup>
     <ClCompile Include="..\SDK\Actor.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
+    <ClCompile Include="..\SDK\GameMode.cpp" />
     <ClCompile Include="..\SDK\LocalPlayer.cpp" />
     <ClCompile Include="..\SDK\Player.cpp" />
     <ClCompile Include="dllmain.cpp" />
