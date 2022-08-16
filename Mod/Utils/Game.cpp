@@ -3,6 +3,7 @@
 #include "../Utils/Utils.h"
 #include "Player.h"
 #include "Actor.h"
+#include "GameMode.h"
 
 float* Game::ArmsLength = nullptr;
 bool Game::ModState = false;
@@ -70,6 +71,19 @@ auto Game::init() -> void
 		}
 	}
 
+	//GameMode虚表地址获取
+	{
+		auto GameModeVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61");
+		auto offsize = *reinterpret_cast<int*>(GameModeVTable_sigOffset + 3);
+		auto GameModeVTables = reinterpret_cast<uintptr_t**>(GameModeVTable_sigOffset + offsize + 7);
+		GameMode::SetVtables(GameModeVTables);
+		if (GameModeVTable_sigOffset == 0x00 || offsize == 0x00) {
+			logF("[GameMode::SetVtables] [Error]Find GameMode GameModeVTable_sigOffset Offset is no working!!!,GameModeVTable_sigOffset=0");
+		}
+		else {
+			logF("[GameMode::SetVtables] GameModeVTable = %llX", GameModeVTables);
+		}
+	}
 
 }
 
