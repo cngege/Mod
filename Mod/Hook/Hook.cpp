@@ -26,11 +26,6 @@ using GetHungerValAddress_Tick = void* (__fastcall*)(void* _this, const char* a1
 GetHungerValAddress_Tick getHungerValAddress_Tickcall;
 uintptr_t getHungerValAddressTick;
 
-//快速破坏相关
-using DestroyBlockingAddress = float (__fastcall*)(void* _this, void* a1, int a2, float a3);
-DestroyBlockingAddress destroyBlockingAddresscall;
-uintptr_t destroyBlockingAddress;
-
 //48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01
 using NoFallDamage_tick = void* (__fastcall*)(void* _this, float* a1);
 NoFallDamage_tick noFallDamage_Tickcall;
@@ -116,18 +111,6 @@ auto Hook::init() -> void
 		}
 	}
 
-	//获取能够加上偏移得出破坏进度的地址(第一个参数) 可用来快速破坏方块
-	{
-		destroyBlockingAddress = FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 83 EC 30 48 8B D9 0F 29 74 24 ? 48 8B 49 08");
-		if (destroyBlockingAddress != 0x00) {
-			MH_CreateHookEx((LPVOID)destroyBlockingAddress, &Hook::DestroyBlocking, &destroyBlockingAddresscall);
-			//MH_EnableHook((LPVOID)destroyBlockingAddress);
-		}
-		else {
-			logF("[Hook error] [%s] is no found Hook point", "destroyBlockingAddress");
-		}
-	}
-
 	//掉落无伤 仅本地有效
 	{
 		noFallDamage_tick = FindSignature("48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01");
@@ -208,6 +191,9 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[GameMode::SetVtables] GameModeVTable = %llX", GameModeVTables);
+			//Hook GameMode_startDestroyBlock
+			MH_CreateHookEx((LPVOID)GameMode::GetVtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
+
 		}
 	}
 
@@ -255,20 +241,6 @@ auto Hook::GetHungerValAddress_Tick(void* _this, const char* a1, void* a2)->void
 }
 
 
-
-auto Hook::DestroyBlocking(void* _this, void* a1, int a2, float a3)->float
-{
-	if (KEY_DOWN(VK_SHIFT) == 1 && KEY_DOWN(VK_CONTROL) == 1) {
-		auto speedDestroy = reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x24);
-		if (*speedDestroy > 0.0f && *speedDestroy < 1.0f) {
-			*speedDestroy = 1.0f;
-		}
-	}
-
-	auto ret = destroyBlockingAddresscall(_this, a1,a2,a3);
-	return ret;
-}
-
 //仅仅在本地房间时有效
 auto Hook::NoFallDamage_Tick(void* _this, float* a1)->void*
 {
@@ -298,7 +270,7 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 	auto thisp = reinterpret_cast<INT64>(_this);
 	if (thisp != p) {
 		p = thisp;
-		logF("Player_Tick localplayer ptr : %llX，Clientinstance ptr : %llX", thisp, instance);
+		logF("Player_Tick localplayer ptr = %llX，Clientinstance ptr = %llX", thisp, instance);
 	}
 	_this->onLocalPlayerTick();
 	return localplayer_getCameraOffsetcall(_this);
@@ -315,4 +287,13 @@ auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 auto Hook::Actor_moveBBs(Actor* _this, vec3_t* v3)->void* {
 	_this->onMoveBBs(*v3);
 	return actor_moveBBscall(_this, v3);
+}
+
+
+//虚表Hook
+auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool {
+	if (KEY_DOWN(VK_SHIFT) == 1 && KEY_DOWN(VK_CONTROL) == 1) {
+		_this->destroyBlock(a2, face);
+	}
+	return _this->startDestroyBlock(a2,face,a3,a4);
 }
