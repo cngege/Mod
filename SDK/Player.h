@@ -1,8 +1,9 @@
 #pragma once
 #include "..\Mod\Utils\HMath.h"
 #include "Actor.h"
+#include "Mob.h"
 
-class Player : Actor
+class Player : Mob
 {
 public:
 	
