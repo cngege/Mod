@@ -19,7 +19,6 @@ public:
 	static auto Is_ShowCoordinates_Tick(void*)->bool;
 	static auto GetHungerValAddress_Tick(void*, const char*, void*)->void*;
 	static auto NoFallDamage_Tick(void*,float*)->void*;
-	static auto Covers_HitBox_Parts(void*, void*, void*)->void*;
 	static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
 	static auto AllActor_Tick(class Actor*, float*, float)->float*;
 	static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
