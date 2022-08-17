@@ -185,6 +185,39 @@ auto Hook::init() -> void
 		}
 	}
 
+	//Actor 虚表及相关Hook
+	{
+		auto ActorVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 49 8B 00 48 89 41 ? 41 8B 40 ? 89 41");
+		auto offsize = *reinterpret_cast<int*>(ActorVTable_sigOffset + 3);
+		auto ActorVTable = reinterpret_cast<uintptr_t**>(ActorVTable_sigOffset + offsize + 7);
+
+
+
+	}
+
+	// Mob 虚表及相关Hook
+	{
+		auto MobVTable_sigOffset = FindSignature("40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05");
+		//+31
+	}
+
+	//Player 虚表及相关Hook
+	{
+		auto PlayerVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 07 44 89 AF ? ? ? ? 44 88 AF ? ? ? ? 44 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 66 44 89 AF");
+	}
+
+
+	//ServerPlayer 虚表及相关Hook
+	{
+		//48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B
+		auto ServerPlayerVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B");
+
+	}
+
+	//LocalPlayer虚表及相关Hook
+	{
+		//auto LocalPlayerVTable_sigOffset = FindSignature("");
+	}
 
 }
 
@@ -238,6 +271,7 @@ auto Hook::NoFallDamage_Tick(void* _this, float* a1)->void*
 }
 
 
+
 auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 {
 	static INT64 p = 0;
@@ -247,6 +281,7 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 		logF("Player_Tick localplayer ptr = %llX，Clientinstance ptr = %llX", thisp, instance);
 	}
 	_this->onLocalPlayerTick();
+	
 	return localplayer_getCameraOffsetcall(_this);
 }
 

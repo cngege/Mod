@@ -5,6 +5,12 @@
 
 class Player : Mob
 {
+protected:
+	static uintptr_t** vTables;
+public:
+	static auto GetVtableFun(int)->uintptr_t*;
+	static auto SetVtables(uintptr_t** vTables)->void;
+
 public:
 	
 	static int YView1;

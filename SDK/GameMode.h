@@ -3,7 +3,7 @@
 
 
 class GameMode {
-private:
+protected:
 	static uintptr_t** vTables;
 public:
 	static auto GetVtableFun(int)->uintptr_t*;
