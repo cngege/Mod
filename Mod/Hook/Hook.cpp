@@ -4,7 +4,7 @@
 #include "Player.h"
 #include "LocalPlayer.h"
 #include "Actor.h"
-
+#include "GameMode.h"
 
 ClientInstance* instance;
 
@@ -63,118 +63,155 @@ auto Hook::init() -> void
 {
 	logF("Hook::init is start runner……");
 
-	playerkb = FindSignature("8B 02 89 81 ? ? 00 00 8B 42 04 89 81 ? ? 00 00 8B 42 08 89 81 ? ? 00 00 C3");
-	if (playerkb != 0x00) {
-		Actor::SpeedXOffset = *reinterpret_cast<int*>(playerkb + 4);
-		Actor::SpeedYOffset = *reinterpret_cast<int*>(playerkb + 13);
-		Actor::SpeedZOffset = *reinterpret_cast<int*>(playerkb + 22);
-		MH_CreateHookEx((LPVOID)playerkb, &Hook::PlayerKB, &playercall);
-		//MH_EnableHook((LPVOID)playerkb);
-	}else {
-		logF("[Hook error] [%s] is no found Hook point", "playerkb");
+	//玩家击退
+	{
+		playerkb = FindSignature("8B 02 89 81 ? ? 00 00 8B 42 04 89 81 ? ? 00 00 8B 42 08 89 81 ? ? 00 00 C3");
+		if (playerkb != 0x00) {
+			Actor::SpeedXOffset = *reinterpret_cast<int*>(playerkb + 4);
+			Actor::SpeedYOffset = *reinterpret_cast<int*>(playerkb + 13);
+			Actor::SpeedZOffset = *reinterpret_cast<int*>(playerkb + 22);
+			MH_CreateHookEx((LPVOID)playerkb, &Hook::PlayerKB, &playercall);
+			//MH_EnableHook((LPVOID)playerkb);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "playerkb");
+		}
 	}
 
 	//clientInstance::Tick
-	clientInstanceTick = FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F9 48 8B 01");
-	if (clientInstanceTick != 0x00) {
-		MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
-		//MH_EnableHook((LPVOID)clientInstanceTick);
+	{
+		clientInstanceTick = FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F9 48 8B 01");
+		if (clientInstanceTick != 0x00) {
+			MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
+			//MH_EnableHook((LPVOID)clientInstanceTick);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "clientInstanceTick");
+		}
 	}
-	else {
-		logF("[Hook error] [%s] is no found Hook point", "clientInstanceTick");
-	}
+
 
 
 	//是否显示坐标 Tick
-	is_ShowCoordinatesTick = FindSignature("48 83 EC ? 48 8B 49 ? 48 8B 01 FF 90 ? ? ? ? 48 85 C0 74 ? 48 8B 88");
-	if (is_ShowCoordinatesTick != 0x00) {
-		MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
-		//MH_EnableHook((LPVOID)is_ShowCoordinatesTick);
-	}
-	else {
-		logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
+	{
+		is_ShowCoordinatesTick = FindSignature("48 83 EC ? 48 8B 49 ? 48 8B 01 FF 90 ? ? ? ? 48 85 C0 74 ? 48 8B 88");
+		if (is_ShowCoordinatesTick != 0x00) {
+			MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
+			//MH_EnableHook((LPVOID)is_ShowCoordinatesTick);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
+		}
 	}
 
 	//获取饥饿值的地址的函数  实际上被用来做修改玩家速度
-	getHungerValAddressTick = FindSignature("4C 8B D1 44 0F B6 CA 49 BB ? ? ? ? ? ? ? ? 48 B8 ? ? ? ? ? ? ? ? 4C 33 C8 8B C2 4D 0F AF CB C1 E8 08 44 0F B6 C0 8B C2 4D 33 C8 C1 E8 10 4D 8B 42 08 4D 0F AF CB 0F B6 C8 4C 33 C9 8B C2 49 8B 4A 30 4D 0F AF CB 48 C1 E8 18 4C 33 C8 4D 0F AF CB 49 23 C9 48 C1 E1 04 49 03 4A 18 48 8B 41 08 49 3B C0 74 27 48 8B 09 3B 50 10 74 0E 48 3B C1 74 1A 48 8B 40 08 3B 50 10 75 F2 48 85 C0 49 0F 44 C0 49 3B C0 74 05 ? ? ? ? C3 48 8D 05 ? ? ? ? C3");
-	if (getHungerValAddressTick != 0x00) {
-		MH_CreateHookEx((LPVOID)getHungerValAddressTick, &Hook::GetHungerValAddress_Tick, &getHungerValAddress_Tickcall);
-		//MH_EnableHook((LPVOID)getHungerValAddressTick);
+	{
+		getHungerValAddressTick = FindSignature("4C 8B D1 44 0F B6 CA 49 BB ? ? ? ? ? ? ? ? 48 B8 ? ? ? ? ? ? ? ? 4C 33 C8 8B C2 4D 0F AF CB C1 E8 08 44 0F B6 C0 8B C2 4D 33 C8 C1 E8 10 4D 8B 42 08 4D 0F AF CB 0F B6 C8 4C 33 C9 8B C2 49 8B 4A 30 4D 0F AF CB 48 C1 E8 18 4C 33 C8 4D 0F AF CB 49 23 C9 48 C1 E1 04 49 03 4A 18 48 8B 41 08 49 3B C0 74 27 48 8B 09 3B 50 10 74 0E 48 3B C1 74 1A 48 8B 40 08 3B 50 10 75 F2 48 85 C0 49 0F 44 C0 49 3B C0 74 05 ? ? ? ? C3 48 8D 05 ? ? ? ? C3");
+		if (getHungerValAddressTick != 0x00) {
+			MH_CreateHookEx((LPVOID)getHungerValAddressTick, &Hook::GetHungerValAddress_Tick, &getHungerValAddress_Tickcall);
+			//MH_EnableHook((LPVOID)getHungerValAddressTick);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "getHungerValAddressTick");
+		}
 	}
-	else {
-		logF("[Hook error] [%s] is no found Hook point", "getHungerValAddressTick");
-	}
-
 
 	//获取能够加上偏移得出破坏进度的地址(第一个参数) 可用来快速破坏方块
-	destroyBlockingAddress = FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 83 EC 30 48 8B D9 0F 29 74 24 ? 48 8B 49 08");
-	if (destroyBlockingAddress != 0x00) {
-		MH_CreateHookEx((LPVOID)destroyBlockingAddress, &Hook::DestroyBlocking, &destroyBlockingAddresscall);
-		//MH_EnableHook((LPVOID)destroyBlockingAddress);
-	}else {
-		logF("[Hook error] [%s] is no found Hook point", "destroyBlockingAddress");
+	{
+		destroyBlockingAddress = FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 83 EC 30 48 8B D9 0F 29 74 24 ? 48 8B 49 08");
+		if (destroyBlockingAddress != 0x00) {
+			MH_CreateHookEx((LPVOID)destroyBlockingAddress, &Hook::DestroyBlocking, &destroyBlockingAddresscall);
+			//MH_EnableHook((LPVOID)destroyBlockingAddress);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "destroyBlockingAddress");
+		}
 	}
 
 	//掉落无伤 仅本地有效
-	noFallDamage_tick = FindSignature("48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01");
-	if (noFallDamage_tick != 0x00) {
-		MH_CreateHookEx((LPVOID)noFallDamage_tick, &Hook::NoFallDamage_Tick, &noFallDamage_Tickcall);
-		//MH_EnableHook((LPVOID)noFallDamage_tick);
-	}else {
-		logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
+	{
+		noFallDamage_tick = FindSignature("48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01");
+		if (noFallDamage_tick != 0x00) {
+			MH_CreateHookEx((LPVOID)noFallDamage_tick, &Hook::NoFallDamage_Tick, &noFallDamage_Tickcall);
+			//MH_EnableHook((LPVOID)noFallDamage_tick);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
+		}
 	}
+
 
 	//获取 HitBox所要用的关键指针
-	/*covers_HitBox_Parts = FindSignature("48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA");
-	if (covers_HitBox_Parts != 0x00) {
-		MH_CreateHookEx((LPVOID)covers_HitBox_Parts, &Hook::Covers_HitBox_Parts, &covers_HitBox_Partscall);
-		//MH_EnableHook((LPVOID)covers_HitBox_Parts);
+	{
+		//covers_HitBox_Parts = FindSignature("48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA");
+		//if (covers_HitBox_Parts != 0x00) {
+		//	MH_CreateHookEx((LPVOID)covers_HitBox_Parts, &Hook::Covers_HitBox_Parts, &covers_HitBox_Partscall);
+		//}
+		//else {
+		//	logF("[Hook error] [%s] is no found Hook point", "covers_HitBox_Parts");
+		//}
 	}
-	else {
-		logF("[Hook error] [%s] is no found Hook point", "covers_HitBox_Parts");
-	}
-	*/
 
 	// 本地玩家 Tick
-	localplayer_getCameraOffset = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
-	if (localplayer_getCameraOffset != 0x00) {
-		MH_CreateHookEx((LPVOID)localplayer_getCameraOffset, &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
-		//MH_EnableHook((LPVOID)player_Tick);
+	{
+		localplayer_getCameraOffset = FindSignature("48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02");
+		if (localplayer_getCameraOffset != 0x00) {
+			MH_CreateHookEx((LPVOID)localplayer_getCameraOffset, &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
+			//MH_EnableHook((LPVOID)player_Tick);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "player_getCameraOffset");
+		}
 	}
-	else {
-		logF("[Hook error] [%s] is no found Hook point", "player_getCameraOffset");
-	}
-
 
 	//所有玩家TICK
-	allActor_Tick = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2");
-	if (allActor_Tick != 0x00) {
-		MH_CreateHookEx((LPVOID)allActor_Tick, &Hook::AllActor_Tick, &allActor_Tickcall);
-		//MH_EnableHook((LPVOID)allPlayer_Tick);
+	{
+		allActor_Tick = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2");
+		if (allActor_Tick != 0x00) {
+			MH_CreateHookEx((LPVOID)allActor_Tick, &Hook::AllActor_Tick, &allActor_Tickcall);
+			//MH_EnableHook((LPVOID)allPlayer_Tick);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "allPlayer_Tick");
+		}
 	}
-	else {
-		logF("[Hook error] [%s] is no found Hook point", "allPlayer_Tick");
-	}
-
 
 	//生物移动消息
-	actor_moveBBs = FindSignature("48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81");
-	if (actor_moveBBs != 0x00) {
-		auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 21);
-		Actor::PosXOffset1 = Xoffset;
-		Actor::PosYOffset1 = Xoffset + 4;
-		Actor::PosZOffset1 = Xoffset + 8;
-		Actor::PosXOffset2 = Xoffset + 12;
-		Actor::PosYOffset2 = Xoffset + 16;
-		Actor::PosZOffset2 = Xoffset + 20;
+	{
+		actor_moveBBs = FindSignature("48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81");
+		if (actor_moveBBs != 0x00) {
+			auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 21);
+			Actor::PosXOffset1 = Xoffset;
+			Actor::PosYOffset1 = Xoffset + 4;
+			Actor::PosZOffset1 = Xoffset + 8;
+			Actor::PosXOffset2 = Xoffset + 12;
+			Actor::PosYOffset2 = Xoffset + 16;
+			Actor::PosZOffset2 = Xoffset + 20;
 
-		Actor::XHitBoxOffset = Xoffset + 24;
-		Actor::YHitBoxOffset = Xoffset + 28;
-		MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
+			Actor::XHitBoxOffset = Xoffset + 24;
+			Actor::YHitBoxOffset = Xoffset + 28;
+			MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "actor_moveBBs");
+		}
 	}
-	else {
-		logF("[Hook error] [%s] is no found Hook point", "actor_moveBBs");
+
+	//GameMode虚表及相关Hook
+	{
+		auto GameModeVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61");
+		auto offsize = *reinterpret_cast<int*>(GameModeVTable_sigOffset + 3);
+		auto GameModeVTables = reinterpret_cast<uintptr_t**>(GameModeVTable_sigOffset + offsize + 7);
+		GameMode::SetVtables(GameModeVTables);
+		if (GameModeVTable_sigOffset == 0x00 || offsize == 0x00) {
+			logF("[GameMode::SetVtables] [Error]Find GameMode GameModeVTable_sigOffset is no working!!!,GameModeVTable_sigOffset=0");
+		}
+		else {
+			logF("[GameMode::SetVtables] GameModeVTable = %llX", GameModeVTables);
+		}
 	}
+
+
 }
 
 auto Hook::exit() -> void {
@@ -185,27 +222,11 @@ auto Hook::exit() -> void {
 //无击退效果
 auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 {
-	//长按鼠标右键
+	//长按CTRL
 	if (!KEY_DOWN(VK_CONTROL)) {
 		playercall(player, kb);
 	}
-	/*
-	auto p = (Player*)(instance->LocalPlayer());
-	if(p != nullptr)
-		p->setSpeed(vec3_t(0.0f, 2.0f, 0.0f));
-	*/
-	/*
-	logF("this fun Player Ptr at: %llX", player);
-	if (instance != nullptr) {
-		logF("instance Ptr at: %llX", instance);
-		logF("LocalPlayer Ptr at: %llX", instance->LocalPlayer());
-		logF("no offset");
-	}
-	*/
 }
-//2.Hook后的函数 3.具有原来的功能的可以调用的函数
-//MH_CreateHook(&MessageBoxW, &DetourMessageBoxW, reinterpret_cast<LPVOID*>(&fpMessageBoxW))
-//Utils::FindSignatureModule("Minecraft.Windows.exe","8B 02 89 81 ? ? 00 00 8B 42 04 89 81 ? ? 00 00 8B 42 08 89 81 ? ? 00 00 C3");
 
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void
 {
