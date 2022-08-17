@@ -8,6 +8,10 @@ auto LocalPlayer::GetVtableFun(int a)->uintptr_t* {
 	return vTables[a];
 }
 
+auto LocalPlayer::GetVtables()->uintptr_t** {
+	return vTables;
+}
+
 auto LocalPlayer::SetVtables(uintptr_t** vTable)->void {
 	vTables = vTable;
 }

@@ -13,6 +13,10 @@ auto Player::GetVtableFun(int a)->uintptr_t* {
 	return vTables[a];
 }
 
+auto Player::GetVtables()->uintptr_t** {
+	return vTables;
+}
+
 auto Player::SetVtables(uintptr_t** vTable)->void {
 	vTables = vTable;
 }

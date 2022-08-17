@@ -24,6 +24,10 @@ auto Actor::GetVtableFun(int a)->uintptr_t* {
 	return vTables[a];
 }
 
+auto Actor::GetVtables()->uintptr_t** {
+	return vTables;
+}
+
 auto Actor::SetVtables(uintptr_t** vTable)->void {
 	vTables = vTable;
 }
