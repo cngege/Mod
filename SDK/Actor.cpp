@@ -1,5 +1,6 @@
 ﻿#include "Actor.h"
 #include "LocalPlayer.h"
+#include "ServerPlayer.h"
 #include "../Mod/Utils/Utils.h"
 
 int Actor::SpeedXOffset = 0;
@@ -110,10 +111,10 @@ auto Actor::setHitBox(vec2_t hb)->void {
 }
 
 auto Actor::isPlayer()->bool {
-	if (!this || !LocalPlayer::GetLocalPlayer()) {
+	if (!this) {
 		return false;
 	}
-	if (*(void**)this == *(void**)LocalPlayer::GetLocalPlayer()) {
+	if (*(void**)this == *(void**)LocalPlayer::GetLocalPlayer() || *(void**)this == ServerPlayer::GetVtables()) {
 		return true;
 	}
 	return false;

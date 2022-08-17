@@ -2,6 +2,7 @@
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "Player.h"
+#include "ServerPlayer.h"
 #include "LocalPlayer.h"
 #include "Actor.h"
 #include "GameMode.h"
@@ -173,12 +174,12 @@ auto Hook::init() -> void
 		auto GameModeVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61");
 		auto offsize = *reinterpret_cast<int*>(GameModeVTable_sigOffset + 3);
 		auto GameModeVTables = reinterpret_cast<uintptr_t**>(GameModeVTable_sigOffset + offsize + 7);
-		GameMode::SetVtables(GameModeVTables);
 		if (GameModeVTable_sigOffset == 0x00 || offsize == 0x00) {
-			logF("[GameMode::SetVtables] [Error]Find GameMode GameModeVTable_sigOffset is no working!!!,GameModeVTable_sigOffset=0");
+			logF("[GameMode::SetVtables] [Error]Find GameMode GameModeVTable_sigOffset is no working!!!");
 		}
 		else {
-			logF("[GameMode::SetVtables] GameModeVTable = %llX", GameModeVTables);
+			logF("[GameMode::SetVtables] [Success] GameModeVTable = %llX", GameModeVTables);
+			GameMode::SetVtables(GameModeVTables);
 			//Hook GameMode_startDestroyBlock
 			MH_CreateHookEx((LPVOID)GameMode::GetVtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
 
@@ -190,20 +191,44 @@ auto Hook::init() -> void
 		auto ActorVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 49 8B 00 48 89 41 ? 41 8B 40 ? 89 41");
 		auto offsize = *reinterpret_cast<int*>(ActorVTable_sigOffset + 3);
 		auto ActorVTable = reinterpret_cast<uintptr_t**>(ActorVTable_sigOffset + offsize + 7);
-
-
+		if (ActorVTable_sigOffset == 0x00 || offsize == 0x00) {
+			logF("[Actor::SetVtables] [Error]Find Actor ActorVTable_sigOffset is no working!!!");
+		}
+		else
+		{
+			logF("[Actor::SetVtables] [Success] ActorVTable = %llX", ActorVTable);
+			Actor::SetVtables(ActorVTable);
+		}
 
 	}
 
 	// Mob 虚表及相关Hook
 	{
-		auto MobVTable_sigOffset = FindSignature("40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05");
-		//+31
+		auto MobVTable_sigOffset = FindSignature("40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05"); //+31
+		auto offsize = *reinterpret_cast<int*>(MobVTable_sigOffset + 31);
+		auto MobVTable = reinterpret_cast<uintptr_t**>(MobVTable_sigOffset + offsize + 35);
+		if (MobVTable_sigOffset == 0x00 || offsize == 0x00) {
+			logF("[Mob::SetVtables] [Error]Find Mob MobVTable_sigOffset is no working!!!");
+		}
+		else
+		{
+			logF("[Mob::SetVtables] [Success] MobVTable = %llX", MobVTable);
+			Mob::SetVtables(MobVTable);
+		}
 	}
 
 	//Player 虚表及相关Hook
 	{
 		auto PlayerVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 07 44 89 AF ? ? ? ? 44 88 AF ? ? ? ? 44 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 66 44 89 AF");
+		auto offsize = *reinterpret_cast<int*>(PlayerVTable_sigOffset + 3);
+		auto PlayerVTable = reinterpret_cast<uintptr_t**>(PlayerVTable_sigOffset + offsize + 7);
+		if (PlayerVTable_sigOffset == 0x00 || offsize == 0x00) {
+			logF("[Player::SetVtables] [Error]Find Player PlayerVTable_sigOffset is no working!!!");
+		}
+		else {
+			logF("[Player::SetVtables] [Success] PlayerVTable = %llX", PlayerVTable);
+			Player::SetVtables(PlayerVTable);
+		}
 	}
 
 
@@ -211,7 +236,15 @@ auto Hook::init() -> void
 	{
 		//48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B
 		auto ServerPlayerVTable_sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B");
-
+		auto offsize = *reinterpret_cast<int*>(ServerPlayerVTable_sigOffset + 3);
+		auto ServerPlayerVTable = reinterpret_cast<uintptr_t**>(ServerPlayerVTable_sigOffset + offsize + 7);
+		if (ServerPlayerVTable_sigOffset == 0x00 || offsize == 0x00) {
+			logF("[ServerPlayer::SetVtables] [Error]Find ServerPlayer ServerPlayerVTable_sigOffset is no working!!!");
+		}
+		else {
+			logF("[ServerPlayer::SetVtables] [Success] ServerPlayerVTable = %llX", ServerPlayerVTable);
+			ServerPlayer::SetVtables(ServerPlayerVTable);
+		}
 	}
 
 	//LocalPlayer虚表及相关Hook
