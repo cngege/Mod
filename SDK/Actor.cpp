@@ -16,7 +16,19 @@ int Actor::PosZOffset2 = 0;
 int Actor::XHitBoxOffset = 0;
 int Actor::YHitBoxOffset = 0;
 
-uintptr_t* Actor::VTable = nullptr;
+
+uintptr_t** Actor::vTables = nullptr;
+
+auto Actor::GetVtableFun(int a)->uintptr_t* {
+	return vTables[a];
+}
+
+auto Actor::SetVtables(uintptr_t** vTable)->void {
+	vTables = vTable;
+}
+
+
+
 
 auto Actor::getSpeed()->vec3_t {
 	if (SpeedXOffset == 0 || SpeedYOffset == 0 || SpeedZOffset == 0) {
