@@ -69,6 +69,9 @@
     <ClInclude Include="..\SDK\Mob.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SDK\ServerPlayer.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -108,6 +111,9 @@
       <Filter>SDK\源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\Mob.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\ServerPlayer.cpp">
       <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>

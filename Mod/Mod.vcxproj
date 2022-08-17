@@ -184,6 +184,7 @@
     <ClInclude Include="..\SDK\LocalPlayer.h" />
     <ClInclude Include="..\SDK\Mob.h" />
     <ClInclude Include="..\SDK\Player.h" />
+    <ClInclude Include="..\SDK\ServerPlayer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Hook\Hook.h" />
     <ClInclude Include="Hook\KeyBoard.hpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="..\SDK\LocalPlayer.cpp" />
     <ClCompile Include="..\SDK\Mob.cpp" />
     <ClCompile Include="..\SDK\Player.cpp" />
+    <ClCompile Include="..\SDK\ServerPlayer.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Hook\Hook.cpp" />
     <ClCompile Include="Loader.cpp" />
