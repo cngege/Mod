@@ -41,6 +41,5 @@ auto GameMode::attack(Actor* actor) ->bool {
 
 //ÆÆ»µ·½¿é
 auto GameMode::destroyBlock(vec3_ti* Bpos, uint8_t* Face)->bool {
-	using Fn = bool(__fastcall*)(GameMode*, vec3_ti*, uint8_t*);
-	return reinterpret_cast<Fn>(vfTables[2])(this, Bpos, Face);
+	return GetVFtableFun<bool, GameMode*, vec3_ti*, uint8_t*>(2)(this, Bpos, Face);
 }
