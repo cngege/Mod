@@ -6,6 +6,11 @@ uintptr_t** GameMode::vfTables = nullptr;
 uintptr_t* GameMode::startDestroyBlockCall = nullptr;
 uintptr_t* GameMode::attackCall = nullptr;
 
+template <typename TRet, typename... TArgs>
+auto GameMode::GetVFtableFun(int a)->auto* {
+	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
+}
+
 auto GameMode::GetVFtableFun(int a)->uintptr_t* {
 	return vfTables[a];
 }

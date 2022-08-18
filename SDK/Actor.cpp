@@ -25,6 +25,10 @@ auto Actor::GetVFtableFun(int a)->auto*{
 	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
 }
 
+auto Actor::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
+}
+
 auto Actor::GetVFtables()->uintptr_t** {
 	return vfTables;
 }
@@ -137,7 +141,7 @@ auto Actor::onMoveBBs(vec3_t p)->void {
 
 auto Actor::onAllActorTick()->void {
 	//判断是否是玩家 大写锁定
-	if (this->isPlayer()) {
+	if (1 || this->isPlayer()) {
 		if (GETKEYSTATE(VK_CAPITAL)) {
 			if (this != (Actor*)LocalPlayer::GetLocalPlayer()) {
 				this->setHitBox(vec2_t(6.0f, 6.0f));

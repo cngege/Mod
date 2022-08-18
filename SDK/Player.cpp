@@ -9,6 +9,11 @@ int Player::XView2 = 0;
 
 uintptr_t** Player::vfTables = nullptr;
 
+template <typename TRet, typename... TArgs>
+auto Player::GetVFtableFun(int a)->auto* {
+	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
+}
+
 auto Player::GetVFtableFun(int a)->uintptr_t* {
 	return vfTables[a];
 }
