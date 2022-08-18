@@ -14,9 +14,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_PROCESS_ATTACH:
     {
         CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Loader::init, hModule, NULL, NULL);
-        DisableThreadLibraryCalls(hModule);
+        //DisableThreadLibraryCalls(hModule);
+        break;
     }
-    break;
     case DLL_PROCESS_DETACH:
         Loader::exit(hModule);
         break;

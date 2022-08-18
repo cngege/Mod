@@ -59,7 +59,7 @@ LRESULT CALLBACK KeyboardProc(int code, WPARAM wParam, LPARAM lParam) {
 }
 
 auto KeyBoard::init(HMODULE hModule)->void {
-	g_hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, GetModuleHandle(L"Mod.dll"), 0);
+	g_hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hModule, 0);
 	if (g_hHook == NULL) {
 		// 钩子安装失败
 		logF("[SetWindowsHookEx] Install Hook Fail");
