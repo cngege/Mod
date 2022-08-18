@@ -344,6 +344,6 @@ auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* fac
 }
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
-	logF("attack Actor ptr= %llX ,VT=%llX, isPlayer = %i", actor, *(void**)actor,actor->isPlayer());
+	//logF("attack Actor ptr= %llX ,VT=%llX, isPlayer = %i", actor, *(void**)actor,actor->isPlayer());
 	return _this->attack(actor);
 }

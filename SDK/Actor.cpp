@@ -20,8 +20,9 @@ int Actor::YHitBoxOffset = 0;
 
 uintptr_t** Actor::vfTables = nullptr;
 
-auto Actor::GetVFtableFun(int a)->uintptr_t* {
-	return vfTables[a];
+template <typename TRet, typename... TArgs>
+auto Actor::GetVFtableFun(int a)->auto*{
+	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
 }
 
 auto Actor::GetVFtables()->uintptr_t** {
@@ -151,6 +152,5 @@ auto Actor::onAllActorTick()->void {
 
 // 虚表函数
 auto Actor::isPlayer()->bool {
-	using Fn = bool(__fastcall*)(Actor*);
-	return reinterpret_cast<Fn>(vfTables[99])(this);
+	return GetVFtableFun<bool, Actor*>(99)(this);
 }
