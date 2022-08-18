@@ -1,15 +1,15 @@
 #include "ServerPlayer.h"
 
-uintptr_t** ServerPlayer::vTables = nullptr;
+uintptr_t** ServerPlayer::vfTables = nullptr;
 
-auto ServerPlayer::GetVtableFun(int a)->uintptr_t* {
-	return vTables[a];
+auto ServerPlayer::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
 }
 
-auto ServerPlayer::GetVtables()->uintptr_t** {
-	return vTables;
+auto ServerPlayer::GetVFtables()->uintptr_t** {
+	return vfTables;
 }
 
-auto ServerPlayer::SetVtables(uintptr_t** vTable)->void {
-	vTables = vTable;
+auto ServerPlayer::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
 }

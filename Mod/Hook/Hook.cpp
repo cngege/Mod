@@ -179,9 +179,11 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[GameMode::SetVtables] [Success] GameModeVTable = %llX", GameModeVTables);
-			GameMode::SetVtables(GameModeVTables);
+			GameMode::SetVFtables(GameModeVTables);
 			//Hook GameMode_startDestroyBlock
-			MH_CreateHookEx((LPVOID)GameMode::GetVtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
+			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
+			//Hook GameMode_attack
+			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(14), &Hook::GameMode_attack, &GameMode::attackCall);
 
 		}
 	}
@@ -197,7 +199,7 @@ auto Hook::init() -> void
 		else
 		{
 			logF("[Actor::SetVtables] [Success] ActorVTable = %llX", ActorVTable);
-			Actor::SetVtables(ActorVTable);
+			Actor::SetVFtables(ActorVTable);
 		}
 
 	}
@@ -213,7 +215,7 @@ auto Hook::init() -> void
 		else
 		{
 			logF("[Mob::SetVtables] [Success] MobVTable = %llX", MobVTable);
-			Mob::SetVtables(MobVTable);
+			Mob::SetVFtables(MobVTable);
 		}
 	}
 
@@ -227,7 +229,7 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[Player::SetVtables] [Success] PlayerVTable = %llX", PlayerVTable);
-			Player::SetVtables(PlayerVTable);
+			Player::SetVFtables(PlayerVTable);
 		}
 	}
 
@@ -243,7 +245,7 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[ServerPlayer::SetVtables] [Success] ServerPlayerVTable = %llX", ServerPlayerVTable);
-			ServerPlayer::SetVtables(ServerPlayerVTable);
+			ServerPlayer::SetVFtables(ServerPlayerVTable);
 		}
 	}
 
@@ -311,7 +313,8 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 	auto thisp = reinterpret_cast<INT64>(_this);
 	if (thisp != p) {
 		p = thisp;
-		logF("Player_Tick localplayer ptr = %llX，Clientinstance ptr = %llX", thisp, instance);
+		logF("Player_Tick localplayer ptr = %llX，localplayerVT = %llX", thisp, *(INT64*)thisp);
+		logF("Player_Tick Clientinstance ptr = %llX", instance);
 	}
 	_this->onLocalPlayerTick();
 	
@@ -338,4 +341,9 @@ auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* fac
 		_this->destroyBlock(a2, face);
 	}
 	return _this->startDestroyBlock(a2,face,a3,a4);
+}
+
+auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
+	logF("attack Actor ptr= %llX ,VT=%llX, isPlayer = %i", actor, *(void**)actor,actor->isPlayer());
+	return _this->attack(actor);
 }

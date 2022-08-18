@@ -2,18 +2,18 @@
 
 LocalPlayer* LocalPlayer::localPlayer = nullptr;
 
-uintptr_t** LocalPlayer::vTables = nullptr;
+uintptr_t** LocalPlayer::vfTables = nullptr;
 
-auto LocalPlayer::GetVtableFun(int a)->uintptr_t* {
-	return vTables[a];
+auto LocalPlayer::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
 }
 
-auto LocalPlayer::GetVtables()->uintptr_t** {
-	return vTables;
+auto LocalPlayer::GetVFtables()->uintptr_t** {
+	return vfTables;
 }
 
-auto LocalPlayer::SetVtables(uintptr_t** vTable)->void {
-	vTables = vTable;
+auto LocalPlayer::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
 }
 
 

@@ -5,11 +5,11 @@
 class Actor
 {
 protected:
-	static uintptr_t** vTables;
+	static uintptr_t** vfTables;
 public:
-	static auto GetVtableFun(int)->uintptr_t*;
-	static auto GetVtables()->uintptr_t**;
-	static auto SetVtables(uintptr_t** vTables)->void;
+	static auto GetVFtableFun(int)->uintptr_t*;
+	static auto GetVFtables()->uintptr_t**;
+	static auto SetVFtables(uintptr_t** vTables)->void;
 
 public:
 	static int SpeedXOffset;
@@ -27,9 +27,7 @@ public:
 	static int YHitBoxOffset;
 
 public:
-	//虚表函数
-	static uintptr_t* VTable;
-
+	
 
 	/*template <typename TRet, typename... TArgs>
 	inline auto* GetVtablecall(int VtCount) {
@@ -48,7 +46,7 @@ public:
 		return isPlayerCall();
 	}*/
 
-	auto isPlayer() -> bool;
+	auto isPlayerEx() -> bool;
 
 public:
 	auto getSpeed()->vec3_t;
@@ -66,4 +64,10 @@ public:
 	auto onMoveBBs(vec3_t)->void;
 
 	auto onAllActorTick()->void;
+
+public:
+	//虚表函数
+
+
+	auto isPlayer()->bool;										/*99*/
 };

@@ -1,15 +1,15 @@
 #include "Mob.h"
 
-uintptr_t** Mob::vTables = nullptr;
+uintptr_t** Mob::vfTables = nullptr;
 
-auto Mob::GetVtableFun(int a)->uintptr_t* {
-	return vTables[a];
+auto Mob::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
 }
 
-auto Mob::GetVtables()->uintptr_t** {
-	return vTables;
+auto Mob::GetVFtables()->uintptr_t** {
+	return vfTables;
 }
 
-auto Mob::SetVtables(uintptr_t** vTable)->void {
-	vTables = vTable;
+auto Mob::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
 }

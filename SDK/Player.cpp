@@ -7,18 +7,18 @@ int Player::YView2 = 0;
 int Player::XView2 = 0;
 
 
-uintptr_t** Player::vTables = nullptr;
+uintptr_t** Player::vfTables = nullptr;
 
-auto Player::GetVtableFun(int a)->uintptr_t* {
-	return vTables[a];
+auto Player::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
 }
 
-auto Player::GetVtables()->uintptr_t** {
-	return vTables;
+auto Player::GetVFtables()->uintptr_t** {
+	return vfTables;
 }
 
-auto Player::SetVtables(uintptr_t** vTable)->void {
-	vTables = vTable;
+auto Player::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
 }
 
 

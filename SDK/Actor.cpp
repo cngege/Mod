@@ -18,18 +18,18 @@ int Actor::XHitBoxOffset = 0;
 int Actor::YHitBoxOffset = 0;
 
 
-uintptr_t** Actor::vTables = nullptr;
+uintptr_t** Actor::vfTables = nullptr;
 
-auto Actor::GetVtableFun(int a)->uintptr_t* {
-	return vTables[a];
+auto Actor::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
 }
 
-auto Actor::GetVtables()->uintptr_t** {
-	return vTables;
+auto Actor::GetVFtables()->uintptr_t** {
+	return vfTables;
 }
 
-auto Actor::SetVtables(uintptr_t** vTable)->void {
-	vTables = vTable;
+auto Actor::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
 }
 
 
@@ -114,11 +114,11 @@ auto Actor::setHitBox(vec2_t hb)->void {
 	*(float*)(this + YHitBoxOffset) = hb.y;
 }
 
-auto Actor::isPlayer()->bool {
+auto Actor::isPlayerEx()->bool {
 	if (!this) {
 		return false;
 	}
-	if (*(void**)this == *(void**)LocalPlayer::GetLocalPlayer() || *(void**)this == ServerPlayer::GetVtables()) {
+	if (*(void**)this == *(void**)LocalPlayer::GetLocalPlayer() || *(void**)this == (void*)Player::GetVFtables()) {
 		return true;
 	}
 	return false;
@@ -136,14 +136,21 @@ auto Actor::onMoveBBs(vec3_t p)->void {
 
 auto Actor::onAllActorTick()->void {
 	//判断是否是玩家 大写锁定
-	//if (!this->isPlayer())
-	//	return;
-	if (GETKEYSTATE(VK_CAPITAL)) {
-		if (this != (Actor*)LocalPlayer::GetLocalPlayer()) {
-			this->setHitBox(vec2_t(6.0f, 6.0f));
+	if (this->isPlayer()) {
+		if (GETKEYSTATE(VK_CAPITAL)) {
+			if (this != (Actor*)LocalPlayer::GetLocalPlayer()) {
+				this->setHitBox(vec2_t(6.0f, 6.0f));
+			}
+		}
+		else {
+			this->resetHitBox();
 		}
 	}
-	else {
-		this->resetHitBox();
-	}
+}
+
+
+// 虚表函数
+auto Actor::isPlayer()->bool {
+	using Fn = bool(__fastcall*)(Actor*);
+	return reinterpret_cast<Fn>(vfTables[99])(this);
 }
