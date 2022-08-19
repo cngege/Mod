@@ -10,10 +10,6 @@
 #include "windows.h"
 #include "../Utils/Logger.h"
 
-using namespace std;
-extern "C" MATHLIBRARY_API BOOL InstallHook();
-extern "C" MATHLIBRARY_API BOOL UninstallHook();
-
 class KeyBoard
 {
 public:
@@ -64,6 +60,18 @@ auto KeyBoard::init(HMODULE hModule)->void {
 		// 钩子安装失败
 		logF("[SetWindowsHookEx] Install Hook Fail");
 	}
+
+	//MSG msg;
+	//while (1)
+	//{
+	//	if (PeekMessageA(&msg, 0, 0, 0, PM_REMOVE))
+	//	{
+	//		TranslateMessage(&msg);
+	//		DispatchMessageW(&msg);
+	//	}
+	//	else
+	//		Sleep(0);    //避免CPU全负载运行
+	//}
 }
 
 auto KeyBoard::exit(HMODULE hModule)->void {
