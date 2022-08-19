@@ -12,4 +12,13 @@ class ServerPlayer : public Player
 //	static auto GetVFtables()->uintptr_t**;
 //	static auto SetVFtables(uintptr_t** vTables)->void;
 
+	//Ðéº¯Êý
+public:
+	static uintptr_t* tickWorldCall;							/*374*/
+
+	auto tickWorld(class struck* Tick)->void*;
+
+public:
+	auto onAllPlayerTick()->void;
+
 };

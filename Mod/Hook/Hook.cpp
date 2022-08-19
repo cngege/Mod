@@ -246,6 +246,10 @@ auto Hook::init() -> void
 		else {
 			logF("[ServerPlayer::SetVtables] [Success] ServerPlayerVTable = %llX", ServerPlayerVTable);
 			ServerPlayer::SetVFtables(ServerPlayerVTable);
+
+			//虚表Hook
+			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(374), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
+
 		}
 	}
 
@@ -346,4 +350,9 @@ auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* fac
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX ,VT=%llX, isPlayer = %i", actor, *(void**)actor,actor->isPlayer());
 	return _this->attack(actor);
+}
+
+auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, class struck* tick)->void* {
+	_this->onAllPlayerTick();
+	return _this->tickWorld(tick);
 }
