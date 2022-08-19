@@ -21,6 +21,12 @@
 //#define logF(x, ...) Logger::WriteLogFileF(XorString(x), __VA_ARGS__)
 #endif
 
+#ifndef logBF
+//#define logF(x) Logger::WriteLogFileF(XorString(x))
+#define logBF(x, ...) Logger::WriteBigLogFileF(2000, x, __VA_ARGS__)
+//#define logF(x, ...) Logger::WriteLogFileF(XorString(x), __VA_ARGS__)
+#endif
+
 struct TextForPrint {
 	char time[20];
 	char text[100];
