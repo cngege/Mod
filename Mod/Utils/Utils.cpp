@@ -159,12 +159,14 @@ uintptr_t Utils::FindSignatureModule(const char* szModule, const char* szSignatu
 
 	for (uintptr_t pCur = rangeStart; pCur < rangeEnd; pCur++) {
 		if (!*pattern)
+			logF("[Utils::FindSignatureModule] Find MemCode result=%llX , MemCode=%s", firstMatch, szSignature);
 			return firstMatch;
 
 		while (*(PBYTE)pattern == ' ')
 			pattern++;
 
 		if (!*pattern)
+			logF("[Utils::FindSignatureModule] Find MemCode result=%llX , MemCode=%s", firstMatch, szSignature);
 			return firstMatch;
 
 		if (oldPat != pattern) {
@@ -178,6 +180,7 @@ uintptr_t Utils::FindSignatureModule(const char* szModule, const char* szSignatu
 				firstMatch = pCur;
 
 			if (!pattern[2] || !pattern[1])
+				logF("[Utils::FindSignatureModule] Find MemCode result=%llX , MemCode=%s", firstMatch, szSignature);
 				return firstMatch;
 
 			//if (*(PWORD)pattern == '\?\?' || *(PBYTE)pattern != '\?')
@@ -208,6 +211,7 @@ uintptr_t Utils::FindSignatureModule(const char* szModule, const char* szSignatu
 #pragma clang diagnostic pop
 #endif
 #endif
+	logF("[Utils::FindSignatureModule] Find MemCode result=%llX , MemCode=%s", 0u, szSignature);
 	return 0u;
 }
 
