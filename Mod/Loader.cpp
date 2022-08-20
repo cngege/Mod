@@ -42,8 +42,6 @@ void Loader::exit(void* hmoudle)
 	}
 	Game::exit();
 
-	KeyBoard::exit((HMODULE)hmoudle);
-
 	logF("Removing logger");
 	Logger::Disable();
 	//关闭被注入程序的时候会调用

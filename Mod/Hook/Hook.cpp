@@ -1,6 +1,7 @@
 ﻿#include "Hook.h"
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
+#include "../Utils/Game.h"
 #include "Player.h"
 #include "ServerPlayer.h"
 #include "LocalPlayer.h"
@@ -288,7 +289,7 @@ auto Hook::exit() -> void {
 auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 {
 	//长按CTRL
-	if (!KEY_DOWN(VK_CONTROL)) {
+	if (!Game::IsKeyDown(VK_CONTROL)) {
 		playercall(player, kb);
 	}
 }
@@ -360,7 +361,7 @@ auto Hook::Actor_moveBBs(Actor* _this, vec3_t* v3)->void* {
 
 //虚表Hook
 auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool {
-	if (KEY_DOWN(VK_SHIFT) == 1 && KEY_DOWN(VK_CONTROL) == 1) {
+	if (Game::IsKeyDown(VK_SHIFT) && Game::IsKeyDown(VK_CONTROL)) {
 		_this->destroyBlock(a2, face);
 	}
 	return _this->startDestroyBlock(a2,face,a3,a4);

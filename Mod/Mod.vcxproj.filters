@@ -57,9 +57,6 @@
     <ClInclude Include="..\SDK\Player.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Hook\KeyBoard.hpp">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\SDK\LocalPlayer.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
