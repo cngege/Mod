@@ -2,6 +2,7 @@
 #include "LocalPlayer.h"
 #include "ServerPlayer.h"
 #include "../Mod/Utils/Utils.h"
+#include "../Mod/Utils/Game.h"
 
 int Actor::SpeedXOffset = 0;
 int Actor::SpeedYOffset = 0;
@@ -146,6 +147,7 @@ auto Actor::onAllActorTick()->void {
 	//判断是否是玩家 大写锁定
 	if (this->isPlayerEx()) {
 		if (GETKEYSTATE(VK_CAPITAL)) {
+		//if (Game::IsKeyDown(VK_CAPITAL)) {
 			this->setHitBox(vec2_t(6.0f, 6.0f));
 		}
 		else {

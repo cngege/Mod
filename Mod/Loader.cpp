@@ -33,7 +33,7 @@ void Loader::init(void* hmoudle)
 	}
 	
 	//捕获按键
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)KeyBoard::init, hmoudle, NULL, NULL);
+	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)KeyBoard::init, hmoudle, NULL, NULL);
 
 }
 

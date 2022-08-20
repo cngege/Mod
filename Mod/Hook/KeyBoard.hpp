@@ -9,6 +9,7 @@
 #include <iostream>
 #include "windows.h"
 #include "../Utils/Logger.h"
+#include "../Utils/Utils.h"
 
 class KeyBoard
 {
@@ -37,18 +38,20 @@ LRESULT CALLBACK KeyboardProc(int code, WPARAM wParam, LPARAM lParam) {
 		// 如果代码小于零，则挂钩过程必须将消息传递给CallNextHookEx函数，而无需进一步处理，并且应返回CallNextHookEx返回的值。此参数可以是下列值之一。(来自官网手册)
 		return CallNextHookEx(KeyBoard::g_hHook, code, wParam, lParam);
 	}
-	if (lParam & 0x40000000) {
-		// 【第30位的含义】键状态。如果在发送消息之前按下了键，则值为1。如果键被释放，则为0。(来自官网手册)
-		// 我们只考虑被按下后松开的状态
-		return CallNextHookEx(KeyBoard::g_hHook, code, wParam, lParam);
+	KBDLLHOOKSTRUCT* ks = (KBDLLHOOKSTRUCT*)lParam;		// 包含低级键盘输入事件信息
+
+	/*
+	typedef struct tagKBDLLHOOKSTRUCT {
+		DWORD     vkCode;		// 按键代号
+		DWORD     scanCode;		// 硬件扫描代号，同 vkCode 也可以作为按键的代号。
+		DWORD     flags;		// 事件类型，一般按键按下为 0 抬起为 128。
+		DWORD     time;			// 消息时间戳
+		ULONG_PTR dwExtraInfo;	// 消息附加信息，一般为 0。
+	}KBDLLHOOKSTRUCT,*LPKBDLLHOOKSTRUCT,*PKBDLLHOOKSTRUCT;
+	*/
+	if (ks->flags == 0) {
+		logF("Key Down: %s", KeyNames[ks->vkCode]);
 	}
-	char szKeyName[200];
-	// 【参数1】LPARAM类型，代表键状态
-	// 【参数2】缓冲区
-	// 【参数3】缓冲区大小
-	GetKeyNameText(lParam, (LPWSTR)szKeyName, 100);
-	
-	logF("[KeyBoard] KeyDown: %s", szKeyName);
 
 	// 将钩子往下传
 	return CallNextHookEx(KeyBoard::g_hHook, code, wParam, lParam);
@@ -61,17 +64,31 @@ auto KeyBoard::init(HMODULE hModule)->void {
 		logF("[SetWindowsHookEx] Install Hook Fail");
 	}
 
-	//MSG msg;
-	//while (1)
-	//{
-	//	if (PeekMessageA(&msg, 0, 0, 0, PM_REMOVE))
-	//	{
-	//		TranslateMessage(&msg);
-	//		DispatchMessageW(&msg);
-	//	}
-	//	else
-	//		Sleep(0);    //避免CPU全负载运行
-	//}
+	MSG msg;
+	while (1)
+	{
+		if (!Game::ModState) {
+			//break;
+		}
+		// 如果消息队列中有消息
+		if (PeekMessageA(
+			&msg,		// MSG 接收这个消息
+			FindWindowA(NULL, "ABC"),		// 检测消息的窗口句柄，NULL：检索当前线程所有窗口消息
+			NULL,		// 检查消息范围中第一个消息的值，NULL：检查所有消息(必须和下面的同时为NULL)
+			NULL,		// 检查消息范围中最后一个消息的值，NULL：检查所有消息(必须和上面的同时为NULL)
+			PM_REMOVE	// 处理消息的方式，PM_REMOVE：处理后将消息从队列中删除
+		)) {
+			// 把按键消息传递给字符消息
+			TranslateMessage(&msg);
+
+			// 将消息分派给窗口程序
+			DispatchMessageW(&msg);
+		}
+		else
+			Sleep(0);    //避免CPU全负载运行
+	}
+	// 删除钩子
+	UnhookWindowsHookEx(KeyBoard::g_hHook);
 }
 
 auto KeyBoard::exit(HMODULE hModule)->void {

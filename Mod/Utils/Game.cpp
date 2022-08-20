@@ -92,3 +92,34 @@ auto Game::exit() -> void
 
 	Game::ModState = false;
 }
+
+
+
+auto Game::IsKeyDown(int key)->bool {
+	static uintptr_t keyMap = 0;
+	if (keyMap == 0x00) {
+		auto sigOffset = FindSignature("4C 8D 05 ? ? ? ? 89 54 24 ? 88 4C 24");
+		if (sigOffset != 0x0) {
+			int offset = *reinterpret_cast<int*>((sigOffset + 3));      // Get Offset from code
+			keyMap = sigOffset + offset + /*length of instruction*/ 7;  // Offset is relative
+			logF("KeyMap: %llX", keyMap);
+		}
+	}
+	// All keys are mapped as bools, though aligned as ints (4 byte)
+	// key0 00 00 00 key1 00 00 00 key2 00 00 00 ...
+	return *reinterpret_cast<bool*>(keyMap + ((uintptr_t)key * 0x4));
+}
+
+/// <summary>
+/// 判断一个按键是否按下
+/// </summary>
+/// <param name="key"></param>
+/// <returns>如果判断时已经按下，则等到松开时再返回true</returns>
+bool Game::IsKeyPressed(int key) {
+	if (IsKeyDown(key)) {
+		while (IsKeyDown(key))
+			Sleep(1);
+		return true;
+	}
+	return false;
+}
