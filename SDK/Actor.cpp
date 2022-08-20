@@ -123,10 +123,7 @@ auto Actor::isPlayerEx()->bool {
 	if (!this) {
 		return false;
 	}
-	if (*(void**)this == *(void**)LocalPlayer::GetLocalPlayer() || *(void**)this == (void*)Player::GetVFtables()) {
-		return true;
-	}
-	return false;
+	return this->getEntityTypeId() == ActorType::player;
 }
 
 
@@ -143,12 +140,13 @@ auto Actor::onAllActorTick()->void {
 	if (LocalPlayer::GetLocalPlayer() == nullptr) {
 		return;
 	}
+	if (this == (Actor*)LocalPlayer::GetLocalPlayer()) {
+		return;
+	}
 	//判断是否是玩家 大写锁定
-	if (1 || this->isPlayer()) {
+	if (this->isPlayerEx()) {
 		if (GETKEYSTATE(VK_CAPITAL)) {
-			if (this != (Actor*)LocalPlayer::GetLocalPlayer()) {
-				this->setHitBox(vec2_t(6.0f, 6.0f));
-			}
+			this->setHitBox(vec2_t(6.0f, 6.0f));
 		}
 		else {
 			this->resetHitBox();
@@ -158,17 +156,18 @@ auto Actor::onAllActorTick()->void {
 
 
 // 虚表函数
+auto Actor::getPosition()->vec3_t* {
+	return GetVFtableFun<vec3_t*, Actor*>(22)(this);
+}
+
+auto Actor::getPosPrev()->vec3_t* {
+	return GetVFtableFun<vec3_t*, Actor*>(23)(this);
+}
+
 auto Actor::isPlayer()->bool {
 	return GetVFtableFun<bool, Actor*>(99)(this);
 }
 
-#include "../Mod/Utils/Logger.h"
-
 auto Actor::getEntityTypeId()->int {
-	
-	//logF("Actor::getEntityTypeId  VT->funaddr shound is %llX, bug that is %llX", Utils::getBase() + 0x01A0C4C0, Actor::GetVFtables()[170]);
-	
-	//return reinterpret_cast<int(__fastcall*)(Actor*)>(Utils::getBase() + 0x01A0C4C0)(this);
-	//return *reinterpret_cast<int*>(reinterpret_cast<INT64>(this) + 0x3D8);
 	return GetVFtableFun<unsigned int, Actor*>(170)(this);
 }

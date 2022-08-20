@@ -79,7 +79,8 @@ public:
 	//虚表函数
 
 
-
-	auto isPlayer()->bool;										/*99*/
+	auto getPosition()->vec3_t*;						/*22*/
+	auto getPosPrev()->vec3_t*;							/*23*/
+	auto isPlayer()->bool;								/*99*/
 	auto getEntityTypeId()->int;						/*170*/	//可能是 Player::getEntityTypeId()
 };
