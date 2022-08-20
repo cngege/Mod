@@ -62,14 +62,14 @@ auto Hook::init() -> void
 
 	//玩家击退
 	{
-		const char* mencode = "8B 02 89 81 ? ? 00 00 8B 42 04 89 81 ? ? 00 00 8B 42 08 89 81 ? ? 00 00 C3";
-		playerkb = FindSignature(mencode);
+		const char* memcode = "8B 02 89 81 ? ? 00 00 8B 42 04 89 81 ? ? 00 00 8B 42 08 89 81 ? ? 00 00 C3";
+		playerkb = FindSignature(memcode);
 		if (playerkb != 0x00) {
 			Actor::SpeedXOffset = *reinterpret_cast<int*>(playerkb + 4);
 			Actor::SpeedYOffset = *reinterpret_cast<int*>(playerkb + 13);
 			Actor::SpeedZOffset = *reinterpret_cast<int*>(playerkb + 22);
 			MH_CreateHookEx((LPVOID)playerkb, &Hook::PlayerKB, &playercall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", playerkb, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", playerkb, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "playerkb");
@@ -78,11 +78,11 @@ auto Hook::init() -> void
 
 	//clientInstance::Tick
 	{
-		const char* mencode = "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F9 48 8B 01";
-		clientInstanceTick = FindSignature(mencode);
+		const char* memcode = "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F9 48 8B 01";
+		clientInstanceTick = FindSignature(memcode);
 		if (clientInstanceTick != 0x00) {
 			MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", clientInstanceTick, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", clientInstanceTick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "clientInstanceTick");
@@ -93,11 +93,11 @@ auto Hook::init() -> void
 
 	//是否显示坐标 Tick
 	{
-		const char* mencode = "48 83 EC ? 48 8B 49 ? 48 8B 01 FF 90 ? ? ? ? 48 85 C0 74 ? 48 8B 88";
-		is_ShowCoordinatesTick = FindSignature(mencode);
+		const char* memcode = "48 83 EC ? 48 8B 49 ? 48 8B 01 FF 90 ? ? ? ? 48 85 C0 74 ? 48 8B 88";
+		is_ShowCoordinatesTick = FindSignature(memcode);
 		if (is_ShowCoordinatesTick != 0x00) {
 			MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
@@ -106,11 +106,11 @@ auto Hook::init() -> void
 
 	//获取饥饿值的地址的函数  实际上被用来做修改玩家速度
 	{
-		const char* mencode = "4C 8B D1 44 0F B6 CA 49 BB ? ? ? ? ? ? ? ? 48 B8 ? ? ? ? ? ? ? ? 4C 33 C8 8B C2 4D 0F AF CB C1 E8 08 44 0F B6 C0 8B C2 4D 33 C8 C1 E8 10 4D 8B 42 08 4D 0F AF CB 0F B6 C8 4C 33 C9 8B C2 49 8B 4A 30 4D 0F AF CB 48 C1 E8 18 4C 33 C8 4D 0F AF CB 49 23 C9 48 C1 E1 04 49 03 4A 18 48 8B 41 08 49 3B C0 74 27 48 8B 09 3B 50 10 74 0E 48 3B C1 74 1A 48 8B 40 08 3B 50 10 75 F2 48 85 C0 49 0F 44 C0 49 3B C0 74 05 ? ? ? ? C3 48 8D 05 ? ? ? ? C3";
-		getHungerValAddressTick = FindSignature(mencode);
+		const char* memcode = "4C 8B D1 44 0F B6 CA 49 BB ? ? ? ? ? ? ? ? 48 B8 ? ? ? ? ? ? ? ? 4C 33 C8 8B C2 4D 0F AF CB C1 E8 08 44 0F B6 C0 8B C2 4D 33 C8 C1 E8 10 4D 8B 42 08 4D 0F AF CB 0F B6 C8 4C 33 C9 8B C2 49 8B 4A 30 4D 0F AF CB 48 C1 E8 18 4C 33 C8 4D 0F AF CB 49 23 C9 48 C1 E1 04 49 03 4A 18 48 8B 41 08 49 3B C0 74 27 48 8B 09 3B 50 10 74 0E 48 3B C1 74 1A 48 8B 40 08 3B 50 10 75 F2 48 85 C0 49 0F 44 C0 49 3B C0 74 05 ? ? ? ? C3 48 8D 05 ? ? ? ? C3";
+		getHungerValAddressTick = FindSignature(memcode);
 		if (getHungerValAddressTick != 0x00) {
 			MH_CreateHookEx((LPVOID)getHungerValAddressTick, &Hook::GetHungerValAddress_Tick, &getHungerValAddress_Tickcall);
-			logBF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", getHungerValAddressTick, mencode);
+			logBF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", getHungerValAddressTick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "getHungerValAddressTick");
@@ -119,11 +119,11 @@ auto Hook::init() -> void
 
 	//掉落无伤 仅本地有效
 	{
-		const char* mencode = "48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01";
-		noFallDamage_tick = FindSignature(mencode);
+		const char* memcode = "48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01";
+		noFallDamage_tick = FindSignature(memcode);
 		if (noFallDamage_tick != 0x00) {
 			MH_CreateHookEx((LPVOID)noFallDamage_tick, &Hook::NoFallDamage_Tick, &noFallDamage_Tickcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", noFallDamage_tick, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", noFallDamage_tick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
@@ -132,11 +132,11 @@ auto Hook::init() -> void
 
 	// 本地玩家 Tick
 	{
-		const char* mencode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
-		localplayer_getCameraOffset = FindSignature(mencode);
+		const char* memcode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
+		localplayer_getCameraOffset = FindSignature(memcode);
 		if (localplayer_getCameraOffset != 0x00) {
 			MH_CreateHookEx((LPVOID)localplayer_getCameraOffset, &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", localplayer_getCameraOffset, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", localplayer_getCameraOffset, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "player_getCameraOffset");
@@ -145,11 +145,11 @@ auto Hook::init() -> void
 
 	//所有玩家TICK
 	{
-		const char* mencode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2";
-		allActor_Tick = FindSignature(mencode);
+		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2";
+		allActor_Tick = FindSignature(memcode);
 		if (allActor_Tick != 0x00) {
 			MH_CreateHookEx((LPVOID)allActor_Tick, &Hook::AllActor_Tick, &allActor_Tickcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", allActor_Tick, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", allActor_Tick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "allPlayer_Tick");
@@ -158,8 +158,8 @@ auto Hook::init() -> void
 
 	//生物移动消息
 	{
-		const char* mencode = "48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81";
-		actor_moveBBs = FindSignature(mencode);
+		const char* memcode = "48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81";
+		actor_moveBBs = FindSignature(memcode);
 		if (actor_moveBBs != 0x00) {
 			auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 21);
 			Actor::PosXOffset1 = Xoffset;
@@ -172,24 +172,30 @@ auto Hook::init() -> void
 			Actor::XHitBoxOffset = Xoffset + 24;
 			Actor::YHitBoxOffset = Xoffset + 28;
 			MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", actor_moveBBs, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", actor_moveBBs, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "actor_moveBBs");
 		}
 	}
 
+	//KeyUpdate
+	{
+		//const char* memcode = "48 83 EC ? 0F B6 C1 4C 8D 05 ? ? ? ? 89 54 24";
+
+	}
+
 	//GameMode虚表及相关Hook
 	{
-		const char* mencode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
-		auto GameModeVTable_sigOffset = FindSignature(mencode);
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
+		auto GameModeVTable_sigOffset = FindSignature(memcode);
 		auto offsize = *reinterpret_cast<int*>(GameModeVTable_sigOffset + 3);
 		auto GameModeVTables = reinterpret_cast<uintptr_t**>(GameModeVTable_sigOffset + offsize + 7);
 		if (GameModeVTable_sigOffset == 0x00 || offsize == 0x00) {
 			logF("[GameMode::SetVtables] [Error]Find GameMode GameModeVTable_sigOffset is no working!!!");
 		}
 		else {
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", GameModeVTable_sigOffset, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", GameModeVTable_sigOffset, memcode);
 			logF("[GameMode::SetVtables] [Success] GameModeVTable = %llX", GameModeVTables);
 			GameMode::SetVFtables(GameModeVTables);
 			//Hook GameMode_startDestroyBlock
@@ -202,8 +208,8 @@ auto Hook::init() -> void
 
 	//Actor 虚表及相关Hook
 	{
-		const char* mencode = "48 8D 05 ? ? ? ? 48 89 01 49 8B 00 48 89 41 ? 41 8B 40 ? 89 41";
-		auto ActorVTable_sigOffset = FindSignature(mencode);
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 49 8B 00 48 89 41 ? 41 8B 40 ? 89 41";
+		auto ActorVTable_sigOffset = FindSignature(memcode);
 		auto offsize = *reinterpret_cast<int*>(ActorVTable_sigOffset + 3);
 		auto ActorVTable = reinterpret_cast<uintptr_t**>(ActorVTable_sigOffset + offsize + 7);
 		if (ActorVTable_sigOffset == 0x00 || offsize == 0x00) {
@@ -211,7 +217,7 @@ auto Hook::init() -> void
 		}
 		else
 		{
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ActorVTable_sigOffset, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ActorVTable_sigOffset, memcode);
 			logF("[Actor::SetVtables] [Success] ActorVTable = %llX", ActorVTable);
 			Actor::SetVFtables(ActorVTable);
 		}
@@ -220,8 +226,8 @@ auto Hook::init() -> void
 
 	// Mob 虚表及相关Hook
 	{
-		const char* mencode = "40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05";
-		auto MobVTable_sigOffset = FindSignature(mencode); //+31
+		const char* memcode = "40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05";
+		auto MobVTable_sigOffset = FindSignature(memcode); //+31
 		auto offsize = *reinterpret_cast<int*>(MobVTable_sigOffset + 31);
 		auto MobVTable = reinterpret_cast<uintptr_t**>(MobVTable_sigOffset + offsize + 35);
 		if (MobVTable_sigOffset == 0x00 || offsize == 0x00) {
@@ -229,7 +235,7 @@ auto Hook::init() -> void
 		}
 		else
 		{
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", MobVTable_sigOffset, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", MobVTable_sigOffset, memcode);
 			logF("[Mob::SetVtables] [Success] MobVTable = %llX", MobVTable);
 			Mob::SetVFtables(MobVTable);
 		}
@@ -237,15 +243,15 @@ auto Hook::init() -> void
 
 	//Player 虚表及相关Hook
 	{
-		const char* mencode = "48 8D 05 ? ? ? ? 48 89 07 44 89 AF ? ? ? ? 44 88 AF ? ? ? ? 44 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 66 44 89 AF";
-		auto PlayerVTable_sigOffset = FindSignature(mencode);
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 44 89 AF ? ? ? ? 44 88 AF ? ? ? ? 44 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 66 44 89 AF";
+		auto PlayerVTable_sigOffset = FindSignature(memcode);
 		auto offsize = *reinterpret_cast<int*>(PlayerVTable_sigOffset + 3);
 		auto PlayerVTable = reinterpret_cast<uintptr_t**>(PlayerVTable_sigOffset + offsize + 7);
 		if (PlayerVTable_sigOffset == 0x00 || offsize == 0x00) {
 			logF("[Player::SetVtables] [Error]Find Player PlayerVTable_sigOffset is no working!!!");
 		}
 		else {
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", PlayerVTable_sigOffset, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", PlayerVTable_sigOffset, memcode);
 			logF("[Player::SetVtables] [Success] PlayerVTable = %llX", PlayerVTable);
 			Player::SetVFtables(PlayerVTable);
 		}
@@ -255,15 +261,15 @@ auto Hook::init() -> void
 	//ServerPlayer 虚表及相关Hook
 	{
 		//48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B
-		const char* mencode = "48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B";
-		auto ServerPlayerVTable_sigOffset = FindSignature(mencode);
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B";
+		auto ServerPlayerVTable_sigOffset = FindSignature(memcode);
 		auto offsize = *reinterpret_cast<int*>(ServerPlayerVTable_sigOffset + 3);
 		auto ServerPlayerVTable = reinterpret_cast<uintptr_t**>(ServerPlayerVTable_sigOffset + offsize + 7);
 		if (ServerPlayerVTable_sigOffset == 0x00 || offsize == 0x00) {
 			logF("[ServerPlayer::SetVtables] [Error]Find ServerPlayer ServerPlayerVTable_sigOffset is no working!!!");
 		}
 		else {
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ServerPlayerVTable_sigOffset, mencode);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ServerPlayerVTable_sigOffset, memcode);
 			logF("[ServerPlayer::SetVtables] [Success] ServerPlayerVTable = %llX", ServerPlayerVTable);
 			ServerPlayer::SetVFtables(ServerPlayerVTable);
 
