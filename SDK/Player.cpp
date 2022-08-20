@@ -7,24 +7,24 @@ int Player::YView2 = 0;
 int Player::XView2 = 0;
 
 
-//uintptr_t** Player::vfTables = nullptr;
-//
-//template <typename TRet, typename... TArgs>
-//auto Player::GetVFtableFun(int a)->auto* {
-//	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
-//}
-//
-//auto Player::GetVFtableFun(int a)->uintptr_t* {
-//	return vfTables[a];
-//}
-//
-//auto Player::GetVFtables()->uintptr_t** {
-//	return vfTables;
-//}
-//
-//auto Player::SetVFtables(uintptr_t** vfTable)->void {
-//	vfTables = vfTable;
-//}
+uintptr_t** Player::vfTables = nullptr;
+
+template <typename TRet, typename... TArgs>
+auto Player::GetVFtableFun(int a)->auto* {
+	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
+}
+
+auto Player::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
+}
+
+auto Player::GetVFtables()->uintptr_t** {
+	return vfTables;
+}
+
+auto Player::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
+}
 
 
 auto Player::getViewYX()->const vec2_t {

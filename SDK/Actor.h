@@ -1,6 +1,14 @@
 ﻿#pragma once
 #include "..\Mod\Utils\HMath.h"
 
+enum ActorType {
+	player = 1,
+	iron_golem = 788,
+	panda = 9477,
+	parrot = 21278,
+	villager = 16778099
+};
+
 
 class Actor
 {
@@ -71,5 +79,7 @@ public:
 	//虚表函数
 
 
+
 	auto isPlayer()->bool;										/*99*/
+	auto getEntityTypeId()->int;						/*170*/	//可能是 Player::getEntityTypeId()
 };

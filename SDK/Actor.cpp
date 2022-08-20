@@ -161,3 +161,14 @@ auto Actor::onAllActorTick()->void {
 auto Actor::isPlayer()->bool {
 	return GetVFtableFun<bool, Actor*>(99)(this);
 }
+
+#include "../Mod/Utils/Logger.h"
+
+auto Actor::getEntityTypeId()->int {
+	
+	//logF("Actor::getEntityTypeId  VT->funaddr shound is %llX, bug that is %llX", Utils::getBase() + 0x01A0C4C0, Actor::GetVFtables()[170]);
+	
+	//return reinterpret_cast<int(__fastcall*)(Actor*)>(Utils::getBase() + 0x01A0C4C0)(this);
+	//return *reinterpret_cast<int*>(reinterpret_cast<INT64>(this) + 0x3D8);
+	return GetVFtableFun<unsigned int, Actor*>(170)(this);
+}
