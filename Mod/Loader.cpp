@@ -5,8 +5,6 @@
 #include "Utils/Utils.h"
 #include "Player.h"
 
-#include "Hook/KeyBoard.hpp"
-
 int hookret;
 //C2 A9 4D 6F 6A 61 6E 67 20 41 42 00 00 00 00 00 0B 00 00 00 00 00 00 00 0F 00 00 00 00 00 00 00 C2 A9 4D 6F 6A 61 6E 67 20 41 42 00  +32
 
@@ -32,8 +30,6 @@ void Loader::init(void* hmoudle)
 		logF("MH_EnableHook Error");
 	}
 	
-	//捕获按键
-	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)KeyBoard::init, hmoudle, NULL, NULL);
 
 }
 
