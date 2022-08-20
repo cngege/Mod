@@ -115,11 +115,16 @@ auto Game::IsKeyDown(int key)->bool {
 /// </summary>
 /// <param name="key"></param>
 /// <returns>如果判断时已经按下，则等到松开时再返回true</returns>
-bool Game::IsKeyPressed(int key) {
+auto Game::IsKeyPressed(int key)->bool {
 	if (IsKeyDown(key)) {
 		while (IsKeyDown(key))
 			Sleep(1);
 		return true;
 	}
 	return false;
+}
+
+
+auto Game::KeyUpdate(int key, bool isdown)->void {
+	//logF("Key: %s, isdown: %i", KeyNames[key], isdown);
 }

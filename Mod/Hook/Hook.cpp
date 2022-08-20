@@ -56,6 +56,10 @@ using Actor_moveBBs = void* (__fastcall*)(Actor*, vec3_t*);
 Actor_moveBBs actor_moveBBscall;
 uintptr_t actor_moveBBs;
 
+using KeyUpdate = void* (__fastcall*)(__int64 key, int isdown);
+KeyUpdate keyupdatecall;
+uintptr_t keyupdate;
+
 auto Hook::init() -> void
 {
 	logF("Hook::init is start runner……");
@@ -181,8 +185,15 @@ auto Hook::init() -> void
 
 	//KeyUpdate
 	{
-		//const char* memcode = "48 83 EC ? 0F B6 C1 4C 8D 05 ? ? ? ? 89 54 24";
-
+		const char* memcode = "48 83 EC ? 0F B6 C1 4C 8D 05 ? ? ? ? 89 54 24";
+		keyupdate = FindSignature(memcode);
+		if (keyupdate != 0x00) {
+			MH_CreateHookEx((LPVOID)keyupdate, &Hook::KeyUpdate, &keyupdatecall);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", keyupdate, memcode);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "actor_moveBBs");
+		}
 	}
 
 	//GameMode虚表及相关Hook
@@ -362,6 +373,11 @@ auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 auto Hook::Actor_moveBBs(Actor* _this, vec3_t* v3)->void* {
 	_this->onMoveBBs(*v3);
 	return actor_moveBBscall(_this, v3);
+}
+
+auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
+	Game::KeyUpdate((int)key, isdown == 1);
+	return keyupdatecall(key, isdown);
 }
 
 

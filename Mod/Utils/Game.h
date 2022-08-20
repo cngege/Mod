@@ -12,4 +12,6 @@ public:
 public:
 	static auto IsKeyDown(int key)->bool;
 	static auto IsKeyPressed(int key)->bool;
+
+	static auto KeyUpdate(int, bool)->void;
 };

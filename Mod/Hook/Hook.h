@@ -22,6 +22,7 @@ public:
 	static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
 	static auto AllActor_Tick(class Actor*, float*, float)->float*;
 	static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
+	static auto KeyUpdate(__int64, int)->void*;
 	
 public:
 	//虚表Hook
