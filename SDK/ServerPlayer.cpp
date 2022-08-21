@@ -26,18 +26,7 @@ auto ServerPlayer::SetVFtables(uintptr_t** vfTable)->void {
 uintptr_t* ServerPlayer::tickWorldCall = nullptr;
 
 auto ServerPlayer::onAllPlayerTick()->void {
-	return;
-	//判断是否是玩家 大写锁定
-	if (1 || this->isPlayer()) {
-		if (GETKEYSTATE(VK_CAPITAL)) {
-			if (this != (Actor*)LocalPlayer::GetLocalPlayer()) {
-				this->setHitBox(vec2_t(6.0f, 6.0f));
-			}
-		}
-		else {
-			this->resetHitBox();
-		}
-	}
+	
 }
 
 

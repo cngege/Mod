@@ -5,6 +5,7 @@ class Game
 public:
 	static float* ArmsLength;
 	static bool ModState;
+	static class LocalPlayer* localplayer;
 private:
 	static class ModuleManager* modmag;
 public:

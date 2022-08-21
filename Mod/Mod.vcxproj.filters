@@ -90,6 +90,9 @@
     <ClInclude Include="Modules\Modules\HitBox.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Modules\NoKnockback.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -144,6 +147,9 @@
       <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="Modules\Modules\HitBox.cpp">
+      <Filter>Modules\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Modules\NoKnockback.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
   </ItemGroup>

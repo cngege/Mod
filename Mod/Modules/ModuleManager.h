@@ -19,6 +19,8 @@ public:
 	auto onTick(class GameMode*)->void;
 	auto onAttack(class Actor*)->bool;							// 返回值可以拦截该事件
 	auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool;  // 返回值可以拦截该事件
+	auto onActorTick(class Actor*)->void;
+	auto onLocalPlayerTick(class LocalPlayer*)->void;
 };
 
 template <typename TRet>

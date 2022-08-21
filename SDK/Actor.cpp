@@ -137,24 +137,6 @@ auto Actor::onMoveBBs(vec3_t p)->void {
 
 }
 
-auto Actor::onAllActorTick()->void {
-	if (LocalPlayer::GetLocalPlayer() == nullptr) {
-		return;
-	}
-	if (this == (Actor*)LocalPlayer::GetLocalPlayer()) {
-		return;
-	}
-	//判断是否是玩家 大写锁定
-	if (this->isPlayerEx()) {
-		if (GETKEYSTATE(VK_CAPITAL)) {
-			this->setHitBox(vec2_t(6.0f, 6.0f));
-		}
-		else {
-			this->resetHitBox();
-		}
-	}
-}
-
 
 // 虚表函数
 auto Actor::getPosition()->vec3_t* {

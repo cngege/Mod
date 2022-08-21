@@ -10,6 +10,14 @@ Module::~Module() {
 
 }
 
+auto Module::SetKeyMode(KeyMode km)->void {
+	this->km = km;
+}
+
+auto Module::GetKeyMode()->KeyMode {
+	return this->km;
+}
+
 auto Module::getKeybind()->int {
 	return this->keybind;
 }
@@ -52,6 +60,10 @@ auto Module::onKeyUpdate(int key, bool isenabled)->void {
 
 }
 
+auto Module::onTrigger()->void {
+
+}
+
 auto Module::onEnable()->void {
 
 }
@@ -66,4 +78,12 @@ auto Module::onAttack(Actor* actor)->bool {
 
 auto Module::onKnockback(LocalPlayer* lp, vec3_t* v3)->bool {
 	return true;
+}
+
+auto Module::onActorTick(Actor* actor)->void {
+
+}
+
+auto Module::onLocalPlayerTick(LocalPlayer* lp)->void {
+
 }

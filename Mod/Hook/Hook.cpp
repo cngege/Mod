@@ -9,6 +9,7 @@
 #include "GameMode.h"
 
 #include "../Modules/ModuleManager.h"
+#include "../Modules/Modules/HitBox.h"
 #include "../Modules/Modules/InstantDestroy.h"
 
 
@@ -313,6 +314,7 @@ auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 	if (!Game::IsKeyDown(VK_CONTROL)) {
 		playercall(player, kb);
 	}
+	Game::GetModuleManager()->onKnockback((LocalPlayer*)player, kb);
 }
 
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void
@@ -358,18 +360,18 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 	auto thisp = reinterpret_cast<INT64>(_this);
 	if (thisp != p) {
 		p = thisp;
+		Game::localplayer = _this;
 		logF("Player_Tick localplayer ptr = %llX，localplayerVT = %llX", thisp, *(INT64*)thisp);
 		logF("Player_Tick Clientinstance ptr = %llX", instance);
 	}
-	_this->onLocalPlayerTick();
-	
+	Game::GetModuleManager()->onLocalPlayerTick(_this);
 	return localplayer_getCameraOffsetcall(_this);
 }
 
 //一直调用 且每位玩家都调用
 auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
-
-	_this->onAllActorTick();
+	HitBox* idy = Game::GetModuleManager()->GetModule<HitBox*>();
+	idy->onActorTick(_this);
 	return allActor_Tickcall(_this, a1, a2);
 }
 

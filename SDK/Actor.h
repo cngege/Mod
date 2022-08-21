@@ -73,8 +73,6 @@ public:
 public:
 	auto onMoveBBs(vec3_t)->void;
 
-	auto onAllActorTick()->void;
-
 public:
 	//虚表函数
 
