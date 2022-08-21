@@ -81,6 +81,12 @@
     <ClInclude Include="Modules\Module.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\ModuleManager.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\Moudles\InstantDestroy.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -127,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="Modules\Module.cpp">
       <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\ModuleManager.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Moudles\InstantDestroy.cpp">
+      <Filter>Modules\源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include "Hook/Hook.h"
 #include "Utils/Utils.h"
 #include "Player.h"
+#include "Modules/ModuleManager.h"
 
 int hookret;
 //C2 A9 4D 6F 6A 61 6E 67 20 41 42 00 00 00 00 00 0B 00 00 00 00 00 00 00 0F 00 00 00 00 00 00 00 C2 A9 4D 6F 6A 61 6E 67 20 41 42 00  +32
@@ -23,6 +24,7 @@ void Loader::init(void* hmoudle)
 	
 	Game::init();
 	Hook::init();
+	ModuleManager::Init();
 
 	auto enableHook = MH_EnableHook(MH_ALL_HOOKS);
 	logF("MH_EnableHook = %i", enableHook);

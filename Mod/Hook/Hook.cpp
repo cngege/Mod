@@ -8,6 +8,8 @@
 #include "Actor.h"
 #include "GameMode.h"
 
+#include "../Modules/ModuleManager.h"
+
 ClientInstance* instance;
 
 using PlayerKBCALL = void(__fastcall*)(Player*, vec3_t*);
@@ -383,9 +385,10 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 
 //虚表Hook
 auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool {
-	if (Game::IsKeyDown(VK_SHIFT) && Game::IsKeyDown(VK_CONTROL)) {
+	/*if (Game::IsKeyDown(VK_SHIFT) && Game::IsKeyDown(VK_CONTROL)) {
 		_this->destroyBlock(a2, face);
-	}
+	}*/
+	ModuleManager::onStartDestroyBlock(_this, a2, face);
 	return _this->startDestroyBlock(a2,face,a3,a4);
 }
 
