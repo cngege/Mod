@@ -32,10 +32,16 @@ auto GameMode::startDestroyBlock(vec3_ti* Bpos, uint8_t* Face, void* a1,void* a2
 	return reinterpret_cast<Fn>(startDestroyBlockCall)(this, Bpos, Face,a1,a2);
 }
 
+auto GameMode::tick()->void* {
+	using Fn = void*(__fastcall*)(GameMode*);
+	return reinterpret_cast<Fn>(tickCall)(this);
+}
+
 auto GameMode::attack(Actor* actor) ->bool {
 	using Fn = bool(__fastcall*)(GameMode*, Actor*);
 	return reinterpret_cast<Fn>(attackCall)(this, actor);
 }
+
 
 //虚表函数实现
 

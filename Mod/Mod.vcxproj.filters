@@ -22,6 +22,15 @@
     <Filter Include="SDK\源文件">
       <UniqueIdentifier>{b41046b3-a111-41fa-a017-163205d65120}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{2bf9f50f-280b-4ba3-9856-adbdcbb355b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\头文件">
+      <UniqueIdentifier>{052d8fe9-cddc-4b6a-85b0-65dc33713883}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\源文件">
+      <UniqueIdentifier>{be83fe2d-c608-43d9-8d69-48cda829d5d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -69,6 +78,9 @@
     <ClInclude Include="..\SDK\ServerPlayer.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Module.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -112,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="..\SDK\ServerPlayer.cpp">
       <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Module.cpp">
+      <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -14,4 +14,8 @@ public:
 	static auto IsKeyPressed(int key)->bool;
 
 	static auto KeyUpdate(int, bool)->void;
+
+public:
+	//瞬间破坏
+	static auto Cheat_InstantDestroy(bool)->void;
 };
