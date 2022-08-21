@@ -6,5 +6,5 @@ public:
 	NoKnockback();
 
 public:
-	virtual auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool;
+	virtual auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool override;
 };

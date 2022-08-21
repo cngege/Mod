@@ -9,10 +9,8 @@
 float* Game::ArmsLength = nullptr;
 bool Game::ModState = false;
 ModuleManager* Game::modmag = nullptr;
-
 LocalPlayer* Game::localplayer = nullptr;
 
-uintptr_t SpeedDestroyBlock;
 
 auto Game::init() -> void
 {

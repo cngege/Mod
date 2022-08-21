@@ -310,11 +310,10 @@ auto Hook::exit() -> void {
 //无击退效果
 auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 {
-	//长按CTRL
-	if (!Game::IsKeyDown(VK_CONTROL)) {
-		playercall(player, kb);
+	if (!Game::GetModuleManager()->onKnockback((LocalPlayer*)player, kb)) {
+		return;
 	}
-	Game::GetModuleManager()->onKnockback((LocalPlayer*)player, kb);
+	playercall(player, kb);
 }
 
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void

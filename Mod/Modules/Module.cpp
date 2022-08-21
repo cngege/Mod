@@ -1,4 +1,5 @@
 #include "Module.h"
+#include "../Utils/Game.h"
 
 Module::Module(int key, std::string name, std::string info) {
 	this->keybind = key;
@@ -24,6 +25,25 @@ auto Module::getKeybind()->int {
 
 auto Module::setKeybind(int key)->void {
 	this->keybind = key;
+}
+
+auto Module::getcontrolkeysbind()->std::vector<int> {
+	return this->controlkeys;
+}
+
+auto Module::setcontrolkeysbind(std::vector<int> keys)->void{
+	this->controlkeys = keys;
+}
+
+//检查模块要求的功能键是否全都按下
+auto Module::checkcontrolkeys()->bool {
+	bool alldown = true;
+	for (auto key : getcontrolkeysbind()) {
+		if (!Game::IsKeyDown(key)) {
+			alldown = false;
+		}
+	}
+	return alldown;
 }
 
 auto Module::getModuleName()->std::string {

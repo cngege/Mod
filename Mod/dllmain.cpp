@@ -18,7 +18,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         break;
     }
     case DLL_PROCESS_DETACH:
-        Loader::exit(hModule);
+        //Loader::exit(hModule);
         break;
     }
     return TRUE;

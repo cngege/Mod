@@ -19,6 +19,7 @@ public:
 private:
 	bool enabled = false;
 	int keybind = 0x00;
+	std::vector<int> controlkeys = std::vector<int>();		//是否要求功能键也要按下
 	std::string modulename;
 	std::string moduleinfo;
 	KeyMode km = KeyMode::Trigger;
@@ -28,6 +29,9 @@ public:
 public:
 	virtual int getKeybind();
 	virtual void setKeybind(int key);
+	virtual std::vector<int> getcontrolkeysbind();
+	virtual bool checkcontrolkeys();
+	virtual void setcontrolkeysbind(std::vector<int> key);
 	virtual std::string getModuleName();
 	virtual void onTick(class GameMode*);
 	virtual void onKeyUpdate(int key, bool isDown);

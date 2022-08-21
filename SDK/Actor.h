@@ -38,24 +38,6 @@ public:
 
 public:
 	
-
-	/*template <typename TRet, typename... TArgs>
-	inline auto* GetVtablecall(int VtCount) {
-		using Fn = TRet(__fastcall*)(TArgs...);
-		auto Vtaddr = *reinterpret_cast<uintptr_t**>(this);
-		return reinterpret_cast<Fn>(Vtaddr + VtCount);
-	};
-
-
-	auto isPlayer() -> bool {
-		if (!VTable) {
-			VTable = *reinterpret_cast<uintptr_t***>(this);
-		}
-		using FN = bool(__fastcall*)();
-		auto isPlayerCall = reinterpret_cast<FN>(VTable[20]);			//20 - Player::isPlayer() bool
-		return isPlayerCall();
-	}*/
-
 	auto isPlayerEx() -> bool;
 
 public:

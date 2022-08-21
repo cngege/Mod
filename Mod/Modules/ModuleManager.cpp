@@ -2,6 +2,8 @@
 
 #include "Modules/HitBox.h"
 #include "Modules/InstantDestroy.h"
+#include "Modules/NoKnockback.h"
+#include "Modules/Traverse.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -13,7 +15,8 @@ auto ModuleManager::Init()->void {
 
 	moduleList.push_back((Module*)(new HitBox()));
 	moduleList.push_back((Module*)(new InstantDestroy()));
-
+	moduleList.push_back((Module*)(new NoKnockback()));
+	moduleList.push_back((Module*)(new Traverse()));
 	isInit = true;
 }
 
@@ -40,7 +43,7 @@ auto ModuleManager::onKeyUpdate(int key, bool isenable)->void {
 		return;
 	for (auto pMod : moduleList) {
 		auto bindkey = pMod->getKeybind();
-		if (bindkey != 0 && bindkey == key) {
+		if (bindkey != 0 && bindkey == key && pMod->checkcontrolkeys()) {
 			switch (pMod->GetKeyMode())
 			{
 			case Hold:

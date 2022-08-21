@@ -7,14 +7,15 @@
 #include "Modules/ModuleManager.h"
 
 int hookret;
-//C2 A9 4D 6F 6A 61 6E 67 20 41 42 00 00 00 00 00 0B 00 00 00 00 00 00 00 0F 00 00 00 00 00 00 00 C2 A9 4D 6F 6A 61 6E 67 20 41 42 00  +32
+void* Loader::dllHMODULE = nullptr;
+
 
 //在线程
 void Loader::init(void* hmoudle)
 {
 	logF("DLL HMODULE: %llX", hmoudle);
 	logF("Minecraft.Windows.exe base: %llX", Utils::getBase());
-
+	dllHMODULE = hmoudle;
 	hookret = MH_Initialize();
 	if (hookret != MH_OK)
 	{
