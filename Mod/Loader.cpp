@@ -22,9 +22,9 @@ void Loader::init(void* hmoudle)
 		return;
 	}
 	
+
 	Game::init();
 	Hook::init();
-	ModuleManager::Init();
 
 	auto enableHook = MH_EnableHook(MH_ALL_HOOKS);
 	logF("MH_EnableHook = %i", enableHook);

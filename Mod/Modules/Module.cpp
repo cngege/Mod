@@ -67,7 +67,3 @@ auto Module::onAttack(Actor* actor)->bool {
 auto Module::onKnockback(LocalPlayer* lp, vec3_t* v3)->bool {
 	return true;
 }
-
-auto Module::onStartDestroyBlock(GameMode* gm ,vec3_ti* Bpos, uint8_t* Face)->void {
-
-}

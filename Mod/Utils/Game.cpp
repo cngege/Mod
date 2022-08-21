@@ -4,16 +4,23 @@
 #include "Player.h"
 #include "Actor.h"
 #include "GameMode.h"
+#include "../Modules/ModuleManager.h"
 
 float* Game::ArmsLength = nullptr;
 bool Game::ModState = false;
+ModuleManager* Game::modmag = nullptr;
+
 
 uintptr_t SpeedDestroyBlock;
 
 auto Game::init() -> void
 {
-	logF("Game::init is start runner……");
+	logF("[Game::init] is start runner……");
+
 	Game::ModState = true;
+	Game::modmag = new ModuleManager;
+	Game::modmag->Init();
+	logF("[ModuleManager::Disable] now init");
 
 	//定位修改攻击距离
 	{
@@ -78,6 +85,10 @@ auto Game::init() -> void
 
 auto Game::exit() -> void
 {
+	Game::modmag->Disable();
+	delete[] Game::modmag;
+	logF("[ModuleManager::Disable] now Disale");
+
 	//长臂管辖
 	if (ArmsLength != 0x00) {
 		DWORD old_Page;
@@ -89,10 +100,12 @@ auto Game::exit() -> void
 		}
 	}
 
-
 	Game::ModState = false;
 }
 
+auto Game::GetModuleManager()->ModuleManager* {
+	return Game::modmag;
+}
 
 
 auto Game::IsKeyDown(int key)->bool {
@@ -122,9 +135,4 @@ auto Game::IsKeyPressed(int key)->bool {
 		return true;
 	}
 	return false;
-}
-
-
-auto Game::KeyUpdate(int key, bool isdown)->void {
-	//logF("Key: %s, isdown: %i", KeyNames[key], isdown);
 }

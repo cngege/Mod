@@ -27,7 +27,6 @@ public:
 // Ðé±íº¯Êý
 public:
 
-	
 	auto destroyBlock(vec3_ti* Bpos, uint8_t* Face)->bool;			/*2*/
 	
 

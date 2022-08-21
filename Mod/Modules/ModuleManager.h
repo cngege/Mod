@@ -4,20 +4,32 @@
 
 class ModuleManager {
 private:
-	static std::vector<Module*> moduleList;
-	static bool isInit;
+	std::vector<Module*> moduleList = std::vector<Module*>();
+	bool isInit = false;
 public:
-	static auto Init()->void;
-	static auto Disable()->void;
-	static auto IsInitialized()->bool;
+	auto Init()->void;
+	auto Disable()->void;
+	auto IsInitialized()->bool;
 
 	template <typename TRet>
-	static auto GetModule()->TRet*;
+	auto GetModule()->TRet;
 
 public:
-	static auto onKeyUpdate(int, bool)->void;
-	static auto onTick(class GameMode*)->void;
-	static auto onAttack(class Actor*)->bool;							// 返回值可以拦截该事件
-	static auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool; // 返回值可以拦截该事件
-	static auto onStartDestroyBlock(class GameMode* gm, struct vec3_ti* Bpos, uint8_t* Face)->void;
+	auto onKeyUpdate(int, bool)->void;
+	auto onTick(class GameMode*)->void;
+	auto onAttack(class Actor*)->bool;							// 返回值可以拦截该事件
+	auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool;  // 返回值可以拦截该事件
 };
+
+template <typename TRet>
+auto ModuleManager::GetModule()->TRet {
+	if (!IsInitialized())
+		return nullptr;
+	for (auto pMod : moduleList) {
+		if (auto pRet = dynamic_cast<typename std::remove_pointer<TRet>::type*>(pMod)) {
+		//if (auto pRet = dynamic_cast<TRet>(pMod)) {
+			return pRet;
+		}
+	}
+	return nullptr;
+}

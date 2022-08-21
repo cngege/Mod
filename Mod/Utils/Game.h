@@ -5,15 +5,16 @@ class Game
 public:
 	static float* ArmsLength;
 	static bool ModState;
+private:
+	static class ModuleManager* modmag;
 public:
 	static auto init()->void;
 	static auto exit()->void;
+	static auto GetModuleManager()->ModuleManager*;
 
 public:
 	static auto IsKeyDown(int key)->bool;
 	static auto IsKeyPressed(int key)->bool;
-
-	static auto KeyUpdate(int, bool)->void;
 
 public:
 	//瞬间破坏

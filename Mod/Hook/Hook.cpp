@@ -9,6 +9,8 @@
 #include "GameMode.h"
 
 #include "../Modules/ModuleManager.h"
+#include "../Modules/Moudles/InstantDestroy.h"
+
 
 ClientInstance* instance;
 
@@ -378,17 +380,15 @@ auto Hook::Actor_moveBBs(Actor* _this, vec3_t* v3)->void* {
 }
 
 auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
-	Game::KeyUpdate((int)key, isdown == 1);
+	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
 	return keyupdatecall(key, isdown);
 }
 
 
 //虚表Hook
 auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool {
-	/*if (Game::IsKeyDown(VK_SHIFT) && Game::IsKeyDown(VK_CONTROL)) {
-		_this->destroyBlock(a2, face);
-	}*/
-	ModuleManager::onStartDestroyBlock(_this, a2, face);
+	InstantDestroy* idy = Game::GetModuleManager()->GetModule<InstantDestroy*>();
+	idy->onStartDestroyBlock(_this, a2, face);
 	return _this->startDestroyBlock(a2,face,a3,a4);
 }
 
