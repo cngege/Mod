@@ -147,7 +147,6 @@ auto Actor::onAllActorTick()->void {
 	//判断是否是玩家 大写锁定
 	if (this->isPlayerEx()) {
 		if (GETKEYSTATE(VK_CAPITAL)) {
-		//if (Game::IsKeyDown(VK_CAPITAL)) {
 			this->setHitBox(vec2_t(6.0f, 6.0f));
 		}
 		else {

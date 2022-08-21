@@ -190,7 +190,8 @@
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Modules\Module.h" />
     <ClInclude Include="Modules\ModuleManager.h" />
-    <ClInclude Include="Modules\Moudles\InstantDestroy.h" />
+    <ClInclude Include="Modules\Modules\HitBox.h" />
+    <ClInclude Include="Modules\Modules\InstantDestroy.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Utils\Game.h" />
     <ClInclude Include="Utils\Logger.h" />
@@ -209,7 +210,8 @@
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Modules\Module.cpp" />
     <ClCompile Include="Modules\ModuleManager.cpp" />
-    <ClCompile Include="Modules\Moudles\InstantDestroy.cpp" />
+    <ClCompile Include="Modules\Modules\HitBox.cpp" />
+    <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

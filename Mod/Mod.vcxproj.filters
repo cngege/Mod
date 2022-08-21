@@ -84,7 +84,10 @@
     <ClInclude Include="Modules\ModuleManager.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Moudles\InstantDestroy.h">
+    <ClInclude Include="Modules\Modules\InstantDestroy.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\Modules\HitBox.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,7 +140,10 @@
     <ClCompile Include="Modules\ModuleManager.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\Moudles\InstantDestroy.cpp">
+    <ClCompile Include="Modules\Modules\InstantDestroy.cpp">
+      <Filter>Modules\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Modules\HitBox.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
   </ItemGroup>

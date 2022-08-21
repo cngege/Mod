@@ -9,7 +9,7 @@
 #include "GameMode.h"
 
 #include "../Modules/ModuleManager.h"
-#include "../Modules/Moudles/InstantDestroy.h"
+#include "../Modules/Modules/InstantDestroy.h"
 
 
 ClientInstance* instance;

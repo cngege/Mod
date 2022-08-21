@@ -1,6 +1,7 @@
 #include "ModuleManager.h"
 
-#include "Moudles/InstantDestroy.h"
+#include "Modules/HitBox.h"
+#include "Modules/InstantDestroy.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -10,6 +11,7 @@
 auto ModuleManager::Init()->void {
 	if (isInit) return;
 
+	moduleList.push_back((Module*)(new InstantDestroy()));
 	moduleList.push_back((Module*)(new InstantDestroy()));
 
 	isInit = true;
