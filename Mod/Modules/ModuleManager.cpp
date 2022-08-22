@@ -4,6 +4,7 @@
 #include "Modules/InstantDestroy.h"
 #include "Modules/NoKnockback.h"
 #include "Modules/Traverse.h"
+#include "Modules/ShowCoordinates.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -17,6 +18,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new InstantDestroy()));
 	moduleList.push_back((Module*)(new NoKnockback()));
 	moduleList.push_back((Module*)(new Traverse()));
+	moduleList.push_back((Module*)(new ShowCoordinates()));
 	isInit = true;
 }
 
@@ -30,6 +32,7 @@ auto ModuleManager::Disable()->void {
 			pMod->setEnabled(false);
 		delete[] pMod;
 	}
+	isInit = false;
 }
 
 auto ModuleManager::IsInitialized()->bool {

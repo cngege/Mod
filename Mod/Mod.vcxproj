@@ -193,6 +193,7 @@
     <ClInclude Include="Modules\Modules\HitBox.h" />
     <ClInclude Include="Modules\Modules\InstantDestroy.h" />
     <ClInclude Include="Modules\Modules\NoKnockback.h" />
+    <ClInclude Include="Modules\Modules\ShowCoordinates.h" />
     <ClInclude Include="Modules\Modules\Traverse.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Utils\Game.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
     <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
     <ClCompile Include="Modules\Modules\NoKnockback.cpp" />
+    <ClCompile Include="Modules\Modules\ShowCoordinates.cpp" />
     <ClCompile Include="Modules\Modules\Traverse.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

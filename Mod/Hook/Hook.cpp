@@ -11,6 +11,7 @@
 #include "../Modules/ModuleManager.h"
 #include "../Modules/Modules/HitBox.h"
 #include "../Modules/Modules/InstantDestroy.h"
+#include "../Modules/Modules/ShowCoordinates.h"
 
 
 ClientInstance* instance;
@@ -216,6 +217,8 @@ auto Hook::init() -> void
 			GameMode::SetVFtables(GameModeVTables);
 			//Hook GameMode_startDestroyBlock
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
+			//Hook GameMode_tick
+			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(9), &Hook::GameMode_tick, &GameMode::tickCall);
 			//Hook GameMode_attack
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(14), &Hook::GameMode_attack, &GameMode::attackCall);
 
@@ -325,8 +328,12 @@ auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void
 
 auto Hook::Is_ShowCoordinates_Tick(void* _this)->bool
 {
-	is_ShowCoordinates_Tickcall(_this);
-	return true;
+	static ShowCoordinates* sc = Game::GetModuleManager()->GetModule<ShowCoordinates*>();
+	bool ret = is_ShowCoordinates_Tickcall(_this);
+	if (sc && sc->isEnabled()) {
+		ret = true;
+	}
+	return ret;
 }
 
 
@@ -343,7 +350,7 @@ auto Hook::GetHungerValAddress_Tick(void* _this, const char* a1, void* a2)->void
 }
 
 
-//仅仅在本地房间时有效
+//仅仅在本地房间时有效 _this 应该是serverplayer
 auto Hook::NoFallDamage_Tick(void* _this, float* a1)->void*
 {
 	//this + 1D4
@@ -369,8 +376,10 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 
 //一直调用 且每位玩家都调用
 auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
-	HitBox* idy = Game::GetModuleManager()->GetModule<HitBox*>();
-	idy->onActorTick(_this);
+	static HitBox* idy = Game::GetModuleManager()->GetModule<HitBox*>();
+	if (idy) {
+		idy->onActorTick(_this);
+	}
 	return allActor_Tickcall(_this, a1, a2);
 }
 
@@ -388,13 +397,23 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 
 //虚表Hook
 auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool {
-	InstantDestroy* idy = Game::GetModuleManager()->GetModule<InstantDestroy*>();
-	idy->onStartDestroyBlock(_this, a2, face);
+	static InstantDestroy* idy = Game::GetModuleManager()->GetModule<InstantDestroy*>();
+	if (idy) {
+		idy->onStartDestroyBlock(_this, a2, face);
+	}
 	return _this->startDestroyBlock(a2,face,a3,a4);
+}
+
+auto Hook::GameMode_tick(GameMode* _this)->void* {
+	Game::GetModuleManager()->onTick(_this);
+	return _this->tick();
 }
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX ,VT=%llX, ActorType = %i", actor, *(void**)actor,actor->getEntityTypeId());
+	if (!Game::GetModuleManager()->onAttack(actor)) {
+		return false;
+	}
 	return _this->attack(actor);
 }
 

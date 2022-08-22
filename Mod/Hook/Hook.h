@@ -27,6 +27,7 @@ public:
 public:
 	//虚表Hook
 	static auto GameMode_attack(class GameMode*, class Actor*)->bool;
+	static auto GameMode_tick(class GameMode*)->void*;
 	static auto GameMode_startDestroyBlock(class GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool;
 
 	static auto ServerPlayer_TickWorld(class ServerPlayer* _this, class struck* tick)->void*;
