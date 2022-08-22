@@ -26,4 +26,8 @@ public:
 	auto getViewYX()->const vec2_t;
 	auto getViewYX2()->const vec2_t;
 
+public:
+	//Ðé±íº¯Êý
+	//44
+	auto teleportTo(vec3_t*, bool, unsigned int, unsigned int)->void;
 };

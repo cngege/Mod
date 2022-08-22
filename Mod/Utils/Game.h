@@ -11,7 +11,7 @@ private:
 public:
 	static auto init()->void;
 	static auto exit()->void;
-	static auto GetModuleManager()->ModuleManager*;
+	static auto GetModuleManager()->class ModuleManager*;
 
 public:
 	static auto IsKeyDown(int key)->bool;

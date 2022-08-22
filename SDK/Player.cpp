@@ -45,3 +45,9 @@ auto Player::getViewYX2()->const vec2_t {
 	return vec2_t(viewy, viewx);
 }
 
+
+//Ðé±íº¯Êý
+
+auto Player::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
+	GetVFtableFun<void,Player*, vec3_t*,bool, unsigned int, unsigned int>(44)(this,pos,a1,a2,a3);
+}

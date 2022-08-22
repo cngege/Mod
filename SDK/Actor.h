@@ -58,7 +58,9 @@ public:
 public:
 	//虚表函数
 
+public:
 
+	//原生虚表函数
 	auto getPosition()->vec3_t*;						/*22*/
 	auto getPosPrev()->vec3_t*;							/*23*/
 	auto isPlayer()->bool;								/*99*/

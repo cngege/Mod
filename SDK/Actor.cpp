@@ -38,9 +38,6 @@ auto Actor::SetVFtables(uintptr_t** vfTable)->void {
 	vfTables = vfTable;
 }
 
-
-
-
 auto Actor::getSpeed()->vec3_t {
 	if (SpeedXOffset == 0 || SpeedYOffset == 0 || SpeedZOffset == 0) {
 		return vec3_t(0.0f, 0.0f, 0.0f);
@@ -137,8 +134,10 @@ auto Actor::onMoveBBs(vec3_t p)->void {
 
 }
 
-
 // 虚表函数
+
+
+// 原生虚表函数
 auto Actor::getPosition()->vec3_t* {
 	return GetVFtableFun<vec3_t*, Actor*>(22)(this);
 }

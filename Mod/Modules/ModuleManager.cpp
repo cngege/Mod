@@ -5,6 +5,7 @@
 #include "Modules/NoKnockback.h"
 #include "Modules/Traverse.h"
 #include "Modules/ShowCoordinates.h"
+#include "Modules/TPPoint.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -19,6 +20,8 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new NoKnockback()));
 	moduleList.push_back((Module*)(new Traverse()));
 	moduleList.push_back((Module*)(new ShowCoordinates()));
+	moduleList.push_back((Module*)(new TPPoint()));
+
 	isInit = true;
 }
 

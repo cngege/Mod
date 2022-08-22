@@ -99,6 +99,9 @@
     <ClInclude Include="Modules\Modules\ShowCoordinates.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Modules\TPPoint.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -162,6 +165,9 @@
       <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="Modules\Modules\ShowCoordinates.cpp">
+      <Filter>Modules\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Modules\TPPoint.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
   </ItemGroup>
