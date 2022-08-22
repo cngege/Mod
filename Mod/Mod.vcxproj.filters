@@ -102,6 +102,9 @@
     <ClInclude Include="Modules\Modules\TPPoint.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -170,5 +173,10 @@
     <ClCompile Include="Modules\Modules\TPPoint.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Mod.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -202,6 +202,7 @@
     <ClInclude Include="Modules\Modules\TPPoint.h" />
     <ClInclude Include="Modules\Modules\Traverse.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Utils\Game.h" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Utils\Utils.h" />
@@ -234,6 +235,9 @@
     <ClCompile Include="Utils\Game.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Mod.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
