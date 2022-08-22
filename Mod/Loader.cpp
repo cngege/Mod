@@ -26,22 +26,17 @@ void Loader::init(void* hmoudle)
 
 	Game::init();
 	Hook::init();
-
-	auto enableHook = MH_EnableHook(MH_ALL_HOOKS);
-	logF("MH_EnableHook = %i", enableHook);
-	if (enableHook != MH_OK) {
-		logF("MH_EnableHook Error");
-	}
 	
-
+	logF("[MH_EnableHook] hook is: %s", MH_StatusToString(MH_EnableHook(MH_ALL_HOOKS)));
 }
 
 void Loader::exit(void* hmoudle)
 {
 	if (hookret == MH_OK)
 	{
-		logF("Hook::exit() Hook IS UnLoad");
+		logF("[Hook::exit] Hook IS UnLoad");
 		Hook::exit();
+		logF("[MH_Uninitialize] is: %s", MH_StatusToString(MH_Uninitialize()));
 	}
 	Game::exit();
 

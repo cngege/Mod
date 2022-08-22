@@ -2,7 +2,13 @@
 #include "pch.h"
 #include "Loader.h"
 
-#pragma comment(lib, "MinHook.x64.lib")
+#ifdef _DEBUG
+    #pragma comment(lib, "libMinHook.x64-v143-mdd.lib")
+#elif NDEBUG
+    #pragma comment(lib, "libMinHook.x64-v143-md.lib")
+#endif
+
+
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -14,11 +20,11 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_PROCESS_ATTACH:
     {
         CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Loader::init, hModule, NULL, NULL);
-        //DisableThreadLibraryCalls(hModule);
+        DisableThreadLibraryCalls(hModule);
         break;
     }
     case DLL_PROCESS_DETACH:
-        //Loader::exit(hModule);
+        Loader::exit(hModule);
         break;
     }
     return TRUE;

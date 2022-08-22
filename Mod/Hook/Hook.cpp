@@ -306,7 +306,7 @@ auto Hook::init() -> void
 }
 
 auto Hook::exit() -> void {
-	MH_DisableHook(MH_ALL_HOOKS);
+	logF("[MH_DisableHook] is: %s", MH_StatusToString(MH_DisableHook(MH_ALL_HOOKS)));
 	Sleep(10);
 }
 
