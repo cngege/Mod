@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 //#include <WinUser.h>
-#include "../Mod/Utils/Utils.h"
+#include "../Utils/Utils.h"
 
 enum KeyMode {
 	Trigger = 0,						//°´ÏÂ ´¥·¢ onTrigger();
