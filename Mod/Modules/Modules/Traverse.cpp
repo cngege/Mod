@@ -3,7 +3,7 @@
 #include "Actor.h"
 #include "LocalPlayer.h"
 
-Traverse::Traverse() : Module(VK_F2, "Traverse", "向所示方向前进一格") {
+Traverse::Traverse() : Module(VK_F2, "Traverse", "向所视方向前进一格") {
 	SetKeyMode(KeyMode::Trigger);
 }
 
