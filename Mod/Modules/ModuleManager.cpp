@@ -33,6 +33,7 @@ auto ModuleManager::Disable()->void {
 		delete[] pMod;
 	}
 	isInit = false;
+	moduleList.clear();
 }
 
 auto ModuleManager::IsInitialized()->bool {
