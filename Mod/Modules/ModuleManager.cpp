@@ -6,6 +6,7 @@
 #include "Modules/Traverse.h"
 #include "Modules/ShowCoordinates.h"
 #include "Modules/TPPoint.h"
+#include "Modules/Render.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -21,6 +22,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new Traverse()));
 	moduleList.push_back((Module*)(new ShowCoordinates()));
 	moduleList.push_back((Module*)(new TPPoint()));
+	moduleList.push_back((Module*)(new Render()));
 
 	isInit = true;
 }
@@ -43,7 +45,13 @@ auto ModuleManager::IsInitialized()->bool {
 	return isInit;
 }
 
-
+auto ModuleManager::Moduleforeach(std::function<void(Module*)> callback)->void {
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		callback(pMod);
+	}
+}
 
 auto ModuleManager::onKeyUpdate(int key, bool isenable)->void {
 	if (!IsInitialized())
@@ -120,5 +128,14 @@ auto ModuleManager::onLocalPlayerTick(LocalPlayer* lp)->void {
 	for (auto pMod : moduleList) {
 		if (pMod->isEnabled())
 			pMod->onLocalPlayerTick(lp);
+	}
+}
+
+
+auto ModuleManager::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onRenderDetour(ctx);
 	}
 }

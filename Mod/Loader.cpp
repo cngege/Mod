@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Modules/ModuleManager.h"
 
-int hookret;
+MH_STATUS hookret;
 void* Loader::dllHMODULE = nullptr;
 
 
@@ -19,7 +19,7 @@ void Loader::init(void* hmoudle)
 	hookret = MH_Initialize();
 	if (hookret != MH_OK)
 	{
-		logF("MH_Initialize Error ret is %i ,Mod Return", hookret);
+		logF("MH_Initialize Error ret is %s ,Mod Return", MH_StatusToString(hookret));
 		return;
 	}
 	

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Module.h"
+#include <functional>
 
 class ModuleManager {
 private:
@@ -14,6 +15,8 @@ public:
 	template <typename TRet>
 	auto GetModule()->TRet;
 
+	auto Moduleforeach(std::function<void(Module*)>)->void;
+
 public:
 	auto onKeyUpdate(int, bool)->void;
 	auto onTick(class GameMode*)->void;
@@ -21,6 +24,7 @@ public:
 	auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool;  // 返回值可以拦截该事件
 	auto onActorTick(class Actor*)->void;
 	auto onLocalPlayerTick(class LocalPlayer*)->void;
+	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
 };
 
 template <typename TRet>

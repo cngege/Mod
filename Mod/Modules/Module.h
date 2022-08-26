@@ -22,7 +22,7 @@ private:
 	std::vector<int> controlkeys = std::vector<int>();		//是否要求功能键也要按下
 	std::string modulename;
 	std::string moduleinfo;
-	KeyMode km = KeyMode::Trigger;
+	KeyMode km = KeyMode::Switch;
 public:
 	void SetKeyMode(KeyMode km);
 	KeyMode GetKeyMode();
@@ -42,6 +42,7 @@ public:
 	virtual bool onKnockback(class LocalPlayer*, struct vec3_t*);
 	virtual void onActorTick(class Actor*);
 	virtual void onLocalPlayerTick(class LocalPlayer*);
+	virtual void onRenderDetour(class MinecraftUIRenderContext*);
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();

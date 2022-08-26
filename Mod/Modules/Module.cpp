@@ -107,3 +107,7 @@ auto Module::onActorTick(Actor* actor)->void {
 auto Module::onLocalPlayerTick(LocalPlayer* lp)->void {
 
 }
+
+auto Module::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
+
+}

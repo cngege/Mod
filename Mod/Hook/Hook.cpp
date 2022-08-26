@@ -415,9 +415,8 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 
 auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	renderDetourcall(_this, ctx);
-	UIColor color = UIColor();
-	RectangleArea ra = RectangleArea(50, 100, 50, 100);
-	ctx->fillRectangle(ra, color, 1);
+
+	Game::GetModuleManager()->onRenderDetour(ctx);
 }
 
 

@@ -199,6 +199,7 @@
     <ClInclude Include="Modules\Modules\HitBox.h" />
     <ClInclude Include="Modules\Modules\InstantDestroy.h" />
     <ClInclude Include="Modules\Modules\NoKnockback.h" />
+    <ClInclude Include="Modules\Modules\Render.h" />
     <ClInclude Include="Modules\Modules\ShowCoordinates.h" />
     <ClInclude Include="Modules\Modules\TPPoint.h" />
     <ClInclude Include="Modules\Modules\Traverse.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
     <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
     <ClCompile Include="Modules\Modules\NoKnockback.cpp" />
+    <ClCompile Include="Modules\Modules\Render.cpp" />
     <ClCompile Include="Modules\Modules\ShowCoordinates.cpp" />
     <ClCompile Include="Modules\Modules\TPPoint.cpp" />
     <ClCompile Include="Modules\Modules\Traverse.cpp" />
