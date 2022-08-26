@@ -23,6 +23,7 @@ public:
 	static auto AllActor_Tick(class Actor*, float*, float)->float*;
 	static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
 	static auto KeyUpdate(__int64, int)->void*;
+	static auto RenderDetour(void*, class MinecraftUIRenderContext*)->void;
 	
 public:
 	//虚表Hook

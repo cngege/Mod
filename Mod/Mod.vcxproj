@@ -187,6 +187,7 @@
     <ClInclude Include="..\SDK\GameMode.h" />
     <ClInclude Include="..\SDK\GuiData.h" />
     <ClInclude Include="..\SDK\LocalPlayer.h" />
+    <ClInclude Include="..\SDK\MinecraftUIRenderContext.h" />
     <ClInclude Include="..\SDK\Mob.h" />
     <ClInclude Include="..\SDK\Player.h" />
     <ClInclude Include="..\SDK\ServerPlayer.h" />

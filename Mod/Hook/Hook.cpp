@@ -7,6 +7,7 @@
 #include "LocalPlayer.h"
 #include "Actor.h"
 #include "GameMode.h"
+#include "MinecraftUIRenderContext.h"
 
 #include "../Modules/ModuleManager.h"
 #include "../Modules/Modules/HitBox.h"
@@ -65,6 +66,10 @@ uintptr_t actor_moveBBs;
 using KeyUpdate = void* (__fastcall*)(__int64 key, int isdown);
 KeyUpdate keyupdatecall;
 uintptr_t keyupdate;
+
+using RenderDetour = void(__fastcall*)(void*, MinecraftUIRenderContext*);
+RenderDetour renderDetourcall;
+uintptr_t renderDetour;
 
 auto Hook::init() -> void
 {
@@ -199,6 +204,20 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "actor_moveBBs");
+		}
+	}
+
+
+	// 渲染
+	{
+		const char* memcode = "48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? ? ? 70 B8 ? ? 78 A8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C";
+		renderDetour = FindSignature(memcode);
+		if (renderDetour != 0x00) {
+			MH_CreateHookEx((LPVOID)renderDetour, &Hook::RenderDetour,&renderDetourcall);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", renderDetour, memcode);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "renderDetour");
 		}
 	}
 
@@ -393,6 +412,14 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
 	return keyupdatecall(key, isdown);
 }
+
+auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
+	renderDetourcall(_this, ctx);
+	UIColor color = UIColor();
+	RectangleArea ra = RectangleArea(50, 100, 50, 100);
+	ctx->fillRectangle(ra, color, 1);
+}
+
 
 
 //虚表Hook
