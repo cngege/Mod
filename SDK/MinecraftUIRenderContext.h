@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+
 /* 如何虚函数出错,就是去ida跑安卓的MC去对新的虚函数 */
 /* 按照视频作者的说法，这个虚函数从一开始就没有变过 */
 
@@ -52,4 +53,16 @@ public:
 	virtual void drawRectangle(RectangleArea const&, UIColor const&, float, int);
 	virtual void fillRectangle(RectangleArea const&, UIColor const&, float);
 
+	//非官方 自定义函数
+public:
+	void Fillshape(struct vec2_t, struct vec2_t, UIColor);
+
+	/// <summary>
+	/// 画空心矩形
+	/// </summary>
+	/// <param name="">位置(左上)</param>
+	/// <param name="">大小</param>
+	/// <param name="">颜色</param>
+	/// <param name="">边框宽度</param>
+	void Drawshape(struct vec2_t, struct vec2_t, UIColor, float);
 };

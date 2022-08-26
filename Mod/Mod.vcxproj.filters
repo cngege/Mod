@@ -182,6 +182,9 @@
     <ClCompile Include="Modules\Modules\Render.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\SDK\MinecraftUIRenderContext.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Mod.rc">

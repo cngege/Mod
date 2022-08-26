@@ -1,5 +1,6 @@
 #include "Module.h"
 #include "../Utils/Game.h"
+#include "../Utils/Utils.h"
 
 Module::Module(int key, std::string name, std::string info) {
 	this->keybind = key;
@@ -48,6 +49,19 @@ auto Module::checkcontrolkeys()->bool {
 
 auto Module::getModuleName()->std::string {
 	return this->modulename;
+}
+
+auto Module::getBindKeyName()->std::string {
+	//ret : CTRL + SHIFT + F
+	std::string name = NULL;
+	for (auto key : this->getcontrolkeysbind()) {
+		name += KeyNames[key];
+		name += " + ";
+	}
+	if (this->getKeybind() != NULL) {
+		name += KeyNames[this->getKeybind()];
+	}
+	return name;
 }
 
 auto Module::isEnabled()->bool {

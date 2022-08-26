@@ -413,10 +413,15 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	return keyupdatecall(key, isdown);
 }
 
+int frame = 0;		// 按照视频作者的说法，这个函数会在三层每层都调用一次，也就是每一帧调用三次
 auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	renderDetourcall(_this, ctx);
 
-	Game::GetModuleManager()->onRenderDetour(ctx);
+	if (frame >= 3) {
+		frame = 0;
+		Game::GetModuleManager()->onRenderDetour(ctx);
+	}
+	frame++;
 }
 
 
