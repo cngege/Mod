@@ -55,14 +55,19 @@ public:
 
 	//非官方 自定义函数
 public:
+	/// <summary>
+	/// 填充矩形
+	/// </summary>
+	/// <param name="pos">位置</param>
+	/// <param name="size">大小</param>
+	/// <param name="color">颜色</param>
 	void Fillshape(struct vec2_t, struct vec2_t, UIColor);
-
 	/// <summary>
 	/// 画空心矩形
 	/// </summary>
-	/// <param name="">位置(左上)</param>
-	/// <param name="">大小</param>
-	/// <param name="">颜色</param>
-	/// <param name="">边框宽度</param>
-	void Drawshape(struct vec2_t, struct vec2_t, UIColor, float);
+	/// <param name="pos">位置(左上)</param>
+	/// <param name="size">大小</param>
+	/// <param name="color">颜色</param>
+	/// <param name="w">边框宽度</param>
+	void Drawshape(struct vec2_t pos, struct vec2_t size, UIColor, float w);
 };
