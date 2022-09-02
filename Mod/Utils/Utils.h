@@ -480,4 +480,60 @@ public:
 	}
 
 	static std::string getRttiBaseClassName(void* ptr);
+
+	static std::string ANSItoUTF8(const char* ansi)
+	{
+		int len = MultiByteToWideChar(CP_ACP, 0, ansi, -1, NULL, 0);
+		wchar_t* wstr = new wchar_t[len + 1];
+		memset(wstr, 0, static_cast<size_t>(len) + 1);
+		MultiByteToWideChar(CP_ACP, 0, ansi, -1, wstr, len);
+		len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+		char* str = new char[len + 1];
+		memset(str, 0, static_cast<size_t>(len) + 1);
+		WideCharToMultiByte(CP_UTF8, 0, wstr, -1, str, len, NULL, NULL);
+		if (wstr) delete[] wstr;
+		std::string ret = str;
+		if (str) delete[] str;
+		return ret;
+	}
+	
+	static std::string UTF8toANSI(const char* utf8)
+	{
+		int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
+		wchar_t* wstr = new wchar_t[len + 1];
+		memset(wstr, 0, static_cast<size_t>(len) + 1);
+		MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wstr, len);
+		len = WideCharToMultiByte(CP_ACP, 0, wstr, -1, NULL, 0, NULL, NULL);
+		char* str = new char[len + 1];
+		memset(str, 0, static_cast<size_t>(len) + 1);
+		WideCharToMultiByte(CP_ACP, 0, wstr, -1, str, len, NULL, NULL);
+		if (wstr) delete[] wstr;
+		std::string ret = str;
+		if (str) delete[] str;
+		return ret;
+	}
+
+	static bool utf8_check_is_valid(const std::string& string)
+	{
+		int c, i, n, j;
+		size_t ix;
+		for (i = 0, ix = string.length(); i < ix; i++)
+		{
+			c = (unsigned char)string[i];
+			//if (c==0x09 || c==0x0a || c==0x0d || (0x20 <= c && c <= 0x7e) ) n = 0; // is_printable_ascii
+			if (0x00 <= c && c <= 0x7f) n = 0; // 0bbbbbbb
+			else if ((c & 0xE0) == 0xC0) n = 1; // 110bbbbb
+			else if (c == 0xed && i < (ix - 1) && ((unsigned char)string[static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(i) + 1] & 0xa0) == 0xa0) return false; //U+d800 to U+dfff
+			else if ((c & 0xF0) == 0xE0) n = 2; // 1110bbbb
+			else if ((c & 0xF8) == 0xF0) n = 3; // 11110bbb
+			//else if (($c & 0xFC) == 0xF8) n=4; // 111110bb //byte 5, unnecessary in 4 byte UTF-8
+			//else if (($c & 0xFE) == 0xFC) n=5; // 1111110b //byte 6, unnecessary in 4 byte UTF-8
+			else return false;
+			for (j = 0; j < n && i < ix; j++) { // n bytes matching 10bbbbbb follow ?
+				if ((++i == ix) || (((unsigned char)string[i] & 0xC0) != 0x80))
+					return false;
+			}
+		}
+		return true;
+	}
 };

@@ -97,7 +97,12 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 		va_start(arg, fmt);
 		int numCharacters = vsprintf_s(logMessage, 300, const_cast<const char*>(fmt), arg);
 		va_end(arg);
-		fprintf(pFile, "%s%s", timeStamp, logMessage);
+		if (!Utils::utf8_check_is_valid(logMessage)) {
+			fprintf(pFile, "%s%s", timeStamp, Utils::ANSItoUTF8(logMessage).c_str());
+		}
+		else {
+			fprintf(pFile, "%s%s", timeStamp, logMessage);
+		}
 		fprintf(pFile, "\n");
 
 		fclose(pFile);
@@ -147,7 +152,12 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 		va_start(arg, fmt);
 		int numCharacters = vsprintf_s(logMessage, maxSize + 1, fmt, arg);
 		va_end(arg);
-		fprintf(pFile, "%s%s", timeStamp, logMessage);
+		if (!Utils::utf8_check_is_valid(logMessage)) {
+			fprintf(pFile, "%s%s", timeStamp, Utils::ANSItoUTF8(logMessage).c_str());
+		}
+		else {
+			fprintf(pFile, "%s%s", timeStamp, logMessage);
+		}
 		fprintf(pFile, "\n");
 
 		fclose(pFile);

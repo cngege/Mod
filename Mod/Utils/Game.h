@@ -1,11 +1,14 @@
 ﻿#pragma once
 
+
 class Game
 {
 public:
 	static float* ArmsLength;
 	static bool ModState;
 	static class LocalPlayer* localplayer;
+	static class BitmapFont* mcfont;
+	static class ClientInstance* Cinstance;
 private:
 	static class ModuleManager* modmag;
 public:

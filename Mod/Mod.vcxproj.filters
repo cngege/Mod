@@ -54,9 +54,6 @@
     <ClInclude Include="Utils\Game.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\SDK\ClientInstance.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\SDK\GuiData.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -111,6 +108,15 @@
     <ClInclude Include="Modules\Modules\Render.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SDK\TextHolder.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\ClientInstance.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\Level.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -132,9 +138,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Utils\Game.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SDK\ClientInstance.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\Actor.cpp">
@@ -183,6 +186,9 @@
       <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\MinecraftUIRenderContext.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\ClientInstance.cpp">
       <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>

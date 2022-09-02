@@ -14,9 +14,6 @@
 #include "../Modules/Modules/InstantDestroy.h"
 #include "../Modules/Modules/ShowCoordinates.h"
 
-
-ClientInstance* instance;
-
 using PlayerKBCALL = void(__fastcall*)(Player*, vec3_t*);
 PlayerKBCALL playercall;
 uintptr_t playerkb;
@@ -73,7 +70,7 @@ uintptr_t renderDetour;
 
 auto Hook::init() -> void
 {
-	logF("Hook::init is start runner……");
+	logF("Hook::init is start runner");
 
 	//玩家击退
 	{
@@ -221,6 +218,19 @@ auto Hook::init() -> void
 		}
 	}
 
+	{
+		uintptr_t muicDrawText;
+		const char* memcode = "48 89 5C 24 ? 55 56 57 48 83 EC ? 4C 8B 94 24 ? ? ? ? 48 8D";
+		muicDrawText = FindSignature(memcode);
+		if (muicDrawText != 0x00) {
+			MH_CreateHookEx((LPVOID)muicDrawText, &Hook::Draw_Text, &MinecraftUIRenderContext::drawtextCall);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", muicDrawText, memcode);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "muicDrawText");
+		}
+	}
+
 	//GameMode虚表及相关Hook
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
@@ -340,7 +350,7 @@ auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
 
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void
 {
-	if (_this != nullptr) instance = _this;
+	if (_this != nullptr) Game::Cinstance = _this;
 	clientInstance_Tickcall(_this, a1);
 }
 
@@ -387,7 +397,7 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 		p = thisp;
 		Game::localplayer = _this;
 		logF("Player_Tick localplayer ptr = %llX，localplayerVT = %llX", thisp, *(INT64*)thisp);
-		logF("Player_Tick Clientinstance ptr = %llX", instance);
+		logF("Player_Tick Clientinstance ptr = %llX", Game::Cinstance);
 	}
 	Game::GetModuleManager()->onLocalPlayerTick(_this);
 	return localplayer_getCameraOffsetcall(_this);
@@ -417,13 +427,31 @@ int frame = 0;		// 按照视频作者的说法，这个函数会在三层每层�
 auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	renderDetourcall(_this, ctx);
 
-	if (frame >= 3) {
+	//{
+	//	//drawText			5
+	//	static uintptr_t MUICFVT = 0;
+	//	if (MUICFVT == 0) {
+	//		MUICFVT = *(*reinterpret_cast<uintptr_t**>(ctx) + 5);
+	//		logF("MUICFVT = %llX", MUICFVT);
+	//	}
+	//}
+
+	if (frame >= 0) {
 		frame = 0;
 		Game::GetModuleManager()->onRenderDetour(ctx);
 	}
 	frame++;
 }
 
+
+auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleArea const& a2, TextHolder* a3, UIColor const& a4, float a5, float a6, TextMeasureData* a7, uintptr_t* a8)->void {
+	if (Game::mcfont != a1) {
+		Game::mcfont = a1;
+		//logF("mcfont = %llX,Text = %s", a1,a3->getText());
+	}
+	
+	reinterpret_cast<MUICDrawText>(MinecraftUIRenderContext::drawtextCall)(_this, a1, a2, a3, a4, a5, a6, a7, a8);
+}
 
 
 //虚表Hook
@@ -452,3 +480,4 @@ auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, class struck* tick)->void
 	_this->onAllPlayerTick();
 	return _this->tickWorld(tick);
 }
+

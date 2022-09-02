@@ -186,11 +186,13 @@
     <ClInclude Include="..\SDK\ClientInstance.h" />
     <ClInclude Include="..\SDK\GameMode.h" />
     <ClInclude Include="..\SDK\GuiData.h" />
+    <ClInclude Include="..\SDK\Level.h" />
     <ClInclude Include="..\SDK\LocalPlayer.h" />
     <ClInclude Include="..\SDK\MinecraftUIRenderContext.h" />
     <ClInclude Include="..\SDK\Mob.h" />
     <ClInclude Include="..\SDK\Player.h" />
     <ClInclude Include="..\SDK\ServerPlayer.h" />
+    <ClInclude Include="..\SDK\TextHolder.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Hook\Hook.h" />
     <ClInclude Include="Loader.h" />

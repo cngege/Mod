@@ -10,11 +10,12 @@ float* Game::ArmsLength = nullptr;
 bool Game::ModState = false;
 ModuleManager* Game::modmag = nullptr;
 LocalPlayer* Game::localplayer = nullptr;
-
+BitmapFont* Game::mcfont = nullptr;
+ClientInstance* Game::Cinstance = nullptr;
 
 auto Game::init() -> void
 {
-	logF("[Game::init] is start runner……");
+	logF("[Game::init] is start runner");
 
 	Game::ModState = true;
 	Game::modmag = new ModuleManager;
