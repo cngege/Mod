@@ -15,7 +15,8 @@
 - **将要更新的功能**
   - No Found
 - **可能更新的功能**
-  - No Found
+  - UI绘制方框绘制文字
+  - 自动识别队友并尝试拦截攻击
   
 ### **已经解决的和未解决的BUG**
 - **已解决**
@@ -31,6 +32,8 @@
 ### **技术参考（学习）**
 - **Horion-Open-SRC**
   - https://github.com/NRGJobro/Horion-Open-SRC/
+- **YT Coding Internal Client**
+  - https://www.youtube.com/playlist?list=PL9mZGNEJquY77cTy1eNOLs12BsVK5zA-P
 
 ### **外部库**
 - **nlohmann::json**
