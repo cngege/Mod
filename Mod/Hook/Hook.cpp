@@ -473,6 +473,7 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}
+	logF("attack actor: %s", actor->getNameTag());
 	return _this->attack(actor);
 }
 

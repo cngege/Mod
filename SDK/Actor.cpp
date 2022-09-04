@@ -146,6 +146,10 @@ auto Actor::getPosPrev()->vec3_t* {
 	return GetVFtableFun<vec3_t*, Actor*>(23)(this);
 }
 
+auto Actor::getNameTag()->std::string {
+	return GetVFtableFun<std::string, Actor*>(63)(this);
+}
+
 auto Actor::isPlayer()->bool {	//无效
 	return GetVFtableFun<bool, Actor*>(99)(this);
 }
