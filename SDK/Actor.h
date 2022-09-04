@@ -64,7 +64,7 @@ public:
 	//原生虚表函数
 	auto getPosition()->vec3_t*;						/*22*/
 	auto getPosPrev()->vec3_t*;							/*23*/
-	auto getNameTag()->std::string;						/*63*/
+	auto getNameTag()->const char*;						/*63*/
 	auto isPlayer()->bool;								/*99*/
 	auto getEntityTypeId()->int;						/*170*/	//可能是 Player::getEntityTypeId()
 };
