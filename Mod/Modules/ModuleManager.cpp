@@ -1,5 +1,5 @@
 #include "ModuleManager.h"
-
+//Ä£¿é
 #include "Modules/HitBox.h"
 #include "Modules/InstantDestroy.h"
 #include "Modules/NoKnockback.h"
@@ -8,6 +8,7 @@
 #include "Modules/TPPoint.h"
 #include "Modules/Render.h"
 #include "Modules/NoAttackFriend.h"
+#include "Modules/ArmsLength.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -25,6 +26,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new TPPoint()));
 	moduleList.push_back((Module*)(new Render()));
 	moduleList.push_back((Module*)(new NoAttackFriend()));
+	moduleList.push_back((Module*)(new ArmsLength()));
 
 	isInit = true;
 }

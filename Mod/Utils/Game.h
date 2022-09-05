@@ -4,7 +4,6 @@
 class Game
 {
 public:
-	static float* ArmsLength;
 	static bool ModState;
 	static class LocalPlayer* localplayer;
 	static class BitmapFont* mcfont;

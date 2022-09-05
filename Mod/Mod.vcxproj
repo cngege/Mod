@@ -198,6 +198,7 @@
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Modules\Module.h" />
     <ClInclude Include="Modules\ModuleManager.h" />
+    <ClInclude Include="Modules\Modules\ArmsLength.h" />
     <ClInclude Include="Modules\Modules\HitBox.h" />
     <ClInclude Include="Modules\Modules\InstantDestroy.h" />
     <ClInclude Include="Modules\Modules\NoAttackFriend.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Modules\Module.cpp" />
     <ClCompile Include="Modules\ModuleManager.cpp" />
+    <ClCompile Include="Modules\Modules\ArmsLength.cpp" />
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
     <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
     <ClCompile Include="Modules\Modules\NoAttackFriend.cpp" />
