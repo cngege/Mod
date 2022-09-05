@@ -51,3 +51,8 @@ auto Player::getViewYX2()->const vec2_t {
 auto Player::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
 	GetVFtableFun<void,Player*, vec3_t*,bool, unsigned int, unsigned int>(44)(this,pos,a1,a2,a3);
 }
+
+//89
+auto Player::displayChatMessage(TextHolder* a1, TextHolder* a2)->__int64{
+	return GetVFtableFun<__int64, Player*, TextHolder*, TextHolder*>(89)(this, a1, a2);
+}

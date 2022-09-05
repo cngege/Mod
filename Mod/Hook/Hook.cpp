@@ -68,6 +68,10 @@ using RenderDetour = void(__fastcall*)(void*, MinecraftUIRenderContext*);
 RenderDetour renderDetourcall;
 uintptr_t renderDetour;
 
+using LPLP = void* (__fastcall*)(void*, void*, void*, void*, int, void*, char, void*, void*, void*, void*, void*);
+LPLP lplpcall;
+
+
 auto Hook::init() -> void
 {
 	logF("Hook::init is start runner");
@@ -328,8 +332,24 @@ auto Hook::init() -> void
 	}
 
 	//LocalPlayer虚表及相关Hook
+	//啥用没有 虚函数没找到能用的
 	{
-		//auto LocalPlayerVTable_sigOffset = FindSignature("");
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 48 8D 8E ? ? ? ? 48 8B 86 ? ? ? ? 4C 8B 80 ? ? ? ? 48 8B D6";
+		auto LocalPlayerVTable_sigOffset = FindSignature(memcode);
+		auto offsize = *reinterpret_cast<int*>(LocalPlayerVTable_sigOffset + 3);
+		auto LocalPlayerVTable = reinterpret_cast<uintptr_t**>(LocalPlayerVTable_sigOffset + offsize + 7);
+		if (LocalPlayerVTable_sigOffset == 0x00 || offsize == 0x00) {
+			logF("[LocalPlayer::SetVtables] [Error]Find LocalPlayer LocalPlayerVTable_sigOffset is no working!!!");
+		}
+		else {
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", LocalPlayerVTable_sigOffset, memcode);
+			logF("[LocalPlayer::SetVtables] [Success] LocalPlayerVTable = %llX", LocalPlayerVTable);
+			LocalPlayer::SetVFtables(LocalPlayerVTable);
+
+			//虚表Hook
+			//MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(374), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
+
+		}
 	}
 
 }

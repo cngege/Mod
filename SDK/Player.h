@@ -30,4 +30,6 @@ public:
 	//Ğé±íº¯Êı
 	//44
 	auto teleportTo(vec3_t*, bool, unsigned int, unsigned int)->void;
+
+	auto displayChatMessage(class TextHolder*, class TextHolder*)->__int64;
 };
