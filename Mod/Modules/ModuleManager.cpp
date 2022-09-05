@@ -37,6 +37,8 @@ auto ModuleManager::Disable()->void {
 	for (auto pMod : moduleList) {
 		if(pMod->isEnabled())
 			pMod->setEnabled(false);
+	}
+	for (auto pMod : moduleList) {
 		delete[] pMod;
 	}
 	isInit = false;
