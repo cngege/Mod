@@ -7,6 +7,7 @@
 #include "Modules/ShowCoordinates.h"
 #include "Modules/TPPoint.h"
 #include "Modules/Render.h"
+#include "Modules/NoAttackFriend.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -23,6 +24,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new ShowCoordinates()));
 	moduleList.push_back((Module*)(new TPPoint()));
 	moduleList.push_back((Module*)(new Render()));
+	moduleList.push_back((Module*)(new NoAttackFriend()));
 
 	isInit = true;
 }
@@ -84,8 +86,7 @@ auto ModuleManager::onTick(GameMode* gm)->void {
 	if (!IsInitialized())
 		return;
 	for (auto pMod : moduleList) {
-		if (pMod->isEnabled())
-			pMod->onTick(gm);
+		pMod->onTick(gm);
 	}
 }
 
@@ -94,9 +95,8 @@ auto ModuleManager::onAttack(Actor* actor)->bool {
 	if (!IsInitialized())
 		return RunOriginalFun;
 	for (auto pMod : moduleList) {
-		if (pMod->isEnabled())
-			if (!pMod->onAttack(actor))
-				RunOriginalFun = false;
+		if (!pMod->onAttack(actor))
+			RunOriginalFun = false;
 	}
 	return RunOriginalFun;
 }
@@ -106,9 +106,8 @@ auto ModuleManager::onKnockback(LocalPlayer* lp, vec3_t* v3)->bool {
 	if (!IsInitialized())
 		return RunOriginalFun;
 	for (auto pMod : moduleList) {
-		if (pMod->isEnabled())
-			if (!pMod->onKnockback(lp,v3))
-				RunOriginalFun = false;
+		if (!pMod->onKnockback(lp,v3))
+			RunOriginalFun = false;
 	}
 	return RunOriginalFun;
 }
@@ -117,8 +116,7 @@ auto ModuleManager::onActorTick(Actor* actor)->void {
 	if (!IsInitialized())
 		return;
 	for (auto pMod : moduleList) {
-		if(pMod->isEnabled())
-			pMod->onActorTick(actor);
+		pMod->onActorTick(actor);
 	}
 }
 
@@ -126,8 +124,7 @@ auto ModuleManager::onLocalPlayerTick(LocalPlayer* lp)->void {
 	if (!IsInitialized())
 		return;
 	for (auto pMod : moduleList) {
-		if (pMod->isEnabled())
-			pMod->onLocalPlayerTick(lp);
+		pMod->onLocalPlayerTick(lp);
 	}
 }
 
