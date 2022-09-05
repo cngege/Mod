@@ -11,4 +11,5 @@ private:
 
 public:
 	virtual auto onTrigger()->void override;
+	virtual auto getBindKeyName()->std::string override;
 };

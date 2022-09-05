@@ -89,7 +89,7 @@ public:
 	/// <param name="w">±ß¿ò¿í¶È</param>
 	void Drawshape(struct vec2_t pos, struct vec2_t size, UIColor, float w);
 
-	void Drawtext(const vec2_t& pos, std::string* textStr, const UIColor& color, float textSize, float alpha) {
+	void Drawtext(const vec2_t& pos, std::string* textStr, const UIColor& color, float textSize) {
 		
 		static uintptr_t caretMeasureData = 0xFFFFFFFF;
 		if (!Game::mcfont)
@@ -103,6 +103,6 @@ public:
 		memset(&textMeasure, 0, sizeof(TextMeasureData));
 		textMeasure.textSize = textSize;
 
-		reinterpret_cast<MUICDrawText>(drawtextCall)(this, Game::mcfont, rect, &text, color, alpha, 0, &textMeasure, &caretMeasureData);
+		reinterpret_cast<MUICDrawText>(drawtextCall)(this, Game::mcfont, rect, &text, color, color.a, 0, &textMeasure, &caretMeasureData);
 	}
 };

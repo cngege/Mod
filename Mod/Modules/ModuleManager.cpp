@@ -49,6 +49,10 @@ auto ModuleManager::IsInitialized()->bool {
 	return isInit;
 }
 
+auto ModuleManager::GetAllModule()->std::vector<Module*> {
+	return moduleList;
+}
+
 auto ModuleManager::Moduleforeach(std::function<void(Module*)> callback)->void {
 	if (!IsInitialized())
 		return;

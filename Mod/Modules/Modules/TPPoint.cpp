@@ -32,3 +32,11 @@ auto TPPoint::onTrigger()->void {
 		}
 	}
 }
+
+auto TPPoint::getBindKeyName()->std::string {
+	//ret : CTRL + SHIFT + F
+	std::string name = Utils::getKeybindName(VK_SHIFT);
+	name += "/";
+	name += Utils::getKeybindName(VK_CONTROL);
+	return name;
+}

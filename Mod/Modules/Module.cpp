@@ -53,13 +53,13 @@ auto Module::getModuleName()->std::string {
 
 auto Module::getBindKeyName()->std::string {
 	//ret : CTRL + SHIFT + F
-	std::string name = NULL;
+	std::string name = "";
 	for (auto key : this->getcontrolkeysbind()) {
 		name += KeyNames[key];
 		name += " + ";
 	}
 	if (this->getKeybind() != NULL) {
-		name += KeyNames[this->getKeybind()];
+		name += Utils::getKeybindName(this->getKeybind());
 	}
 	return name;
 }

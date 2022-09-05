@@ -12,4 +12,6 @@ public:
 
 public:
 	virtual auto onAttack(class Actor*)->bool override;
+
+	auto IsFriend(class Player*)->bool;
 };

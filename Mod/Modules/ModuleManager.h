@@ -15,6 +15,7 @@ public:
 	template <typename TRet>
 	auto GetModule()->TRet;
 
+	auto GetAllModule()->std::vector<Module*>;
 	auto Moduleforeach(std::function<void(Module*)>)->void;
 
 public:
