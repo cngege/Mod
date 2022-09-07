@@ -22,9 +22,9 @@ auto LocalPlayer::SetVFtables(uintptr_t** vfTable)->void {
 
 //Ðé±íº¯Êý
 
-auto LocalPlayer::setPos(vec3_t pos)->__int64 {
-	return GetVFtableFun<__int64, LocalPlayer*, vec3_t>(13)(this,pos);
-}
+//auto LocalPlayer::setPos(vec3_t* pos)->__int64 {
+//	return GetVFtableFun<__int64, LocalPlayer*, vec3_t*>(13)(this,pos);	//19?
+//}
 
 auto LocalPlayer::jumpFromGround()->UINT64 {
 	return GetVFtableFun<UINT64, LocalPlayer*>(346)(this);

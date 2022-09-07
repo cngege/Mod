@@ -60,7 +60,8 @@ auto Actor::setSpeed(vec3_t v) ->void {
 	*Zspeed = v.z;
 }
 
-auto Actor::getPos()->vec3_t {
+//获取玩家下边框对角点的位置
+auto Actor::getPosEx()->vec3_t {
 	if (PosXOffset1 == 0) {
 		return vec3_t(0.0f, 0.0f, 0.0f);
 	}
@@ -70,7 +71,8 @@ auto Actor::getPos()->vec3_t {
 	return vec3_t(*Xpos, *Ypos, *Zpos);
 }
 
-auto Actor::getPos2()->vec3_t {
+//获取玩家上边框对角点的位置
+auto Actor::getPosEx2()->vec3_t {
 	if (PosXOffset2 == 0) {
 		return vec3_t(0.0f, 0.0f, 0.0f);
 	}
@@ -80,7 +82,8 @@ auto Actor::getPos2()->vec3_t {
 	return vec3_t(*Xpos, *Ypos, *Zpos);
 }
 
-auto Actor::setPos(vec3_t p)->void {
+//以玩家下对焦点位置为基准设置玩家位置
+auto Actor::setPosEx(vec3_t p)->void {
 	if (PosXOffset1 == 0) {				//后面的偏移都是根据这个来的，所以只需要判断这一个就可以
 		return;
 	}
@@ -134,10 +137,21 @@ auto Actor::onMoveBBs(vec3_t p)->void {
 
 }
 
+auto Actor::isLocalPlayer()->bool {
+	if (*(__int64*)this == *(__int64*)LocalPlayer::GetVFtables())
+		return true;
+	else
+		return false;
+}
+
 // 虚表函数
 
 
 // 原生虚表函数
+auto Actor::setPos(vec3_t* pos)->void* {
+	return GetVFtableFun<void*, Actor*, vec3_t*>(19)(this,pos);
+}
+
 auto Actor::getPosition()->vec3_t* {
 	return GetVFtableFun<vec3_t*, Actor*>(22)(this);
 }
@@ -146,12 +160,12 @@ auto Actor::getPosPrev()->vec3_t* {
 	return GetVFtableFun<vec3_t*, Actor*>(23)(this);
 }
 
-auto Actor::getNameTag()->const char* {
-	return GetVFtableFun<const char*, Actor*>(63)(this);
+auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
+	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(44)(this, pos, a1, a2, a3);
 }
 
-auto Actor::isPlayer()->bool {	//无效
-	return GetVFtableFun<bool, Actor*>(99)(this);
+auto Actor::getNameTag()->const char* {
+	return GetVFtableFun<const char*, Actor*>(63)(this);
 }
 
 auto Actor::getEntityTypeId()->int {

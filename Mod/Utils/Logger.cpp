@@ -97,18 +97,13 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 		va_start(arg, fmt);
 		int numCharacters = vsprintf_s(logMessage, 300, const_cast<const char*>(fmt), arg);
 		va_end(arg);
-		if (!Utils::utf8_check_is_valid(logMessage)) {
-			fprintf(pFile, "%s%s", timeStamp, Utils::ANSItoUTF8(logMessage).c_str());
-		}
-		else {
-			fprintf(pFile, "%s%s", timeStamp, logMessage);
-		}
+		fprintf(pFile, "%s%s", timeStamp, Utils::ANSItoUTF8(logMessage).c_str());
 		fprintf(pFile, "\n");
 
 		fclose(pFile);
 
 		if (numCharacters < 100) {
-			TextForPrint textForPrint;
+			TextForPrint textForPrint{};
 			strcpy_s(textForPrint.text, 100, logMessage);
 			strcpy_s(textForPrint.time, 20, timeStamp);
 			auto lock = Logger::GetTextToPrintLock();
@@ -152,18 +147,13 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 		va_start(arg, fmt);
 		int numCharacters = vsprintf_s(logMessage, maxSize + 1, fmt, arg);
 		va_end(arg);
-		if (!Utils::utf8_check_is_valid(logMessage)) {
-			fprintf(pFile, "%s%s", timeStamp, Utils::ANSItoUTF8(logMessage).c_str());
-		}
-		else {
-			fprintf(pFile, "%s%s", timeStamp, logMessage);
-		}
+		fprintf(pFile, "%s%s", timeStamp, Utils::ANSItoUTF8(logMessage).c_str());
 		fprintf(pFile, "\n");
 
 		fclose(pFile);
 
 		if (numCharacters < 100) {
-			TextForPrint textForPrint;
+			TextForPrint textForPrint{};
 			strcpy_s(textForPrint.text, 100, logMessage);
 			strcpy_s(textForPrint.time, 20, timeStamp);
 			auto lock = Logger::GetTextToPrintLock();

@@ -45,9 +45,9 @@ public:
 	auto getSpeed()->vec3_t;
 	auto setSpeed(vec3_t)->void;
 
-	auto getPos()->vec3_t;
-	auto getPos2()->vec3_t;
-	auto setPos(vec3_t)->void;
+	auto getPosEx()->vec3_t;
+	auto getPosEx2()->vec3_t;
+	auto setPosEx(vec3_t)->void;
 
 	auto getHitBox()->vec2_t;
 	auto setHitBox(vec2_t)->void;
@@ -55,6 +55,7 @@ public:
 
 public:
 	auto onMoveBBs(vec3_t)->void;
+	auto isLocalPlayer()->bool;
 
 public:
 	//虚表函数
@@ -62,9 +63,11 @@ public:
 public:
 
 	//原生虚表函数
-	auto getPosition()->vec3_t*;						/*22*/
-	auto getPosPrev()->vec3_t*;							/*23*/
-	auto getNameTag()->const char*;						/*63*/
-	auto isPlayer()->bool;								/*99*/
-	auto getEntityTypeId()->int;						/*170*/	//可能是 Player::getEntityTypeId()
+	auto setPos(vec3_t*)->void*;													/*19*/
+	auto getPosition()->vec3_t*;													/*22*/
+	auto getPosPrev()->vec3_t*;														/*23*/
+	auto teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void;	/*44*/
+	auto getNameTag()->const char*;													/*63*/
+	//auto isPlayer()->bool;														/*99*/  // 不能用 因为MC中该函数功能的实现方法是 Player类重写
+	auto getEntityTypeId()->int;													/*170*/	//可能是 Player::getEntityTypeId()
 };

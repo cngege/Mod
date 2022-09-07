@@ -17,7 +17,7 @@ public:
 
 public:
 	//Ðé±íº¯Êý
-	auto setPos(vec3_t)->__int64;									/*14*/
+	//auto setPos(vec3_t*)->__int64;									/*14*/
 	auto jumpFromGround()->UINT64;									/*346*/
 	auto displayClientMessage(class TextHolder*)->UINT64;					/*389*/
 };

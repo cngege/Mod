@@ -1,7 +1,9 @@
 ﻿#include "NoAttackFriend.h"
 #include "Actor.h"
 #include "LocalPlayer.h"
+#include "TextHolder.h"
 #include "../../Utils/Game.h"
+#include "../../Utils/Utils.h"
 
 NoAttackFriend::NoAttackFriend() : Module(VK_F4, "NoAttackFriend", "从名称颜色识别玩家为队友时拦截攻击") {
 
@@ -28,9 +30,11 @@ auto NoAttackFriend::IsFriend(Player* p)->bool {
 
 #include "../../Utils/Logger.h"
 auto NoAttackFriend::onAttack(Actor* actor)->bool {
-	logF("myname:%s, actorname:%s", Game::localplayer->getNameTag(), actor->getNameTag());
 	if (!isEnabled() || !actor->isPlayerEx()) {
 		return true;
 	}
+	//暂时搁置
+	//logF("myptr:%llX,myname:%s", Game::localplayer, Game::localplayer->getNameTag());
+	//logF("actorname:%s,actorptr:%llX", actor->getNameTag(), actor);
 	return !IsFriend((Player*)actor);
 }

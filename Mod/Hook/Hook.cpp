@@ -332,7 +332,7 @@ auto Hook::init() -> void
 	}
 
 	//LocalPlayer虚表及相关Hook
-	//啥用没有 虚函数没找到能用的
+	//啥用没有 虚函数没找到能用的  仅在 Actor::isLocalPlayer() 中使用
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 48 8D 8E ? ? ? ? 48 8B 86 ? ? ? ? 4C 8B 80 ? ? ? ? 48 8B D6";
 		auto LocalPlayerVTable_sigOffset = FindSignature(memcode);
@@ -416,7 +416,7 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 	if (thisp != p) {
 		p = thisp;
 		Game::localplayer = _this;
-		logF("Player_Tick localplayer ptr = %llX，localplayerVT = %llX", thisp, *(INT64*)thisp);
+		logF("Player_Tick localplayer ptr = %llX,localplayerVT = %llX", thisp, *(INT64*)thisp);
 		logF("Player_Tick Clientinstance ptr = %llX", Game::Cinstance);
 	}
 	Game::GetModuleManager()->onLocalPlayerTick(_this);
@@ -489,7 +489,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 }
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
-	//logF("attack Actor ptr= %llX ,VT=%llX, ActorType = %i", actor, *(void**)actor,actor->getEntityTypeId());
+	//logF("attack Actor ptr= %llX ,VT=%llX, ActorType = %i", actor, *(void**)actor, actor->getEntityTypeId());
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}
@@ -497,7 +497,7 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 }
 
 auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, class struck* tick)->void* {
-	_this->onAllPlayerTick();
+	//_this->onAllPlayerTick();				//这里应该是 所有serverplayer tick
 	return _this->tickWorld(tick);
 }
 

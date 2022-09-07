@@ -17,26 +17,20 @@ auto TPPoint::onTrigger()->void {
 	if (!Game::localplayer) {
 		return;
 	}
-	TextHolder chat = TextHolder("AAAA");
-	Game::localplayer->displayChatMessage(&chat,&chat);
-	Game::localplayer->jumpFromGround();
+	//TextHolder chat = TextHolder("AAAA");
+	//Game::localplayer->displayChatMessage(&chat,&chat);
+	//Game::localplayer->jumpFromGround();
 
 	//记录传送点
 	if (Game::IsKeyDown(VK_CONTROL)) {
-		if (Game::localplayer) {
-			auto p = Game::localplayer->getPos();
-			point->x = p.x;
-			point->y = p.y;
-			point->z = p.z;
-		}
+		*point = *Game::localplayer->getPosition();
+		
 	}
 
-	//读取传送过去
+	//读取并传送过去
 	if (Game::IsKeyDown(VK_SHIFT) && point && (point->x || point->y || point->z)) {
-		if (Game::localplayer) {
-			Game::localplayer->setPos(*point);
-			//Game::localplayer->teleportTo(point,true,0,1);
-		}
+		//Game::localplayer->setPos(point);
+		Game::localplayer->teleportTo(point,true,0,1);
 	}
 }
 

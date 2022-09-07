@@ -481,38 +481,6 @@ public:
 
 	static std::string getRttiBaseClassName(void* ptr);
 
-	static std::string ANSItoUTF8(const char* ansi)
-	{
-		int len = MultiByteToWideChar(CP_ACP, 0, ansi, -1, NULL, 0);
-		wchar_t* wstr = new wchar_t[len + 1];
-		memset(wstr, 0, static_cast<size_t>(len) + 1);
-		MultiByteToWideChar(CP_ACP, 0, ansi, -1, wstr, len);
-		len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
-		char* str = new char[len + 1];
-		memset(str, 0, static_cast<size_t>(len) + 1);
-		WideCharToMultiByte(CP_UTF8, 0, wstr, -1, str, len, NULL, NULL);
-		if (wstr) delete[] wstr;
-		std::string ret = str;
-		if (str) delete[] str;
-		return ret;
-	}
-	
-	static std::string UTF8toANSI(const char* utf8)
-	{
-		int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
-		wchar_t* wstr = new wchar_t[len + 1];
-		memset(wstr, 0, static_cast<size_t>(len) + 1);
-		MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wstr, len);
-		len = WideCharToMultiByte(CP_ACP, 0, wstr, -1, NULL, 0, NULL, NULL);
-		char* str = new char[len + 1];
-		memset(str, 0, static_cast<size_t>(len) + 1);
-		WideCharToMultiByte(CP_ACP, 0, wstr, -1, str, len, NULL, NULL);
-		if (wstr) delete[] wstr;
-		std::string ret = str;
-		if (str) delete[] str;
-		return ret;
-	}
-
 	static bool utf8_check_is_valid(const std::string& string)
 	{
 		int c, i, n, j;
@@ -536,4 +504,44 @@ public:
 		}
 		return true;
 	}
+
+	static std::string ANSItoUTF8(const char* ansi)
+	{
+		if (utf8_check_is_valid(ansi)) {
+			return std::string(ansi);
+		}
+		int len = MultiByteToWideChar(CP_ACP, 0, ansi, -1, NULL, 0);
+		wchar_t* wstr = new wchar_t[len + 1];
+		memset(wstr, 0, static_cast<size_t>(len) + 1);
+		MultiByteToWideChar(CP_ACP, 0, ansi, -1, wstr, len);
+		len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+		char* str = new char[len + 1];
+		memset(str, 0, static_cast<size_t>(len) + 1);
+		WideCharToMultiByte(CP_UTF8, 0, wstr, -1, str, len, NULL, NULL);
+		if (wstr) delete[] wstr;
+		std::string ret = str;
+		if (str) delete[] str;
+		return ret;
+	}
+	
+	static std::string UTF8toANSI(const char* utf8)
+	{
+		if (!utf8_check_is_valid(utf8)) {
+			return std::string(utf8);
+		}
+		int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
+		wchar_t* wstr = new wchar_t[len + 1];
+		memset(wstr, 0, static_cast<size_t>(len) + 1);
+		MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wstr, len);
+		len = WideCharToMultiByte(CP_ACP, 0, wstr, -1, NULL, 0, NULL, NULL);
+		char* str = new char[len + 1];
+		memset(str, 0, static_cast<size_t>(len) + 1);
+		WideCharToMultiByte(CP_ACP, 0, wstr, -1, str, len, NULL, NULL);
+		if (wstr) delete[] wstr;
+		std::string ret = str;
+		if (str) delete[] str;
+		return ret;
+	}
+
+
 };
