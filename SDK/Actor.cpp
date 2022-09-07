@@ -168,6 +168,31 @@ auto Actor::getNameTag()->const char* {
 	return GetVFtableFun<const char*, Actor*>(63)(this);
 }
 
+auto Actor::getNameTagAsHash()->unsigned __int64 {
+	return GetVFtableFun<unsigned __int64, Actor*>(64)(this);
+}
+
+/*
+_QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
+{
+  (*(void (__fastcall **)(__int64))(*(_QWORD *)a1 + 504i64))(a1);
+  *a2 = 0i64;
+  a2[2] = 0i64;
+  a2[3] = 0i64;
+  sub_1400A7970(a2, a1 + 1440);			//std::string::string
+  return a2;
+}
+*/
+//这个函数暂存，因为会崩溃
+auto Actor::getFormattedNameTag()->void* {
+	void* ret[3];
+	return GetVFtableFun<void*, Actor*,void*>(65)(this,ret);
+}
+
 auto Actor::getEntityTypeId()->int {
 	return GetVFtableFun<unsigned int, Actor*>(170)(this);
+}
+
+auto Actor::causeFallDamage()->void* {
+	return GetVFtableFun<void*, Actor*>(186)(this);
 }

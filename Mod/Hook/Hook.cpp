@@ -400,10 +400,10 @@ auto Hook::GetHungerValAddress_Tick(void* _this, const char* a1, void* a2)->void
 
 
 //仅仅在本地房间时有效 _this 应该是serverplayer
-auto Hook::NoFallDamage_Tick(void* _this, float* a1)->void*
+auto Hook::NoFallDamage_Tick(Player* _this, float* a1)->void*
 {
 	//this + 1D4
-	*reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x1D4) = 0.0f;
+	//*reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x1D4) = 0.0f;
 	return noFallDamage_Tickcall(_this, a1);
 }
 

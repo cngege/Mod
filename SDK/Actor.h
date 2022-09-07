@@ -68,6 +68,9 @@ public:
 	auto getPosPrev()->vec3_t*;														/*23*/
 	auto teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void;	/*44*/
 	auto getNameTag()->const char*;													/*63*/
+	auto getNameTagAsHash()->unsigned __int64;										/*64*/
+	auto getFormattedNameTag()->void*;										/*65*/
 	//auto isPlayer()->bool;														/*99*/  // 不能用 因为MC中该函数功能的实现方法是 Player类重写
 	auto getEntityTypeId()->int;													/*170*/	//可能是 Player::getEntityTypeId()
+	auto causeFallDamage()->void*;													/*186*/
 };

@@ -30,11 +30,17 @@ auto NoAttackFriend::IsFriend(Player* p)->bool {
 
 #include "../../Utils/Logger.h"
 auto NoAttackFriend::onAttack(Actor* actor)->bool {
-	if (!isEnabled() || !actor->isPlayerEx()) {
+	if (!isEnabled()) {
 		return true;
 	}
-	//暂时搁置
-	//logF("myptr:%llX,myname:%s", Game::localplayer, Game::localplayer->getNameTag());
-	//logF("actorname:%s,actorptr:%llX", actor->getNameTag(), actor);
+	{
+		//暂时搁置
+		logF("myptr:%llX,myname:%llu", Game::localplayer, actor->getNameTagAsHash());
+		logF("actorname:%s,actorptr:%llX", actor->getNameTag(), actor);
+	}
+	if (!actor->isPlayerEx()) {
+		return true;
+	}
+	
 	return !IsFriend((Player*)actor);
 }
