@@ -425,10 +425,7 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 
 //一直调用 且每位玩家都调用
 auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
-	static HitBox* idy = Game::GetModuleManager()->GetModule<HitBox*>();
-	if (idy) {
-		idy->onActorTick(_this);
-	}
+	Game::GetModuleManager()->onActorTick(_this);
 	return allActor_Tickcall(_this, a1, a2);
 }
 
@@ -489,7 +486,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 }
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
-	//logF("attack Actor ptr= %llX ,VT=%llX, ActorType = %i", actor, *(void**)actor, actor->getEntityTypeId());
+	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y);
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}

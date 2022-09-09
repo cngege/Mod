@@ -7,7 +7,9 @@ enum ActorType {
 	iron_golem = 788,
 	panda = 9477,
 	parrot = 21278,
-	villager = 16778099
+	villager = 16778099,
+
+	Hive_Treasure = 256
 };
 
 

@@ -23,12 +23,15 @@ auto HitBox::onKeyUpdate(int key, bool isDown)->void {
 }
 
 auto HitBox::onActorTick(Actor* actor)->void {
-	if (Game::localplayer == nullptr) {
+	if (actor->isLocalPlayer()) {
 		return;
 	}
-	if (actor == (Actor*)Game::localplayer) {
-		return;
-	}
+	//if (Game::localplayer == nullptr) {
+	//	return;
+	//}
+	//if (actor == (Actor*)Game::localplayer) {
+	//	return;
+	//}
 	//判断是否是玩家 大写锁定
 	static NoAttackFriend* noAttackFriend = Game::GetModuleManager()->GetModule<NoAttackFriend*>();
 	if (actor->isPlayerEx()) {

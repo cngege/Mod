@@ -9,6 +9,7 @@
 #include "Modules/Render.h"
 #include "Modules/NoAttackFriend.h"
 #include "Modules/ArmsLength.h"
+#include "Modules/HiveTreasureHitBox.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -19,6 +20,7 @@ auto ModuleManager::Init()->void {
 	if (isInit) return;
 
 	moduleList.push_back((Module*)(new HitBox()));
+	moduleList.push_back((Module*)(new HiveTreasureHitBox()));
 	moduleList.push_back((Module*)(new InstantDestroy()));
 	moduleList.push_back((Module*)(new NoKnockback()));
 	moduleList.push_back((Module*)(new Traverse()));
