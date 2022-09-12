@@ -1,7 +1,7 @@
 #pragma once
 
-struct Attribute {
-	static const __int64 HEALTH = 25769804032;
+enum Attribute : __int64 {
+	HEALTH = 25769804032
 };
 
 class AttributeInstance {

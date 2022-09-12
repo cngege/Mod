@@ -147,7 +147,6 @@ auto Actor::isLocalPlayer()->bool {
 		return false;
 }
 
-#include "../Mod/Utils/Logger.h"
 auto Actor::getHealth()->float {
 	AttributeInstance* AI = this->getAttribute(Attribute::HEALTH);
 	float v = AI->getCurrentValue();
@@ -156,8 +155,8 @@ auto Actor::getHealth()->float {
 
 // 虚表函数
 
-auto Actor::getAttribute(const __int64 attribute)->AttributeInstance* {
-	return GetVFtableFun<AttributeInstance*, Actor*, const __int64*>(207)(this, &attribute);
+auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
+	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(207)(this, &attribute);
 	//if (GetAttributeInstance_HealthFunVT != 0) {
 	//	return reinterpret_cast<AttributeInstance* (__fastcall*)(Actor*, const __int64*)>(ServerPlayer::GetVFtableFun(GetAttributeInstance_HealthFunVT))(this, &attribute);
 	//}

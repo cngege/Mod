@@ -68,7 +68,7 @@ public:
 public:
 	//虚表函数
 
-	auto getAttribute(const __int64)->class AttributeInstance*;
+	auto getAttribute(Attribute)->class AttributeInstance*;
 
 public:
 

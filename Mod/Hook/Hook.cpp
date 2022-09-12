@@ -487,6 +487,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y);
+	//logF("H:%f", actor->getHealth());
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}
