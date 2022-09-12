@@ -3,6 +3,7 @@
 #include "../Utils/Utils.h"
 #include "Player.h"
 #include "Actor.h"
+#include "AttributeInstance.h"
 #include "GameMode.h"
 #include "../Modules/ModuleManager.h"
 
@@ -55,8 +56,30 @@ auto Game::init() -> void
 		}
 	}
 
+	//获取 获取玩家血量函数的相关偏移
+	{
+		auto getHealthFun_sigOffset = FindSignature("48 8D 15 ? ? ? ? 48 8B CE FF 90 ? ? ? ? F3 0F 10 88 ? ? ? ? F3 0F 2C C9 66 0F 6E C1 0F 5B C0 8D 41 ? 0F 2F C1 0F 42 C8 85 C9");
+		auto offset = *reinterpret_cast<int*>(getHealthFun_sigOffset + 3);
+		auto HEALTHVal = *reinterpret_cast<__int64*>(getHealthFun_sigOffset + 7 + offset);
 
+		auto vtoffset = *reinterpret_cast<int*>(getHealthFun_sigOffset + 12);
+		auto gvoffset = *reinterpret_cast<int*>(getHealthFun_sigOffset + 20);
+		Actor::GetAttributeInstance_HealthFunVT = vtoffset;
+		AttributeInstance::getCurrentValueoffset = gvoffset;
 
+		if (getHealthFun_sigOffset == 0x00) {
+			logF("[Game::init] [Error]Find Player getHealthFun_sigOffset Offset is no working!!!,getHealthFun_sigOffset=0");
+		}
+		if (Attribute::HEALTH != HEALTHVal) {
+			logF("[Game::init] [Error]Attribute::HEALTH is Error,should is :%ll", HEALTHVal);
+		}
+		if (vtoffset == 0x00) {
+			logF("[Game::init] [Error]vtoffset == 0x00 ");
+		}
+		if (gvoffset == 0x00) {
+			logF("[Game::init] [Error]gvoffset == 0x00 ");
+		}
+	}
 }
 
 

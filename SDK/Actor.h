@@ -2,6 +2,8 @@
 #include <string>
 #include "..\Mod\Utils\HMath.h"
 
+#include "AttributeInstance.h"
+
 enum ActorType {
 	player = 1,
 	iron_golem = 788,
@@ -39,6 +41,8 @@ public:
 	static int XHitBoxOffset;
 	static int YHitBoxOffset;
 
+	static int GetAttributeInstance_HealthFunVT;
+
 public:
 	
 	auto isPlayerEx() -> bool;
@@ -59,8 +63,12 @@ public:
 	auto onMoveBBs(vec3_t)->void;
 	auto isLocalPlayer()->bool;
 
+	auto getHealth()->float;
+
 public:
 	//虚表函数
+
+	auto getAttribute(const __int64)->class AttributeInstance*;
 
 public:
 

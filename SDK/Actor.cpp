@@ -1,8 +1,10 @@
 ﻿#include "Actor.h"
 #include "LocalPlayer.h"
 #include "ServerPlayer.h"
+#include "AttributeInstance.h"
 #include "../Mod/Utils/Utils.h"
 #include "../Mod/Utils/Game.h"
+#include <math.h>
 
 int Actor::SpeedXOffset = 0;
 int Actor::SpeedYOffset = 0;
@@ -18,6 +20,7 @@ int Actor::PosZOffset2 = 0;
 int Actor::XHitBoxOffset = 0;
 int Actor::YHitBoxOffset = 0;
 
+int Actor::GetAttributeInstance_HealthFunVT = 0;
 
 uintptr_t** Actor::vfTables = nullptr;
 
@@ -144,8 +147,22 @@ auto Actor::isLocalPlayer()->bool {
 		return false;
 }
 
+#include "../Mod/Utils/Logger.h"
+auto Actor::getHealth()->float {
+	AttributeInstance* AI = this->getAttribute(Attribute::HEALTH);
+	float v = AI->getCurrentValue();
+	return ceil(v);
+}
+
 // 虚表函数
 
+auto Actor::getAttribute(const __int64 attribute)->AttributeInstance* {
+	return GetVFtableFun<AttributeInstance*, Actor*, const __int64*>(207)(this, &attribute);
+	//if (GetAttributeInstance_HealthFunVT != 0) {
+	//	return reinterpret_cast<AttributeInstance* (__fastcall*)(Actor*, const __int64*)>(ServerPlayer::GetVFtableFun(GetAttributeInstance_HealthFunVT))(this, &attribute);
+	//}
+	//return nullptr;
+}
 
 // 原生虚表函数
 auto Actor::setPos(vec3_t* pos)->void* {

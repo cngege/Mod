@@ -126,6 +126,9 @@
     <ClInclude Include="Modules\Modules\HiveTreasureHitBox.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SDK\AttributeInstance.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -208,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="Modules\Modules\HiveTreasureHitBox.cpp">
       <Filter>Modules\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\AttributeInstance.cpp">
+      <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
