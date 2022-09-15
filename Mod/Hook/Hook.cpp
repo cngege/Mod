@@ -478,6 +478,9 @@ auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 
 auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleArea const& a2, TextHolder* a3, UIColor const& a4, float a5, float a6, TextMeasureData* a7, uintptr_t* a8)->void {
 	if (Game::mcfont != a1) {
+		if (Game::mcfont == nullptr) {
+			logF("Font:%llX", a1);
+		}
 		Game::mcfont = a1;
 		//logF("mcfont = %llX,Text = %s", a1,a3->getText());
 	}

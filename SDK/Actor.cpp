@@ -200,8 +200,8 @@ _QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
 }
 */
 //这个函数暂存，因为会崩溃
-auto Actor::getFormattedNameTag()->void* {
-	void* ret[3];
+auto Actor::getFormattedNameTag(void* ret)->void* {
+	//void* ret = malloc(8 * 4);
 	return GetVFtableFun<void*, Actor*,void*>(65)(this,ret);
 }
 

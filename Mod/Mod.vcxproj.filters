@@ -129,6 +129,9 @@
     <ClInclude Include="..\SDK\AttributeInstance.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Modules\RenderHealth.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -214,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="..\SDK\AttributeInstance.cpp">
       <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Modules\RenderHealth.cpp">
+      <Filter>Modules\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
