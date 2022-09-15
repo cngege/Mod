@@ -7,6 +7,10 @@
 class LocalPlayer : public Player {
 protected:
 	static uintptr_t** vfTables;
+
+public:
+	static int toCIoffset;
+	
 public:
 	template <typename TRet, typename... TArgs>
 	static auto GetVFtableFun(int)->auto*;
@@ -14,6 +18,10 @@ public:
 	static auto GetVFtables()->uintptr_t**;
 	static auto SetVFtables(uintptr_t** vTables)->void;
 	//LocalPlayer::displayClientMessage(std::string const&)  //388
+
+public:
+	//定义函数
+	auto getClientInstance()->class ClientInstance*;
 
 public:
 	//虚表函数

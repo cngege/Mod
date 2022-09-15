@@ -336,9 +336,9 @@ auto Hook::init() -> void
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 48 8D 8E ? ? ? ? 48 8B 86 ? ? ? ? 4C 8B 80 ? ? ? ? 48 8B D6";
 		auto LocalPlayerVTable_sigOffset = FindSignature(memcode);
-		auto offsize = *reinterpret_cast<int*>(LocalPlayerVTable_sigOffset + 3);
-		auto LocalPlayerVTable = reinterpret_cast<uintptr_t**>(LocalPlayerVTable_sigOffset + offsize + 7);
-		if (LocalPlayerVTable_sigOffset == 0x00 || offsize == 0x00) {
+		auto offset = *reinterpret_cast<int*>(LocalPlayerVTable_sigOffset + 3);
+		auto LocalPlayerVTable = reinterpret_cast<uintptr_t**>(LocalPlayerVTable_sigOffset + offset + 7);
+		if (LocalPlayerVTable_sigOffset == 0x00 || offset == 0x00) {
 			logF("[LocalPlayer::SetVtables] [Error]Find LocalPlayer LocalPlayerVTable_sigOffset is no working!!!");
 		}
 		else {
@@ -346,6 +346,21 @@ auto Hook::init() -> void
 			logF("[LocalPlayer::SetVtables] [Success] LocalPlayerVTable = %llX", LocalPlayerVTable);
 			LocalPlayer::SetVFtables(LocalPlayerVTable);
 
+			//找本地玩家到ClientInstance的指针偏移
+			char* LP_CIoffset = (char*)LocalPlayerVTable_sigOffset;
+			for (int i = 0; i <= 500; i++) {
+				if (i == 500) {
+					logF("[LocalPlayer::SetVtables] [Error] Find LocalPlayer To ClientInstance Offset Fail");
+					logF("[LocalPlayer::SetVtables] [Error] LP_CIoffset:%llX", LP_CIoffset);
+					break;
+				}
+				if (*LP_CIoffset == (char)0x48 && *(LP_CIoffset + 1) == (char)0x89 && *(LP_CIoffset + 2) == (char)0xBE) {
+					LocalPlayer::toCIoffset = *reinterpret_cast<int*>(LP_CIoffset + 3);
+					logF("[LocalPlayer::SetVtables] [Success] Find LocalPlayer To ClientInstance i:%d",i);
+					break;
+				}
+				LP_CIoffset++;
+			}
 			//虚表Hook
 			//MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(374), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
 
@@ -417,7 +432,7 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 		p = thisp;
 		Game::localplayer = _this;
 		logF("Player_Tick localplayer ptr = %llX,localplayerVT = %llX", thisp, *(INT64*)thisp);
-		logF("Player_Tick Clientinstance ptr = %llX", Game::Cinstance);
+		logF("Player_Tick Clientinstance ptr = %llX,LP->getCI = %llX,CIVT = %llX", Game::Cinstance, _this->getClientInstance(),*(uintptr_t*)_this->getClientInstance());
 	}
 	Game::GetModuleManager()->onLocalPlayerTick(_this);
 	return localplayer_getCameraOffsetcall(_this);
@@ -487,7 +502,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y);
-	//logF("H:%f", actor->getHealth());
+	//Game::localplayer->getClientInstance()->setCameraEntity(actor);
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}

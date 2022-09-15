@@ -1,7 +1,9 @@
 #include "LocalPlayer.h"
+#include "ClientInstance.h"
 #include "TextHolder.h"
 
 uintptr_t** LocalPlayer::vfTables = nullptr;
+int LocalPlayer::toCIoffset = 0;
 
 template <typename TRet, typename... TArgs>
 auto LocalPlayer::GetVFtableFun(int a)->auto* {
@@ -19,6 +21,12 @@ auto LocalPlayer::GetVFtables()->uintptr_t** {
 auto LocalPlayer::SetVFtables(uintptr_t** vfTable)->void {
 	vfTables = vfTable;
 }
+
+//定义函数
+auto LocalPlayer::getClientInstance()->ClientInstance* {
+	return *((ClientInstance**)((uintptr_t)this + toCIoffset));			//这个偏移是偏移字节
+}
+
 
 //虚表函数
 
