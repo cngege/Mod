@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include "..\Mod\Utils\HMath.h"
 #include "..\Mod\Utils\Game.h"
@@ -6,8 +6,8 @@
 #include "TextHolder.h"
 
 
-/* ÈçºÎĞéº¯Êı³ö´í,¾ÍÊÇÈ¥idaÅÜ°²×¿µÄMCÈ¥¶ÔĞÂµÄĞéº¯Êı */
-/* °´ÕÕÊÓÆµ×÷ÕßµÄËµ·¨£¬Õâ¸öĞéº¯Êı´ÓÒ»¿ªÊ¼¾ÍÃ»ÓĞ±ä¹ı */
+/* å¦‚ä½•è™šå‡½æ•°å‡ºé”™,å°±æ˜¯å»idaè·‘å®‰å“çš„MCå»å¯¹æ–°çš„è™šå‡½æ•° */
+/* æŒ‰ç…§è§†é¢‘ä½œè€…çš„è¯´æ³•ï¼Œè¿™ä¸ªè™šå‡½æ•°ä»ä¸€å¼€å§‹å°±æ²¡æœ‰å˜è¿‡ */
 
 struct RectangleArea {
 public:
@@ -70,23 +70,23 @@ public:
 
 	static uintptr_t* drawtextCall;
 
-	//·Ç¹Ù·½ ×Ô¶¨Òåº¯Êı
+	//éå®˜æ–¹ è‡ªå®šä¹‰å‡½æ•°
 public:
 
 	/// <summary>
-	/// Ìî³ä¾ØĞÎ
+	/// å¡«å……çŸ©å½¢
 	/// </summary>
-	/// <param name="pos">Î»ÖÃ</param>
-	/// <param name="size">´óĞ¡</param>
-	/// <param name="color">ÑÕÉ«</param>
+	/// <param name="pos">ä½ç½®</param>
+	/// <param name="size">å¤§å°</param>
+	/// <param name="color">é¢œè‰²</param>
 	void Fillshape(struct vec2_t, struct vec2_t, UIColor);
 	/// <summary>
-	/// »­¿ÕĞÄ¾ØĞÎ
+	/// ç”»ç©ºå¿ƒçŸ©å½¢
 	/// </summary>
-	/// <param name="pos">Î»ÖÃ(×óÉÏ)</param>
-	/// <param name="size">´óĞ¡</param>
-	/// <param name="color">ÑÕÉ«</param>
-	/// <param name="w">±ß¿ò¿í¶È</param>
+	/// <param name="pos">ä½ç½®(å·¦ä¸Š)</param>
+	/// <param name="size">å¤§å°</param>
+	/// <param name="color">é¢œè‰²</param>
+	/// <param name="w">è¾¹æ¡†å®½åº¦</param>
 	void Drawshape(struct vec2_t pos, struct vec2_t size, UIColor, float w);
 
 	void Drawtext(const vec2_t& pos, std::string* textStr, const UIColor& color, float textSize) {

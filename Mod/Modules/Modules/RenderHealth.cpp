@@ -23,8 +23,8 @@ auto RenderHealth::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 			show = false;
 			return;
 		}
-		if (*(uintptr_t*)currentActor == currentActorVT) {
-			currentPlayerName = currentActor->getNameTag();
+		if (*(uintptr_t*)currentActor == currentActorVT) {				//防止实体移除后，后面还会调用这个实体类中的方法
+			currentPlayerName = currentActor->getNameTag()->getText();
 			currentPlayerHealth = (int)currentActor->getHealth();
 		}
 

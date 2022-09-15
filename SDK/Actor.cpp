@@ -1,6 +1,7 @@
 ﻿#include "Actor.h"
 #include "LocalPlayer.h"
 #include "ServerPlayer.h"
+#include "TextHolder.h"
 #include "AttributeInstance.h"
 #include "../Mod/Utils/Utils.h"
 #include "../Mod/Utils/Game.h"
@@ -180,8 +181,8 @@ auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->
 	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(44)(this, pos, a1, a2, a3);
 }
 
-auto Actor::getNameTag()->const char* {
-	return GetVFtableFun<const char*, Actor*>(63)(this);
+auto Actor::getNameTag()->TextHolder* {
+	return GetVFtableFun<TextHolder*, Actor*>(63)(this);
 }
 
 auto Actor::getNameTagAsHash()->unsigned __int64 {
