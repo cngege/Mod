@@ -8,7 +8,7 @@ public:
 	NoAttackFriend();
 
 public:
-	char colorbyte[17] = {(char)'§',(char)'0',(char)'1',(char)'2',(char)'3',(char)'4',(char)'5',(char)'6',(char)'7',(char)'8',(char)'9',(char)'a',(char)'b',(char)'c',(char)'d',(char)'e',(char)'f'};
+	std::string colorbyte[17] = { "§","0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"};
 
 public:
 	virtual auto onAttack(class Actor*)->bool override;
