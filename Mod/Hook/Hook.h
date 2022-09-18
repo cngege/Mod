@@ -26,7 +26,7 @@ public:
 	static auto KeyUpdate(__int64, int)->void*;
 	static auto RenderDetour(void*, class MinecraftUIRenderContext*)->void;
 	static auto Draw_Text(class MinecraftUIRenderContext*,class BitmapFont*, struct RectangleArea const&, class TextHolder*, struct UIColor const& , float , float , struct TextMeasureData*, uintptr_t*)->void;
-	
+	static auto sendMessage(void*, TextHolder*)->__int64;
 public:
 	//虚表Hook
 	static auto GameMode_attack(class GameMode*, class Actor*)->bool;

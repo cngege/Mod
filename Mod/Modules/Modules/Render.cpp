@@ -15,7 +15,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 		UIColor textcolor2 = UIColor(150, 150, 150);
 
 		float ltY = 15.f;						//绘制文字左上角Y值的位置
-		float textlineheight = 10.f * fontsize;		//下一行的偏移量
+		float textlineheight = 8.f * fontsize;		//下一行的偏移量
 
 		auto mcount = Game::GetModuleManager()->GetAllModule().size();
 

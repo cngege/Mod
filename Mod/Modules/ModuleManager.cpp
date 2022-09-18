@@ -1,5 +1,5 @@
-#include "ModuleManager.h"
-//Ä£¿é
+ï»¿#include "ModuleManager.h"
+//æ¨¡å—
 #include "Modules/HitBox.h"
 #include "Modules/InstantDestroy.h"
 #include "Modules/NoKnockback.h"
@@ -15,8 +15,8 @@
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
 
-//ÔØÈëËùÓĞµÄModuleµ½ÁĞ±íÖĞ
-//Ã¿ĞÂ½¨Ò»¸öModule¶¼ÔÚÕâÀïÌí¼ÓÒ»´Î new 
+//è½½å…¥æ‰€æœ‰çš„Moduleåˆ°åˆ—è¡¨ä¸­
+//æ¯æ–°å»ºä¸€ä¸ªModuleéƒ½åœ¨è¿™é‡Œæ·»åŠ ä¸€æ¬¡ new 
 auto ModuleManager::Init()->void {
 	if (isInit) return;
 
@@ -36,7 +36,7 @@ auto ModuleManager::Init()->void {
 }
 
 
-//¹Ø±ÕËùÓĞµÄ Module ²¢Ö´ĞĞÎö¹¹º¯Êı
+//å…³é—­æ‰€æœ‰çš„ Module å¹¶æ‰§è¡Œææ„å‡½æ•°
 auto ModuleManager::Disable()->void {
 	if (!IsInitialized())
 		return;
@@ -147,4 +147,15 @@ auto ModuleManager::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	for (auto pMod : moduleList) {
 		pMod->onRenderDetour(ctx);
 	}
+}
+
+auto ModuleManager::onSendMessage(TextHolder* TH)->bool {
+	bool RunOriginalFun = true;
+	if (!IsInitialized())
+		return RunOriginalFun;
+	for (auto pMod : moduleList) {
+		if (!pMod->onSendMessage(TH))
+			RunOriginalFun = false;
+	}
+	return RunOriginalFun;
 }

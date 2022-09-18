@@ -21,11 +21,12 @@ public:
 public:
 	auto onKeyUpdate(int, bool)->void;
 	auto onTick(class GameMode*)->void;
-	auto onAttack(class Actor*)->bool;							// 返回值可以拦截该事件
-	auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool;  // 返回值可以拦截该事件
+	auto onAttack(class Actor*)->bool;							// 杩斿洖鍊煎彲浠ユ嫤鎴浜嬩欢
+	auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool;  // 杩斿洖鍊煎彲浠ユ嫤鎴浜嬩欢
 	auto onActorTick(class Actor*)->void;
 	auto onLocalPlayerTick(class LocalPlayer*)->void;
 	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
+	auto onSendMessage(class TextHolder*)->bool;
 };
 
 template <typename TRet>

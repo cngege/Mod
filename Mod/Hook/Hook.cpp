@@ -68,6 +68,10 @@ using RenderDetour = void(__fastcall*)(void*, MinecraftUIRenderContext*);
 RenderDetour renderDetourcall;
 uintptr_t renderDetour;
 
+using SendChatMessage = uint8_t(__fastcall*)(void*, TextHolder*);
+SendChatMessage sendChatMessagecall;
+uintptr_t sendChatMessage;
+
 using LPLP = void* (__fastcall*)(void*, void*, void*, void*, int, void*, char, void*, void*, void*, void*, void*);
 LPLP lplpcall;
 
@@ -232,6 +236,21 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "muicDrawText");
+		}
+	}
+
+	//SendChatMessage
+	{
+		const char* memcode = "E8 ? ? ? ? 3C ? 75 ? 48 8B 8F ? ? ? ? 48 8B 01 4C 89 75";
+		auto findptr = FindSignature(memcode);
+		auto offset = *reinterpret_cast<int*>(findptr + 1);
+		sendChatMessage = findptr + 5 + offset;
+		if (findptr != 0x00) {
+			MH_CreateHookEx((LPVOID)sendChatMessage, &Hook::sendMessage, &sendChatMessagecall);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "sendChatMessage");
 		}
 	}
 
@@ -488,6 +507,15 @@ auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleA
 	reinterpret_cast<MUICDrawText>(MinecraftUIRenderContext::drawtextCall)(_this, a1, a2, a3, a4, a5, a6, a7, a8);
 }
 
+
+auto Hook::sendMessage(void* a1, TextHolder* a2)->__int64 {
+	//if (strcmp(a2->getText(), "1") == 0)
+	auto ret = Game::GetModuleManager()->onSendMessage(a2);
+	if (!ret || 1) {
+		return 0;
+	}
+	return sendChatMessagecall(a1, a2);
+}
 
 //虚表Hook
 auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool {

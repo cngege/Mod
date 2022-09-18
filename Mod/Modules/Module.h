@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 //#include <WinUser.h>
 #include "../Utils/Utils.h"
 
 enum KeyMode {
-	Trigger = 0,						//°´ÏÂ ´¥·¢ onTrigger();
-	Switch = 1,							//°´ÏÂÒ»´Î  isenable µÄÖµ¾ÍÇĞ»»Ò»´Î Í¬Ê±Ò²»á´¥·¢¶ÔÓ¦µÄ onEnable()  onDisable()
-	Hold = 2							//°´ÏÂ ´¥·¢ onEnable()   ËÉ¿ª´¥·¢  onDisable()
+	Trigger = 0,						//æŒ‰ä¸‹ è§¦å‘ onTrigger();
+	Switch = 1,							//æŒ‰ä¸‹ä¸€æ¬¡  isenable çš„å€¼å°±åˆ‡æ¢ä¸€æ¬¡ åŒæ—¶ä¹Ÿä¼šè§¦å‘å¯¹åº”çš„ onEnable()  onDisable()
+	Hold = 2							//æŒ‰ä¸‹ è§¦å‘ onEnable()   æ¾å¼€è§¦å‘  onDisable()
 };
 
 
@@ -19,7 +19,7 @@ public:
 private:
 	bool enabled = false;
 	int keybind = 0x00;
-	std::vector<int> controlkeys = std::vector<int>();		//ÊÇ·ñÒªÇó¹¦ÄÜ¼üÒ²Òª°´ÏÂ
+	std::vector<int> controlkeys = std::vector<int>();		//æ˜¯å¦è¦æ±‚åŠŸèƒ½é”®ä¹Ÿè¦æŒ‰ä¸‹
 	std::string modulename;
 	std::string moduleinfo;
 	KeyMode km = KeyMode::Switch;
@@ -39,11 +39,12 @@ public:
 	virtual void onTrigger();
 	virtual void onEnable();
 	virtual void onDisable();
-	virtual bool onAttack(class Actor*);				// ·µ»ØÖµ¿ÉÒÔÀ¹½Ø¸ÃÊÂ¼ş
+	virtual bool onAttack(class Actor*);				// è¿”å›å€¼å¯ä»¥æ‹¦æˆªè¯¥äº‹ä»¶
 	virtual bool onKnockback(class LocalPlayer*, struct vec3_t*);
 	virtual void onActorTick(class Actor*);
 	virtual void onLocalPlayerTick(class LocalPlayer*);
 	virtual void onRenderDetour(class MinecraftUIRenderContext*);
+	virtual bool onSendMessage(class TextHolder*);
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();

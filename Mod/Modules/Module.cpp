@@ -1,4 +1,4 @@
-#include "Module.h"
+ï»¿#include "Module.h"
 #include "../Utils/Game.h"
 #include "../Utils/Utils.h"
 
@@ -36,7 +36,7 @@ auto Module::setcontrolkeysbind(std::vector<int> keys)->void{
 	this->controlkeys = keys;
 }
 
-//¼ì²éÄ£¿éÒªÇóµÄ¹¦ÄÜ¼üÊÇ·ñÈ«¶¼°´ÏÂ
+//æ£€æŸ¥æ¨¡å—è¦æ±‚çš„åŠŸèƒ½é”®æ˜¯å¦å…¨éƒ½æŒ‰ä¸‹
 auto Module::checkcontrolkeys()->bool {
 	bool alldown = true;
 	for (auto key : getcontrolkeysbind()) {
@@ -124,4 +124,8 @@ auto Module::onLocalPlayerTick(LocalPlayer* lp)->void {
 
 auto Module::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 
+}
+
+auto Module::onSendMessage(TextHolder*)->bool {
+	return true;
 }
