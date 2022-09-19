@@ -12,13 +12,17 @@
   - 向前挺进一格 可穿过一层墙（**快捷键F2**）
   - 坐标点,可记录(**CTRL+F3**)、传送（**SHIFT+F3**）
   - HiveTreasureHitBox Hive起床中使用（**SHIFT**）修改小宝箱碰撞箱
-  - UI绘制方框绘制文字
-  - 点击显示实体名称和血量（**F5**）
+  - UI绘制方框绘制文字 渲染面板 （**INSERT**）
   - 好友检查，（**F4**）开启后通过玩家名称判断是否是好友，来拦截攻击（防止误伤），HitBox也不对好友产生影响
+  - 点击显示实体名称和血量（**F5**）
+  - 自动疾跑模块 (**F6**) 默认开启，开启后，玩家移动即会自动奔跑
 - **将要更新的功能**
   - No Found
 - **可能更新的功能**
-  - No Found
+  - 发送消息翻译成指定的语言
+  - 命令系统
+  - 面板UI用中文
+  - 配置保存本地,模块开启关闭状态保持本地
   
 ### **已经解决的和未解决的BUG**
 - **已解决**
@@ -38,8 +42,11 @@
   - https://www.youtube.com/playlist?list=PL9mZGNEJquY77cTy1eNOLs12BsVK5zA-P
 
 ### **外部库**
-- **nlohmann::json**
+- **nlohmann::json** （暂未用到）
   - https://github.com/nlohmann/json
   
+- **cpp-httplib** （暂未用到）
+  - https://github.com/yhirose/cpp-httplib
+
 - **minhook**
   - https://github.com/TsudaKageyu/minhook
