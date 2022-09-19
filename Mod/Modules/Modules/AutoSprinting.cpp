@@ -15,7 +15,7 @@ auto AutoSprinting::onTick(GameMode* gm)->void {
 	LocalPlayer* lp = Game::localplayer;
 	if (lp != nullptr) {
 		if (lp->getSpeed().magnitudexy() > 0.05f) {
-			lp->setSprinting(true);
+			lp->setSprintingEx(true);					//setSprintingEx 不会被HIVE踢，原版虚表函数会，可能是没有检测而直接发包的原因
 		}
 	}
 }

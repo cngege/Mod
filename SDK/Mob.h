@@ -15,10 +15,10 @@ public:
 	static uintptr_t setSprintingFunAddr;
 
 public:
-	auto setSprintingEx(bool)->char;
+	auto setSprintingEx(bool)->char;					//即使放在Tick中执行，也不会被HIVE踢
 
 	//虚表函数
 public:
-	auto setSprinting(bool)->void;						//函数是对的，但是执行没有效果,可能是只对本地玩家没有效果.
+	auto setSprinting(bool)->void;						//函数是对的，但在Tick中执行会持续发包（猜测），会被HIVE踢
 
 };
