@@ -11,6 +11,7 @@
 #include "Modules/ArmsLength.h"
 #include "Modules/HiveTreasureHitBox.h"
 #include "Modules/RenderHealth.h"
+#include "Modules/AutoSprinting.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -31,6 +32,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new NoAttackFriend()));
 	moduleList.push_back((Module*)(new ArmsLength()));
 	moduleList.push_back((Module*)(new RenderHealth()));
+	moduleList.push_back((Module*)(new AutoSprinting()));
 
 	isInit = true;
 }

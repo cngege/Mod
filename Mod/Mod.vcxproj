@@ -200,6 +200,7 @@
     <ClInclude Include="Modules\Module.h" />
     <ClInclude Include="Modules\ModuleManager.h" />
     <ClInclude Include="Modules\Modules\ArmsLength.h" />
+    <ClInclude Include="Modules\Modules\AutoSprinting.h" />
     <ClInclude Include="Modules\Modules\HitBox.h" />
     <ClInclude Include="Modules\Modules\HiveTreasureHitBox.h" />
     <ClInclude Include="Modules\Modules\InstantDestroy.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="Modules\Module.cpp" />
     <ClCompile Include="Modules\ModuleManager.cpp" />
     <ClCompile Include="Modules\Modules\ArmsLength.cpp" />
+    <ClCompile Include="Modules\Modules\AutoSprinting.cpp" />
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
     <ClCompile Include="Modules\Modules\HiveTreasureHitBox.cpp" />
     <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
