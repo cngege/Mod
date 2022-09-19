@@ -25,24 +25,12 @@ auto Game::init() -> void
 
 	//获取生物位置指针的偏移
 	{
-		
-		//48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81
-		/*auto ActorPos_sigOffset = FindSignature("48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81");
-		auto Xoffset = *reinterpret_cast<int*>(ActorPos_sigOffset + 21);
-		Actor::PosXOffset1 = Xoffset;
-		Actor::PosYOffset1 = Xoffset + 4;
-		Actor::PosZOffset1 = Xoffset + 8;
-		Actor::PosXOffset2 = Xoffset + 12;
-		Actor::PosYOffset2 = Xoffset + 16;
-		Actor::PosZOffset2 = Xoffset + 20;
 
-		Actor::XHitBoxOffset = Xoffset + 24;
-		Actor::YHitBoxOffset = Xoffset + 28;
-		if (ActorPos_sigOffset == 0x00) {
-			logF("[Game::init] [Error]Find Actor SetPostion/HitBox Offset is no working!!!,ActorPos_sigOffset=0");
-		}*/
+		Mob::setSprintingFunAddr = FindSignature("48 89 5C 24 ? 57 48 83 EC ? 48 8B 81 ? ? ? ? 0F B6 DA");
+		if (Mob::setSprintingFunAddr == 0x00) {
+			logF("[Game::init] [Error]Find Mob::setSprintingFunAddr FunAddr is no working!!!,Mob::setSprintingFunAddr=0");
+		}
 	}
-
 	//获取玩家视角的偏移地址 +15
 	{
 		auto PlayerView_sigOffset = FindSignature("0F B6 D0 48 8B CE E8 ? ? ? ? F2 0F 10 86 ? ? ? ? F2 0F 11 86");

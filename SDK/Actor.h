@@ -48,8 +48,8 @@ public:
 	auto isPlayerEx() -> bool;
 
 public:
-	auto getSpeed()->vec3_t;
-	auto setSpeed(vec3_t)->void;
+	auto getSpeed()->vec3_t;			//获取瞬间速度
+	auto setSpeed(vec3_t)->void;		//设置瞬间速度
 
 	auto getPosEx()->vec3_t;
 	auto getPosEx2()->vec3_t;

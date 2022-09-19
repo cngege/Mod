@@ -125,6 +125,7 @@ auto Hook::init() -> void
 	}
 
 	//获取饥饿值的地址的函数  实际上被用来做修改玩家速度
+	//没有作用，准备删除
 	{
 		const char* memcode = "4C 8B D1 44 0F B6 CA 49 BB ? ? ? ? ? ? ? ? 48 B8 ? ? ? ? ? ? ? ? 4C 33 C8 8B C2 4D 0F AF CB C1 E8 08 44 0F B6 C0 8B C2 4D 33 C8 C1 E8 10 4D 8B 42 08 4D 0F AF CB 0F B6 C8 4C 33 C9 8B C2 49 8B 4A 30 4D 0F AF CB 48 C1 E8 18 4C 33 C8 4D 0F AF CB 49 23 C9 48 C1 E1 04 49 03 4A 18 48 8B 41 08 49 3B C0 74 27 48 8B 09 3B 50 10 74 0E 48 3B C1 74 1A 48 8B 40 08 3B 50 10 75 F2 48 85 C0 49 0F 44 C0 49 3B C0 74 05 ? ? ? ? C3 48 8D 05 ? ? ? ? C3";
 		getHungerValAddressTick = FindSignature(memcode);
@@ -270,7 +271,7 @@ auto Hook::init() -> void
 			//Hook GameMode_startDestroyBlock
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
 			//Hook GameMode_tick
-			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(9), &Hook::GameMode_tick, &GameMode::tickCall);
+			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(8), &Hook::GameMode_tick, &GameMode::tickCall);
 			//Hook GameMode_attack
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(14), &Hook::GameMode_attack, &GameMode::attackCall);
 
@@ -511,7 +512,7 @@ auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleA
 auto Hook::sendMessage(void* a1, TextHolder* a2)->__int64 {
 	//if (strcmp(a2->getText(), "1") == 0)
 	auto ret = Game::GetModuleManager()->onSendMessage(a2);
-	if (!ret || 1) {
+	if (!ret) {
 		return 0;
 	}
 	return sendChatMessagecall(a1, a2);

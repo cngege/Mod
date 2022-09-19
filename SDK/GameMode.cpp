@@ -1,4 +1,4 @@
-#include "GameMode.h"
+ï»¿#include "GameMode.h"
 #include "Actor.h"
 
 uintptr_t** GameMode::vfTables = nullptr;
@@ -27,7 +27,7 @@ auto GameMode::SetVFtables(uintptr_t** vfTable)->void {
 
 
 
-//HookºóÐé±íº¯ÊýµÄÊµÏÖ
+//HookåŽè™šè¡¨å‡½æ•°çš„å®žçŽ°
 auto GameMode::startDestroyBlock(vec3_ti* Bpos, uint8_t* Face, void* a1,void* a2)->bool {
 	using Fn = bool(__fastcall*)(GameMode*, vec3_ti*, uint8_t*,void*,void*);
 	return reinterpret_cast<Fn>(startDestroyBlockCall)(this, Bpos, Face,a1,a2);
@@ -44,9 +44,9 @@ auto GameMode::attack(Actor* actor) ->bool {
 }
 
 
-//Ðé±íº¯ÊýÊµÏÖ
+//è™šè¡¨å‡½æ•°å®žçŽ°
 
-//ÆÆ»µ·½¿é
+//ç ´åæ–¹å—
 auto GameMode::destroyBlock(vec3_ti* Bpos, uint8_t* Face)->bool {
 	return GetVFtableFun<bool, GameMode*, vec3_ti*, uint8_t*>(2)(this, Bpos, Face);
 }

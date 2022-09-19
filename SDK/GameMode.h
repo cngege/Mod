@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "../Mod/Utils/Utils.h"
 
 
@@ -12,19 +12,19 @@ public:
 	static auto GetVFtables()->uintptr_t**;
 	static auto SetVFtables(uintptr_t** vTables)->void;
 
-// Ðé±íº¯Êý±»Hookºó ¾ßÓÐÔ­Ê¼¹¦ÄÜµÄµ÷ÓÃ
+// è™šè¡¨å‡½æ•°è¢«HookåŽ å…·æœ‰åŽŸå§‹åŠŸèƒ½çš„è°ƒç”¨
 public:
 	static uintptr_t* startDestroyBlockCall;
 	static uintptr_t* attackCall;
 	static uintptr_t* tickCall;
 
-//µ÷ÓÃ¾ßÓÐÔ­Ê¼¹¦ÄÜµÄ±»HookµÄº¯Êý
+//è°ƒç”¨å…·æœ‰åŽŸå§‹åŠŸèƒ½çš„è¢«Hookçš„å‡½æ•°
 public:
 	auto startDestroyBlock(vec3_ti* Bpos, uint8_t* Face, void* a1, void* a2)->bool;				/*1*/
-	auto tick()->void*;																			/*9*/
+	auto tick()->void*;																			/*9é”™  8*/
 	auto attack(class Actor*) ->bool;															/*14*/
 
-// Ðé±íº¯Êý
+// è™šè¡¨å‡½æ•°
 public:
 
 	auto destroyBlock(vec3_ti* Bpos, uint8_t* Face)->bool;			/*2*/
