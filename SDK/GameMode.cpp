@@ -25,6 +25,9 @@ auto GameMode::SetVFtables(uintptr_t** vfTable)->void {
 }
 
 
+auto GameMode::GetLocalPlayer()->LocalPlayer* {
+	return *reinterpret_cast<LocalPlayer**>((uintptr_t)this + 8);						//紧挨着虚表地址的就是本地玩家地址
+}
 
 
 //Hook后虚表函数的实现

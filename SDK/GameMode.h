@@ -3,6 +3,7 @@
 
 
 class GameMode {
+
 protected:
 	static uintptr_t** vfTables;
 public:
@@ -18,8 +19,12 @@ public:
 	static uintptr_t* attackCall;
 	static uintptr_t* tickCall;
 
+public:
+	auto GetLocalPlayer()->class LocalPlayer*;
+
 //调用具有原始功能的被Hook的函数
 public:
+	
 	auto startDestroyBlock(vec3_ti* Bpos, uint8_t* Face, void* a1, void* a2)->bool;				/*1*/
 	auto tick()->void*;																			/*9错  8*/
 	auto attack(class Actor*) ->bool;															/*14*/
