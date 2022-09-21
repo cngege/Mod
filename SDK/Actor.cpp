@@ -208,6 +208,10 @@ auto Actor::getFormattedNameTag(void* ret)->void* {
 	return GetVFtableFun<void*, Actor*,void*>(64)(this,ret);
 }
 
+auto Actor::setSneaking(bool b)->void {
+	return GetVFtableFun<void, Actor*, bool>(99)(this, b);
+}
+
 auto Actor::getEntityTypeId()->int {
 	return GetVFtableFun<unsigned int, Actor*>(169)(this);
 }

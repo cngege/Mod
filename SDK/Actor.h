@@ -78,6 +78,7 @@ public:
 	auto getNameTagAsHash()->unsigned __int64;										/*63*/
 	auto getFormattedNameTag(void*)->void*;											/*64*/
 	auto isPlayer()->bool;															/*67*/  // 不能用 因为MC中该函数功能的实现方法是 Player类重写,现在由类地址获取虚表获取该函数地址
+	auto setSneaking(bool)->void;													/*99*/
 	auto getEntityTypeId()->int;													/*169*/	//可能是 Player::getEntityTypeId()
 	auto causeFallDamage()->void*;													/*185*/
 	auto getAttribute(Attribute)->class AttributeInstance*;							/*206*/
