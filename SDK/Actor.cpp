@@ -162,6 +162,7 @@ auto Actor::setPos(vec3_t* pos)->void* {
 	return GetVFtableFun<void*, Actor*, vec3_t*>(18)(this,pos);
 }
 
+
 auto Actor::getPosition()->vec3_t* {
 	return GetVFtableFun<vec3_t*, Actor*>(21)(this);
 }
@@ -177,6 +178,14 @@ auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->
 auto Actor::getNameTag()->TextHolder* {
 	return GetVFtableFun<TextHolder*, Actor*>(62)(this);
 }
+
+// 第19号虚表调用的都是 Player::isPlayer 所以一定返回true
+// 第40号虚表调用的都是 Actor::isPlayer  所以一定返回false
+// 第67号虚表 Actor调用的是 Actor::isPlayer, Player调用的是Player::isPlayer,所以可用
+auto Actor::isPlayer()->bool {
+	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[67])(this);
+}
+
 
 auto Actor::getNameTagAsHash()->unsigned __int64 {
 	return GetVFtableFun<unsigned __int64, Actor*>(63)(this);
