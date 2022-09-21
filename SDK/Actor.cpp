@@ -156,37 +156,30 @@ auto Actor::getHealth()->float {
 
 // 虚表函数
 
-auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
-	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(207)(this, &attribute);
-	//if (GetAttributeInstance_HealthFunVT != 0) {
-	//	return reinterpret_cast<AttributeInstance* (__fastcall*)(Actor*, const __int64*)>(ServerPlayer::GetVFtableFun(GetAttributeInstance_HealthFunVT))(this, &attribute);
-	//}
-	//return nullptr;
-}
 
 // 原生虚表函数
 auto Actor::setPos(vec3_t* pos)->void* {
-	return GetVFtableFun<void*, Actor*, vec3_t*>(19)(this,pos);
+	return GetVFtableFun<void*, Actor*, vec3_t*>(18)(this,pos);
 }
 
 auto Actor::getPosition()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(22)(this);
+	return GetVFtableFun<vec3_t*, Actor*>(21)(this);
 }
 
 auto Actor::getPosPrev()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(23)(this);
+	return GetVFtableFun<vec3_t*, Actor*>(22)(this);
 }
 
 auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
-	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(44)(this, pos, a1, a2, a3);
+	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(43)(this, pos, a1, a2, a3);
 }
 
 auto Actor::getNameTag()->TextHolder* {
-	return GetVFtableFun<TextHolder*, Actor*>(63)(this);
+	return GetVFtableFun<TextHolder*, Actor*>(62)(this);
 }
 
 auto Actor::getNameTagAsHash()->unsigned __int64 {
-	return GetVFtableFun<unsigned __int64, Actor*>(64)(this);
+	return GetVFtableFun<unsigned __int64, Actor*>(63)(this);
 }
 
 /*
@@ -203,13 +196,17 @@ _QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
 //这个函数暂存，因为会崩溃
 auto Actor::getFormattedNameTag(void* ret)->void* {
 	//void* ret = malloc(8 * 4);
-	return GetVFtableFun<void*, Actor*,void*>(65)(this,ret);
+	return GetVFtableFun<void*, Actor*,void*>(64)(this,ret);
 }
 
 auto Actor::getEntityTypeId()->int {
-	return GetVFtableFun<unsigned int, Actor*>(170)(this);
+	return GetVFtableFun<unsigned int, Actor*>(169)(this);
 }
 
 auto Actor::causeFallDamage()->void* {
-	return GetVFtableFun<void*, Actor*>(186)(this);
+	return GetVFtableFun<void*, Actor*>(185)(this);
+}
+
+auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
+	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(206)(this, &attribute);
 }

@@ -26,7 +26,7 @@ auto Game::init() -> void
 	//获取生物位置指针的偏移
 	{
 
-		Mob::setSprintingFunAddr = FindSignature("48 89 5C 24 ? 57 48 83 EC ? 48 8B 81 ? ? ? ? 0F B6 DA");
+		Mob::setSprintingFunAddr = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B ? ? ? ? ? 0F B6 ? 48 8B F1");
 		if (Mob::setSprintingFunAddr == 0x00) {
 			logF("[Game::init] [Error]Find Mob::setSprintingFunAddr FunAddr is no working!!!,Mob::setSprintingFunAddr=0");
 		}

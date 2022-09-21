@@ -151,20 +151,21 @@ auto Hook::init() -> void
 		}
 	}
 
-	// 本地玩家 Tick
-	{
-		const char* memcode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
-		localplayer_getCameraOffset = FindSignature(memcode);
-		if (localplayer_getCameraOffset != 0x00) {
-			MH_CreateHookEx((LPVOID)localplayer_getCameraOffset, &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", localplayer_getCameraOffset, memcode);
-		}
-		else {
-			logF("[Hook error] [%s] is no found Hook point", "player_getCameraOffset");
-		}
-	}
+	// 本地玩家 Tick  改为获取虚表后Hook
+	//{
+	//	const char* memcode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
+	//	localplayer_getCameraOffset = FindSignature(memcode);
+	//	if (localplayer_getCameraOffset != 0x00) {
+	//		MH_CreateHookEx((LPVOID)localplayer_getCameraOffset, &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
+	//		logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", localplayer_getCameraOffset, memcode);
+	//	}
+	//	else {
+	//		logF("[Hook error] [%s] is no found Hook point", "player_getCameraOffset");
+	//	}
+	//}
 
-	//所有玩家TICK
+	//所有玩家TICK ,所有生物TICK,对玩家来说应该是渲染相关得函数,只有看向 那个玩家，那个玩家才会触发这个函数，其中出现的玩家指针是Player 不是ServerPlayer
+	//非掉落物实体，都只会在视野中才会触发
 	{
 		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2";
 		allActor_Tick = FindSignature(memcode);
@@ -315,7 +316,7 @@ auto Hook::init() -> void
 
 	//Player 虚表及相关Hook
 	{
-		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 44 89 AF ? ? ? ? 44 88 AF ? ? ? ? 44 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 66 44 89 AF";
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 45 33 ED 44 89 AF ? ? ? ? 44 88 AF ? ? ? ? 44 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 66 44 89 AF";
 		auto PlayerVTable_sigOffset = FindSignature(memcode);
 		if (PlayerVTable_sigOffset == 0x00) {
 			logF("[Player::SetVtables] [Error]Find Player PlayerVTable_sigOffset is no working!!!");
@@ -326,6 +327,8 @@ auto Hook::init() -> void
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", PlayerVTable_sigOffset, memcode);
 			logF("[Player::SetVtables] [Success] PlayerVTable = %llX", PlayerVTable);
 			Player::SetVFtables(PlayerVTable);
+			//虚表Hook
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(77), &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
 		}
 	}
 
@@ -534,7 +537,8 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y);
-	//Game::localplayer->getClientInstance()->setCameraEntity(actor);
+	//logF("attack Actor ptr= %llX, ActorType = %i, name=%s, health=%f", actor, actor->getEntityTypeId(),actor->getNameTag()->getText(),actor->getHealth());
+	//Game::localplayer->setSpeed(vec3_t(0.f,1.f,0.f));
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}

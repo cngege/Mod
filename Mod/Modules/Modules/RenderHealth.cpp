@@ -8,11 +8,12 @@ RenderHealth::RenderHealth() : Module(VK_F5, "RenderHealth", "显示被攻击生
 
 
 auto RenderHealth::onAttack(Actor* actor)->bool {
-	currentActorVT = *(uintptr_t*)actor;
-	currentActor = actor;
-	tick = 800.f;
-	show = true;
-
+	if (isEnabled()) {
+		currentActorVT = *(uintptr_t*)actor;
+		currentActor = actor;
+		tick = 800.f;
+		show = true;
+	}
 	return true;
 }
 
