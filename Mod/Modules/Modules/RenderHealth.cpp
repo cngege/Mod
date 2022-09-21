@@ -11,7 +11,7 @@ auto RenderHealth::onAttack(Actor* actor)->bool {
 	if (isEnabled()) {
 		currentActorVT = *(uintptr_t*)actor;
 		currentActor = actor;
-		tick = 800.f;
+		tick = 600.f;
 		show = true;
 	}
 	return true;

@@ -8,7 +8,7 @@ public:
 
 private:
 	vec2_t showpos = vec2_t(230.f, 250.f);
-	float tick = 500.f;
+	float tick = 0.f;
 	bool show = false;
 	uintptr_t currentActorVT = 0;
 	class Actor* currentActor = nullptr;

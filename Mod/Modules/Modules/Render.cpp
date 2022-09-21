@@ -3,23 +3,25 @@
 #include "../../Utils/Game.h"
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
-	setEnabled(true);
+	
 	SetKeyMode(KeyMode::Switch);
+	setEnabled(true);
 }
 
 auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	if (isEnabled()) {
 		//画面板 功能列表
-		UIColor bgcolor = UIColor(0,0,0,60);
+		UIColor bgcolor = UIColor(0,0,0,80);
 		UIColor textcolor1 = UIColor(255, 255, 255);
-		UIColor textcolor2 = UIColor(150, 150, 150);
+		UIColor textcolor2 = UIColor(160, 160, 160);
 
-		float ltY = 15.f;						//绘制文字左上角Y值的位置
+		float ltX = x + 5.f;
+		float ltY = y + 5.f;						//绘制文字左上角Y值的位置
 		float textlineheight = 8.f * fontsize;		//下一行的偏移量
 
 		auto mcount = Game::GetModuleManager()->GetAllModule().size();
 
-		ctx->Fillshape(vec2_t(20, 10), vec2_t(200.f, mcount* (textlineheight + 5.f) + 5.f), bgcolor);
+		ctx->Fillshape(vec2_t(x, ltY - 5.f), vec2_t(200.f, mcount* (textlineheight + 5.f) + 5.f), bgcolor);
 		
 		for (auto pMod : Game::GetModuleManager()->GetAllModule()) {
 			if (pMod->GetKeyMode() == KeyMode::Switch) {
@@ -29,7 +31,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
 				}
 				showText += pMod->isEnabled() ? "[ON]" : "[OFF]";
-				ctx->Drawtext(vec2_t(25.f, ltY), &showText, pMod->isEnabled()? textcolor1 : textcolor2, fontsize);
+				ctx->Drawtext(vec2_t(ltX, ltY), &showText, pMod->isEnabled()? textcolor1 : textcolor2, fontsize);
 				ltY += textlineheight + 5.f;
 			}
 			else if (pMod->GetKeyMode() == KeyMode::Trigger) {
@@ -39,7 +41,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
 				}
 				showText += "[Trigger]";
-				ctx->Drawtext(vec2_t(25.f, ltY), &showText, textcolor2, fontsize);
+				ctx->Drawtext(vec2_t(ltX, ltY), &showText, textcolor2, fontsize);
 				ltY += textlineheight + 5.f;
 			}
 			else if (pMod->GetKeyMode() == KeyMode::Hold) {
@@ -49,7 +51,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
 				}
 				showText += pMod->isEnabled() ? "[HoldON]" : "[HoldOFF]";
-				ctx->Drawtext(vec2_t(25.f, ltY), &showText, pMod->isEnabled() ? textcolor1 : textcolor2, fontsize);
+				ctx->Drawtext(vec2_t(ltX, ltY), &showText, pMod->isEnabled() ? textcolor1 : textcolor2, fontsize);
 				ltY += textlineheight + 5.f;
 			}
 		}

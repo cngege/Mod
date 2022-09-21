@@ -491,7 +491,7 @@ auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	//	}
 	//}
 
-	if (frame >= 0) {
+	if (frame >= 3) {
 		frame = 0;
 		Game::GetModuleManager()->onRenderDetour(ctx);
 	}
@@ -537,7 +537,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y);
-	//logF("attack Actor ptr= %llX, ActorType = %i, name=%s, health=%f", actor, actor->getEntityTypeId(),actor->getNameTag()->getText(),actor->getHealth());
+	//logF("lp speed =%f", Game::localplayer->getSpeed().magnitudexz());
 	//Game::localplayer->setSpeed(vec3_t(0.f,1.f,0.f));
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
