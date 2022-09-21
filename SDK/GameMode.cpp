@@ -6,6 +6,8 @@ uintptr_t** GameMode::vfTables = nullptr;
 uintptr_t* GameMode::startDestroyBlockCall = nullptr;
 uintptr_t* GameMode::attackCall = nullptr;
 uintptr_t* GameMode::tickCall = nullptr;
+uintptr_t* GameMode::useItemCall = nullptr;
+uintptr_t* GameMode::useItemOnCall = nullptr;
 
 template <typename TRet, typename... TArgs>
 auto GameMode::GetVFtableFun(int a)->auto* {
@@ -46,6 +48,15 @@ auto GameMode::attack(Actor* actor) ->bool {
 	return reinterpret_cast<Fn>(attackCall)(this, actor);
 }
 
+auto GameMode::useItem(class ItemStack* item)->bool {
+	using Fn = bool(__fastcall*)(GameMode*, class ItemStack*);
+	return reinterpret_cast<Fn>(useItemCall)(this, item);
+}
+
+auto GameMode::useItemOn(class ItemStack* item, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
+	using Fn = bool(__fastcall*)(GameMode*, class ItemStack*, vec3_ti*, uint8_t*, vec3_t*, class Block*);
+	return reinterpret_cast<Fn>(useItemOnCall)(this, item,bpos,face,f,block);
+}
 
 //虚表函数实现
 
@@ -53,3 +64,5 @@ auto GameMode::attack(Actor* actor) ->bool {
 auto GameMode::destroyBlock(vec3_ti* Bpos, uint8_t* Face)->bool {
 	return GetVFtableFun<bool, GameMode*, vec3_ti*, uint8_t*>(2)(this, Bpos, Face);
 }
+
+

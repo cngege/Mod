@@ -40,6 +40,8 @@ public:
 	virtual void onEnable();
 	virtual void onDisable();
 	virtual bool onAttack(class Actor*);				// 返回值可以拦截该事件
+	virtual bool useItem(class GameMode*,class ItemStack*);
+	virtual bool useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, struct vec3_t*, class Block*);
 	virtual bool onKnockback(class LocalPlayer*, struct vec3_t*);
 	virtual void onActorTick(class Actor*);
 	virtual void onLocalPlayerTick(class LocalPlayer*);

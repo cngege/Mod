@@ -273,9 +273,12 @@ auto Hook::init() -> void
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
 			//Hook GameMode_tick
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(8), &Hook::GameMode_tick, &GameMode::tickCall);
+			//Hook GameMode_useItem
+			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(11), &Hook::GameMode_useItem, &GameMode::useItemCall);
+			//Hook GameMode_useItemOn
+			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(12), &Hook::GameMode_useItemOn, &GameMode::useItemOnCall);
 			//Hook GameMode_attack
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(14), &Hook::GameMode_attack, &GameMode::attackCall);
-
 		}
 	}
 
@@ -529,6 +532,24 @@ auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* fac
 	}
 	return _this->startDestroyBlock(a2,face,a3,a4);
 }
+
+auto Hook::GameMode_useItem(GameMode* gm, class ItemStack* item)->bool
+{
+	if (!Game::GetModuleManager()->useItem(gm,item)) {
+		return false;
+	}
+	return gm->useItem(item);
+}
+
+//对着方块右键 会一直触发
+auto Hook::GameMode_useItemOn(GameMode* gm, class ItemStack* item, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool
+{
+	if (!Game::GetModuleManager()->useItemOn(gm, item,bpos,face,f,block)) {
+		return false;
+	}
+	return gm->useItemOn(item,bpos,face,f,block);
+}
+
 
 auto Hook::GameMode_tick(GameMode* _this)->void* {
 	Game::GetModuleManager()->onTick(_this);

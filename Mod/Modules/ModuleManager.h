@@ -22,6 +22,8 @@ public:
 	auto onKeyUpdate(int, bool)->void;
 	auto onTick(class GameMode*)->void;
 	auto onAttack(class Actor*)->bool;							// 返回值可以拦截该事件
+	bool useItem(class GameMode*, class ItemStack*);
+	bool useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, struct vec3_t*, class Block*);
 	auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool;  // 返回值可以拦截该事件
 	auto onActorTick(class Actor*)->void;
 	auto onLocalPlayerTick(class LocalPlayer*)->void;

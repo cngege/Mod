@@ -110,6 +110,14 @@ auto Module::onAttack(Actor* actor)->bool {
 	return true;
 }
 
+auto Module::useItem(GameMode* gm, class ItemStack* item)->bool {
+	return true;
+}
+
+auto Module::useItemOn(GameMode* gm, class ItemStack* item, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
+	return true;
+}
+
 auto Module::onKnockback(LocalPlayer* lp, vec3_t* v3)->bool {
 	return true;
 }

@@ -32,6 +32,8 @@ public:
 	static auto GameMode_attack(class GameMode*, class Actor*)->bool;
 	static auto GameMode_tick(class GameMode*)->void*;
 	static auto GameMode_startDestroyBlock(class GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool;
+	static auto GameMode_useItem(class GameMode*,class ItemStack*)->bool;
+	static auto GameMode_useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, vec3_t*, class Block*)->bool;
 
 	static auto ServerPlayer_TickWorld(class ServerPlayer* _this, class struck* tick)->void*;
 };

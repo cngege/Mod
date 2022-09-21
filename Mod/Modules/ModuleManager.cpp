@@ -115,6 +115,29 @@ auto ModuleManager::onAttack(Actor* actor)->bool {
 	return RunOriginalFun;
 }
 
+auto ModuleManager::useItem(GameMode* gm, class ItemStack* item)->bool {
+	bool RunOriginalFun = true;
+	if (!IsInitialized())
+		return RunOriginalFun;
+	for (auto pMod : moduleList) {
+		if (!pMod->useItem(gm,item))
+			RunOriginalFun = false;
+	}
+	return RunOriginalFun;
+}
+
+auto ModuleManager::useItemOn(GameMode* gm, class ItemStack* item, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
+	bool RunOriginalFun = true;
+	if (!IsInitialized())
+		return RunOriginalFun;
+	for (auto pMod : moduleList) {
+		if (!pMod->useItemOn(gm, item,bpos,face, f, block))
+			RunOriginalFun = false;
+	}
+	return RunOriginalFun;
+}
+
+
 auto ModuleManager::onKnockback(LocalPlayer* lp, vec3_t* v3)->bool {
 	bool RunOriginalFun = true;
 	if (!IsInitialized())
