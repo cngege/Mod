@@ -34,19 +34,23 @@ auto Game::init() -> void
 	//获取玩家视角的偏移地址 +15
 	{
 		auto PlayerView_sigOffset = FindSignature("0F B6 D0 48 8B CE E8 ? ? ? ? F2 0F 10 86 ? ? ? ? F2 0F 11 86");
+		if (PlayerView_sigOffset == 0x00) {
+			logF("[Game::init] [Error]Find Player PlayerView_sigOffset Offset is no working!!!,PlayerView_sigOffset=0");
+		}
 		auto offset = *reinterpret_cast<int*>(PlayerView_sigOffset + 15);
 		Player::YView1 = offset;
 		Player::XView1 = offset + 4;
 		Player::YView2 = offset + 8;
 		Player::XView2 = offset + 12;
-		if (PlayerView_sigOffset == 0x00) {
-			logF("[Game::init] [Error]Find Player PlayerView_sigOffset Offset is no working!!!,PlayerView_sigOffset=0");
-		}
 	}
 
 	//获取 获取玩家血量函数的相关偏移
 	{
 		auto getHealthFun_sigOffset = FindSignature("48 8D 15 ? ? ? ? 48 8B CE FF 90 ? ? ? ? F3 0F 10 88 ? ? ? ? F3 0F 2C C9 66 0F 6E C1 0F 5B C0 8D 41 ? 0F 2F C1 0F 42 C8 85 C9");
+		if (getHealthFun_sigOffset == 0x00) {
+			logF("[Game::init] [Warn]Find Player getHealthFun_sigOffset Offset is no working!!!,getHealthFun_sigOffset=0");
+			return;
+		}
 		auto offset = *reinterpret_cast<int*>(getHealthFun_sigOffset + 3);
 		auto HEALTHVal = *reinterpret_cast<__int64*>(getHealthFun_sigOffset + 7 + offset);
 
@@ -55,11 +59,9 @@ auto Game::init() -> void
 		Actor::GetAttributeInstance_HealthFunVT = vtoffset;
 		AttributeInstance::getCurrentValueoffset = gvoffset;
 
-		if (getHealthFun_sigOffset == 0x00) {
-			logF("[Game::init] [Error]Find Player getHealthFun_sigOffset Offset is no working!!!,getHealthFun_sigOffset=0");
-		}
+
 		if (Attribute::HEALTH != HEALTHVal) {
-			logF("[Game::init] [Error]Attribute::HEALTH is Error,should is :%ll", HEALTHVal);
+			logF("[Game::init] [Error]Attribute::HEALTH is Error,should is :%I64d", HEALTHVal);
 		}
 		if (vtoffset == 0x00) {
 			logF("[Game::init] [Error]vtoffset == 0x00 ");

@@ -244,9 +244,9 @@ auto Hook::init() -> void
 	{
 		const char* memcode = "E8 ? ? ? ? 3C ? 75 ? 48 8B 8F ? ? ? ? 48 8B 01 4C 89 75";
 		auto findptr = FindSignature(memcode);
-		auto offset = *reinterpret_cast<int*>(findptr + 1);
-		sendChatMessage = findptr + 5 + offset;
 		if (findptr != 0x00) {
+			auto offset = *reinterpret_cast<int*>(findptr + 1);
+			sendChatMessage = findptr + 5 + offset;
 			MH_CreateHookEx((LPVOID)sendChatMessage, &Hook::sendMessage, &sendChatMessagecall);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
 		}
@@ -259,12 +259,12 @@ auto Hook::init() -> void
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
 		auto GameModeVTable_sigOffset = FindSignature(memcode);
-		auto offsize = *reinterpret_cast<int*>(GameModeVTable_sigOffset + 3);
-		auto GameModeVTables = reinterpret_cast<uintptr_t**>(GameModeVTable_sigOffset + offsize + 7);
-		if (GameModeVTable_sigOffset == 0x00 || offsize == 0x00) {
+		if (GameModeVTable_sigOffset == 0x00) {
 			logF("[GameMode::SetVtables] [Error]Find GameMode GameModeVTable_sigOffset is no working!!!");
 		}
 		else {
+			auto offsize = *reinterpret_cast<int*>(GameModeVTable_sigOffset + 3);
+			auto GameModeVTables = reinterpret_cast<uintptr_t**>(GameModeVTable_sigOffset + offsize + 7);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", GameModeVTable_sigOffset, memcode);
 			logF("[GameMode::SetVtables] [Success] GameModeVTable = %llX", GameModeVTables);
 			GameMode::SetVFtables(GameModeVTables);
@@ -282,13 +282,13 @@ auto Hook::init() -> void
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 49 8B 00 48 89 41 ? 41 8B 40 ? 89 41";
 		auto ActorVTable_sigOffset = FindSignature(memcode);
-		auto offsize = *reinterpret_cast<int*>(ActorVTable_sigOffset + 3);
-		auto ActorVTable = reinterpret_cast<uintptr_t**>(ActorVTable_sigOffset + offsize + 7);
-		if (ActorVTable_sigOffset == 0x00 || offsize == 0x00) {
+		if (ActorVTable_sigOffset == 0x00) {
 			logF("[Actor::SetVtables] [Error]Find Actor ActorVTable_sigOffset is no working!!!");
 		}
 		else
 		{
+			auto offsize = *reinterpret_cast<int*>(ActorVTable_sigOffset + 3);
+			auto ActorVTable = reinterpret_cast<uintptr_t**>(ActorVTable_sigOffset + offsize + 7);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ActorVTable_sigOffset, memcode);
 			logF("[Actor::SetVtables] [Success] ActorVTable = %llX", ActorVTable);
 			Actor::SetVFtables(ActorVTable);
@@ -300,13 +300,13 @@ auto Hook::init() -> void
 	{
 		const char* memcode = "40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05";
 		auto MobVTable_sigOffset = FindSignature(memcode); //+31
-		auto offsize = *reinterpret_cast<int*>(MobVTable_sigOffset + 31);
-		auto MobVTable = reinterpret_cast<uintptr_t**>(MobVTable_sigOffset + offsize + 35);
-		if (MobVTable_sigOffset == 0x00 || offsize == 0x00) {
+		if (MobVTable_sigOffset == 0x00) {
 			logF("[Mob::SetVtables] [Error]Find Mob MobVTable_sigOffset is no working!!!");
 		}
 		else
 		{
+			auto offsize = *reinterpret_cast<int*>(MobVTable_sigOffset + 31);
+			auto MobVTable = reinterpret_cast<uintptr_t**>(MobVTable_sigOffset + offsize + 35);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", MobVTable_sigOffset, memcode);
 			logF("[Mob::SetVtables] [Success] MobVTable = %llX", MobVTable);
 			Mob::SetVFtables(MobVTable);
@@ -317,12 +317,12 @@ auto Hook::init() -> void
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 44 89 AF ? ? ? ? 44 88 AF ? ? ? ? 44 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 66 44 89 AF";
 		auto PlayerVTable_sigOffset = FindSignature(memcode);
-		auto offsize = *reinterpret_cast<int*>(PlayerVTable_sigOffset + 3);
-		auto PlayerVTable = reinterpret_cast<uintptr_t**>(PlayerVTable_sigOffset + offsize + 7);
-		if (PlayerVTable_sigOffset == 0x00 || offsize == 0x00) {
+		if (PlayerVTable_sigOffset == 0x00) {
 			logF("[Player::SetVtables] [Error]Find Player PlayerVTable_sigOffset is no working!!!");
 		}
 		else {
+			auto offsize = *reinterpret_cast<int*>(PlayerVTable_sigOffset + 3);
+			auto PlayerVTable = reinterpret_cast<uintptr_t**>(PlayerVTable_sigOffset + offsize + 7);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", PlayerVTable_sigOffset, memcode);
 			logF("[Player::SetVtables] [Success] PlayerVTable = %llX", PlayerVTable);
 			Player::SetVFtables(PlayerVTable);
@@ -335,12 +335,12 @@ auto Hook::init() -> void
 		//48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B";
 		auto ServerPlayerVTable_sigOffset = FindSignature(memcode);
-		auto offsize = *reinterpret_cast<int*>(ServerPlayerVTable_sigOffset + 3);
-		auto ServerPlayerVTable = reinterpret_cast<uintptr_t**>(ServerPlayerVTable_sigOffset + offsize + 7);
-		if (ServerPlayerVTable_sigOffset == 0x00 || offsize == 0x00) {
+		if (ServerPlayerVTable_sigOffset == 0x00) {
 			logF("[ServerPlayer::SetVtables] [Error]Find ServerPlayer ServerPlayerVTable_sigOffset is no working!!!");
 		}
 		else {
+			auto offsize = *reinterpret_cast<int*>(ServerPlayerVTable_sigOffset + 3);
+			auto ServerPlayerVTable = reinterpret_cast<uintptr_t**>(ServerPlayerVTable_sigOffset + offsize + 7);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ServerPlayerVTable_sigOffset, memcode);
 			logF("[ServerPlayer::SetVtables] [Success] ServerPlayerVTable = %llX", ServerPlayerVTable);
 			ServerPlayer::SetVFtables(ServerPlayerVTable);
@@ -356,12 +356,12 @@ auto Hook::init() -> void
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 48 8D 8E ? ? ? ? 48 8B 86 ? ? ? ? 4C 8B 80 ? ? ? ? 48 8B D6";
 		auto LocalPlayerVTable_sigOffset = FindSignature(memcode);
-		auto offset = *reinterpret_cast<int*>(LocalPlayerVTable_sigOffset + 3);
-		auto LocalPlayerVTable = reinterpret_cast<uintptr_t**>(LocalPlayerVTable_sigOffset + offset + 7);
-		if (LocalPlayerVTable_sigOffset == 0x00 || offset == 0x00) {
+		if (LocalPlayerVTable_sigOffset == 0x00) {
 			logF("[LocalPlayer::SetVtables] [Error]Find LocalPlayer LocalPlayerVTable_sigOffset is no working!!!");
 		}
 		else {
+			auto offset = *reinterpret_cast<int*>(LocalPlayerVTable_sigOffset + 3);
+			auto LocalPlayerVTable = reinterpret_cast<uintptr_t**>(LocalPlayerVTable_sigOffset + offset + 7);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", LocalPlayerVTable_sigOffset, memcode);
 			logF("[LocalPlayer::SetVtables] [Success] LocalPlayerVTable = %llX", LocalPlayerVTable);
 			LocalPlayer::SetVFtables(LocalPlayerVTable);
