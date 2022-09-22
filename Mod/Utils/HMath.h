@@ -251,6 +251,11 @@ struct vec3_t {
 
 		return angles;
 	}
+
+	//获取两个坐标之间的距离
+	float CoordinateDistance(vec3_t dst) {
+		return sqrtf((x - dst.x) * (x - dst.x) + (y - dst.y) * (y - dst.y) + (z - dst.z) * (z - dst.z));
+	}
 };
 
 struct vec3_ti {

@@ -123,7 +123,7 @@
     <ClInclude Include="Modules\Modules\ArmsLength.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Modules\HiveTreasureHitBox.h">
+    <ClInclude Include="Modules\Modules\HiveTreasurePos.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\SDK\AttributeInstance.h">
@@ -215,7 +215,7 @@
     <ClCompile Include="Modules\Modules\ArmsLength.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\Modules\HiveTreasureHitBox.cpp">
+    <ClCompile Include="Modules\Modules\HiveTreasurePos.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\AttributeInstance.cpp">

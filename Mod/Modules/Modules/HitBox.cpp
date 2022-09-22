@@ -34,7 +34,7 @@ auto HitBox::onActorTick(Actor* actor)->void {
 	//}
 	//判断是否是玩家 大写锁定
 	static NoAttackFriend* noAttackFriend = Game::GetModuleManager()->GetModule<NoAttackFriend*>();
-	if (actor->isPlayerEx()) {
+	if (actor->isPlayer()) {
 		if (isEnabled()) {
 			if (noAttackFriend->isEnabled() && noAttackFriend->IsFriend((Player*)actor)) {
 				actor->resetHitBox();
