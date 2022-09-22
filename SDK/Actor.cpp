@@ -132,9 +132,9 @@ auto Actor::isPlayerEx()->bool {
 	return this->getEntityTypeId() == ActorType::player;
 }
 
-
+//仅玩家
 auto Actor::resetHitBox()->void {
-	Actor::setHitBox(vec2_t(0.6000000238f, 1.799999952f));
+	this->setHitBox(vec2_t(0.6000000238f, 1.799999952f));
 }
 
 
@@ -171,6 +171,7 @@ auto Actor::setPos(vec3_t* pos)->void* {
 }
 
 
+//应该获取的是头部位置，Y值会往上偏两个单位
 auto Actor::getPosition()->vec3_t* {
 	return GetVFtableFun<vec3_t*, Actor*>(21)(this);
 }

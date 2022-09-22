@@ -28,14 +28,16 @@ auto Game::init() -> void
 
 		Mob::setSprintingFunAddr = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B ? ? ? ? ? 0F B6 ? 48 8B F1");
 		if (Mob::setSprintingFunAddr == 0x00) {
-			logF("[Game::init] [Error]Find Mob::setSprintingFunAddr FunAddr is no working!!!,Mob::setSprintingFunAddr=0");
+			logF("[Game::init] [Warn]Find Mob::setSprintingFunAddr FunAddr is no working!!!,Mob::setSprintingFunAddr=0");
+			return;
 		}
 	}
 	//获取玩家视角的偏移地址 +15
 	{
 		auto PlayerView_sigOffset = FindSignature("0F B6 D0 48 8B CE E8 ? ? ? ? F2 0F 10 86 ? ? ? ? F2 0F 11 86");
 		if (PlayerView_sigOffset == 0x00) {
-			logF("[Game::init] [Error]Find Player PlayerView_sigOffset Offset is no working!!!,PlayerView_sigOffset=0");
+			logF("[Game::init] [Warn]Find Player PlayerView_sigOffset Offset is no working!!!,PlayerView_sigOffset=0");
+			return;
 		}
 		auto offset = *reinterpret_cast<int*>(PlayerView_sigOffset + 15);
 		Player::YView1 = offset;
