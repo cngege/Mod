@@ -70,6 +70,17 @@ auto Game::init() -> void
 			logF("[Game::init] [Error]gvoffset == 0x00 ");
 		}
 	}
+
+	//获取Actor::isSneaking 函数位置
+	{
+		auto Actor_Sneaking_sigOffset = FindSignature("E8 ? ? ? ? 84 C0 0F 84 ? ? ? ? 48 8B 4F ? 48 85 C9 74 ? 48 83");
+		if (Actor_Sneaking_sigOffset == 0x00) {
+			logF("[Game::init] [Warn]Find Player Actor_Sneaking_sigOffset Offset is no working!!!,Actor_Sneaking_sigOffset=0");
+			return;
+		}
+		auto offset = *reinterpret_cast<int*>(Actor_Sneaking_sigOffset + 1);
+		Actor::isSneakingCallptr = Actor_Sneaking_sigOffset + offset + 5;
+	}
 }
 
 

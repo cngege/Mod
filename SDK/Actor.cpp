@@ -22,6 +22,7 @@ int Actor::XHitBoxOffset = 0;
 int Actor::YHitBoxOffset = 0;
 
 int Actor::GetAttributeInstance_HealthFunVT = 0;
+uintptr_t Actor::isSneakingCallptr = 0;
 
 uintptr_t** Actor::vfTables = nullptr;
 
@@ -154,8 +155,15 @@ auto Actor::getHealth()->float {
 	return ceil(v);
 }
 
-// 虚表函数
 
+auto Actor::isSneaking()->bool {
+	using Fn = bool(__fastcall*)(Actor*);
+	return reinterpret_cast<Fn>(isSneakingCallptr)(this);
+}
+
+
+
+// 虚表函数
 
 // 原生虚表函数
 auto Actor::setPos(vec3_t* pos)->void* {

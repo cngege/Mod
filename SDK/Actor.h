@@ -42,6 +42,7 @@ public:
 	static int YHitBoxOffset;
 
 	static int GetAttributeInstance_HealthFunVT;
+	static uintptr_t isSneakingCallptr;
 
 public:
 	
@@ -62,8 +63,8 @@ public:
 public:
 	auto onMoveBBs(vec3_t)->void;
 	auto isLocalPlayer()->bool;
-
 	auto getHealth()->float;
+	auto isSneaking()->bool;
 
 public:
 

@@ -484,16 +484,6 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 int frame = 0;		// 按照视频作者的说法，这个函数会在三层每层都调用一次，也就是每一帧调用三次
 auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	renderDetourcall(_this, ctx);
-
-	//{
-	//	//drawText			5
-	//	static uintptr_t MUICFVT = 0;
-	//	if (MUICFVT == 0) {
-	//		MUICFVT = *(*reinterpret_cast<uintptr_t**>(ctx) + 5);
-	//		logF("MUICFVT = %llX", MUICFVT);
-	//	}
-	//}
-
 	if (frame >= 3) {
 		frame = 0;
 		Game::GetModuleManager()->onRenderDetour(ctx);
@@ -558,7 +548,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y);
-	//logF("lp speed =%f", Game::localplayer->getSpeed().magnitudexz());
+	//logF("lp is Sneaking:%i", Game::localplayer->isSneaking());
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}
