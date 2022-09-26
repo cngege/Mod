@@ -12,6 +12,7 @@
 #include "Modules/HiveTreasurePos.h"
 #include "Modules/RenderHealth.h"
 #include "Modules/AutoSprinting.h"
+#include "Modules/FastViewPerspective.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -33,6 +34,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new ArmsLength()));
 	moduleList.push_back((Module*)(new RenderHealth()));
 	moduleList.push_back((Module*)(new AutoSprinting()));
+	moduleList.push_back((Module*)(new FastViewPerspective()));
 
 	isInit = true;
 }

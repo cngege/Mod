@@ -13,6 +13,8 @@ LocalPlayer* Game::localplayer = nullptr;
 BitmapFont* Game::mcfont = nullptr;
 ClientInstance* Game::Cinstance = nullptr;
 
+uintptr_t Game::KeyMap = 0x00;
+
 auto Game::init() -> void
 {
 	logF("[Game::init] is start runner");
@@ -83,6 +85,18 @@ auto Game::init() -> void
 		auto offset = *reinterpret_cast<int*>(Actor_Sneaking_sigOffset + 1);
 		Actor::isSneakingCallptr = Actor_Sneaking_sigOffset + offset + 5;
 	}
+
+	//KeyMap
+	{
+		auto sigOffset = FindSignature("4C 8D 05 ? ? ? ? 89 54 24 ? 88 4C 24");
+		if (sigOffset == 0x0) {
+			logF("[Game::init] [Warn]Find KeyMap Offset is no working!!!,KeyMap=0");
+			return;
+		}
+		int offset = *reinterpret_cast<int*>((sigOffset + 3));      // Get Offset from code
+		KeyMap = sigOffset + offset + /*length of instruction*/ 7;  // Offset is relative
+		logF("KeyMap: %llX", KeyMap);
+	}
 }
 
 
@@ -101,18 +115,9 @@ auto Game::GetModuleManager()->ModuleManager* {
 
 
 auto Game::IsKeyDown(int key)->bool {
-	static uintptr_t keyMap = 0;
-	if (keyMap == 0x00) {
-		auto sigOffset = FindSignature("4C 8D 05 ? ? ? ? 89 54 24 ? 88 4C 24");
-		if (sigOffset != 0x0) {
-			int offset = *reinterpret_cast<int*>((sigOffset + 3));      // Get Offset from code
-			keyMap = sigOffset + offset + /*length of instruction*/ 7;  // Offset is relative
-			logF("KeyMap: %llX", keyMap);
-		}
-	}
 	// All keys are mapped as bools, though aligned as ints (4 byte)
 	// key0 00 00 00 key1 00 00 00 key2 00 00 00 ...
-	return *reinterpret_cast<bool*>(keyMap + ((uintptr_t)key * 0x4));
+	return *reinterpret_cast<bool*>(KeyMap + ((uintptr_t)key * 0x4));
 }
 
 /// <summary>

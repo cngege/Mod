@@ -13,6 +13,7 @@
 #include "../Modules/Modules/HitBox.h"
 #include "../Modules/Modules/InstantDestroy.h"
 #include "../Modules/Modules/ShowCoordinates.h"
+#include "../Modules/Modules/FastViewPerspective.h"
 
 using PlayerKBCALL = void(__fastcall*)(Player*, vec3_t*);
 PlayerKBCALL playercall;
@@ -71,6 +72,9 @@ uintptr_t renderDetour;
 using SendChatMessage = uint8_t(__fastcall*)(void*, TextHolder*);
 SendChatMessage sendChatMessagecall;
 uintptr_t sendChatMessage;
+
+using GetViewPerspective = int(__fastcall*)(void*);
+GetViewPerspective getLocalPlayerViewPerspectivecall;
 
 using LPLP = void* (__fastcall*)(void*, void*, void*, void*, int, void*, char, void*, void*, void*, void*, void*);
 LPLP lplpcall;
@@ -253,6 +257,19 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "sendChatMessage");
+		}
+	}
+
+	//获取本地玩家人称视角函数
+	{
+		const char* memcode = "48 83 EC ? 48 8B ? 48 8D 54 24 ? 41 B8 02 00 00 00 FF 50 ? 48 8B ? 48 85 D2 74 ? 48 8B 42 ? 48 8B 88 ? ? ? ? 48 85 C9 74 ? E8 ? ? ? ? 48 83 C4 ? C3 8B";
+		auto findptr = FindSignature(memcode);
+		if (findptr != 0x00) {
+			MH_CreateHookEx((LPVOID)findptr, &Hook::getLocalPlayerViewPerspective, &getLocalPlayerViewPerspectivecall);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "getLocalPlayerViewPerspective");
 		}
 	}
 
@@ -512,6 +529,17 @@ auto Hook::sendMessage(void* a1, TextHolder* a2)->__int64 {
 		return 0;
 	}
 	return sendChatMessagecall(a1, a2);
+}
+
+//返回值0-2 分别对应玩家第一二三人称视角
+auto Hook::getLocalPlayerViewPerspective(void* thi)->int {
+	static FastViewPerspective* idy = Game::GetModuleManager()->GetModule<FastViewPerspective*>();
+	if (idy) {
+		if (idy->isEnabled() && idy->isToggle()) {
+			return 2;
+		}
+	}
+	return getLocalPlayerViewPerspectivecall(thi);
 }
 
 //虚表Hook

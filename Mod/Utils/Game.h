@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include <cstdint>
 
 class Game
 {
@@ -8,6 +8,7 @@ public:
 	static class LocalPlayer* localplayer;
 	static class BitmapFont* mcfont;
 	static class ClientInstance* Cinstance;
+	static uintptr_t KeyMap;
 private:
 	static class ModuleManager* modmag;
 public:
