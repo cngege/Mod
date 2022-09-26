@@ -2,6 +2,8 @@
 #include "Actor.h"
 #include "MinecraftUIRenderContext.h"
 
+#include <string.h>
+
 RenderHealth::RenderHealth() : Module(VK_F5, "RenderHealth", "显示被攻击生物的血量和名字") {
 	setEnabled(true);
 }
@@ -25,8 +27,17 @@ auto RenderHealth::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 			return;
 		}
 		if (*(uintptr_t*)currentActor == currentActorVT) {				//防止实体移除后，后面还会调用这个实体类中的方法
-			currentPlayerName = currentActor->getNameTag()->getText();
 			currentPlayerHealth = (int)currentActor->getHealth();
+			if (currentPlayerHealth != 0) {								//只有在生物血量不为0的时候才更新生物名称
+				std::string sname = currentActor->getNameTag()->getText();
+				auto find = sname.find("\n");
+				if (find == -1) {
+					currentPlayerName = currentActor->getNameTag()->getText();
+				}
+				else {
+					currentPlayerName = sname.substr(0, find);
+				}
+			}
 		}
 
 		UIColor bgcolor = UIColor(0, 0, 0, (tick < 60) ? tick : 60);

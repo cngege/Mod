@@ -7,7 +7,6 @@ HiveTreasurePos::HiveTreasurePos() : Module(VK_F7, "HiveTreasurePos", "在 HIVE 
 	SetKeyMode(KeyMode::Switch);
 }
 
-#include "../../Utils/Logger.h"
 auto HiveTreasurePos::onActorTick(Actor* actor)->void {
 	if (Game::localplayer == nullptr) {
 		return;

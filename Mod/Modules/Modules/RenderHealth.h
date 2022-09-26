@@ -12,7 +12,7 @@ private:
 	bool show = false;
 	uintptr_t currentActorVT = 0;
 	class Actor* currentActor = nullptr;
-	const char* currentPlayerName = "";
+	std::string currentPlayerName;
 	int currentPlayerHealth = 0;
 
 public:
