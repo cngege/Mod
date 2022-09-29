@@ -40,7 +40,7 @@ auto HitBox::onActorTick(Actor* actor)->void {
 				actor->resetHitBox();
 			}
 			else {
-				actor->setHitBox(vec2_t(6.0f, 6.0f));
+				actor->setHitBox(vec2_t(5.0f, 4.0f));
 			}
 		}
 		else {
