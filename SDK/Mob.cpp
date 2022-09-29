@@ -31,3 +31,8 @@ auto Mob::setSprintingEx(bool v)->char {
 auto Mob::setSprinting(bool v)->void {
 	GetVFtableFun<void, Mob*,bool>(288)(this,v);
 }
+
+
+auto Mob::lookAt(Actor* actor,float f1, float f2)->void {
+	GetVFtableFun<void, Mob*, Actor*,float,float>(303)(this, actor,f1,f2);
+}
