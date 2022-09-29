@@ -1,7 +1,7 @@
 ﻿#include "ArmsLength.h"
 #include "../../Utils/Logger.h"
 
-ArmsLength::ArmsLength() : Module(0, "ArmsLength", "修改玩家攻击距离") {
+ArmsLength::ArmsLength() : Module(VK_F10, "ArmsLength", "修改玩家攻击距离") {
 	auto sigOffset = FindSignature("84 C0 74 ? C7 45 ? ? ? ? ? 48 8D 85 ? ? ? ? 48 8D 4D ? 44 0F 2F ? ? ? ? ? 48 0F 43 C1");
 	if (sigOffset == 0x00) {
 		logF("[ArmsLength::ArmsLength] [error] FindSignature sigOffset NoFound");
@@ -21,7 +21,6 @@ auto ArmsLength::onEnable()->void {
 		DWORD old_Page;
 		bool b = VirtualProtect(arms, sizeof(float), PAGE_READWRITE, &old_Page);
 		if (b) {
-			logF("[ArmsLength::onEnable] Survival Moudle ArmsLength is %lf,new Modify to %lf", *arms, 7.0f);
 			*arms = 7.0f;
 			VirtualProtect(arms, sizeof(float), old_Page, &old_Page);
 		}
@@ -36,7 +35,6 @@ auto ArmsLength::onDisable()->void {
 		bool b = VirtualProtect(arms, sizeof(float), PAGE_READWRITE, &old_Page);
 		if (b) {
 			*arms = 3.0f;
-			logF("[ArmsLength::onDisable] Survival Moudle ArmsLength Modify to %lf", *arms);
 			VirtualProtect(arms, sizeof(float), old_Page, &old_Page);
 		}
 	}

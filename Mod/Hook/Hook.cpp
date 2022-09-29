@@ -79,7 +79,6 @@ GetViewPerspective getLocalPlayerViewPerspectivecall;
 using LPLP = void* (__fastcall*)(void*, void*, void*, void*, int, void*, char, void*, void*, void*, void*, void*);
 LPLP lplpcall;
 
-
 auto Hook::init() -> void
 {
 	logF("Hook::init is start runner");
@@ -331,6 +330,7 @@ auto Hook::init() -> void
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", MobVTable_sigOffset, memcode);
 			logF("[Mob::SetVtables] [Success] MobVTable = %llX", MobVTable);
 			Mob::SetVFtables(MobVTable);
+			//虚表Hook
 		}
 	}
 
