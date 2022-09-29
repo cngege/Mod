@@ -42,10 +42,8 @@ auto Game::init() -> void
 			return;
 		}
 		auto offset = *reinterpret_cast<int*>(PlayerView_sigOffset + 15);
-		Player::YView1 = offset;
-		Player::XView1 = offset + 4;
-		Player::YView2 = offset + 8;
-		Player::XView2 = offset + 12;
+		Player::Rot1 = offset;
+		Player::Rot2 = offset + 8;
 	}
 
 	//获取 获取玩家血量函数的相关偏移

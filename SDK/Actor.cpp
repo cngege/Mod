@@ -180,6 +180,10 @@ auto Actor::getPosPrev()->vec3_t* {
 	return GetVFtableFun<vec3_t*, Actor*>(22)(this);
 }
 
+auto Actor::setRot(vec2_t* rot)->void {
+	GetVFtableFun<void, Actor*,vec2_t*>(26)(this,rot);
+}
+
 auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
 	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(43)(this, pos, a1, a2, a3);
 }
@@ -215,6 +219,10 @@ _QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
 auto Actor::getFormattedNameTag(void* ret)->void* {
 	//void* ret = malloc(8 * 4);
 	return GetVFtableFun<void*, Actor*,void*>(64)(this,ret);
+}
+
+auto Actor::getRotation()->vec2_t* {
+	return GetVFtableFun<vec2_t*, Actor*>(81)(this);
 }
 
 auto Actor::setSneaking(bool b)->void {

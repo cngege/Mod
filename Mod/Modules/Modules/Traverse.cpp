@@ -36,7 +36,7 @@ auto Traverse::onTrigger()->void {
 		return;
 	}
 
-	vec2_t rot = lp->getViewYX();
+	vec2_t rot = *lp->getRotEx1();
 	vec3_t pos = *lp->getPosition();
 	vec3_t toPos = vec3_t(pos.x + (float)rotToCoordinateX(rot.y), pos.y, pos.z + (float)rotToCoordinateZ(rot.y));
 	//lp->setPos(vec3_t(pos.x + rotToCoordinateX(rot.y), pos.y, pos.z + rotToCoordinateZ(rot.y)));

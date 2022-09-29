@@ -16,15 +16,14 @@ public:
 
 public:
 	
-	static int YView1;
-	static int XView1;
-	static int YView2;
-	static int XView2;
+	static int Rot1;	//偏移指向 vec2_t 指针
+	static int Rot2;	//偏移指向 vec2_t 指针
 
 public:
-
-	auto getViewYX()->const vec2_t;
-	auto getViewYX2()->const vec2_t;
+	//ret->x 表示竖直方向的值
+	auto getRotEx1()->vec2_t*;
+	//ret->x 表示竖直方向的值
+	auto getRotEx2()->vec2_t*;
 
 public:
 	//虚表函数
