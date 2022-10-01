@@ -22,19 +22,19 @@
 auto ModuleManager::Init()->void {
 	if (isInit) return;
 
-	moduleList.push_back((Module*)(new HitBox()));
-	moduleList.push_back((Module*)(new HiveTreasurePos()));
-	moduleList.push_back((Module*)(new InstantDestroy()));
-	moduleList.push_back((Module*)(new NoKnockback()));
-	moduleList.push_back((Module*)(new Traverse()));
+	moduleList.push_back((Module*)(new HitBox()));							/*Caps*/
+	moduleList.push_back((Module*)(new InstantDestroy()));					/*Ctrl+Shift*/
+	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl*/
+	moduleList.push_back((Module*)(new Traverse()));						/*F2*/
 	moduleList.push_back((Module*)(new ShowCoordinates()));
-	moduleList.push_back((Module*)(new TPPoint()));
-	moduleList.push_back((Module*)(new Render()));
-	moduleList.push_back((Module*)(new NoAttackFriend()));
-	moduleList.push_back((Module*)(new ArmsLength()));
-	moduleList.push_back((Module*)(new RenderHealth()));
-	moduleList.push_back((Module*)(new AutoSprinting()));
-	moduleList.push_back((Module*)(new FastViewPerspective()));
+	moduleList.push_back((Module*)(new TPPoint()));							/*Ctrl/Shift+F3*/
+	moduleList.push_back((Module*)(new Render()));							/*INS*/
+	moduleList.push_back((Module*)(new NoAttackFriend()));					/*F4*/
+	moduleList.push_back((Module*)(new AutoSprinting()));					/*F6*/
+	moduleList.push_back((Module*)(new HiveTreasurePos()));					/*F7*/
+	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/
+	moduleList.push_back((Module*)(new ArmsLength()));						/*SHIFT+F10*/
+	moduleList.push_back((Module*)(new RenderHealth()));					/*Ctrl+F10*/
 
 	isInit = true;
 }
