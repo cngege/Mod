@@ -11,4 +11,5 @@ private:
 public:
 	virtual auto onEnable()->void override;
 	virtual auto onDisable()->void override;
+	virtual auto isEnabled()->bool override;
 };
