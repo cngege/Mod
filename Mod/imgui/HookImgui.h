@@ -43,7 +43,7 @@ struct FrameContext {
 	ID3D12Resource* main_render_target_resource = nullptr;
 	D3D12_CPU_DESCRIPTOR_HANDLE main_render_target_descriptor;
 };
-uint64_t buffersCounts = -1;
+UINT buffersCounts = -1;
 FrameContext* frameContext = nullptr;
 ID3D12DescriptorHeap* d3d12DescriptorHeapImGuiRender = nullptr;
 ID3D12DescriptorHeap* d3d12DescriptorHeapBackBuffers = nullptr;
@@ -98,7 +98,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 #pragma region SnowFlakes
 		RECT rect;
 		GetWindowRect(window, &rect);
-		ImVec2 size69 = ImVec2(rect.right - rect.left, rect.bottom - rect.top);
+		ImVec2 size69 = ImVec2(static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top));
 		if (ImGui::doSnow) {
 			ImGui::SetNextWindowPos(ImVec2(size69.x - size69.x, size69.y - size69.y), ImGuiCond_Once);
 			ImGui::SetNextWindowSize(ImVec2(size69.x, size69.y));
@@ -275,7 +275,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			return false;
 		const auto rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
-		for (size_t i = 0; i < buffersCounts; i++) {
+		for (UINT i = 0; i < buffersCounts; i++) {
 			ID3D12Resource* pBackBuffer = nullptr;
 			frameContext[i].main_render_target_descriptor = rtvHandle;
 			ppSwapChain->GetBuffer(i, IID_PPV_ARGS(&pBackBuffer));
@@ -312,7 +312,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 #pragma region SnowFlakes
 		RECT rect;
 		GetWindowRect(window, &rect);
-		ImVec2 size69 = ImVec2(rect.right - rect.left, rect.bottom - rect.top);
+		ImVec2 size69 = ImVec2(static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top));
 		if (ImGui::doSnow) {
 			ImGui::SetNextWindowPos(ImVec2(size69.x - size69.x, size69.y - size69.y), ImGuiCond_Once);
 			ImGui::SetNextWindowSize(ImVec2(size69.x, size69.y));
