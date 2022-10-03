@@ -36,6 +36,7 @@ public:
 	virtual std::string getBindKeyName();
 	virtual void onTick(class GameMode*);
 	virtual void onKeyUpdate(int key, bool isDown);
+	virtual void onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY);
 	virtual void onTrigger();
 	virtual void onEnable();
 	virtual void onDisable();

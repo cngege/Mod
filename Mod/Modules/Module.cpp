@@ -94,6 +94,10 @@ auto Module::onKeyUpdate(int key, bool isenabled)->void {
 
 }
 
+auto Module::onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY)->void {
+
+}
+
 auto Module::onTrigger()->void {
 
 }

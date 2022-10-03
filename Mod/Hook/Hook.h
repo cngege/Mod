@@ -24,6 +24,7 @@ public:
 	static auto AllActor_Tick(class Actor*, float*, float)->float*;
 	static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
 	static auto KeyUpdate(__int64, int)->void*;
+	static auto MouseUpdate(__int64, char, char, __int16, __int16, __int16, __int16, char)->void;
 	static auto RenderDetour(void*, class MinecraftUIRenderContext*)->void;
 	static auto Draw_Text(class MinecraftUIRenderContext*,class BitmapFont*, struct RectangleArea const&, class TextHolder*, struct UIColor const& , float , float , struct TextMeasureData*, uintptr_t*)->void;
 	static auto sendMessage(void*, TextHolder*)->__int64;

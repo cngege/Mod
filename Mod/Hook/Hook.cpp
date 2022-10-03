@@ -65,6 +65,10 @@ using KeyUpdate = void* (__fastcall*)(__int64 key, int isdown);
 KeyUpdate keyupdatecall;
 uintptr_t keyupdate;
 
+using MouseUpdate = void(__fastcall*)(__int64, char, char, __int16, __int16, __int16, __int16, char);
+MouseUpdate mouseupdatecall;
+uintptr_t mouseupdate;
+
 using RenderDetour = void(__fastcall*)(void*, MinecraftUIRenderContext*);
 RenderDetour renderDetourcall;
 uintptr_t renderDetour;
@@ -213,10 +217,22 @@ auto Hook::init() -> void
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", keyupdate, memcode);
 		}
 		else {
-			logF("[Hook error] [%s] is no found Hook point", "actor_moveBBs");
+			logF("[Hook error] [%s] is no found Hook point", "keyupdate");
 		}
 	}
 
+	//MouseUpdate
+	{
+		const char* memcode = "48 8B C4 48 89 58 ? 48 89 68 ? 48 89 70 ? 57 41 54 41 55 41 56 41 57 48 83 EC ? 44 0F";
+		mouseupdate = FindSignature(memcode);
+		if (keyupdate != 0x00) {
+			MH_CreateHookEx((LPVOID)mouseupdate, &Hook::MouseUpdate, &mouseupdatecall);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", mouseupdate, memcode);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "mouseupdate");
+		}
+	}
 
 	// 渲染
 	{
@@ -498,6 +514,15 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	return keyupdatecall(key, isdown);
 }
 
+
+
+//触发: 鼠标在窗口中经过就会触发 mousebutton=0,isDown=0
+//mousebutton 1:鼠标左键,2鼠标右键,3:鼠标中键,4:鼠标滚轮滚动(isDown 为+-120左右的值),
+auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8)->void {
+	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
+	mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
+}
+
 int frame = 0;		// 按照视频作者的说法，这个函数会在三层每层都调用一次，也就是每一帧调用三次
 auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	renderDetourcall(_this, ctx);
@@ -513,8 +538,8 @@ auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleA
 	if (Game::mcfont != a1) {
 		if (Game::mcfont == nullptr) {
 			logF("Font:%llX", a1);
+			Game::mcfont = a1;
 		}
-		Game::mcfont = a1;
 		//logF("mcfont = %llX,Text = %s", a1,a3->getText());
 	}
 	

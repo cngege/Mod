@@ -40,7 +40,7 @@ auto ModuleManager::Init()->void {
 }
 
 
-//关闭所有的 Module 并执行析构函数
+//关闭所有的 Module 并销毁
 auto ModuleManager::Disable()->void {
 	if (!IsInitialized())
 		return;
@@ -95,6 +95,14 @@ auto ModuleManager::onKeyUpdate(int key, bool isenable)->void {
 			}
 		}
 		pMod->onKeyUpdate(key, isenable);
+	}
+}
+
+auto ModuleManager::onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY)->void {
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onMouseUpdate(mousebutton, isdown, mouseX, mouseY, relativeMovementX, relativeMovementY);
 	}
 }
 

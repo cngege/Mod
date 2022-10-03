@@ -20,6 +20,7 @@ public:
 
 public:
 	auto onKeyUpdate(int, bool)->void;
+	auto onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY)->void;
 	auto onTick(class GameMode*)->void;
 	auto onAttack(class Actor*)->bool;							// 返回值可以拦截该事件
 	bool useItem(class GameMode*, class ItemStack*);
