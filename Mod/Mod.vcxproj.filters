@@ -31,6 +31,12 @@
     <Filter Include="Modules\源文件">
       <UniqueIdentifier>{be83fe2d-c608-43d9-8d69-48cda829d5d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IMGUI">
+      <UniqueIdentifier>{83c89bc7-ebc4-4e83-853a-8d87026e5ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IMGUI\IMGUI">
+      <UniqueIdentifier>{6aa3c014-873b-4750-9796-5f6847a02752}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,6 +144,42 @@
     <ClInclude Include="Modules\Modules\FastViewPerspective.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="imgui\HookImgui.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\kiero\kiero.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imconfig.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imgui.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imgui_impl_dx11.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imgui_impl_dx12.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imgui_impl_win32.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imgui_internal.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imstb_rectpack.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imstb_textedit.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui\imstb_truetype.h">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\animations\fade.hpp">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -232,6 +274,36 @@
     </ClCompile>
     <ClCompile Include="Modules\Modules\FastViewPerspective.cpp">
       <Filter>Modules\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\kiero\kiero.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui\imgui.cpp">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui\imgui_demo.cpp">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui\imgui_draw.cpp">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui\imgui_impl_dx11.cpp">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui\imgui_impl_dx12.cpp">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui\imgui_impl_win32.cpp">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui\imgui_tables.cpp">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui\imgui_widgets.cpp">
+      <Filter>IMGUI\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\animations\fade.cpp">
+      <Filter>IMGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

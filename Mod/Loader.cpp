@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "Modules/ModuleManager.h"
 
+#include "imgui/HookImgui.h"
+
 MH_STATUS hookret;
 void* Loader::dllHMODULE = nullptr;
 
@@ -25,8 +27,9 @@ void Loader::init(void* hmoudle)
 	
 
 	Game::init();
+	ImguiHooks::InitImgui();
 	Hook::init();
-	
+
 	logF("[MH_EnableHook] hook is: %s", MH_StatusToString(MH_EnableHook(MH_ALL_HOOKS)));
 }
 

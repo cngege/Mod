@@ -2,6 +2,7 @@
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "../Utils/Game.h"
+#include "imgui.h"
 #include "Player.h"
 #include "ServerPlayer.h"
 #include "LocalPlayer.h"
@@ -519,8 +520,34 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 //触发: 鼠标在窗口中经过就会触发 mousebutton=0,isDown=0
 //mousebutton 1:鼠标左键,2鼠标右键,3:鼠标中键,4:鼠标滚轮滚动(isDown 为+-120左右的值),
 auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8)->void {
+
+	if (ImGui::GetCurrentContext() != nullptr) {
+		switch (mousebutton) {
+		case 1:
+			ImGui::GetIO().MouseDown[0] = isDown;
+			break;
+		case 2:
+			ImGui::GetIO().MouseDown[1] = isDown;
+			break;
+		case 3:
+			ImGui::GetIO().MouseDown[2] = isDown;
+			break;
+		case 4:
+			ImGui::GetIO().MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
+			break;
+		default:
+			break;
+		}
+		if (!ImGui::GetIO().WantCaptureMouse)
+			return mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
+
+	}
+	else {
+		mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
+	}
 	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
-	mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
+	
+
 }
 
 int frame = 0;		// 按照视频作者的说法，这个函数会在三层每层都调用一次，也就是每一帧调用三次

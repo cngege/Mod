@@ -124,8 +124,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>_DEBUG;MOD_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDK\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;MOD_EXPORTS;MINECRAFTDX12WITHIMGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDK\;$(SolutionDir)Mod\imgui\imgui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -160,8 +160,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDK\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MINECRAFTDX12WITHIMGUI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDK\;$(SolutionDir)Mod\imgui\imgui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -196,6 +196,18 @@
     <ClInclude Include="..\SDK\TextHolder.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Hook\Hook.h" />
+    <ClInclude Include="imgui\animations\fade.hpp" />
+    <ClInclude Include="imgui\HookImgui.h" />
+    <ClInclude Include="imgui\imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="imgui\imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="imgui\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imgui\imstb_truetype.h" />
+    <ClInclude Include="imgui\kiero\kiero.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Modules\Module.h" />
     <ClInclude Include="Modules\ModuleManager.h" />
@@ -230,6 +242,16 @@
     <ClCompile Include="..\SDK\ServerPlayer.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Hook\Hook.cpp" />
+    <ClCompile Include="imgui\animations\fade.cpp" />
+    <ClCompile Include="imgui\imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui\imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="imgui\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="imgui\kiero\kiero.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Modules\Module.cpp" />
     <ClCompile Include="Modules\ModuleManager.cpp" />

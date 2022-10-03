@@ -8,7 +8,9 @@
     #pragma comment(lib, "libMinHook.x64-v143-md.lib")
 #endif
 
-
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dwrite.lib")
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
