@@ -1,13 +1,6 @@
 //ImGui Shit
 #include "../Utils/Logger.h"
 #include "../../imgui/animations/fade.hpp"
-//#include "imgui.h"
-//#include <imgui_impl_dx12.cpp>
-//#include <wrl.h>
-//#include <imgui_impl_dx11.h>
-//#include <d3d11.h>
-//#include <imgui_impl_win32.h>
-//#include "kiero\kiero.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -41,7 +34,7 @@ enum ID3D_Device_Type {
 struct FrameContext {
 	ID3D12CommandAllocator* commandAllocator = nullptr;
 	ID3D12Resource* main_render_target_resource = nullptr;
-	D3D12_CPU_DESCRIPTOR_HANDLE main_render_target_descriptor;
+	D3D12_CPU_DESCRIPTOR_HANDLE main_render_target_descriptor = {};
 };
 UINT buffersCounts = -1;
 FrameContext* frameContext = nullptr;
@@ -259,20 +252,20 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorImGuiRender, IID_PPV_ARGS(&d3d12DescriptorHeapImGuiRender))))
 				goto out;
 		if (d3d12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator)) != S_OK)
-			return false;
+			return 0;
 		for (size_t i = 0; i < buffersCounts; i++) {
 			frameContext[i].commandAllocator = allocator;
 		};
 		if (d3d12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocator, NULL, IID_PPV_ARGS(&d3d12CommandList)) != S_OK ||
 			d3d12CommandList->Close() != S_OK)
-			return false;
+			return 0;
 		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers;
 		descriptorBackBuffers.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		descriptorBackBuffers.NumDescriptors = buffersCounts;
 		descriptorBackBuffers.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		descriptorBackBuffers.NodeMask = 1;
 		if (d3d12Device->CreateDescriptorHeap(&descriptorBackBuffers, IID_PPV_ARGS(&d3d12DescriptorHeapBackBuffers)) != S_OK)
-			return false;
+			return 0;
 		const auto rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
 		for (UINT i = 0; i < buffersCounts; i++) {
@@ -284,7 +277,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			rtvHandle.ptr += rtvDescriptorSize;
 			pBackBuffer->Release();
 		};
-		POINT mouse;
+		//POINT mouse;
 		RECT rc = { 0 };
 		md::FadeInOut fade;
 		if (!initContext) {
@@ -310,23 +303,23 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		ImGui::NewFrame();
 
 #pragma region SnowFlakes
-		RECT rect;
-		GetWindowRect(window, &rect);
-		ImVec2 size69 = ImVec2(static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top));
-		if (ImGui::doSnow) {
-			ImGui::SetNextWindowPos(ImVec2(size69.x - size69.x, size69.y - size69.y), ImGuiCond_Once);
-			ImGui::SetNextWindowSize(ImVec2(size69.x, size69.y));
-			ImGui::SetNextWindowBgAlpha(0.f);//Set to 0.25 for a nice background
+		//RECT rect;
+		//GetWindowRect(window, &rect);
+		//ImVec2 size69 = ImVec2(static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top));
+		//if (ImGui::doSnow) {
+		//	ImGui::SetNextWindowPos(ImVec2(size69.x - size69.x, size69.y - size69.y), ImGuiCond_Once);
+		//	ImGui::SetNextWindowSize(ImVec2(size69.x, size69.y));
+		//	ImGui::SetNextWindowBgAlpha(0.f);//Set to 0.25 for a nice background
 
-			ImGui::Begin("HELLO!!!", 0, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
-			{
-				GetWindowRect(window, &rc);
-				GetCursorPos(&mouse);
-				// render this before anything else so it is the background
-				//Snowflake::Update(snow, Snowflake::vec3(mouse.x, mouse.y), Snowflake::vec3(rc.left, rc.top));  // you can change a few things inside the update function
-			}
-			ImGui::End();
-		}
+		//	ImGui::Begin("HELLO!!!", 0, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
+		//	{
+		//		GetWindowRect(window, &rc);
+		//		GetCursorPos(&mouse);
+		//		// render this before anything else so it is the background
+		//		//Snowflake::Update(snow, Snowflake::vec3(mouse.x, mouse.y), Snowflake::vec3(rc.left, rc.top));  // you can change a few things inside the update function
+		//	}
+		//	ImGui::End();
+		//}
 #pragma endregion
 
 		//for (auto mod : modHandler.modules)
@@ -477,7 +470,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		currentFrameContext.main_render_target_resource->Release();
 		currentFrameContext.commandAllocator->Release();
 		d3d12Device->Release();
-		delete frameContext;
+		delete[] frameContext;
 	};
 	goto out;
 out:
