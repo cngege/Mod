@@ -360,7 +360,7 @@ public:
 
 	template < typename ret>
 	static inline auto FuncFromSigOffset(uintptr_t sig, int offset) -> ret {
-		return reinterpret_cast<ret>(sig + offset + 4 + *reinterpret_cast<int*>(sig + offset));
+		return reinterpret_cast<ret>(sig + offset + 4 + *reinterpret_cast<uintptr_t*>(sig + offset));
 	}
 
 	// https://stackoverflow.com/a/34571089

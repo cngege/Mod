@@ -1,9 +1,9 @@
-ï»¿#include "Render.h"
+#include "Render.h"
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"
 #include "imgui.h"
 
-Render::Render() : Module(VK_INSERT, "Render", "æ¸²æŸ“UIç®¡ç†å™¨") {
+Render::Render() : Module(VK_INSERT, "Render", "äÖÈ¾UI¹ÜÀíÆ÷") {
 	
 	SetKeyMode(KeyMode::Switch);
 	setEnabled(true);
@@ -11,14 +11,14 @@ Render::Render() : Module(VK_INSERT, "Render", "æ¸²æŸ“UIç®¡ç†å™¨") {
 
 auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	if (isEnabled()) {
-		//ç”»é¢æ¿ åŠŸèƒ½åˆ—è¡¨
+		//»­Ãæ°å ¹¦ÄÜÁÐ±í
 		UIColor bgcolor = UIColor(0,0,0,80);
 		UIColor textcolor1 = UIColor(255, 255, 255);
 		UIColor textcolor2 = UIColor(160, 160, 160);
 
 		float ltX = x + 5.f;
-		float ltY = y + 5.f;						//ç»˜åˆ¶æ–‡å­—å·¦ä¸Šè§’Yå€¼çš„ä½ç½®
-		float textlineheight = 8.f * fontsize;		//ä¸‹ä¸€è¡Œçš„åç§»é‡
+		float ltY = y + 5.f;						//»æÖÆÎÄ×Ö×óÉÏ½ÇYÖµµÄÎ»ÖÃ
+		float textlineheight = 8.f * fontsize;		//ÏÂÒ»ÐÐµÄÆ«ÒÆÁ¿
 
 		auto mcount = Game::GetModuleManager()->GetAllModule().size();
 
@@ -26,7 +26,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 		
 		for (auto pMod : Game::GetModuleManager()->GetAllModule()) {
 			if (pMod->GetKeyMode() == KeyMode::Switch) {
-				// å¦‚æžœè¿™ä¸ªæ¨¡å—æ˜¯æœ‰å¼€å…³çŠ¶æ€çš„åˆ‡æ¢æ¨¡å¼
+				// Èç¹ûÕâ¸öÄ£¿éÊÇÓÐ¿ª¹Ø×´Ì¬µÄÇÐ»»Ä£Ê½
 				std::string showText = pMod->getModuleName() + " ";
 				if (pMod->getBindKeyName() != "") {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
@@ -36,7 +36,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 				ltY += textlineheight + 5.f;
 			}
 			else if (pMod->GetKeyMode() == KeyMode::Trigger) {
-				// å¦‚æžœè¿™ä¸ªæ¨¡å—æ˜¯ç‚¹å‡»å¿«æ·é”®è§¦å‘çš„
+				// Èç¹ûÕâ¸öÄ£¿éÊÇµã»÷¿ì½Ý¼ü´¥·¢µÄ
 				std::string showText = pMod->getModuleName() + " ";
 				if (pMod->getBindKeyName() != "") {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
@@ -46,7 +46,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 				ltY += textlineheight + 5.f;
 			}
 			else if (pMod->GetKeyMode() == KeyMode::Hold) {
-				// å¦‚æžœè¿™ä¸ªæ¨¡å—æ˜¯é•¿æŒ‰å¼€å¯ï¼Œæ¾å¼€å…³é—­æ¨¡å¼
+				// Èç¹ûÕâ¸öÄ£¿éÊÇ³¤°´¿ªÆô£¬ËÉ¿ª¹Ø±ÕÄ£Ê½
 				std::string showText = pMod->getModuleName() + " ";
 				if (pMod->getBindKeyName() != "") {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
@@ -90,7 +90,7 @@ auto Render::onImGUIRender()->void {
 		}
 		if (ImGui::CollapsingHeader(("Exploits"))) {
 			ImGui::Spacing();
-			if (ImGui::Button("ä¸­æ–‡")) {
+			if (ImGui::Button(u8"ÖÐÎÄ")) {
 			}
 			ImGui::Spacing();
 		}

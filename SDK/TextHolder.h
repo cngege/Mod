@@ -5,7 +5,7 @@ class TextHolder {
 public:
 	union {
 		char inlineText[16];  //0x0000
-		char* pText;          //0x0000
+		char* pText = nullptr;          //0x0000
 	};
 
 	size_t textLength;         //0x0010
@@ -29,7 +29,7 @@ public:
 
 			pText = reinterpret_cast<char*>(malloc(size + 1));
 			alignedTextLength = size;
-			if (size + 1 >= 0x1000) {
+			if (pText != 0x0 && size + 1 >= 0x1000) {
 				*reinterpret_cast<char**>(pText) = pText;
 				pText += 8;
 			}
@@ -56,7 +56,7 @@ public:
 
 			pText = reinterpret_cast<char*>(malloc(size + 1));
 			alignedTextLength = size;
-			if (size + 1 >= 0x1000) {
+			if (pText != 0x0 && size + 1 >= 0x1000) {
 				*reinterpret_cast<char**>(pText) = pText;
 				pText += 8;
 			}
@@ -85,7 +85,7 @@ public:
 
 			pText = reinterpret_cast<char*>(malloc(size + 1));
 			alignedTextLength = size;
-			if (size + 1 >= 0x1000) {
+			if (pText != 0x0 && size + 1 >= 0x1000) {
 				*reinterpret_cast<char**>(pText) = pText;
 				pText += 8;
 			}
@@ -111,14 +111,15 @@ public:
 
 			pText = reinterpret_cast<char*>(malloc(size + 1));
 			alignedTextLength = size;
-			if (size + 1 >= 0x1000) {
+			if (pText != 0x0 && size + 1 >= 0x1000) {
 				*reinterpret_cast<char**>(pText) = pText;
 
 				pText += 8;
 				memset(pText, 0, alignedTextLength - 8);
 			}
-			else
+			else if(pText != 0x0) {
 				memset(pText, 0, alignedTextLength);
+			}
 		}
 	}
 
@@ -179,7 +180,7 @@ public:
 
 			pText = reinterpret_cast<char*>(malloc(size + 1));
 			alignedTextLength = size;
-			if (size + 1 >= 0x1000) {
+			if (pText != 0x0 && size + 1 >= 0x1000) {
 				*reinterpret_cast<char**>(pText) = pText;
 				pText += 8;
 			}
