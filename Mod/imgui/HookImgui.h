@@ -15,6 +15,9 @@
 #include <dwrite_1.h>
 #include "kiero/kiero.h"
 
+#include "../Utils/Game.h"
+#include "../Modules/ModuleManager.h"
+
 //auto GetDllMod(void) -> HMODULE {
 //	MEMORY_BASIC_INFORMATION info;
 //	size_t len = VirtualQueryEx(GetCurrentProcess(), (void*)GetDllMod, &info, sizeof(info));
@@ -64,12 +67,12 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			ImGui::CreateContext();
 		ID3D11DeviceContext* ppContext = nullptr;
 		d3d11Device->GetImmediateContext(&ppContext);
-		ID3D11Texture2D* pBackBuffer;
+		ID3D11Texture2D* pBackBuffer = nullptr;
 		ppSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 		ID3D11RenderTargetView* mainRenderTargetView;
 		d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
 		pBackBuffer->Release();
-		POINT mouse;
+		//POINT mouse;
 		RECT rc = { 0 };
 		md::FadeInOut fade;
 		ImGui_ImplWin32_Init(window);
@@ -89,24 +92,26 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		ImGui::NewFrame();
 		
 #pragma region SnowFlakes
-		RECT rect;
-		GetWindowRect(window, &rect);
-		ImVec2 size69 = ImVec2(static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top));
-		if (ImGui::doSnow) {
-			ImGui::SetNextWindowPos(ImVec2(size69.x - size69.x, size69.y - size69.y), ImGuiCond_Once);
-			ImGui::SetNextWindowSize(ImVec2(size69.x, size69.y));
-			ImGui::SetNextWindowBgAlpha(0.f);//Set to 0.25 for a nice background
+		//RECT rect;
+		//GetWindowRect(window, &rect);
+		//ImVec2 size69 = ImVec2(static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top));
+		//if (ImGui::doSnow) {
+		//	ImGui::SetNextWindowPos(ImVec2(size69.x - size69.x, size69.y - size69.y), ImGuiCond_Once);
+		//	ImGui::SetNextWindowSize(ImVec2(size69.x, size69.y));
+		//	ImGui::SetNextWindowBgAlpha(0.f);//Set to 0.25 for a nice background
 
-			ImGui::Begin("HELLO!!!", 0, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
-			{
-				GetWindowRect(window, &rc);
-				GetCursorPos(&mouse);
-				// render this before anything else so it is the background
-				//Snowflake::Update(snow, Snowflake::vec3(mouse.x, mouse.y), Snowflake::vec3(rc.left, rc.top));  // you can change a few things inside the update function
-			}
-			ImGui::End();
-		}
+		//	ImGui::Begin("HELLO!!!", 0, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
+		//	{
+		//		GetWindowRect(window, &rc);
+		//		GetCursorPos(&mouse);
+		//		// render this before anything else so it is the background
+		//		//Snowflake::Update(snow, Snowflake::vec3(mouse.x, mouse.y), Snowflake::vec3(rc.left, rc.top));  // you can change a few things inside the update function
+		//	}
+		//	ImGui::End();
+		//}
 #pragma endregion
+
+		Game::GetModuleManager()->onImGUIRender();
 
 		//for (auto mod : modHandler.modules)
 		//	if (mod->enabled)
@@ -167,11 +172,11 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 					style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
 					style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 
-					ImGuiWindowFlags TargetFlags;
-					TargetFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
+					//ImGuiWindowFlags TargetFlags;
+					//TargetFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
 
-					if (ImGui::Begin(("TestGui"), 0, TargetFlags)) {
-						ImGui::SetWindowSize(ImVec2(360.f, 430.f));
+					//if (ImGui::Begin(("TestGui"), 0, TargetFlags)) {
+					//	ImGui::SetWindowSize(ImVec2(360.f, 430.f));
 #pragma region FadeAnimations
 						/*md::FadeInOut fade;
 						ImVec2 window_pos = ImGui::GetWindowPos();
@@ -195,36 +200,36 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 						if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows | ImGuiHoveredFlags_AllowWhenBlockedByPopup | ImGuiHoveredFlags_AllowWhenBlockedByActiveItem))
 							b_child_window_visible = true; else b_child_window_visible = false;*/
 #pragma endregion
-						if (ImGui::CollapsingHeader("Visuals")) {
-							ImGui::Spacing();
-							if (ImGui::Button("Test")) {
-							}
-							ImGui::Toggle("Toggle Snow", &ImGui::doSnow);
-							ImGui::ButtonScrollable("Button Scrollable", ImVec2(100.f, 0.f));
-							//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
-							ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(100.f, 0.f), ImGuiButtonFlags_MouseButtonRight);
-							ImGui::Spacing();
-						}
-						if (ImGui::CollapsingHeader(("Aura"))) {
-							ImGui::Spacing();
-							if (ImGui::Button("Test")) {
-							}
-							ImGui::Spacing();
-						}
-						if (ImGui::CollapsingHeader(("Client"))) {
-							ImGui::Spacing();
-							if (ImGui::Button("Test")) {
-							}
-							ImGui::Spacing();
-						}
-						if (ImGui::CollapsingHeader(("Exploits"))) {
-							ImGui::Spacing();
-							if (ImGui::Button("Test")) {
-							}
-							ImGui::Spacing();
-						}
-					}
-					ImGui::End();
+					//	if (ImGui::CollapsingHeader("Visuals")) {
+					//		ImGui::Spacing();
+					//		if (ImGui::Button("Test")) {
+					//		}
+					//		ImGui::Toggle("Toggle Snow D3D11", &ImGui::doSnow);
+					//		ImGui::ButtonScrollable("Button Scrollable", ImVec2(300.f, 0.f));
+					//		//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
+					//		ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(200.f, 0.f), ImGuiButtonFlags_MouseButtonRight);
+					//		ImGui::Spacing();
+					//	}
+					//	if (ImGui::CollapsingHeader(("Aura"))) {
+					//		ImGui::Spacing();
+					//		if (ImGui::Button("Test")) {
+					//		}
+					//		ImGui::Spacing();
+					//	}
+					//	if (ImGui::CollapsingHeader(("Client"))) {
+					//		ImGui::Spacing();
+					//		if (ImGui::Button("Test")) {
+					//		}
+					//		ImGui::Spacing();
+					//	}
+					//	if (ImGui::CollapsingHeader(("Exploits"))) {
+					//		ImGui::Spacing();
+					//		if (ImGui::Button("中文")) {
+					//		}
+					//		ImGui::Spacing();
+					//	}
+					//}
+					//ImGui::End();
 				}
 			//}
 
@@ -259,7 +264,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		if (d3d12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocator, NULL, IID_PPV_ARGS(&d3d12CommandList)) != S_OK ||
 			d3d12CommandList->Close() != S_OK)
 			return 0;
-		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers;
+		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers = {};
 		descriptorBackBuffers.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		descriptorBackBuffers.NumDescriptors = buffersCounts;
 		descriptorBackBuffers.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
@@ -322,6 +327,8 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		//}
 #pragma endregion
 
+		Game::GetModuleManager()->onImGUIRender();
+
 		//for (auto mod : modHandler.modules)
 		//	if (mod->enabled)
 		//		mod->OnImGuiRender();
@@ -381,11 +388,11 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 					style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
 					style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 
-					ImGuiWindowFlags TargetFlags;
-					TargetFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
+					//ImGuiWindowFlags TargetFlags;
+					//TargetFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
 
-					if (ImGui::Begin(("TestGui"), 0, TargetFlags)) {
-						ImGui::SetWindowSize(ImVec2(360.f, 430.f));
+					//if (ImGui::Begin(("TestGui"), 0, TargetFlags)) {
+					//	ImGui::SetWindowSize(ImVec2(360.f, 430.f));
 #pragma region FadeAnimations
 						/*md::FadeInOut fade;
 						ImVec2 window_pos = ImGui::GetWindowPos();
@@ -409,43 +416,43 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 						if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows | ImGuiHoveredFlags_AllowWhenBlockedByPopup | ImGuiHoveredFlags_AllowWhenBlockedByActiveItem))
 							b_child_window_visible = true; else b_child_window_visible = false;*/
 #pragma endregion
-						if (ImGui::CollapsingHeader("Visuals")) {
-							ImGui::Spacing();
-							if (ImGui::Button("Test")) {
-							}
-							ImGui::Toggle("Toggle Snow", &ImGui::doSnow);
-							ImGui::ButtonScrollable("Button Scrollable", ImVec2(100.f, 0.f));
-							//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
-							ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(100.f, 0.f), ImGuiButtonFlags_MouseButtonRight);
-							ImGui::Spacing();
-						}
-						if (ImGui::CollapsingHeader(("Aura"))) {
-							ImGui::Spacing();
-							if (ImGui::Button("Test")) {
-							}
-							ImGui::Spacing();
-						}
-						if (ImGui::CollapsingHeader(("Client"))) {
-							ImGui::Spacing();
-							if (ImGui::Button("Test")) {
-							}
-							ImGui::Spacing();
-						}
-						if (ImGui::CollapsingHeader(("Exploits"))) {
-							ImGui::Spacing();
-							if (ImGui::Button("Test")) {
-							}
-							ImGui::Spacing();
-						}
-					}
-					ImGui::End();
+					//	if (ImGui::CollapsingHeader("Visuals")) {
+					//		ImGui::Spacing();
+					//		if (ImGui::Button("Test")) {
+					//		}
+					//		ImGui::Toggle("中文", &ImGui::doSnow);
+					//		ImGui::ButtonScrollable("Button Scrollable", ImVec2(100.f, 0.f));
+					//		//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
+					//		ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(100.f, 0.f), ImGuiButtonFlags_MouseButtonRight);
+					//		ImGui::Spacing();
+					//	}
+					//	if (ImGui::CollapsingHeader(("Aura"))) {
+					//		ImGui::Spacing();
+					//		if (ImGui::Button("Test")) {
+					//		}
+					//		ImGui::Spacing();
+					//	}
+					//	if (ImGui::CollapsingHeader(("Client"))) {
+					//		ImGui::Spacing();
+					//		if (ImGui::Button("Test")) {
+					//		}
+					//		ImGui::Spacing();
+					//	}
+					//	if (ImGui::CollapsingHeader(("Exploits"))) {
+					//		ImGui::Spacing();
+					//		if (ImGui::Button("Test")) {
+					//		}
+					//		ImGui::Spacing();
+					//	}
+					//}
+					//ImGui::End();
 				}
 			//}
 		//}
 
 		FrameContext& currentFrameContext = frameContext[ppSwapChain->GetCurrentBackBufferIndex()];
 		currentFrameContext.commandAllocator->Reset();
-		D3D12_RESOURCE_BARRIER barrier;
+		D3D12_RESOURCE_BARRIER barrier = {};
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 		barrier.Transition.pResource = currentFrameContext.main_render_target_resource;

@@ -1,6 +1,7 @@
 ﻿#include "Render.h"
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"
+#include "imgui.h"
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	
@@ -57,4 +58,42 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 		}
 		ctx->flushText(0);
 	}
+}
+
+auto Render::onImGUIRender()->void {
+	if (!isEnabled()) {
+		return;
+	}
+	if (ImGui::Begin("Gui")) {
+		ImGui::SetWindowSize(ImVec2(360.f, 430.f));
+		if (ImGui::CollapsingHeader("Visuals")) {
+			ImGui::Spacing();
+			if (ImGui::Button("Test")) {
+			}
+			ImGui::Toggle("Toggle Snow D3D11", &ImGui::doSnow);
+			ImGui::ButtonScrollable("Button Scrollable", ImVec2(300.f, 0.f));
+			//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
+			ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(355.f, 0.f), ImGuiButtonFlags_MouseButtonRight);
+			ImGui::Spacing();
+		}
+		if (ImGui::CollapsingHeader(("Aura"))) {
+			ImGui::Spacing();
+			if (ImGui::Button("Test")) {
+			}
+			ImGui::Spacing();
+		}
+		if (ImGui::CollapsingHeader(("Client"))) {
+			ImGui::Spacing();
+			if (ImGui::Button("Test")) {
+			}
+			ImGui::Spacing();
+		}
+		if (ImGui::CollapsingHeader(("Exploits"))) {
+			ImGui::Spacing();
+			if (ImGui::Button("中文")) {
+			}
+			ImGui::Spacing();
+		}
+	}
+	ImGui::End();
 }

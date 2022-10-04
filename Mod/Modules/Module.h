@@ -47,6 +47,7 @@ public:
 	virtual void onActorTick(class Actor*);
 	virtual void onLocalPlayerTick(class LocalPlayer*);
 	virtual void onRenderDetour(class MinecraftUIRenderContext*);
+	virtual void onImGUIRender();
 	virtual bool onSendMessage(class TextHolder*);
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();

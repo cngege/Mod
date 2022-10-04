@@ -184,6 +184,14 @@ auto ModuleManager::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	}
 }
 
+auto ModuleManager::onImGUIRender()->void {
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onImGUIRender();
+	}
+}
+
 auto ModuleManager::onSendMessage(TextHolder* TH)->bool {
 	bool RunOriginalFun = true;
 	if (!IsInitialized())

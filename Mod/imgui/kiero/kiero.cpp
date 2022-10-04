@@ -54,7 +54,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType) {
 
 	if (_renderType != RenderType::None) {
 		if (_renderType >= RenderType::D3D9 && _renderType <= RenderType::D3D12) {
-			WNDCLASSEX windowClass;
+			WNDCLASSEX windowClass = {};
 			windowClass.cbSize = sizeof(WNDCLASSEX);
 			windowClass.style = CS_HREDRAW | CS_VREDRAW;
 			windowClass.lpfnWndProc = DefWindowProc;
@@ -353,7 +353,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType) {
 					return Status::UnknownError;
 				}
 
-				IDXGIFactory* factory;
+				IDXGIFactory* factory = nullptr;
 				if (((long(__stdcall*)(const IID&, void**))(CreateDXGIFactory))(__uuidof(IDXGIFactory), (void**)&factory) < 0) {
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
@@ -374,45 +374,45 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType) {
 					return Status::UnknownError;
 				}
 
-				ID3D12Device* device;
+				ID3D12Device* device = nullptr;
 				if (((long(__stdcall*)(IUnknown*, D3D_FEATURE_LEVEL, const IID&, void**))(D3D12CreateDevice))(adapter, D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), (void**)&device) < 0) {
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
 					return Status::UnknownError;
 				}
 
-				D3D12_COMMAND_QUEUE_DESC queueDesc;
+				D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 				queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 				queueDesc.Priority = 0;
 				queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 				queueDesc.NodeMask = 0;
 
-				ID3D12CommandQueue* commandQueue;
+				ID3D12CommandQueue* commandQueue = nullptr;
 				if (device->CreateCommandQueue(&queueDesc, __uuidof(ID3D12CommandQueue), (void**)&commandQueue) < 0) {
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
 					return Status::UnknownError;
 				}
 
-				ID3D12CommandAllocator* commandAllocator;
+				ID3D12CommandAllocator* commandAllocator = nullptr;
 				if (device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&commandAllocator) < 0) {
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
 					return Status::UnknownError;
 				}
 
-				ID3D12GraphicsCommandList* commandList;
+				ID3D12GraphicsCommandList* commandList = nullptr;
 				if (device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, NULL, __uuidof(ID3D12GraphicsCommandList), (void**)&commandList) < 0) {
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
 					return Status::UnknownError;
 				}
 
-				DXGI_RATIONAL refreshRate;
+				DXGI_RATIONAL refreshRate = {};
 				refreshRate.Numerator = 60;
 				refreshRate.Denominator = 1;
 
-				DXGI_MODE_DESC bufferDesc;
+				DXGI_MODE_DESC bufferDesc = {};
 				bufferDesc.Width = 100;
 				bufferDesc.Height = 100;
 				bufferDesc.RefreshRate = refreshRate;
@@ -420,7 +420,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType) {
 				bufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 				bufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-				DXGI_SAMPLE_DESC sampleDesc;
+				DXGI_SAMPLE_DESC sampleDesc = {};
 				sampleDesc.Count = 1;
 				sampleDesc.Quality = 0;
 
@@ -442,6 +442,9 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType) {
 				}
 
 				g_methodsTable = (uint150_t*)::calloc(150, sizeof(uint150_t));
+				if (g_methodsTable == 0) {
+					return Status::UnknownError;
+				}
 				::memcpy(g_methodsTable, *(uint150_t**)device, 44 * sizeof(uint150_t));
 				::memcpy(g_methodsTable + 44, *(uint150_t**)commandQueue, 19 * sizeof(uint150_t));
 				::memcpy(g_methodsTable + 44 + 19, *(uint150_t**)commandAllocator, 9 * sizeof(uint150_t));

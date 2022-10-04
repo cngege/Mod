@@ -29,6 +29,7 @@ public:
 	auto onActorTick(class Actor*)->void;
 	auto onLocalPlayerTick(class LocalPlayer*)->void;
 	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
+	auto onImGUIRender()->void;
 	auto onSendMessage(class TextHolder*)->bool;
 };
 
