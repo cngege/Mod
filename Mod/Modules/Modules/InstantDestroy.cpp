@@ -1,6 +1,7 @@
 ﻿#include "InstantDestroy.h"
 #include "../Mod/Utils/Game.h"
 #include "../SDK/GameMode.h"
+#pragma execution_character_set("utf-8")
 
 InstantDestroy::InstantDestroy() : Module(0, "InstantDestroy", "按下 CTRL + SHIFT 后破坏方块时瞬间破坏") {
 	setEnabled(true);

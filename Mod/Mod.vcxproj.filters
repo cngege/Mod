@@ -180,6 +180,9 @@
     <ClInclude Include="imgui\animations\fade.hpp">
       <Filter>IMGUI</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\httplib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

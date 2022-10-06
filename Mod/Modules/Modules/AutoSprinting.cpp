@@ -3,6 +3,7 @@
 #include "GameMode.h"
 
 #include "../../Utils/Logger.h"
+#pragma execution_character_set("utf-8")
 
 AutoSprinting::AutoSprinting() : Module(VK_F6, "AutoSprinting", "自动疾跑") {
 	setEnabled(true);

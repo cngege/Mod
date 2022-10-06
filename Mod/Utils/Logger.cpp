@@ -31,12 +31,6 @@ bool Logger::isActive() {
 
 std::wstring Logger::GetRoamingFolderPath() {
 
-#ifdef _DEBUG
-	std::string s("C:\\Users\\CNGEGE\\Desktop");
-	std::wstring ws(s.begin(), s.end());
-	return ws;
-#endif
-
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);
 	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve application data statics");
@@ -72,8 +66,12 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 		InitializeCriticalSection(&loggerLock);
 		EnterCriticalSection(&loggerLock);
 
-
+#ifdef _DEBUG
+		std::string s("C:\\Users\\CNGEGE\\Desktop");
+		std::wstring roam(s.begin(), s.end());
+#else
 		std::wstring roam = GetRoamingFolderPath();
+#endif
 		sprintf_s(logPath, 200, "%S\\logs.txt", roam.c_str());
 
 		try {
@@ -123,7 +121,12 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 		InitializeCriticalSection(&loggerLock);
 		EnterCriticalSection(&loggerLock);
 
+#ifdef _DEBUG
+		std::string s("C:\\Users\\CNGEGE\\Desktop");
+		std::wstring roam(s.begin(), s.end());
+#else
 		std::wstring roam = GetRoamingFolderPath();
+#endif
 		sprintf_s(logPath, 200, "%S\\logs.txt", roam.c_str());
 
 		try {

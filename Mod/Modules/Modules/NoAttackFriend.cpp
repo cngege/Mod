@@ -4,8 +4,9 @@
 #include "TextHolder.h"
 #include "../../Utils/Game.h"
 #include "../../Utils/Utils.h"
+#pragma execution_character_set("utf-8")
 
-NoAttackFriend::NoAttackFriend() : Module(VK_F4, "NoAttackFriend", "从名称颜色识别玩家为队友时拦截攻击") {
+NoAttackFriend::NoAttackFriend() : Module(VK_F4, "NoAttackFriend", "根据玩家名称的颜色识别玩家为队友时拦截攻击") {
 	colorbyte[0] = Utils::ANSItoUTF8(colorbyte[0].c_str());
 }
 
@@ -33,7 +34,7 @@ auto NoAttackFriend::IsFriend(Player* p)->bool {
 	return false;
 }
 
-#include "../../Utils/Logger.h"
+//#include "../../Utils/Logger.h"
 auto NoAttackFriend::onAttack(Actor* actor)->bool {
 	if (!isEnabled()) {
 		return true;

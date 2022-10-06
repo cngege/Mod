@@ -4,7 +4,7 @@
 #include "../Mod/Utils/Game.h"
 #include "../ModuleManager.h"
 #include "NoAttackFriend.h"
-
+#pragma execution_character_set("utf-8")
 
 HitBox::HitBox() : Module(0, "HitBox", "增大其他玩家的碰撞体积,更容易击中") {
 

@@ -1,24 +1,26 @@
-#include "Render.h"
+ï»¿#include "Render.h"
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"
+#include "../../Utils/Utils.h"
 #include "imgui.h"
+#pragma execution_character_set("utf-8")
 
-Render::Render() : Module(VK_INSERT, "Render", "äÖÈ¾UI¹ÜÀíÆ÷") {
-	
+Render::Render() : Module(VK_INSERT, "Render", "æ¸²æŸ“UIç®¡ç†å™¨") {
 	SetKeyMode(KeyMode::Switch);
 	setEnabled(true);
 }
 
 auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
+	return;
 	if (isEnabled()) {
-		//»­Ãæ°å ¹¦ÄÜÁĞ±í
+		//ç”»é¢æ¿ åŠŸèƒ½åˆ—è¡¨
 		UIColor bgcolor = UIColor(0,0,0,80);
 		UIColor textcolor1 = UIColor(255, 255, 255);
 		UIColor textcolor2 = UIColor(160, 160, 160);
 
 		float ltX = x + 5.f;
-		float ltY = y + 5.f;						//»æÖÆÎÄ×Ö×óÉÏ½ÇYÖµµÄÎ»ÖÃ
-		float textlineheight = 8.f * fontsize;		//ÏÂÒ»ĞĞµÄÆ«ÒÆÁ¿
+		float ltY = y + 5.f;						//ç»˜åˆ¶æ–‡å­—å·¦ä¸Šè§’Yå€¼çš„ä½ç½®
+		float textlineheight = 8.f * fontsize;		//ä¸‹ä¸€è¡Œçš„åç§»é‡
 
 		auto mcount = Game::GetModuleManager()->GetAllModule().size();
 
@@ -26,7 +28,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 		
 		for (auto pMod : Game::GetModuleManager()->GetAllModule()) {
 			if (pMod->GetKeyMode() == KeyMode::Switch) {
-				// Èç¹ûÕâ¸öÄ£¿éÊÇÓĞ¿ª¹Ø×´Ì¬µÄÇĞ»»Ä£Ê½
+				// å¦‚æœè¿™ä¸ªæ¨¡å—æ˜¯æœ‰å¼€å…³çŠ¶æ€çš„åˆ‡æ¢æ¨¡å¼
 				std::string showText = pMod->getModuleName() + " ";
 				if (pMod->getBindKeyName() != "") {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
@@ -36,7 +38,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 				ltY += textlineheight + 5.f;
 			}
 			else if (pMod->GetKeyMode() == KeyMode::Trigger) {
-				// Èç¹ûÕâ¸öÄ£¿éÊÇµã»÷¿ì½İ¼ü´¥·¢µÄ
+				// å¦‚æœè¿™ä¸ªæ¨¡å—æ˜¯ç‚¹å‡»å¿«æ·é”®è§¦å‘çš„
 				std::string showText = pMod->getModuleName() + " ";
 				if (pMod->getBindKeyName() != "") {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
@@ -46,7 +48,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 				ltY += textlineheight + 5.f;
 			}
 			else if (pMod->GetKeyMode() == KeyMode::Hold) {
-				// Èç¹ûÕâ¸öÄ£¿éÊÇ³¤°´¿ªÆô£¬ËÉ¿ª¹Ø±ÕÄ£Ê½
+				// å¦‚æœè¿™ä¸ªæ¨¡å—æ˜¯é•¿æŒ‰å¼€å¯ï¼Œæ¾å¼€å…³é—­æ¨¡å¼
 				std::string showText = pMod->getModuleName() + " ";
 				if (pMod->getBindKeyName() != "") {
 					showText += "[" + pMod->getBindKeyName() + "]  ";
@@ -64,36 +66,47 @@ auto Render::onImGUIRender()->void {
 	if (!isEnabled()) {
 		return;
 	}
-	if (ImGui::Begin("Gui")) {
+	if (ImGui::Begin("æ¨¡ç»„åŠŸèƒ½é¢æ¿  æ‰€æœ‰ModçŠ¶æ€")) {
 		ImGui::SetWindowSize(ImVec2(360.f, 430.f));
-		if (ImGui::CollapsingHeader("Visuals")) {
-			ImGui::Spacing();
-			if (ImGui::Button("Test")) {
+
+		Game::GetModuleManager()->Moduleforeach([](Module* mod) {
+			std::string showText(mod->isEnabled() ? "[å¼€å¯]" : "[å…³é—­]");
+			showText += " ";
+			showText += mod->getModuleName().c_str();		//åŠ ä¸ŠModuleæœ¬æ¥çš„åç§°
+			if (mod->getBindKeyName() != "") {
+				showText += " [" + mod->getBindKeyName() + "]";
 			}
-			ImGui::Toggle("Toggle Snow D3D11", &ImGui::doSnow);
-			ImGui::ButtonScrollable("Button Scrollable", ImVec2(300.f, 0.f));
-			//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
-			ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(355.f, 0.f), ImGuiButtonFlags_MouseButtonRight);
-			ImGui::Spacing();
-		}
-		if (ImGui::CollapsingHeader(("Aura"))) {
-			ImGui::Spacing();
-			if (ImGui::Button("Test")) {
+			if (Utils::HelpCollapsingHeader(showText.c_str(), mod->getModuleInfo().c_str())) {
+				ImGui::TextColored(ImVec4(252, 161, 4, 255), mod->getModuleInfo().c_str());
+				bool modIsEnable = mod->isEnabled();
+				if (ImGui::Button(modIsEnable ? "ç‚¹å‡»å…³é—­" : "ç‚¹å‡»å¼€å¯")) {
+					mod->setEnabled(!modIsEnable);
+				}
 			}
-			ImGui::Spacing();
-		}
-		if (ImGui::CollapsingHeader(("Client"))) {
-			ImGui::Spacing();
-			if (ImGui::Button("Test")) {
-			}
-			ImGui::Spacing();
-		}
-		if (ImGui::CollapsingHeader(("Exploits"))) {
-			ImGui::Spacing();
-			if (ImGui::Button(u8"ÖĞÎÄ")) {
-			}
-			ImGui::Spacing();
-		}
+		});
+
+		//if (ImGui::CollapsingHeader(("Aura"))) {
+		//	ImGui::Spacing();
+		//	if (ImGui::Button("Test")) {
+		//	}
+		//	//ImGui::Toggle("Toggle Snow D3D11", &ImGui::doSnow);
+		//	ImGui::ButtonScrollable("Button Scrollable", ImVec2(300.f, 0.f));
+		//	//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
+		//	ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(355.f, 0.f), ImGuiButtonFlags_MouseButtonRight);
+		//	ImGui::Spacing();
+		//}
+		//if (ImGui::CollapsingHeader(("Client"))) {
+		//	ImGui::Spacing();
+		//	if (ImGui::Button("ä¸­å›½åˆ¶é€ æ±‡é›†å…¨çƒ")) {
+		//	}
+		//	ImGui::Spacing();
+		//}
+		//if (ImGui::CollapsingHeader(("Exploits"))) {
+		//	ImGui::Spacing();
+		//	if (ImGui::Button("ä¸­å›½åˆ¶é€ æ±‡é›†å…¨çƒ")) {
+		//	}
+		//	ImGui::Spacing();
+		//}
 	}
 	ImGui::End();
 }

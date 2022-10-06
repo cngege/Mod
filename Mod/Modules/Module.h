@@ -33,6 +33,7 @@ public:
 	virtual bool checkcontrolkeys();
 	virtual void setcontrolkeysbind(std::vector<int> key);
 	virtual std::string getModuleName();
+	virtual std::string getModuleInfo();
 	virtual std::string getBindKeyName();
 	virtual void onTick(class GameMode*);
 	virtual void onKeyUpdate(int key, bool isDown);

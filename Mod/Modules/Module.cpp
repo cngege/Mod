@@ -51,6 +51,10 @@ auto Module::getModuleName()->std::string {
 	return this->modulename;
 }
 
+auto Module::getModuleInfo()->std::string {
+	return this->moduleinfo;
+}
+
 auto Module::getBindKeyName()->std::string {
 	//ret : CTRL + SHIFT + F
 	std::string name = "";

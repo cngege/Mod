@@ -4,6 +4,7 @@
 
 #include "GameMode.h"
 #include "LocalPlayer.h"
+#pragma execution_character_set("utf-8")
 
 FastViewPerspective::FastViewPerspective() : Module(VK_F9, "FastViewPerspective", "快速预览第二人称视角") {
 	setEnabled(true);
