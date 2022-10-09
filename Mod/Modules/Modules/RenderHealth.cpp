@@ -15,7 +15,7 @@ auto RenderHealth::onAttack(Actor* actor)->bool {
 	if (isEnabled()) {
 		currentActorVT = *(uintptr_t*)actor;
 		currentActor = actor;
-		tick = 600.f;
+		tick = 300.f;
 		show = true;
 	}
 	return true;
@@ -39,6 +39,9 @@ auto RenderHealth::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 				else {
 					currentPlayerName = sname.substr(0, find);
 				}
+			}
+			else {
+				currentActorVT = -1;
 			}
 		}
 

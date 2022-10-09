@@ -183,6 +183,9 @@
     <ClInclude Include="Utils\httplib.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Modules\AirJump.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -307,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="imgui\animations\fade.cpp">
       <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Modules\AirJump.cpp">
+      <Filter>Modules\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

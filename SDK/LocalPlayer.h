@@ -10,6 +10,7 @@ protected:
 
 public:
 	static int toCIoffset;
+	static int onGroundoffset;
 	
 public:
 	template <typename TRet, typename... TArgs>
@@ -22,10 +23,11 @@ public:
 public:
 	//定义函数
 	auto getClientInstance()->class ClientInstance*;
+	auto isOnGround()->bool*;
 
 public:
 	//虚表函数
 	//auto setPos(vec3_t*)->__int64;									/*14*/
-	auto jumpFromGround()->UINT64;									/*346*/
-	auto displayClientMessage(class TextHolder*)->UINT64;					/*389*/
+	auto jumpFromGround()->UINT64;										/*346*/
+	auto displayClientMessage(class TextHolder*)->UINT64;				/*389*/
 };

@@ -5,7 +5,9 @@
 #include "Actor.h"
 #include "AttributeInstance.h"
 #include "GameMode.h"
+#include "LocalPlayer.h"
 #include "../Modules/ModuleManager.h"
+
 
 bool Game::ModState = false;
 ModuleManager* Game::modmag = nullptr;
@@ -94,6 +96,16 @@ auto Game::init() -> void
 		int offset = *reinterpret_cast<int*>((sigOffset + 3));      // Get Offset from code
 		KeyMap = sigOffset + offset + /*length of instruction*/ 7;  // Offset is relative
 		logF("KeyMap: %llX", KeyMap);
+	}
+
+	//获取本地玩家OnGround函数的偏移
+	{
+		auto sigOffset = FindSignature("80 BF ? ? ? ? 00 74 ? 80 7B ? ? 74 ? 83 7B");
+		if (sigOffset == 0x0) {
+			logF("[Game::init] [Warn]Find OnGround Offset is no working!!!,OnGround=0");
+			return;
+		}
+		LocalPlayer::onGroundoffset = *reinterpret_cast<int*>(sigOffset + 2);      // Get Offset from code
 	}
 }
 

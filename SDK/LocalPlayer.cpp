@@ -4,6 +4,7 @@
 
 uintptr_t** LocalPlayer::vfTables = nullptr;
 int LocalPlayer::toCIoffset = 0;
+int LocalPlayer::onGroundoffset = 0;
 
 template <typename TRet, typename... TArgs>
 auto LocalPlayer::GetVFtableFun(int a)->auto* {
@@ -25,6 +26,10 @@ auto LocalPlayer::SetVFtables(uintptr_t** vfTable)->void {
 //定义函数
 auto LocalPlayer::getClientInstance()->ClientInstance* {
 	return *((ClientInstance**)((uintptr_t)this + toCIoffset));			//这个偏移是偏移字节
+}
+
+auto LocalPlayer::isOnGround()->bool* {
+	return (bool*)((uintptr_t)this + onGroundoffset);
 }
 
 

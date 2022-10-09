@@ -1,9 +1,10 @@
-﻿#include "Render.h"
+﻿#pragma execution_character_set("utf-8")
+#include "Render.h"
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"
 #include "../../Utils/Utils.h"
 #include "imgui.h"
-#pragma execution_character_set("utf-8")
+
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
