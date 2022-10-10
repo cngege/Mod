@@ -32,6 +32,10 @@ auto LocalPlayer::isOnGround()->bool* {
 	return (bool*)((uintptr_t)this + onGroundoffset);
 }
 
+auto LocalPlayer::isValid()->bool {
+	return this->isLocalPlayer();
+}
+
 
 //Ðé±íº¯Êý
 

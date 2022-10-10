@@ -24,6 +24,7 @@ public:
 	//定义函数
 	auto getClientInstance()->class ClientInstance*;
 	auto isOnGround()->bool*;
+	auto isValid()->bool;
 
 public:
 	//虚表函数

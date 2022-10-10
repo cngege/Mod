@@ -5,7 +5,8 @@
 #pragma execution_character_set("utf-8")
 
 Traverse::Traverse() : Module(VK_F2, "Traverse", "向所视方向前进一格") {
-	SetKeyMode(KeyMode::Trigger);
+	//SetKeyMode(KeyMode::Trigger);
+	setEnabled(true);
 }
 
 
@@ -31,16 +32,34 @@ int rotToCoordinateZ(float X) {
 	return 0;
 }
 
-auto Traverse::onTrigger()->void {
-	LocalPlayer* lp = Game::localplayer;
-	if (lp == nullptr) {
-		return;
-	}
 
-	vec2_t rot = *lp->getRotEx1();
-	vec3_t pos = *lp->getPosition();
-	vec3_t toPos = vec3_t(pos.x + (float)rotToCoordinateX(rot.y), pos.y, pos.z + (float)rotToCoordinateZ(rot.y));
-	//lp->setPos(vec3_t(pos.x + rotToCoordinateX(rot.y), pos.y, pos.z + rotToCoordinateZ(rot.y)));
-	lp->setPos(&toPos);
-	//lp->teleportTo(&toPos, true, 0, 1);
+auto Traverse::getBindKeyName()->std::string {
+	std::string name = "(MButton)";
+	name += Utils::getKeybindName(this->getKeybind());
+	return name;
+}
+
+auto Traverse::onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY)->void {
+	if (isEnabled()) {
+		if (mousebutton == VK_CANCEL && isdown) {
+			LocalPlayer* lp = Game::localplayer;
+			if (lp == nullptr || !lp->isValid()) {
+				return;
+			}
+
+			vec2_t rot = *lp->getRotEx1();
+			vec3_t pos = *lp->getPosition();
+			if (rot.x > 67.5f) {
+				//如果玩家看向地面 则向下tp一格以穿过地面
+				vec3_t toPos = vec3_t(pos.x, pos.y-1, pos.z);
+				lp->setPos(&toPos);
+			}
+			else {
+				vec3_t toPos = vec3_t(pos.x + (float)rotToCoordinateX(rot.y), pos.y, pos.z + (float)rotToCoordinateZ(rot.y));
+				//lp->setPos(vec3_t(pos.x + rotToCoordinateX(rot.y), pos.y, pos.z + rotToCoordinateZ(rot.y)));
+				lp->setPos(&toPos);
+				//lp->teleportTo(&toPos, true, 0, 1);
+			}
+		}
+	}
 }
