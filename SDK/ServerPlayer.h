@@ -16,7 +16,7 @@ public:
 public:
 	static uintptr_t* tickWorldCall;							/*374*/
 
-	auto tickWorld(class struck* Tick)->void*;
+	auto tickWorld(void* Tick)->void*;
 
 public:
 	auto onAllPlayerTick()->void;

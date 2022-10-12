@@ -33,7 +33,7 @@ auto ServerPlayer::onAllPlayerTick()->void {
 
 //虚函数
 //具有原始功能的调用
-auto ServerPlayer::tickWorld(class struck* Tick)->void* {
-	using Fn = void*(__fastcall*)(ServerPlayer*, class struck*);
+auto ServerPlayer::tickWorld(void* Tick)->void* {
+	using Fn = void*(__fastcall*)(ServerPlayer*, void*);
 	return reinterpret_cast<Fn>(tickWorldCall)(this, Tick);
 }
