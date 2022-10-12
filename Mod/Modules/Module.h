@@ -9,6 +9,32 @@ enum KeyMode {
 	Hold = 2							//按下 触发 onEnable()   松开触发  onDisable()
 };
 
+struct IntUIValue
+{
+	std::string name;
+	int* value;
+	int min;
+	int max;
+	float speed;
+};
+
+struct FloatUIValue
+{
+	std::string name;
+	float* value;
+	float min;
+	float max;
+	float speed;
+};
+
+struct BoolUIValue
+{
+	std::string name;
+	bool* value;
+};
+
+
+
 
 class Module
 {
@@ -23,9 +49,21 @@ private:
 	std::string modulename;
 	std::string moduleinfo;
 	KeyMode km = KeyMode::Switch;
+
+	std::vector<IntUIValue> intUIValue = std::vector<IntUIValue>();
+	std::vector<FloatUIValue> floatUIValue = std::vector<FloatUIValue>();
+	std::vector<BoolUIValue> boolUIValue = std::vector<BoolUIValue>();
 public:
 	void SetKeyMode(KeyMode km);
 	KeyMode GetKeyMode();
+protected:
+	void AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue, float speed);
+	void AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed);
+	void AddBoolUIValue(std::string name, bool* defautvalue_ptr);
+public:
+	std::vector<IntUIValue> GetIntUIValue();
+	std::vector<FloatUIValue> GetFloatUIValue();
+	std::vector<BoolUIValue> GetBoolUIValue();
 public:
 	virtual int getKeybind();
 	virtual void setKeybind(int key);

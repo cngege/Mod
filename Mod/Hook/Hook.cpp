@@ -633,7 +633,7 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	return _this->attack(actor);
 }
 
-auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, class struck* tick)->void* {
+auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, void* tick)->void* {
 	//_this->onAllPlayerTick();				//这里应该是 所有serverplayer tick
 	return _this->tickWorld(tick);
 }

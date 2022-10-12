@@ -7,7 +7,7 @@ public:
 
 private:
 	float* arms;
-
+	float distance = 7;
 public:
 	virtual auto onEnable()->void override;
 	virtual auto onDisable()->void override;

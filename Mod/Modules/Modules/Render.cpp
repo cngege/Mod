@@ -82,8 +82,19 @@ auto Render::onImGUIRender()->void {
 			if (Utils::HelpCollapsingHeader(showText.c_str(), mod->getModuleInfo().c_str())) {
 				ImGui::TextColored(ImVec4(0.98f, 0.63f, 0.01f, 1.f), mod->getModuleInfo().c_str());
 				bool modIsEnable = mod->isEnabled();
+				//按钮
 				if (ImGui::Button(modIsEnable ? "点击关闭" : "点击开启")) {
 					mod->setEnabled(!modIsEnable);
+				}
+				//IntUIValue
+				for (auto &intval : mod->GetIntUIValue()) {
+					ImGui::DragInt(intval.name.c_str(), intval.value, intval.speed, intval.min, intval.max);
+				}
+				for (auto& floatval : mod->GetFloatUIValue()) {
+					ImGui::DragFloat(floatval.name.c_str(), floatval.value, floatval.speed, floatval.min, floatval.max);
+				}
+				for (auto& boolval : mod->GetBoolUIValue()) {
+					ImGui::Checkbox(boolval.name.c_str(), boolval.value);
 				}
 			}
 		});

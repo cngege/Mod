@@ -37,5 +37,5 @@ public:
 	static auto GameMode_useItem(class GameMode*,class ItemStack*)->bool;
 	static auto GameMode_useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, vec3_t*, class Block*)->bool;
 
-	static auto ServerPlayer_TickWorld(class ServerPlayer* _this, class struck* tick)->void*;
+	static auto ServerPlayer_TickWorld(class ServerPlayer* _this, void* tick)->void*;
 };

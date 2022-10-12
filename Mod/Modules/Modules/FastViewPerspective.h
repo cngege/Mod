@@ -4,8 +4,6 @@
 class FastViewPerspective : public Module {
 public:
 	FastViewPerspective();
-private:
-	float lpRotVertical = -30.0f;
 public:
 	auto isToggle()->bool;
 	

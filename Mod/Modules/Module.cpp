@@ -20,6 +20,45 @@ auto Module::GetKeyMode()->KeyMode {
 	return this->km;
 }
 
+auto Module::AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue,float speed = 1.f)->void {
+	IntUIValue _intUIValue;
+	_intUIValue.name = name;
+	_intUIValue.value = defautvalue_ptr;
+	_intUIValue.min = minvalue;
+	_intUIValue.max = maxvalue;
+	_intUIValue.speed = speed;
+	intUIValue.push_back(_intUIValue);
+}
+
+auto Module::AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed = 0.01f)->void {
+	FloatUIValue _floatUIValue;
+	_floatUIValue.name = name;
+	_floatUIValue.value = defautvalue_ptr;
+	_floatUIValue.min = minvalue;
+	_floatUIValue.max = maxvalue;
+	_floatUIValue.speed = speed;
+	floatUIValue.push_back(_floatUIValue);
+}
+
+auto Module::AddBoolUIValue(std::string name, bool* defautvalue_ptr)->void {
+	BoolUIValue _boolUIValue;
+	_boolUIValue.name = name;
+	_boolUIValue.value = defautvalue_ptr;
+	boolUIValue.push_back(_boolUIValue);
+}
+
+auto Module::GetIntUIValue()->std::vector<IntUIValue> {
+	return intUIValue;
+}
+
+auto Module::GetFloatUIValue()->std::vector<FloatUIValue> {
+	return floatUIValue;
+}
+
+auto Module::GetBoolUIValue()->std::vector<BoolUIValue> {
+	return boolUIValue;
+}
+
 auto Module::getKeybind()->int {
 	return this->keybind;
 }
