@@ -1,8 +1,8 @@
 ﻿//#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "Loader.h"
 //httplib
-#include "httplib.h"
-#include <Windows.h>
+//#include "httplib.h"
+//#include <Windows.h>
 #include <thread>
 
 #include "Utils/Logger.h"
@@ -20,6 +20,7 @@
 MH_STATUS hookret;
 void* Loader::dllHMODULE = nullptr;
 
+#include "Utils/config.h"
 //在线程
 void Loader::init(void* hmoudle)
 {
@@ -85,6 +86,7 @@ void Loader::init(void* hmoudle)
 	Hook::init();
 
 	logF("[MH_EnableHook] hook is: %s", MH_StatusToString(MH_EnableHook(MH_ALL_HOOKS)));
+
 }
 
 void Loader::exit(void* hmoudle)
