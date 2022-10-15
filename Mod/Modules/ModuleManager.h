@@ -31,6 +31,8 @@ public:
 	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
 	auto onImGUIRender()->void;
 	auto onSendMessage(class TextHolder*)->bool;
+	auto onloadConfigFile(json& data)->void;
+	auto onsaveConfigFile(json& data)->void;
 };
 
 template <typename TRet>

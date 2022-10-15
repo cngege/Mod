@@ -1,4 +1,5 @@
 ﻿#include "ModuleManager.h"
+#include "../Utils/config.h"
 //模块
 #include "Modules/HitBox.h"
 #include "Modules/AirJump.h"
@@ -23,6 +24,12 @@
 auto ModuleManager::Init()->void {
 	if (isInit) return;
 
+	// 读取所有模块,和配置文件,给所有模块加载配置文件 且这里放在所有模块的构造函数前面, 这样在模块的构造函数中就可以直接使用 config::currentSaveConfigFile
+	json sysdata = config::loadConfigonRootFromFile("config");
+	if (sysdata.contains("CurrentConfigFile")) {
+		config::currentSaveConfigFile = sysdata["CurrentConfigFile"];
+	}
+
 	moduleList.push_back((Module*)(new HitBox()));							/*Caps*/
 	moduleList.push_back((Module*)(new AirJump()));
 	moduleList.push_back((Module*)(new InstantDestroy()));					/*Ctrl+Shift*/
@@ -39,6 +46,12 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new RenderHealth()));					/*Ctrl+F10*/
 
 	isInit = true;
+
+	// 读取 指定的配置文件
+	json configdata = config::loadConfigonRootFromFile(config::currentSaveConfigFile);
+	for (auto& mod : moduleList) {										// 这里有&则代表引用,所有的修改都将作用在原来的数组成员上
+		mod->onloadConfigFile(configdata[mod->getModuleName()]);
+	}
 }
 
 
@@ -203,4 +216,20 @@ auto ModuleManager::onSendMessage(TextHolder* TH)->bool {
 			RunOriginalFun = false;
 	}
 	return RunOriginalFun;
+}
+
+auto ModuleManager::onloadConfigFile(json& data)->void {
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onloadConfigFile(data);
+	}
+}
+
+auto ModuleManager::onsaveConfigFile(json& data)->void {
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onsaveConfigFile(data);
+	}
 }
