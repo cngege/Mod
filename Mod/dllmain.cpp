@@ -31,7 +31,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_PROCESS_ATTACH:
     {
         CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Loader::init, hModule, NULL, NULL);
-        DisableThreadLibraryCalls(hModule);
+        DisableThreadLibraryCalls(hModule);                                     //应用程序及其DLL的线程创建与销毁不再对此DLL进行通知
         break;
     }
     case DLL_PROCESS_DETACH:

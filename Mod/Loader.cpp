@@ -1,24 +1,24 @@
 ﻿//#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "Loader.h"
-
+//httplib
 #include "httplib.h"
 #include <Windows.h>
+#include <thread>
 
 #include "Utils/Logger.h"
 #include "Utils/Game.h"
 #include "Hook/Hook.h"
 #include "Utils/Utils.h"
-
+//SDK
 #include "Player.h"
+//Modules
 #include "Modules/ModuleManager.h"
 
 #include "imgui/HookImgui.h"
 #include <io.h>
-#include <thread>
 
 MH_STATUS hookret;
 void* Loader::dllHMODULE = nullptr;
-
 
 //在线程
 void Loader::init(void* hmoudle)
@@ -36,11 +36,13 @@ void Loader::init(void* hmoudle)
 	{
 		std::wstring modPath = Logger::GetRoamingFolderPath() + Utils::stringToWstring("\\Mod\\");
 		std::wstring assetsPath = Logger::GetRoamingFolderPath() + Utils::stringToWstring("\\Mod\\Assets\\");
+		std::wstring configPath = Logger::GetRoamingFolderPath() + Utils::stringToWstring("\\Mod\\Config\\");
 		std::string font_JNMYT = Utils::WStringToString(Logger::GetRoamingFolderPath()) + std::string("\\Mod\\Assets\\JNMYT.ttf");
 
 		//检测 资源等相关文件夹是否存在并创建
 		CreateDirectory((LPCWSTR)(modPath).c_str(), NULL);
 		CreateDirectory((LPCWSTR)(assetsPath).c_str(), NULL);
+		CreateDirectory((LPCWSTR)(configPath).c_str(), NULL);
 		{
 			//检测字体文件是否存在及下载
 			if (_access(font_JNMYT.c_str(),0 /*F_OK*/) == -1) {
