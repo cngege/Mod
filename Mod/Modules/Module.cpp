@@ -188,3 +188,11 @@ auto Module::onImGUIRender()->void {
 auto Module::onSendMessage(TextHolder*)->bool {
 	return true;
 }
+
+auto Module::onloadConfigFile(json& data)->void {
+
+}
+
+auto Module::onsaveConfigFile(json& data)->void {
+
+}
