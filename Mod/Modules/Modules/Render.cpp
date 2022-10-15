@@ -8,6 +8,8 @@
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
+	AddFloatUIValue("窗口宽度", &uiWidth, 0, 1000.f, 1.f);
+	AddFloatUIValue("窗口高度", &uiHeight, 0, 1000.f,1.f);
 	setEnabled(true);
 }
 
@@ -68,7 +70,7 @@ auto Render::onImGUIRender()->void {
 		return;
 	}
 	if (ImGui::Begin("模组功能面板  所有Moudle状态")) {
-		ImGui::SetWindowSize(ImVec2(360.f, 430.f));
+		ImGui::SetWindowSize(ImVec2(uiWidth, uiHeight));
 
 		Game::GetModuleManager()->Moduleforeach([](Module* mod) {
 			
@@ -99,6 +101,10 @@ auto Render::onImGUIRender()->void {
 			}
 		});
 
+		if (Utils::HelpCollapsingHeader("设置", "读取保存配置等")) {
+			static char text[32] = "AAA";
+			ImGui::InputText("配置文件名", text, 32);
+		}
 		//if (ImGui::CollapsingHeader(("Aura"))) {
 		//	ImGui::Spacing();
 		//	if (ImGui::Button("Test")) {

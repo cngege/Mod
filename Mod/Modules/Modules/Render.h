@@ -8,6 +8,8 @@ public:
 
 private:
 	float fontsize = 1.f;
+	float uiWidth = 350.f;
+	float uiHeight = 530.f;
 
 public:
 	float x = 5.f;
