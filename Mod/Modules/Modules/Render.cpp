@@ -105,7 +105,11 @@ auto Render::onImGUIRender()->void {
 		});
 
 		if (Utils::HelpCollapsingHeader("设置", "读取保存配置等")) {
-			static char* text = config::currentSaveConfigFile.data();
+			static char text[32] = { '\0' };
+			if (strlen(text) == 0) {
+				//memcpy(text, config::currentSaveConfigFile.c_str(), sizeof(config::currentSaveConfigFile.c_str()));
+				snprintf(text, sizeof(text), config::currentSaveConfigFile.c_str());
+			}
 			ImGui::InputText("配置文件名", text, sizeof(text));
 			if (ImGui::Button("加载使用配置")) {
 				//调用所有模块 加载配置
@@ -120,6 +124,7 @@ auto Render::onImGUIRender()->void {
 				//将输入框中的配置文件名保存到config.json中
 				json sysdata = config::loadConfigonRootFromFile("config");
 				{
+					config::currentSaveConfigFile = text;
 					sysdata["CurrentConfigFile"] = config::currentSaveConfigFile;
 				}
 				config::writeConfigonRootToFile("config", sysdata);
