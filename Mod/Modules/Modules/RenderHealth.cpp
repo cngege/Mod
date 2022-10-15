@@ -59,3 +59,11 @@ auto RenderHealth::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 		ctx->flushText(0);
 	}
 }
+
+
+auto RenderHealth::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+}
+auto RenderHealth::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
+}

@@ -7,7 +7,7 @@
 #pragma execution_character_set("utf-8")
 
 FastViewPerspective::FastViewPerspective() : Module(VK_F9, "FastViewPerspective", "快速预览第二人称视角") {
-	setEnabled(true);
+	//setEnabled(true);
 }
 
 auto FastViewPerspective::getBindKeyName()->std::string {
@@ -37,4 +37,11 @@ auto FastViewPerspective::onTick(GameMode* gm)->void {
 		vec2_t nrot(srot.x,srot.y);
 		gm->GetLocalPlayer()->setRot(&nrot);
 	}
+}
+
+auto FastViewPerspective::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+}
+auto FastViewPerspective::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
 }

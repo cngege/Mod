@@ -49,3 +49,14 @@ auto HitBox::onActorTick(Actor* actor)->void {
 		}
 	}
 }
+
+auto HitBox::onloadConfigFile(json& data)->void {
+	//setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+	width = config::readDataFromJson<float>(data, "width", 5.f);
+	height = config::readDataFromJson<float>(data, "height", 3.f);
+}
+auto HitBox::onsaveConfigFile(json& data)->void {
+	//data["enable"] = isEnabled();
+	data["width"] = width;
+	data["height"] = height;
+}

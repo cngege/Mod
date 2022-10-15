@@ -44,3 +44,10 @@ auto TPPoint::getBindKeyName()->std::string {
 	name += Utils::getKeybindName(this->getKeybind());
 	return name;
 }
+
+auto TPPoint::onloadConfigFile(json& data)->void {
+	//setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+}
+auto TPPoint::onsaveConfigFile(json& data)->void {
+	//data["enable"] = isEnabled();
+}

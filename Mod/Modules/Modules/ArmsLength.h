@@ -12,4 +12,6 @@ public:
 	virtual auto onEnable()->void override;
 	virtual auto onDisable()->void override;
 	virtual auto isEnabled()->bool override;
+	virtual auto onloadConfigFile(json& data)->void override;
+	virtual auto onsaveConfigFile(json& data)->void override;
 };

@@ -14,4 +14,6 @@ public:
 	virtual auto onAttack(class Actor*)->bool override;
 
 	auto IsFriend(class Player*)->bool;
+	virtual auto onloadConfigFile(json& data)->void override;
+	virtual auto onsaveConfigFile(json& data)->void override;
 };

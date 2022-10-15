@@ -15,3 +15,10 @@ auto AirJump::onTick(GameMode* gm)->void {
 		}
 	}
 }
+
+auto AirJump::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", false));
+}
+auto AirJump::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
+}

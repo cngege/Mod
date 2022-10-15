@@ -50,3 +50,10 @@ auto NoAttackFriend::onAttack(Actor* actor)->bool {
 	
 	return !IsFriend((Player*)actor);
 }
+
+auto NoAttackFriend::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", false));
+}
+auto NoAttackFriend::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
+}

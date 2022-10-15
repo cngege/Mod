@@ -6,7 +6,7 @@
 
 Traverse::Traverse() : Module(VK_F2, "Traverse", "向所视方向前进一格") {
 	//SetKeyMode(KeyMode::Trigger);
-	setEnabled(true);
+	//setEnabled(true);
 }
 
 
@@ -62,4 +62,11 @@ auto Traverse::onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __in
 			}
 		}
 	}
+}
+
+auto Traverse::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+}
+auto Traverse::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
 }

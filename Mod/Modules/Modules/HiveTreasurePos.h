@@ -6,9 +6,9 @@ class HiveTreasurePos : public Module
 public:
 	HiveTreasurePos();
 
-private:
-	float S_TreasureHeight = 0;
 public:
 
 	virtual auto onActorTick(class Actor* actor)->void override;
+	virtual auto onloadConfigFile(json& data)->void override;
+	virtual auto onsaveConfigFile(json& data)->void override;
 };

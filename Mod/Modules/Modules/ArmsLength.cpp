@@ -12,7 +12,7 @@ ArmsLength::ArmsLength() : Module(VK_F10, "ArmsLength", "修改玩家攻击距�
 	}
 	auto offset = *reinterpret_cast<int*>(sigOffset + 52);
 	arms = reinterpret_cast<float*>(sigOffset + 56 + offset);//指向玩家攻击距离的指针 52(22) 56(56-30=26)
-	setEnabled(true);	//默认开启
+	//setEnabled(true);	//默认开启
 }
 
 auto ArmsLength::onEnable()->void {
@@ -36,4 +36,13 @@ auto ArmsLength::onDisable()->void {
 
 auto ArmsLength::isEnabled()->bool {
 	return *arms != 3.f;
+}
+
+auto ArmsLength::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+	distance = config::readDataFromJson<float>(data, "distance", 7.f);
+}
+auto ArmsLength::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
+	data["distance"] = distance;
 }

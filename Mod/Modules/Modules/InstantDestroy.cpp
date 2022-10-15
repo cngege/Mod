@@ -4,7 +4,7 @@
 #pragma execution_character_set("utf-8")
 
 InstantDestroy::InstantDestroy() : Module(0, "InstantDestroy", "按下 CTRL + SHIFT 后破坏方块时瞬间破坏") {
-	setEnabled(true);
+	//setEnabled(true);
 }
 
 InstantDestroy::~InstantDestroy() {
@@ -24,4 +24,11 @@ auto InstantDestroy::onStartDestroyBlock(GameMode* gm, vec3_ti* Bpos, uint8_t* F
 	if (isEnabled() && Game::IsKeyDown(VK_SHIFT) && Game::IsKeyDown(VK_CONTROL)) {
 		gm->destroyBlock(Bpos, Face);
 	}
+}
+
+auto InstantDestroy::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+}
+auto InstantDestroy::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
 }

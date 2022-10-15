@@ -24,3 +24,10 @@ auto HiveTreasurePos::onActorTick(Actor* actor)->void {
 		}
 	}
 }
+
+auto HiveTreasurePos::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", false));
+}
+auto HiveTreasurePos::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
+}

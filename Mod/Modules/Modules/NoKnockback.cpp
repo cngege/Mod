@@ -11,3 +11,10 @@ auto NoKnockback::onKnockback(LocalPlayer* lp, vec3_t* v3)->bool {
 	}
 	return true;
 }
+
+auto NoKnockback::onloadConfigFile(json& data)->void {
+	//setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+}
+auto NoKnockback::onsaveConfigFile(json& data)->void {
+	//data["enable"] = isEnabled();
+}
