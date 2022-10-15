@@ -1,8 +1,10 @@
 ﻿#pragma execution_character_set("utf-8")
 #include "Render.h"
+#include <string>
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"
 #include "../../Utils/Utils.h"
+#include "../../Utils/config.h"
 #include "imgui.h"
 
 
@@ -10,7 +12,8 @@ Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
 	AddFloatUIValue("窗口宽度", &uiWidth, 0, 1000.f, 1.f);
 	AddFloatUIValue("窗口高度", &uiHeight, 0, 1000.f,1.f);
-	setEnabled(true);
+
+	//setEnabled(true);
 }
 
 auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
@@ -102,8 +105,32 @@ auto Render::onImGUIRender()->void {
 		});
 
 		if (Utils::HelpCollapsingHeader("设置", "读取保存配置等")) {
-			static char text[32] = "AAA";
-			ImGui::InputText("配置文件名", text, 32);
+			static char* text = config::currentSaveConfigFile.data();
+			ImGui::InputText("配置文件名", text, sizeof(text));
+			if (ImGui::Button("加载使用配置")) {
+				//调用所有模块 加载配置
+				json configdata = config::loadConfigonRootFromFile(config::currentSaveConfigFile);
+				for (auto& mod : Game::GetModuleManager()->GetAllModule()) {
+					mod->onloadConfigFile(configdata[mod->getModuleName()]);
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("保存覆盖配置")) {
+				//调用所有模块保存配置
+				//将输入框中的配置文件名保存到config.json中
+				json sysdata = config::loadConfigonRootFromFile("config");
+				{
+					sysdata["CurrentConfigFile"] = config::currentSaveConfigFile;
+				}
+				config::writeConfigonRootToFile("config", sysdata);
+				//调用所有模块 加载配置
+				json data = config::loadConfigonRootFromFile(config::currentSaveConfigFile);
+				for (auto& mod : Game::GetModuleManager()->GetAllModule()) {
+					mod->onsaveConfigFile(data[mod->getModuleName()]);
+				}
+				//写入文件
+				config::writeConfigonRootToFile(config::currentSaveConfigFile, data);
+			}
 		}
 		//if (ImGui::CollapsingHeader(("Aura"))) {
 		//	ImGui::Spacing();
@@ -129,4 +156,16 @@ auto Render::onImGUIRender()->void {
 		//}
 	}
 	ImGui::End();
+}
+
+auto Render::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+	uiWidth = config::readDataFromJson<float>(data, "width", 350.f);
+	uiHeight = config::readDataFromJson<float>(data, "height", 530.f);
+}
+
+auto Render::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
+	data["width"] = uiWidth;
+	data["height"] = uiHeight;
 }
