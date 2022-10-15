@@ -57,8 +57,8 @@ public:
 	void SetKeyMode(KeyMode km);
 	KeyMode GetKeyMode();
 protected:
-	void AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue, float speed);
-	void AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed);
+	void AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue, float speed = 1.f);
+	void AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed = 0.05f);
 	void AddBoolUIValue(std::string name, bool* defautvalue_ptr);
 public:
 	std::vector<IntUIValue> GetIntUIValue();

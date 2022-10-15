@@ -20,7 +20,7 @@ auto Module::GetKeyMode()->KeyMode {
 	return this->km;
 }
 
-auto Module::AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue,float speed = 1.f)->void {
+auto Module::AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue,float speed)->void {
 	IntUIValue _intUIValue;
 	_intUIValue.name = name;
 	_intUIValue.value = defautvalue_ptr;
@@ -30,7 +30,7 @@ auto Module::AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue,
 	intUIValue.push_back(_intUIValue);
 }
 
-auto Module::AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed = 0.01f)->void {
+auto Module::AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed)->void {
 	FloatUIValue _floatUIValue;
 	_floatUIValue.name = name;
 	_floatUIValue.value = defautvalue_ptr;
