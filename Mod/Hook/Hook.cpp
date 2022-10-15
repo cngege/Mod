@@ -511,6 +511,13 @@ auto Hook::Actor_moveBBs(Actor* _this, vec3_t* v3)->void* {
 }
 
 auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
+	if (ImGui::GetCurrentContext() != nullptr) {
+		ImGui::GetIO().KeysDown[key] = isdown;
+		if (ImGui::GetIO().WantCaptureKeyboard || ImGui::GetIO().WantTextInput) {
+			return 0;
+		}
+	}
+
 	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
 	return keyupdatecall(key, isdown);
 }
