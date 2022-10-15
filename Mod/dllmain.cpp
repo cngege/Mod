@@ -21,6 +21,9 @@
 #endif
 
 
+//临时消除出现在Json.hpp 4281行的警告
+#pragma warning(disable:26800)
+
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
