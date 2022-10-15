@@ -1,6 +1,6 @@
 //ImGui Shit
 #include "../Utils/Logger.h"
-#include "../../imgui/animations/fade.hpp"
+//#include "../../imgui/animations/fade.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -78,6 +78,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			else {
 				ImFont* font = io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
+			ImGui::GetIO().IniFilename = (Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini").c_str();
 		}
 			
 		ID3D11DeviceContext* ppContext = nullptr;
@@ -93,12 +94,12 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		
 
 
-		md::FadeInOut fade;
+		//md::FadeInOut fade;
 		ImGui_ImplWin32_Init(window);
 		ImGui_ImplDX11_Init(d3d11Device, ppContext);
 		if (!initContext) {
 			// fade effect with windows transparency
-			fade.init();
+			//fade.init();
 
 			// Snowflakes
 			//Snowflake::CreateSnowFlakes(snow, SNOW_LIMIT, 5.f /*minimum size*/, 25.f /*maximum size*/, 0 /*imgui window x position*/, 0 /*imgui window y position*/, Utils::getScreenResolution().x, Utils::getScreenResolution().y, Snowflake::vec3(0.f, 0.005f) /*gravity*/, IM_COL32(255, 255, 255, 100) /*color*/);
@@ -265,6 +266,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			else {
 				ImFont* font = io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
+			ImGui::GetIO().IniFilename = (Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini").c_str();
 		}
 		DXGI_SWAP_CHAIN_DESC sdesc;
 		ppSwapChain->GetDesc(&sdesc);
@@ -308,7 +310,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		};
 		//POINT mouse;
 		RECT rc = { 0 };
-		md::FadeInOut fade;
+		//md::FadeInOut fade;
 		if (!initContext) {
 			ImGui_ImplWin32_Init(window);
 			ImGui_ImplDX12_Init(d3d12Device, buffersCounts,
@@ -318,7 +320,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 				d3d12DescriptorHeapImGuiRender->GetGPUDescriptorHandleForHeapStart());
 
 			// fade effect with windows transparency
-			fade.init();
+			//fade.init();
 
 			// Snowflakes
 			//Snowflake::CreateSnowFlakes(snow, SNOW_LIMIT, 5.f /*minimum size*/, 25.f /*maximum size*/, 0 /*imgui window x position*/, 0 /*imgui window y position*/, Utils::getScreenResolution().x, Utils::getScreenResolution().y, Snowflake::vec3(0.f, 0.005f) /*gravity*/, IM_COL32(255, 255, 255, 100) /*color*/);
