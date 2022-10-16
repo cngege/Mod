@@ -33,12 +33,12 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new HitBox()));							/*Caps*/
 	moduleList.push_back((Module*)(new AirJump()));
 	moduleList.push_back((Module*)(new InstantDestroy()));					/*Ctrl+Shift*/
-	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl*/
 	moduleList.push_back((Module*)(new Traverse()));						/*F2*/
 	moduleList.push_back((Module*)(new ShowCoordinates()));
 	moduleList.push_back((Module*)(new TPPoint()));							/*Ctrl/Shift+F3*/
 	moduleList.push_back((Module*)(new Render()));							/*INS*/
-	moduleList.push_back((Module*)(new NoAttackFriend()));					/*F4*/
+	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl+F4*/
+	moduleList.push_back((Module*)(new NoAttackFriend()));					/*SHIFT+F4*/
 	moduleList.push_back((Module*)(new AutoSprinting()));					/*F6*/
 	moduleList.push_back((Module*)(new HiveTreasurePos()));					/*F7*/
 	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/

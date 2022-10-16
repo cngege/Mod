@@ -87,7 +87,6 @@ auto Render::onImGUIRender()->void {
 			if (Utils::HelpCollapsingHeader(showText.c_str(), mod->getModuleInfo().c_str())) {
 				ImGui::TextColored(ImVec4(0.98f, 0.63f, 0.01f, 1.f), mod->getModuleInfo().c_str());
 				bool modIsEnable = mod->isEnabled();
-				//按钮
 				if (ImGui::Button(modIsEnable ? "点击关闭" : "点击开启")) {
 					mod->setEnabled(!modIsEnable);
 				}
