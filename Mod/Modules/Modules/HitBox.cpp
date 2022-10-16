@@ -11,16 +11,12 @@ HitBox::HitBox() : Module(0, "HitBox", "增大其他玩家的碰撞体积,更容
 	AddFloatUIValue("高度", &height, 0, 5.f, 0.05f);
 }
 
-auto HitBox::onDisable()->void {
-	//获取所有非本地玩家,然后重设HitBox
+auto HitBox::isEnabled()->bool {
+	return GETKEYSTATE(VK_CAPITAL);
 }
 
 auto HitBox::getBindKeyName()->std::string {
 	return Utils::getKeybindName(VK_CAPITAL);
-}
-
-auto HitBox::onKeyUpdate(int key, bool isDown)->void {
-	setEnabled(GETKEYSTATE(VK_CAPITAL));
 }
 
 auto HitBox::onActorTick(Actor* actor)->void {

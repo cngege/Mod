@@ -25,7 +25,7 @@ auto TPPoint::onTrigger()->void {
 	//记录传送点
 	if (Game::IsKeyDown(VK_CONTROL)) {
 		*point = *Game::localplayer->getPosition();
-		
+		return;
 	}
 
 	//读取并传送过去
@@ -41,7 +41,7 @@ auto TPPoint::getBindKeyName()->std::string {
 	name += "/";
 	name += Utils::getKeybindName(VK_CONTROL);
 	name += "+";
-	name += Utils::getKeybindName(this->getKeybind());
+	name += Module::getBindKeyName();
 	return name;
 }
 

@@ -35,7 +35,7 @@ int rotToCoordinateZ(float X) {
 
 auto Traverse::getBindKeyName()->std::string {
 	std::string name = "(MButton)";
-	name += Utils::getKeybindName(this->getKeybind());
+	name += Module::getBindKeyName();
 	return name;
 }
 

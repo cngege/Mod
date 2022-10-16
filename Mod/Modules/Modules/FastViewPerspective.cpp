@@ -13,7 +13,7 @@ FastViewPerspective::FastViewPerspective() : Module(VK_F9, "FastViewPerspective"
 auto FastViewPerspective::getBindKeyName()->std::string {
 	//ret : CTRL + SHIFT + F
 	std::string name = "(R) ";
-	name += Utils::getKeybindName(this->getKeybind());
+	name += Module::getBindKeyName();
 	return name;
 }
 
