@@ -41,6 +41,8 @@ public:
 	static int XHitBoxOffset;
 	static int YHitBoxOffset;
 
+	static int LevelOffset;
+
 	static int GetAttributeInstance_HealthFunVT;
 	static uintptr_t isSneakingCallptr;
 
@@ -59,6 +61,7 @@ public:
 	auto getHitBox()->vec2_t;
 	auto setHitBox(vec2_t)->void;
 	auto resetHitBox()->void;
+	auto getLevel()->class Level*;
 
 public:
 	auto onMoveBBs(vec3_t)->void;

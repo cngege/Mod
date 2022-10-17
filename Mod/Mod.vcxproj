@@ -239,6 +239,7 @@
     <ClCompile Include="..\SDK\AttributeInstance.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
     <ClCompile Include="..\SDK\GameMode.cpp" />
+    <ClCompile Include="..\SDK\Level.cpp" />
     <ClCompile Include="..\SDK\LocalPlayer.cpp" />
     <ClCompile Include="..\SDK\MinecraftUIRenderContext.cpp" />
     <ClCompile Include="..\SDK\Mob.cpp" />

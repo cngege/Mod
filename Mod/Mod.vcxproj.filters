@@ -323,6 +323,9 @@
     <ClCompile Include="Utils\config.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\SDK\Level.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Mod.rc">

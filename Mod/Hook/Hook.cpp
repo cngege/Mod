@@ -7,6 +7,7 @@
 #include "ServerPlayer.h"
 #include "LocalPlayer.h"
 #include "Actor.h"
+#include "Level.h"
 #include "GameMode.h"
 #include "MinecraftUIRenderContext.h"
 
@@ -289,6 +290,19 @@ auto Hook::init() -> void
 		}
 	}
 
+	//寻找 Level::foreachplayer 的call 非Hook
+	{
+		const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B EA 48";
+		Level::forEachPlayerCall = (uintptr_t*)FindSignature(memcode);
+		if (Level::forEachPlayerCall != 0x00) {
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", Level::forEachPlayerCall, memcode);
+		}
+		else {
+			logF("[FindCallPtr error] [%s] is no found ptr point", "Level::forEachPlayerCall");
+			return;
+		}
+	}
+
 	//GameMode虚表及相关Hook
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
@@ -330,7 +344,19 @@ auto Hook::init() -> void
 			logF("[Actor::SetVtables] [Success] ActorVTable = %llX", ActorVTable);
 			Actor::SetVFtables(ActorVTable);
 		}
+	}
 
+	//Actor构造函数下的 获取Actor类中的Level指针偏移
+	{
+		const char* memcode = "49 89 BE ? ? ? ? E8 ? ? ? ? 48 8B D0 49 8D 8E ? ? ? ? E8";
+		auto ActorGetLevel_sigOffset = FindSignature(memcode);
+		if (ActorGetLevel_sigOffset == 0x00) {
+			logF("[Actor::LevelOffset] [Error]Find Actor ActorGetLevel_sigOffset is no working!!!");
+		}
+		else {
+			Actor::LevelOffset = *reinterpret_cast<int*>(ActorGetLevel_sigOffset + 3);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ActorGetLevel_sigOffset, memcode);
+		}
 	}
 
 	// Mob 虚表及相关Hook
@@ -630,6 +656,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 	Game::GetModuleManager()->onTick(_this);
 	return _this->tick();
 }
+
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y);

@@ -21,6 +21,8 @@ int Actor::PosZOffset2 = 0;
 int Actor::XHitBoxOffset = 0;
 int Actor::YHitBoxOffset = 0;
 
+int Actor::LevelOffset = 0;
+
 int Actor::GetAttributeInstance_HealthFunVT = 0;
 uintptr_t Actor::isSneakingCallptr = 0;
 
@@ -137,6 +139,10 @@ auto Actor::resetHitBox()->void {
 	this->setHitBox(vec2_t(0.6000000238f, 1.799999952f));
 }
 
+
+auto Actor::getLevel()->class Level* {
+	return *reinterpret_cast<class Level**>((intptr_t)this + LevelOffset);
+}
 
 auto Actor::onMoveBBs(vec3_t p)->void {
 
