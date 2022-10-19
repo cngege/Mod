@@ -100,6 +100,15 @@ auto Render::onImGUIRender()->void {
 				for (auto& boolval : mod->GetBoolUIValue()) {
 					ImGui::Checkbox(boolval.name.c_str(), boolval.value);
 				}
+				for (auto& buttonet : mod->GetButtonUIEvent()) {
+					if (buttonet.sameline) {
+						ImGui::SameLine();
+					}
+					if (ImGui::Button(buttonet.name.c_str())) {
+						buttonet.et();
+					}
+				}
+
 			}
 		});
 

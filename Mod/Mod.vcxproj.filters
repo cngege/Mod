@@ -195,6 +195,9 @@
     <ClInclude Include="Modules\Modules\GameTimeLock.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\http.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

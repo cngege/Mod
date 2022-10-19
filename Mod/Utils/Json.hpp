@@ -4279,6 +4279,7 @@ inline OutStringType concat(Args && ... args)
     OutStringType str{};
     str.reserve(concat_length(std::forward<Args>(args)...));
     concat_into(str, std::forward<Args>(args)...);
+    //concat_into(str, args...);
     return str;
 }
 

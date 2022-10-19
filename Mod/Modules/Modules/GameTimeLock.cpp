@@ -3,9 +3,34 @@
 #include "GameMode.h"
 #include "LocalPlayer.h"
 #include "Level.h"
+#include "Game.h"
 
-GameTimeLock::GameTimeLock() : Module(0, "GameTimeLock", "将游戏时间固定到一个设置的时间") {
+GameTimeLock::GameTimeLock() : Module(0, "GameTimeLock", "将游戏时间固定到一个设置的时间,不会改变真实时间") {
 	AddIntUIValue("时间", &time, 0, 1000000);
+	AddButtonUIEvent("清晨", false, [this]() {
+		time = 0;
+		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {
+			Game::localplayer->getLevel()->setTime(time);
+		}
+	});
+	AddButtonUIEvent("正午", true, [this]() {
+		time = 6000;
+		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {
+			Game::localplayer->getLevel()->setTime(time);
+		}
+	});
+	AddButtonUIEvent("傍晚", true, [this]() {
+		time = 12000;
+		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {
+			Game::localplayer->getLevel()->setTime(time);
+		}
+	});
+	AddButtonUIEvent("午夜", true, [this]() {
+		time = 18000;
+		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {
+			Game::localplayer->getLevel()->setTime(time);
+		}
+	});
 }
 
 auto GameTimeLock::onTick(GameMode* gm)->void {

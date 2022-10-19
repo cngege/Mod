@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 //#include <WinUser.h>
+#include <functional>
 #include "../Utils/Utils.h"
 #include "../Utils/config.h"
 
@@ -34,6 +35,13 @@ struct BoolUIValue
 	bool* value;
 };
 
+struct ButtonUIEvent
+{
+	std::string name;
+	bool sameline;							//同一行 和前一个UI之间不换行
+	std::function<void()> et;
+};
+
 
 
 
@@ -54,6 +62,8 @@ private:
 	std::vector<IntUIValue> intUIValue = std::vector<IntUIValue>();
 	std::vector<FloatUIValue> floatUIValue = std::vector<FloatUIValue>();
 	std::vector<BoolUIValue> boolUIValue = std::vector<BoolUIValue>();
+	std::vector<ButtonUIEvent> buttonUIEvent = std::vector<ButtonUIEvent>();
+
 public:
 	void SetKeyMode(KeyMode km);
 	KeyMode GetKeyMode();
@@ -61,10 +71,12 @@ protected:
 	void AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue, float speed = 1.f);
 	void AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed = 0.05f);
 	void AddBoolUIValue(std::string name, bool* defautvalue_ptr);
+	void AddButtonUIEvent(std::string name, bool sameline, std::function<void()> et);
 public:
 	std::vector<IntUIValue> GetIntUIValue();
 	std::vector<FloatUIValue> GetFloatUIValue();
 	std::vector<BoolUIValue> GetBoolUIValue();
+	std::vector<ButtonUIEvent> GetButtonUIEvent();
 public:
 	virtual int getKeybind();
 	virtual void setKeybind(int key);

@@ -47,6 +47,14 @@ auto Module::AddBoolUIValue(std::string name, bool* defautvalue_ptr)->void {
 	boolUIValue.push_back(_boolUIValue);
 }
 
+auto Module::AddButtonUIEvent(std::string name, bool sameline, std::function<void()> et)->void {
+	ButtonUIEvent _buttonUIEvent;
+	_buttonUIEvent.name = name;
+	_buttonUIEvent.sameline = sameline;
+	_buttonUIEvent.et = et;
+	buttonUIEvent.push_back(_buttonUIEvent);
+}
+
 auto Module::GetIntUIValue()->std::vector<IntUIValue> {
 	return intUIValue;
 }
@@ -57,6 +65,10 @@ auto Module::GetFloatUIValue()->std::vector<FloatUIValue> {
 
 auto Module::GetBoolUIValue()->std::vector<BoolUIValue> {
 	return boolUIValue;
+}
+
+auto Module::GetButtonUIEvent()->std::vector<ButtonUIEvent> {
+	return buttonUIEvent;
 }
 
 auto Module::getKeybind()->int {

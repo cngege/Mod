@@ -230,6 +230,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utils\config.h" />
     <ClInclude Include="Utils\Game.h" />
+    <ClInclude Include="Utils\http.hpp" />
     <ClInclude Include="Utils\httplib.h" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\Logger.h" />
