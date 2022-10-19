@@ -13,16 +13,14 @@
 #include <winrt/Windows.Security.Cryptography.h>
 #include <winrt/Windows.Storage.Streams.h>
 #include <winrt/Windows.Web.Http.Headers.h>
-#include "Logger.h"
-using namespace winrt;
-using namespace Windows::Foundation;
-using namespace Windows::Storage::Streams;
+#include <io.h>
+
 using namespace concurrency;
 class NetClient {
 public:
-	int StatusCode;
-	Windows::Web::Http::HttpClient httpClient;
-	Windows::Web::Http::HttpResponseMessage httpResponseMessage;
+	int StatusCode = 200;
+	winrt::Windows::Web::Http::HttpClient httpClient;
+	winrt::Windows::Web::Http::HttpResponseMessage httpResponseMessage;
 
 public:
 	bool StatusSuccess() {
@@ -45,7 +43,7 @@ public:
 		}
 	}
 
-	IBuffer GetAsyncAsBuffer() {
+	winrt::Windows::Storage::Streams::IBuffer GetAsyncAsBuffer() {
 		try {
 			httpResponseMessage.EnsureSuccessStatusCode();
 			auto readAsBufferAsync = httpResponseMessage.Content().ReadAsBufferAsync();
@@ -66,7 +64,7 @@ public:
 	/// <param name="file">必须要在 [Microsoft.MinecraftUWP_8wekyb3d8bbwe] 文件夹下的绝对路径,否则崩溃</param>
 	/// <param name="buff">IBuffer流</param>
 	/// <returns>是否写入成功</returns>
-	static bool WriteFile(std::string file,IBuffer& buff) {
+	static bool WriteFile(std::string file, winrt::Windows::Storage::Streams::IBuffer& buff) {
 		if (!buff) {
 			return false;
 		}
@@ -76,8 +74,8 @@ public:
 			if (_access(file.c_str(),0)) {
 				std::ofstream(file).close();
 			}
-			Windows::Storage::StorageFile sfile = Windows::Storage::StorageFile::GetFileFromPathAsync(wstr).get();
-			Windows::Storage::FileIO::WriteBufferAsync(sfile, buff);
+			winrt::Windows::Storage::StorageFile sfile = winrt::Windows::Storage::StorageFile::GetFileFromPathAsync(wstr).get();
+			winrt::Windows::Storage::FileIO::WriteBufferAsync(sfile, buff);
 			return true;
 		}
 		catch (...) {
@@ -88,7 +86,7 @@ public:
 public:
 	static NetClient GetAsync(std::string url) {
 		NetClient network;
-		Uri requestUri{ winrt::to_hstring(url) };
+		winrt::Windows::Foundation::Uri requestUri{ winrt::to_hstring(url) };
 		network.httpResponseMessage = network.httpClient.GetAsync(requestUri).get();
 		network.StatusCode = (uint32_t)network.httpResponseMessage.StatusCode();
 		return network;
@@ -96,11 +94,11 @@ public:
 
 	static NetClient PostAsync(std::string url,std::string json = "{}") {
 		NetClient network;
-		Uri requestUri{ winrt::to_hstring(url) };
-		Windows::Web::Http::HttpStringContent jsonContent(
+		winrt::Windows::Foundation::Uri requestUri{ winrt::to_hstring(url) };
+		winrt::Windows::Web::Http::HttpStringContent jsonContent(
 			//L"{ \"firstName\": \"Eliot\" }",
 			winrt::to_hstring(json),
-			UnicodeEncoding::Utf8,
+			winrt::Windows::Storage::Streams::UnicodeEncoding::Utf8,
 			L"application/json");
 		network.httpResponseMessage = network.httpClient.PostAsync(requestUri, jsonContent).get();
 		network.StatusCode = (uint32_t)network.httpResponseMessage.StatusCode();
