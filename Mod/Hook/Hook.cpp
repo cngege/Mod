@@ -189,10 +189,10 @@ auto Hook::init() -> void
 
 	//生物移动消息
 	{
-		const char* memcode = "48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81";
+		const char* memcode = "40 53 48 83 EC ? 48 8B 81 ? ? ? ? 48 8B D9 48 85 C0 0F 84 ? ? ? ? F3 0F 10";
 		actor_moveBBs = FindSignature(memcode);
 		if (actor_moveBBs != 0x00) {
-			auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 21);
+			auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 9);
 			Actor::PosXOffset1 = Xoffset;
 			Actor::PosYOffset1 = Xoffset + 4;
 			Actor::PosZOffset1 = Xoffset + 8;
@@ -440,7 +440,7 @@ auto Hook::init() -> void
 					logF("[LocalPlayer::SetVtables] [Error] LP_CIoffset:%llX", LP_CIoffset);
 					break;
 				}
-				if (*LP_CIoffset == (char)0x48 && *(LP_CIoffset + 1) == (char)0x89 && *(LP_CIoffset + 2) == (char)0xBE) {
+				if (*LP_CIoffset == (char)0x48 && *(LP_CIoffset + 1) == (char)0x89 && *(LP_CIoffset + 2) == (char)0xB7/*(char)0xBE*/) {
 					LocalPlayer::toCIoffset = *reinterpret_cast<int*>(LP_CIoffset + 3);
 					logF("[LocalPlayer::SetVtables] [Success] Find LocalPlayer To ClientInstance i:%d",i);
 					break;
