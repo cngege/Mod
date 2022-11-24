@@ -420,7 +420,7 @@ auto Hook::init() -> void
 	//LocalPlayer虚表及相关Hook
 	//啥用没有 虚函数没找到能用的  仅在 Actor::isLocalPlayer() 中使用
 	{
-		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 48 8D 8E ? ? ? ? 48 8B 86 ? ? ? ? 4C 8B 80 ? ? ? ? 48 8B D6";
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 48 8D 8F ? ? ? ? 48 8B 87";
 		auto LocalPlayerVTable_sigOffset = FindSignature(memcode);
 		if (LocalPlayerVTable_sigOffset == 0x00) {
 			logF("[LocalPlayer::SetVtables] [Error]Find LocalPlayer LocalPlayerVTable_sigOffset is no working!!!");
