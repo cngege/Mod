@@ -379,7 +379,7 @@ auto Hook::init() -> void
 
 	//Player 虚表及相关Hook
 	{
-		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 45 33 ED 44 89 AF ? ? ? ? 44 88 AF ? ? ? ? 44 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 4C 89 AF ? ? ? ? 66 44 89 AF";
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 44 89 A7 ? ? ? ? 44 88 A7";
 		auto PlayerVTable_sigOffset = FindSignature(memcode);
 		if (PlayerVTable_sigOffset == 0x00) {
 			logF("[Player::SetVtables] [Error]Find Player PlayerVTable_sigOffset is no working!!!");
