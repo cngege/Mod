@@ -279,7 +279,7 @@ auto Hook::init() -> void
 
 	//获取本地玩家人称视角函数
 	{
-		const char* memcode = "48 83 EC ? 48 8B ? 48 8D 54 24 ? 41 B8 02 00 00 00 FF 50 ? 48 8B ? 48 85 D2 74 ? 48 8B 42 ? 48 8B 88 ? ? ? ? 48 85 C9 74 ? E8 ? ? ? ? 48 83 C4 ? C3 8B";
+		const char* memcode = "48 83 EC ? 48 8B ? 48 8D 54 24 ? 41 B8 02 00 00 00";
 		auto findptr = FindSignature(memcode);
 		if (findptr != 0x00) {
 			MH_CreateHookEx((LPVOID)findptr, &Hook::getLocalPlayerViewPerspective, &getLocalPlayerViewPerspectivecall);
