@@ -122,7 +122,7 @@ auto Hook::init() -> void
 
 	//是否显示坐标 Tick
 	{
-		const char* memcode = "48 83 EC ? 48 8B 49 ? 48 8B 01 FF 90 ? ? ? ? 48 85 C0 74 ? 48 8B 88";
+		const char* memcode = "48 83 EC ? 48 8B 49 ? 48 8B 01 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48 85 C0 74 ? 48 8B 88";
 		is_ShowCoordinatesTick = FindSignature(memcode);
 		if (is_ShowCoordinatesTick != 0x00) {
 			MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
