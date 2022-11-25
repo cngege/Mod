@@ -29,10 +29,10 @@ auto Mob::setSprintingEx(bool v)->char {
 
 //虚表函数
 auto Mob::setSprinting(bool v)->void {
-	GetVFtableFun<void, Mob*,bool>(288)(this,v);
+	GetVFtableFun<void, Mob*,bool>(286)(this,v);
 }
 
 
 auto Mob::lookAt(Actor* actor,float f1, float f2)->void {
-	GetVFtableFun<void, Mob*, Actor*,float,float>(303)(this, actor,f1,f2);
+	GetVFtableFun<void, Mob*, Actor*,float,float>(300)(this, actor,f1,f2);
 }

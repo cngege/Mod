@@ -192,7 +192,7 @@ auto Hook::init() -> void
 		const char* memcode = "40 53 48 83 EC ? 48 8B 81 ? ? ? ? 48 8B D9 48 85 C0 0F 84 ? ? ? ? F3 0F 10";
 		actor_moveBBs = FindSignature(memcode);
 		if (actor_moveBBs != 0x00) {
-			auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 9);
+			auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 9);//这个结果应该是由Actor指向AABB类的偏移
 			Actor::PosXOffset1 = Xoffset;
 			Actor::PosYOffset1 = Xoffset + 4;
 			Actor::PosZOffset1 = Xoffset + 8;
