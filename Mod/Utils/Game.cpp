@@ -100,7 +100,7 @@ auto Game::init() -> void
 
 	//获取本地玩家OnGround函数的偏移
 	{
-		auto sigOffset = FindSignature("80 BF ? ? ? ? 00 74 ? 80 7B ? ? 74 ? 83 7B");
+		auto sigOffset = FindSignature("80 B8 ? ? ? ? 00 75 ? 48 8B C8 E8 ? ? ? ? 84");
 		if (sigOffset == 0x0) {
 			logF("[Game::init] [Warn]Find OnGround Offset is no working!!!,OnGround=0");
 			return;
