@@ -3,6 +3,7 @@
 #include "ServerPlayer.h"
 #include "TextHolder.h"
 #include "AttributeInstance.h"
+#include "AABB.h"
 #include "../Mod/Utils/Utils.h"
 #include "../Mod/Utils/Game.h"
 #include <math.h>
@@ -11,15 +12,16 @@ int Actor::SpeedXOffset = 0;
 int Actor::SpeedYOffset = 0;
 int Actor::SpeedZOffset = 0;
 
-int Actor::PosXOffset1 = 0;
-int Actor::PosYOffset1 = 0;
-int Actor::PosZOffset1 = 0;
-int Actor::PosXOffset2 = 0;
-int Actor::PosYOffset2 = 0;
-int Actor::PosZOffset2 = 0;
-
-int Actor::XHitBoxOffset = 0;
-int Actor::YHitBoxOffset = 0;
+int Actor::AABBOffset = 0;
+//int Actor::PosXOffset1 = 0;
+//int Actor::PosYOffset1 = 0;
+//int Actor::PosZOffset1 = 0;
+//int Actor::PosXOffset2 = 0;
+//int Actor::PosYOffset2 = 0;
+//int Actor::PosZOffset2 = 0;
+//
+//int Actor::XHitBoxOffset = 0;
+//int Actor::YHitBoxOffset = 0;
 
 int Actor::LevelOffset = 0;
 
@@ -67,64 +69,57 @@ auto Actor::setSpeed(vec3_t v) ->void {
 	*Zspeed = v.z;
 }
 
+auto Actor::getAABB()->AABB* {
+	if (AABBOffset == 0) {
+		return nullptr;
+	}
+	return reinterpret_cast<AABB*>(this + AABBOffset);
+}
+
 //获取玩家下边框对角点的位置
 auto Actor::getPosEx()->vec3_t {
-	if (PosXOffset1 == 0) {
-		return vec3_t(0.0f, 0.0f, 0.0f);
+	auto aabb = this->getAABB();
+	if (!aabb) {
+		return vec3_t();
 	}
-	float* Xpos = (float*)(this + PosXOffset1);
-	float* Ypos = (float*)(this + PosYOffset1);
-	float* Zpos = (float*)(this + PosZOffset1);
-	return vec3_t(*Xpos, *Ypos, *Zpos);
+	return aabb->min;
 }
 
 //获取玩家上边框对角点的位置
 auto Actor::getPosEx2()->vec3_t {
-	if (PosXOffset2 == 0) {
-		return vec3_t(0.0f, 0.0f, 0.0f);
+	auto aabb = this->getAABB();
+	if (!aabb) {
+		return vec3_t();
 	}
-	float* Xpos = (float*)(this + PosXOffset2);
-	float* Ypos = (float*)(this + PosYOffset2);
-	float* Zpos = (float*)(this + PosZOffset2);
-	return vec3_t(*Xpos, *Ypos, *Zpos);
+	return aabb->max;
 }
 
-//以玩家下对焦点位置为基准设置玩家位置
+//以玩家下对焦点位置为基准设置玩家位置 不建议
 auto Actor::setPosEx(vec3_t p)->void {
-	if (PosXOffset1 == 0) {				//后面的偏移都是根据这个来的，所以只需要判断这一个就可以
+	auto aabb = this->getAABB();
+	if (!aabb) {				//后面的偏移都是根据这个来的，所以只需要判断这一个就可以
 		return;
 	}
-	float* Xpos1 = (float*)(this + PosXOffset1);
-	float* Ypos1 = (float*)(this + PosYOffset1);
-	float* Zpos1 = (float*)(this + PosZOffset1);
-
-	float* Xpos2 = (float*)(this + PosXOffset2);
-	float* Ypos2 = (float*)(this + PosYOffset2);
-	float* Zpos2 = (float*)(this + PosZOffset2);
-
-	*Xpos1 = p.x;
-	*Ypos1 = p.y;
-	*Zpos1 = p.z;
-	*Xpos2 = p.x + 0.5999756f;
-	*Ypos2 = p.y + 1.80000305f;
-	*Zpos2 = p.z + 0.60002518f;
+	aabb->min = p;
+	aabb->max = vec3_t(p.x + 0.5999756f, p.y + 1.80000305f, p.z + 0.60002518f);
 }
 
 auto Actor::getHitBox()->vec2_t {
-	if (XHitBoxOffset == 0 || YHitBoxOffset == 0) {
-		return vec2_t(0.0f, 0.0f);
+	auto aabb = this->getAABB();
+	if (!aabb) {				//后面的偏移都是根据这个来的，所以只需要判断这一个就可以
+		return vec2_t();
 	}
-	auto hbx = *(float*)(this + XHitBoxOffset);
-	auto hby = *(float*)(this + YHitBoxOffset);
-	return vec2_t(hbx, hby);
+	
+	return *(vec2_t*)((uintptr_t)aabb + 24);
 }
 
 auto Actor::setHitBox(vec2_t hb)->void {
-	if (XHitBoxOffset == 0 || YHitBoxOffset == 0) {
+	auto aabb = this->getAABB();
+	if (!aabb) {				//后面的偏移都是根据这个来的，所以只需要判断这一个就可以
 		return;
 	}
-	*(float*)(this + XHitBoxOffset) = hb.x;
-	*(float*)(this + YHitBoxOffset) = hb.y;
+	*(float*)((uintptr_t)aabb + 24) = hb.x;
+	*(float*)((uintptr_t)aabb + 28) = hb.y;
 }
 
 auto Actor::isPlayerEx()->bool {

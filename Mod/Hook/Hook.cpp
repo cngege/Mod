@@ -192,16 +192,16 @@ auto Hook::init() -> void
 		const char* memcode = "40 53 48 83 EC ? 48 8B 81 ? ? ? ? 48 8B D9 48 85 C0 0F 84 ? ? ? ? F3 0F 10";
 		actor_moveBBs = FindSignature(memcode);
 		if (actor_moveBBs != 0x00) {
-			auto Xoffset = *reinterpret_cast<int*>(actor_moveBBs + 9);//这个结果应该是由Actor指向AABB类的偏移
-			Actor::PosXOffset1 = Xoffset;
-			Actor::PosYOffset1 = Xoffset + 4;
-			Actor::PosZOffset1 = Xoffset + 8;
-			Actor::PosXOffset2 = Xoffset + 12;
-			Actor::PosYOffset2 = Xoffset + 16;
-			Actor::PosZOffset2 = Xoffset + 20;
+			Actor::AABBOffset = *reinterpret_cast<int*>(actor_moveBBs + 9);//这个结果应该是由Actor指向AABB类的偏移
+			//Actor::PosXOffset1 = Xoffset;
+			//Actor::PosYOffset1 = Xoffset + 4;
+			//Actor::PosZOffset1 = Xoffset + 8;
+			//Actor::PosXOffset2 = Xoffset + 12;
+			//Actor::PosYOffset2 = Xoffset + 16;
+			//Actor::PosZOffset2 = Xoffset + 20;
 
-			Actor::XHitBoxOffset = Xoffset + 24;
-			Actor::YHitBoxOffset = Xoffset + 28;
+			//Actor::XHitBoxOffset = Xoffset + 24;
+			//Actor::YHitBoxOffset = Xoffset + 28;
 			MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", actor_moveBBs, memcode);
 		}
@@ -659,7 +659,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
-	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y);
+	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f, isplayer=%i, islocalplayer=%i", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y,actor->isPlayer(),actor->isLocalPlayer());
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}

@@ -4,6 +4,7 @@
 
 #include "AttributeInstance.h"
 
+
 enum ActorType {
 	player = 1,
 	iron_golem = 788,
@@ -31,15 +32,16 @@ public:
 	static int SpeedYOffset;
 	static int SpeedZOffset;
 
-	static int PosXOffset1;
-	static int PosYOffset1;
-	static int PosZOffset1;
-	static int PosXOffset2;
-	static int PosYOffset2;
-	static int PosZOffset2;
+	static int AABBOffset;
+	//static int PosXOffset1;
+	//static int PosYOffset1;
+	//static int PosZOffset1;
+	//static int PosXOffset2;
+	//static int PosYOffset2;
+	//static int PosZOffset2;
 
-	static int XHitBoxOffset;
-	static int YHitBoxOffset;
+	//static int XHitBoxOffset;
+	//static int YHitBoxOffset;
 
 	static int LevelOffset;
 
@@ -54,8 +56,10 @@ public:
 	auto getSpeed()->vec3_t;			//获取瞬间速度
 	auto setSpeed(vec3_t)->void;		//设置瞬间速度
 
+	auto getAABB()->class AABB*;
 	auto getPosEx()->vec3_t;
 	auto getPosEx2()->vec3_t;
+	[[deprecated]]
 	auto setPosEx(vec3_t)->void;
 
 	auto getHitBox()->vec2_t;

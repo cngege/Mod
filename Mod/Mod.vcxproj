@@ -182,6 +182,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\SDK\AABB.h" />
     <ClInclude Include="..\SDK\Actor.h" />
     <ClInclude Include="..\SDK\AttributeInstance.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
@@ -237,6 +238,7 @@
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\SDK\AABB.cpp" />
     <ClCompile Include="..\SDK\Actor.cpp" />
     <ClCompile Include="..\SDK\AttributeInstance.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />

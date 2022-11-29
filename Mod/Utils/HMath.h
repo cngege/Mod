@@ -530,6 +530,7 @@ struct glmatrixf {
 	}
 };
 
+/*
 struct AABB {
 	vec3_t lower;
 	vec3_t upper;
@@ -580,6 +581,7 @@ struct AABB {
 			   aabb.upper.z > lower.z && upper.z > aabb.lower.z;
 	}
 };
+*/
 
 /*
 inline int random(int start, int end) {
