@@ -8,9 +8,7 @@
 #include "../Mod/Utils/Game.h"
 #include <math.h>
 
-int Actor::SpeedXOffset = 0;
-int Actor::SpeedYOffset = 0;
-int Actor::SpeedZOffset = 0;
+int Actor::SpeedOffset = 0;		//玩家指针到玩家速度相关信息指针的偏移
 
 int Actor::AABBOffset = 0;
 //int Actor::PosXOffset1 = 0;
@@ -27,6 +25,7 @@ int Actor::LevelOffset = 0;
 
 int Actor::GetAttributeInstance_HealthFunVT = 0;
 uintptr_t Actor::isSneakingCallptr = 0;
+uintptr_t* Actor::setVelocityCallptr = nullptr;
 
 uintptr_t** Actor::vfTables = nullptr;
 
@@ -48,25 +47,11 @@ auto Actor::SetVFtables(uintptr_t** vfTable)->void {
 }
 
 auto Actor::getSpeed()->vec3_t {
-	if (SpeedXOffset == 0 || SpeedYOffset == 0 || SpeedZOffset == 0) {
-		return vec3_t(0.0f, 0.0f, 0.0f);
-	}
-	float* Xspeed = (float*)(this + SpeedXOffset);
-	float* Yspeed = (float*)(this + SpeedYOffset);
-	float* Zspeed = (float*)(this + SpeedZOffset);
-	return vec3_t(*Xspeed, *Yspeed, *Zspeed);
+	return *(vec3_t*)(*(uintptr_t*)(this + SpeedOffset) + 24);			//+24 是因为前面有两组相同的坐标数据 两个vec3_t
 }
 
 auto Actor::setSpeed(vec3_t v) ->void {
-	if (SpeedXOffset == 0 || SpeedYOffset == 0 || SpeedZOffset == 0) {
-		return;
-	}
-	float* Xspeed = (float*)(this + SpeedXOffset);
-	float* Yspeed = (float*)(this + SpeedYOffset);
-	float* Zspeed = (float*)(this + SpeedZOffset);
-	*Xspeed = v.x;
-	*Yspeed = v.y;
-	*Zspeed = v.z;
+	*(vec3_t*)(*(uintptr_t*)(this + SpeedOffset) + 24) = v;
 }
 
 auto Actor::getAABB()->AABB* {
@@ -163,6 +148,10 @@ auto Actor::isSneaking()->bool {
 }
 
 
+auto Actor::setVelocity(vec3_t* sp)->void* {
+	using Fn = void*(__fastcall*)(Actor*, vec3_t*);
+	return reinterpret_cast<Fn>(setVelocityCallptr)(this,sp);
+}
 
 // 虚表函数
 

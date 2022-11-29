@@ -17,9 +17,9 @@
 #include "../Modules/Modules/ShowCoordinates.h"
 #include "../Modules/Modules/FastViewPerspective.h"
 
-using PlayerKBCALL = void(__fastcall*)(Player*, vec3_t*);
-PlayerKBCALL playercall;
-uintptr_t playerkb;
+using SetVelocityCALL = void*(__fastcall*)(Player*, vec3_t*);
+//SetVelocityCALL SetVelocityCALLcall;
+//uintptr_t setVelocity;
 
 using ClientInstance_Tick = void(__fastcall*)(ClientInstance* _this, void* a1);
 ClientInstance_Tick clientInstance_Tickcall;
@@ -89,7 +89,8 @@ auto Hook::init() -> void
 {
 	logF("Hook::init is start runner");
 
-	//玩家击退
+	//玩家击退  重新在 Actor::setVelocity 中实现
+	/*
 	{
 		const char* memcode = "8B 02 89 81 ? ? 00 00 8B 42 04 89 81 ? ? 00 00 8B 42 08 89 81 ? ? 00 00 C3";
 		playerkb = FindSignature(memcode);
@@ -104,6 +105,7 @@ auto Hook::init() -> void
 			logF("[Hook error] [%s] is no found Hook point", "playerkb");
 		}
 	}
+	*/
 
 	//clientInstance::Tick
 	{
@@ -343,6 +345,9 @@ auto Hook::init() -> void
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ActorVTable_sigOffset, memcode);
 			logF("[Actor::SetVtables] [Success] ActorVTable = %llX", ActorVTable);
 			Actor::SetVFtables(ActorVTable);
+			//虚表Hook
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(46), &Hook::SetVelocity, &Actor::setVelocityCallptr);
+			Actor::SpeedOffset = *reinterpret_cast<int*>((uintptr_t)Actor::GetVFtableFun(46) + 7);
 		}
 	}
 
@@ -461,12 +466,12 @@ auto Hook::exit() -> void {
 }
 
 //无击退效果
-auto Hook::PlayerKB(Player* player,vec3_t* kb) -> void
+auto Hook::SetVelocity(Player* player,vec3_t* kb)->void*
 {
 	if (!Game::GetModuleManager()->onKnockback((LocalPlayer*)player, kb)) {
-		return;
+		return nullptr;
 	}
-	playercall(player, kb);
+	return player->setVelocity(kb);
 }
 
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void

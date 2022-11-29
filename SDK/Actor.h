@@ -28,9 +28,7 @@ public:
 	static auto SetVFtables(uintptr_t** vTables)->void;
 
 public:
-	static int SpeedXOffset;
-	static int SpeedYOffset;
-	static int SpeedZOffset;
+	static int SpeedOffset;
 
 	static int AABBOffset;
 	//static int PosXOffset1;
@@ -47,10 +45,11 @@ public:
 
 	static int GetAttributeInstance_HealthFunVT;
 	static uintptr_t isSneakingCallptr;
+	static uintptr_t* setVelocityCallptr;
 
 public:
 	
-	auto isPlayerEx() -> bool;
+	auto isPlayerEx()->bool;
 
 public:
 	auto getSpeed()->vec3_t;			//获取瞬间速度
@@ -75,6 +74,7 @@ public:
 
 public:
 
+	auto setVelocity(vec3_t*)->void*;												/*46*/
 public:
 
 	//原生虚表函数
