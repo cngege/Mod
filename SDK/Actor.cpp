@@ -125,9 +125,9 @@ auto Actor::getLevel()->class Level* {
 	return *reinterpret_cast<class Level**>((intptr_t)this + LevelOffset);
 }
 
-auto Actor::onMoveBBs(vec3_t p)->void {
-
-}
+//auto Actor::onMoveBBs(vec3_t p)->void {
+//
+//}
 
 auto Actor::isLocalPlayer()->bool {
 	if (*(__int64*)this == (__int64)LocalPlayer::GetVFtables())

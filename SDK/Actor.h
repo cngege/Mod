@@ -68,7 +68,7 @@ public:
 	auto getLevel()->class Level*;
 
 public:
-	auto onMoveBBs(vec3_t)->void;
+	//auto onMoveBBs(vec3_t)->void;
 	auto isLocalPlayer()->bool;
 	auto getHealth()->float;
 	auto isSneaking()->bool;

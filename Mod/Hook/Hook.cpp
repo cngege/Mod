@@ -55,9 +55,9 @@ uintptr_t allActor_Tick;
 
 //48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81
 //这里第二个参数是三个float（三个四字节）
-using Actor_moveBBs = void* (__fastcall*)(Actor*, vec3_t*);
-Actor_moveBBs actor_moveBBscall;
-uintptr_t actor_moveBBs;
+//using Actor_moveBBs = void* (__fastcall*)(Actor*, vec3_t*);
+//Actor_moveBBs actor_moveBBscall;
+//uintptr_t actor_moveBBs;
 
 using KeyUpdate = void* (__fastcall*)(__int64 key, int isdown);
 KeyUpdate keyupdatecall;
@@ -181,14 +181,14 @@ auto Hook::init() -> void
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", allActor_Tick, memcode);
 		}
 		else {
-			logF("[Hook error] [%s] is no found Hook point", "allPlayer_Tick");
+			logF("[Hook error] [%s] is no found Hook point", "allActor_Tick");
 		}
 	}
 
 	//生物移动消息
 	{
 		const char* memcode = "40 53 48 83 EC ? 48 8B 81 ? ? ? ? 48 8B D9 48 85 C0 0F 84 ? ? ? ? F3 0F 10";
-		actor_moveBBs = FindSignature(memcode);
+		auto actor_moveBBs = FindSignature(memcode);
 		if (actor_moveBBs != 0x00) {
 			Actor::AABBOffset = *reinterpret_cast<int*>(actor_moveBBs + 9);//这个结果应该是由Actor指向AABB类的偏移
 			//Actor::PosXOffset1 = Xoffset;
@@ -200,7 +200,7 @@ auto Hook::init() -> void
 
 			//Actor::XHitBoxOffset = Xoffset + 24;
 			//Actor::YHitBoxOffset = Xoffset + 28;
-			MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
+			//MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", actor_moveBBs, memcode);
 		}
 		else {
@@ -556,10 +556,10 @@ auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 }
 
 //就是把生物当前位置加上这个值 v3
-auto Hook::Actor_moveBBs(Actor* _this, vec3_t* v3)->void* {
-	_this->onMoveBBs(*v3);
-	return actor_moveBBscall(_this, v3);
-}
+//auto Hook::Actor_moveBBs(Actor* _this, vec3_t* v3)->void* {
+//	_this->onMoveBBs(*v3);
+//	return actor_moveBBscall(_this, v3);
+//}
 
 auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	if (ImGui::GetCurrentContext() != nullptr) {
