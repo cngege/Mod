@@ -19,7 +19,6 @@ public:
 	static auto Actor_getShadowRadius(class Actor*)->float;										//执行对象是所有生物 但不包括玩家
 	static auto ClientInstance_Tick(ClientInstance*, void*)->void;
 	static auto Is_ShowCoordinates_Tick(void*)->bool;
-	//static auto GetHungerValAddress_Tick(void*, const char*, void*)->void*;
 	static auto NoFallDamage_Tick(class Player*,float*)->void*;
 	//Player 虚表Hook
 	static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
