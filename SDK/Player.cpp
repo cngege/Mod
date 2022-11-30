@@ -7,6 +7,9 @@ int Player::Rot2 = 0;
 
 uintptr_t** Player::vfTables = nullptr;
 
+uintptr_t* Player::tickWorldCallptr = nullptr;
+uintptr_t* Player::getShadowRadiusCallptr = nullptr;
+
 template <typename TRet, typename... TArgs>
 auto Player::GetVFtableFun(int a)->auto* {
 	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
@@ -43,4 +46,16 @@ auto Player::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)-
 //89
 auto Player::displayChatMessage(TextHolder* a1, TextHolder* a2)->__int64{
 	return GetVFtableFun<__int64, Player*, TextHolder*, TextHolder*>(89)(this, a1, a2);
+}
+
+auto Player::getShadowRadius() -> float
+{
+	using Fn = float(__fastcall*)(Player*);
+	return reinterpret_cast<Fn>(getShadowRadiusCallptr)(this);
+}
+
+auto Player::tickWorld(Tick* tick) -> void
+{
+	using Fn = void(__fastcall*)(Player*, class Tick*);
+	reinterpret_cast<Fn>(tickWorldCallptr)(this, tick);
 }

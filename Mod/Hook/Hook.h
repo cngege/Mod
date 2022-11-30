@@ -15,12 +15,17 @@ class Hook
 public:
 	static auto init() ->void;
 	static auto exit() ->void;
-	static auto SetVelocity(class Player* ,vec3_t*) ->void*;
+	static auto SetVelocity(class Player* ,vec3_t*)->void*;
+	static auto Actor_getShadowRadius(class Actor*)->float;										//执行对象是所有生物 但不包括玩家
 	static auto ClientInstance_Tick(ClientInstance*, void*)->void;
 	static auto Is_ShowCoordinates_Tick(void*)->bool;
-	static auto GetHungerValAddress_Tick(void*, const char*, void*)->void*;
+	//static auto GetHungerValAddress_Tick(void*, const char*, void*)->void*;
 	static auto NoFallDamage_Tick(class Player*,float*)->void*;
+	//Player 虚表Hook
 	static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
+	static auto Player_tickWorld(class Player*, class Tick*)->void;
+	static auto Player_getShadowRadius(class Player*)->float;
+
 	static auto AllActor_Tick(class Actor*, float*, float)->float*;
 	static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
 	static auto KeyUpdate(__int64, int)->void*;

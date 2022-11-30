@@ -19,10 +19,10 @@ auto HitBox::getBindKeyName()->std::string {
 	return Utils::getKeybindName(VK_CAPITAL);
 }
 
-auto HitBox::onActorTick(Actor* actor)->void {
-	if (actor->isLocalPlayer()) {
-		return;
-	}
+auto HitBox::onPlayerSightTick(Player* player)->void {
+	//if (actor->isLocalPlayer()) {
+	//	return;
+	//}
 	//if (Game::localplayer == nullptr) {
 	//	return;
 	//}
@@ -31,19 +31,19 @@ auto HitBox::onActorTick(Actor* actor)->void {
 	//}
 	//判断是否是玩家 大写锁定
 	static NoAttackFriend* noAttackFriend = Game::GetModuleManager()->GetModule<NoAttackFriend*>();
-	if (actor->isPlayer()) {
+	//if (actor->isPlayer()) {
 		if (isEnabled()) {
-			if (noAttackFriend->isEnabled() && noAttackFriend->IsFriend((Player*)actor)) {
-				actor->resetHitBox();
+			if (noAttackFriend->isEnabled() && noAttackFriend->IsFriend(player)) {
+				player->resetHitBox();
 			}
 			else {
-				actor->setHitBox(vec2_t(width, height));
+				player->setHitBox(vec2_t(width, height));
 			}
 		}
 		else {
-			actor->resetHitBox();
+			player->resetHitBox();
 		}
-	}
+	//}
 }
 
 auto HitBox::onloadConfigFile(json& data)->void {

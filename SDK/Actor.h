@@ -46,6 +46,7 @@ public:
 	static int GetAttributeInstance_HealthFunVT;
 	static uintptr_t isSneakingCallptr;
 	static uintptr_t* setVelocityCallptr;
+	static uintptr_t* getShadowRadiusCallptr;
 
 public:
 	
@@ -75,6 +76,7 @@ public:
 public:
 
 	auto setVelocity(vec3_t*)->void*;												/*46*/
+	auto getShadowRadius()->float;													/*79*/
 public:
 
 	//原生虚表函数

@@ -7,6 +7,10 @@ class Player : public Mob
 {
 protected:
 	static uintptr_t** vfTables;
+
+public:
+	static uintptr_t* tickWorldCallptr;
+	static uintptr_t* getShadowRadiusCallptr;
 public:
 	template <typename TRet, typename... TArgs>
 	static auto GetVFtableFun(int)->auto*;
@@ -29,6 +33,9 @@ public:
 	//虚表函数
 	//44
 	auto teleportTo(vec3_t*, bool, unsigned int, unsigned int)->void;
-
 	auto displayChatMessage(class TextHolder*, class TextHolder*)->__int64;
+
+	//Hook虚表函数
+	auto getShadowRadius()->float;															/*79*/
+	auto tickWorld(class Tick*) -> void;													/*371*/
 };

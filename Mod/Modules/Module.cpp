@@ -181,30 +181,26 @@ auto Module::onKnockback(LocalPlayer* lp, vec3_t* v3)->bool {
 	return true;
 }
 
-auto Module::onActorTick(Actor* actor)->void {
+auto Module::onActorTick(Actor* actor)->void {}
 
-}
+auto Module::onActorSightTick(Actor* actor)->void{}
 
-auto Module::onLocalPlayerTick(LocalPlayer* lp)->void {
+auto Module::onPlayerTick(Player* player)->void{}
 
-}
+auto Module::onPlayerSightTick(Player*)->void{}
 
-auto Module::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
+auto Module::onServerPlayerTick(ServerPlayer* serverplayer)->void{}
 
-}
+auto Module::onLocalPlayerTick(LocalPlayer* lp)->void {}
 
-auto Module::onImGUIRender()->void {
+auto Module::onRenderDetour(MinecraftUIRenderContext* ctx)->void {}
 
-}
+auto Module::onImGUIRender()->void {}
 
 auto Module::onSendMessage(TextHolder*)->bool {
 	return true;
 }
 
-auto Module::onloadConfigFile(json& data)->void {
+auto Module::onloadConfigFile(json& data)->void {}
 
-}
-
-auto Module::onsaveConfigFile(json& data)->void {
-
-}
+auto Module::onsaveConfigFile(json& data)->void {}

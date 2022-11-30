@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include "Module.h"
 #include <functional>
@@ -26,7 +26,11 @@ public:
 	bool useItem(class GameMode*, class ItemStack*);
 	bool useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, struct vec3_t*, class Block*);
 	auto onKnockback(class LocalPlayer*, struct vec3_t*)->bool;  // 返回值可以拦截该事件
-	auto onActorTick(class Actor*)->void;
+	auto onActorTick(class Actor*)->void;						 // 暂时没找到相关函数
+	auto onActorSightTick(class Actor*)->void;					 // 在本地玩家视野内的生物将会tick 来自Actor虚表函数:Actor::getShadowRadius Actor Mob会调用 但Player不会
+	auto onPlayerTick(class Player*)->void;
+	auto onPlayerSightTick(class Player*)->void;
+	auto onServerPlayerTick(class ServerPlayer*)->void;
 	auto onLocalPlayerTick(class LocalPlayer*)->void;
 	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
 	auto onImGUIRender()->void;

@@ -97,6 +97,10 @@ public:
 	virtual bool useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, struct vec3_t*, class Block*);
 	virtual bool onKnockback(class LocalPlayer*, struct vec3_t*);
 	virtual void onActorTick(class Actor*);
+	virtual void onActorSightTick(class Actor*);
+	virtual void onPlayerTick(class Player*);
+	virtual void onPlayerSightTick(class Player*);
+	virtual void onServerPlayerTick(class ServerPlayer*);
 	virtual void onLocalPlayerTick(class LocalPlayer*);
 	virtual void onRenderDetour(class MinecraftUIRenderContext*);
 	virtual void onImGUIRender();

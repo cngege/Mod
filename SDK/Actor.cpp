@@ -26,6 +26,7 @@ int Actor::LevelOffset = 0;
 int Actor::GetAttributeInstance_HealthFunVT = 0;
 uintptr_t Actor::isSneakingCallptr = 0;
 uintptr_t* Actor::setVelocityCallptr = nullptr;
+uintptr_t* Actor::getShadowRadiusCallptr = nullptr;
 
 uintptr_t** Actor::vfTables = nullptr;
 
@@ -58,7 +59,7 @@ auto Actor::getAABB()->AABB* {
 	if (AABBOffset == 0) {
 		return nullptr;
 	}
-	return reinterpret_cast<AABB*>(this + AABBOffset);
+	return *reinterpret_cast<AABB**>(this + AABBOffset);
 }
 
 //获取玩家下边框对角点的位置
@@ -151,6 +152,11 @@ auto Actor::isSneaking()->bool {
 auto Actor::setVelocity(vec3_t* sp)->void* {
 	using Fn = void*(__fastcall*)(Actor*, vec3_t*);
 	return reinterpret_cast<Fn>(setVelocityCallptr)(this,sp);
+}
+
+auto Actor::getShadowRadius()->float {
+	using Fn = float(__fastcall*)(Actor*);
+	return reinterpret_cast<Fn>(getShadowRadiusCallptr)(this);
 }
 
 // 虚表函数

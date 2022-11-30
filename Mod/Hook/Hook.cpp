@@ -17,10 +17,6 @@
 #include "../Modules/Modules/ShowCoordinates.h"
 #include "../Modules/Modules/FastViewPerspective.h"
 
-using SetVelocityCALL = void*(__fastcall*)(Player*, vec3_t*);
-//SetVelocityCALL SetVelocityCALLcall;
-//uintptr_t setVelocity;
-
 using ClientInstance_Tick = void(__fastcall*)(ClientInstance* _this, void* a1);
 ClientInstance_Tick clientInstance_Tickcall;
 uintptr_t clientInstanceTick;
@@ -176,7 +172,7 @@ auto Hook::init() -> void
 	//}
 
 	//所有玩家TICK ,所有生物TICK,对玩家来说应该是渲染相关得函数,只有看向 那个玩家，那个玩家才会触发这个函数，其中出现的玩家指针是Player 不是ServerPlayer
-	//非掉落物实体，都只会在视野中才会触发
+	//非掉落物实体，都只会在视野中才会触发  这个特征码比较旧了，不知道Hook的函数正不正确
 	{
 		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2";
 		allActor_Tick = FindSignature(memcode);
@@ -346,8 +342,11 @@ auto Hook::init() -> void
 			logF("[Actor::SetVtables] [Success] ActorVTable = %llX", ActorVTable);
 			Actor::SetVFtables(ActorVTable);
 			//虚表Hook
+			//Actor::setVelocity
 			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(46), &Hook::SetVelocity, &Actor::setVelocityCallptr);
 			Actor::SpeedOffset = *reinterpret_cast<int*>((uintptr_t)Actor::GetVFtableFun(46) + 7);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(79), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
+
 		}
 	}
 
@@ -397,6 +396,10 @@ auto Hook::init() -> void
 			Player::SetVFtables(PlayerVTable);
 			//虚表Hook
 			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(77), &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
+			//Player::getShadowRadius
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(79), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
+			//Player::tickWorld
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(371), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
 		}
 	}
 
@@ -417,7 +420,7 @@ auto Hook::init() -> void
 			ServerPlayer::SetVFtables(ServerPlayerVTable);
 
 			//虚表Hook
-			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(374), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
+			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(371), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
 
 		}
 	}
@@ -472,6 +475,11 @@ auto Hook::SetVelocity(Player* player,vec3_t* kb)->void*
 		return nullptr;
 	}
 	return player->setVelocity(kb);
+}
+
+auto Hook::Actor_getShadowRadius(Actor* actor)->float {
+	Game::GetModuleManager()->onActorSightTick(actor);
+	return actor->getShadowRadius();
 }
 
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void
@@ -529,7 +537,19 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 	return localplayer_getCameraOffsetcall(_this);
 }
 
-//一直调用 且每位玩家都调用
+auto Hook::Player_tickWorld(Player* player, Tick* tick)->void
+{
+	Game::GetModuleManager()->onPlayerTick(player);
+	player->tickWorld(tick);
+}
+
+auto Hook::Player_getShadowRadius(Player* player) -> float
+{
+	Game::GetModuleManager()->onPlayerSightTick(player);
+	return player->getShadowRadius();
+}
+
+//一直调用 且每位玩家都调用 这个函数好像是Player::getShadowRadius 不确定
 auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 	Game::GetModuleManager()->onActorTick(_this);
 	return allActor_Tickcall(_this, a1, a2);
@@ -672,6 +692,7 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 }
 
 auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, void* tick)->void* {
+	Game::GetModuleManager()->onServerPlayerTick(_this);
 	//_this->onAllPlayerTick();				//这里应该是 所有serverplayer tick
 	return _this->tickWorld(tick);
 }

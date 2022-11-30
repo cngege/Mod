@@ -184,6 +184,42 @@ auto ModuleManager::onActorTick(Actor* actor)->void {
 	}
 }
 
+auto ModuleManager::onActorSightTick(Actor* actor) -> void
+{
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onActorSightTick(actor);
+	}
+}
+
+auto ModuleManager::onPlayerTick(Player* player) -> void
+{
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onPlayerTick(player);
+	}
+}
+
+auto ModuleManager::onPlayerSightTick(Player* player) -> void
+{
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onPlayerSightTick(player);
+	}
+}
+
+auto ModuleManager::onServerPlayerTick(ServerPlayer* serverplayer) -> void
+{
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onServerPlayerTick(serverplayer);
+	}
+}
+
 auto ModuleManager::onLocalPlayerTick(LocalPlayer* lp)->void {
 	if (!IsInitialized())
 		return;
