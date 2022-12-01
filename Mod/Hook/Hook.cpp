@@ -678,6 +678,7 @@ auto Hook::GameMode_useItemOn(GameMode* gm, class ItemStack* item, vec3_ti* bpos
 
 
 auto Hook::GameMode_tick(GameMode* _this)->void* {
+	logF("[Hook::GameMode_tick] GameMode_tick 在该版本中恢复工作。。。");
 	Game::GetModuleManager()->onTick(_this);
 	return _this->tick();
 }

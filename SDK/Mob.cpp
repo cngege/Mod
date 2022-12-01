@@ -33,7 +33,7 @@ __int64 __fastcall Mob::isSprinting(Mob* this)
 	return (**(__int64(__fastcall***)(Mob*, __int64))this)(this, 3i64);
 }*/
 auto Mob::isSprinting()-> bool{
-	return GetVFtableFun<bool, Mob*, int>(0)(this, 3);
+	return getStatusFlag(ActorFlags::isSprinting);
 }
 
 

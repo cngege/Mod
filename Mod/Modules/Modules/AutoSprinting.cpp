@@ -25,6 +25,16 @@ auto AutoSprinting::onTick(GameMode* gm)->void {
 	}
 }
 
+auto AutoSprinting::onLocalPlayerTick(LocalPlayer* lp)->void {
+	if (!isEnabled()) {
+		return;
+	}
+	auto speed = lp->getSpeed().magnitudexz();
+	if (speed > 0.1f && !lp->isSprinting()) {
+		lp->setSprintingEx(true);
+	}
+}
+
 auto AutoSprinting::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
 }
