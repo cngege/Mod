@@ -43,10 +43,12 @@ auto LocalPlayer::isValid()->bool {
 //	return GetVFtableFun<__int64, LocalPlayer*, vec3_t*>(13)(this,pos);	//19?
 //}
 
+//无法验证虚表
 auto LocalPlayer::jumpFromGround()->UINT64 {
 	return GetVFtableFun<UINT64, LocalPlayer*>(346)(this);
 }
 
+//无法验证虚表
 auto LocalPlayer::displayClientMessage(TextHolder* text)->UINT64 {
 	return GetVFtableFun<UINT64, LocalPlayer*, TextHolder*>(389)(this, text);
 }

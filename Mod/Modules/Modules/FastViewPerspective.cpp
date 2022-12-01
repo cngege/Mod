@@ -35,7 +35,7 @@ auto FastViewPerspective::onTick(GameMode* gm)->void {
 		//这里表示我按下了R
 		//可以尝试做自瞄 和自由视角
 		vec2_t nrot(srot.x,srot.y);
-		gm->GetLocalPlayer()->setRot(&nrot);
+		//gm->GetLocalPlayer()->setRot(&nrot);
 	}
 }
 

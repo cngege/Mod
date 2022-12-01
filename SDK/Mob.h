@@ -16,6 +16,7 @@ public:
 
 public:
 	auto setSprintingEx(bool)->char;							//即使放在Tick中执行，也不会被HIVE踢
+	auto isSprinting()->bool;
 
 	//虚表函数
 public:

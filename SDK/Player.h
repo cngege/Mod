@@ -20,8 +20,8 @@ public:
 
 public:
 	
-	static int Rot1;	//偏移指向 vec2_t 指针
-	static int Rot2;	//偏移指向 vec2_t 指针
+	static int RotPtrOffset;	//偏移指向 vec2_t 指针
+	//static int Rot2;			//偏移指向 vec2_t 指针
 
 public:
 	//ret->x 表示竖直方向的值

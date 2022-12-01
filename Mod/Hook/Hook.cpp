@@ -317,7 +317,7 @@ auto Hook::init() -> void
 			//Hook GameMode_startDestroyBlock
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
 			//Hook GameMode_tick
-			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(8), &Hook::GameMode_tick, &GameMode::tickCall);
+			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(9), &Hook::GameMode_tick, &GameMode::tickCall);
 			//Hook GameMode_useItem
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(11), &Hook::GameMode_useItem, &GameMode::useItemCall);
 			//Hook GameMode_useItemOn
@@ -343,9 +343,9 @@ auto Hook::init() -> void
 			Actor::SetVFtables(ActorVTable);
 			//虚表Hook
 			//Actor::setVelocity
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(46), &Hook::SetVelocity, &Actor::setVelocityCallptr);
-			Actor::SpeedOffset = *reinterpret_cast<int*>((uintptr_t)Actor::GetVFtableFun(46) + 7);
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(79), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(48), &Hook::SetVelocity, &Actor::setVelocityCallptr);
+			Actor::SpeedOffset = *reinterpret_cast<int*>((uintptr_t)Actor::GetVFtableFun(48) + 7);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(82), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
 
 		}
 	}
@@ -383,7 +383,7 @@ auto Hook::init() -> void
 
 	//Player 虚表及相关Hook
 	{
-		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 44 89 A7 ? ? ? ? 44 88 A7";
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 45 33 E4 44 89 A7 ? ? ? ? 44 88 A7";
 		auto PlayerVTable_sigOffset = FindSignature(memcode);
 		if (PlayerVTable_sigOffset == 0x00) {
 			logF("[Player::SetVtables] [Error]Find Player PlayerVTable_sigOffset is no working!!!");
@@ -395,11 +395,11 @@ auto Hook::init() -> void
 			logF("[Player::SetVtables] [Success] PlayerVTable = %llX", PlayerVTable);
 			Player::SetVFtables(PlayerVTable);
 			//虚表Hook
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(77), &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(80), &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
 			//Player::getShadowRadius
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(79), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(82), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
 			//Player::tickWorld
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(371), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(369), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
 		}
 	}
 
@@ -420,7 +420,7 @@ auto Hook::init() -> void
 			ServerPlayer::SetVFtables(ServerPlayerVTable);
 
 			//虚表Hook
-			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(371), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
+			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(369), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
 
 		}
 	}
@@ -428,7 +428,7 @@ auto Hook::init() -> void
 	//LocalPlayer虚表及相关Hook
 	//啥用没有 虚函数没找到能用的  仅在 Actor::isLocalPlayer() 中使用
 	{
-		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 48 8D 8F ? ? ? ? 48 8B 87";
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 C6 87 ? ? ? ? 0 4C 89 B7";
 		auto LocalPlayerVTable_sigOffset = FindSignature(memcode);
 		if (LocalPlayerVTable_sigOffset == 0x00) {
 			logF("[LocalPlayer::SetVtables] [Error]Find LocalPlayer LocalPlayerVTable_sigOffset is no working!!!");
@@ -685,6 +685,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f, isplayer=%i, islocalplayer=%i", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y,actor->isPlayer(),actor->isLocalPlayer());
+	//logF("attack Lp is isSneaking = %i", _this->GetLocalPlayer()->isSneaking());
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}

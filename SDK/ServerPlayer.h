@@ -14,11 +14,8 @@ public:
 
 	//Ðéº¯Êý
 public:
-	static uintptr_t* tickWorldCall;							/*374*/
-
+	static uintptr_t* tickWorldCall;							/*369*/
 	auto tickWorld(void* Tick)->void*;
 
-public:
-	auto onAllPlayerTick()->void;
 
 };

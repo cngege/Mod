@@ -29,22 +29,22 @@ auto Game::init() -> void
 
 	//获取生物位置指针的偏移
 	{
-		Mob::setSprintingFunAddr = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B ? ? ? ? ? 0F B6 ? 48 8B F1");
+		Mob::setSprintingFunAddr = FindSignature("48 89 74 24 ? 57 48 83 EC ? 48 8B ? 0F B6 F2 BA");
 		if (Mob::setSprintingFunAddr == 0x00) {
 			logF("[Game::init] [Warn]Find Mob::setSprintingFunAddr FunAddr is no working!!!,Mob::setSprintingFunAddr=0");
 			return;
 		}
 	}
-	//获取玩家视角的偏移地址 +15
+	//获取玩家视角的指针的偏移地址
 	{
-		auto PlayerView_sigOffset = FindSignature("0F B6 D0 48 8B CE E8 ? ? ? ? F2 0F 10 86 ? ? ? ? F2 0F 11 86");
+		auto PlayerView_sigOffset = FindSignature("48 8B 88 ? ? ? ? 48 85 C9 0F 84 ? ? ? ? F3 0F 10 80");
 		if (PlayerView_sigOffset == 0x00) {
 			logF("[Game::init] [Warn]Find Player PlayerView_sigOffset Offset is no working!!!,PlayerView_sigOffset=0");
 			return;
 		}
-		auto offset = *reinterpret_cast<int*>(PlayerView_sigOffset + 15);
-		Player::Rot1 = offset;
-		Player::Rot2 = offset + 8;
+		Player::RotPtrOffset = *reinterpret_cast<int*>(PlayerView_sigOffset + 3);
+		//Player::Rot1 = offset;
+		//Player::Rot2 = offset + 8;
 	}
 
 	//获取 获取玩家血量函数的相关偏移
@@ -75,15 +75,15 @@ auto Game::init() -> void
 	}
 
 	//获取Actor::isSneaking 函数位置
-	{
-		auto Actor_Sneaking_sigOffset = FindSignature("E8 ? ? ? ? 84 C0 0F 84 ? ? ? ? 48 8B 4F ? 48 85 C9 74 ? 48 83");
-		if (Actor_Sneaking_sigOffset == 0x00) {
-			logF("[Game::init] [Warn]Find Player Actor_Sneaking_sigOffset Offset is no working!!!,Actor_Sneaking_sigOffset=0");
-			return;
-		}
-		auto offset = *reinterpret_cast<int*>(Actor_Sneaking_sigOffset + 1);
-		Actor::isSneakingCallptr = Actor_Sneaking_sigOffset + offset + 5;
-	}
+	//{
+	//	auto Actor_Sneaking_sigOffset = FindSignature("E8 ? ? ? ? 84 C0 0F 84 ? ? ? ? 48 8B 4F ? 48 85 C9 74 ? 48 83");
+	//	if (Actor_Sneaking_sigOffset == 0x00) {
+	//		logF("[Game::init] [Warn]Find Player Actor_Sneaking_sigOffset Offset is no working!!!,Actor_Sneaking_sigOffset=0");
+	//		return;
+	//	}
+	//	auto offset = *reinterpret_cast<int*>(Actor_Sneaking_sigOffset + 1);
+	//	Actor::isSneakingCallptr = Actor_Sneaking_sigOffset + offset + 5;
+	//}
 
 	//KeyMap
 	{

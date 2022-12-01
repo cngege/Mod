@@ -22,10 +22,10 @@ auto Level::forEachPlayer(std::function<bool(class Player&)> fp)->void {
 }
 
 auto Level::getTime()->int {
-	return reinterpret_cast<int(__fastcall*)(Level*)>((*(uintptr_t**)this)[111])(this);
+	return reinterpret_cast<int(__fastcall*)(Level*)>((*(uintptr_t**)this)[114])(this);
 }
 
 auto Level::setTime(int time)->void {
-	return reinterpret_cast<void(__fastcall*)(Level*,int)>((*(uintptr_t**)this)[112])(this,time);
+	return reinterpret_cast<void(__fastcall*)(Level*,int)>((*(uintptr_t**)this)[115])(this,time);
 }
 

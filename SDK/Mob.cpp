@@ -27,12 +27,22 @@ auto Mob::setSprintingEx(bool v)->char {
 	return reinterpret_cast<FunsetSprinting>(setSprintingFunAddr)(this,v);
 }
 
+/*
+__int64 __fastcall Mob::isSprinting(Mob* this)
+{
+	return (**(__int64(__fastcall***)(Mob*, __int64))this)(this, 3i64);
+}*/
+auto Mob::isSprinting()-> bool{
+	return GetVFtableFun<bool, Mob*, int>(0)(this, 3);
+}
+
+
 //虚表函数
 auto Mob::setSprinting(bool v)->void {
-	GetVFtableFun<void, Mob*,bool>(286)(this,v);
+	GetVFtableFun<void, Mob*,bool>(284)(this,v);
 }
 
 
 auto Mob::lookAt(Actor* actor,float f1, float f2)->void {
-	GetVFtableFun<void, Mob*, Actor*,float,float>(300)(this, actor,f1,f2);
+	GetVFtableFun<void, Mob*, Actor*,float,float>(298)(this, actor,f1,f2);
 }

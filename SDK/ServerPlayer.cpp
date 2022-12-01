@@ -25,11 +25,6 @@ auto ServerPlayer::SetVFtables(uintptr_t** vfTable)->void {
 //虚函数 回调
 uintptr_t* ServerPlayer::tickWorldCall = nullptr;
 
-auto ServerPlayer::onAllPlayerTick()->void {
-	
-}
-
-
 
 //虚函数
 //具有原始功能的调用

@@ -11,20 +11,10 @@
 int Actor::SpeedOffset = 0;		//玩家指针到玩家速度相关信息指针的偏移
 
 int Actor::AABBOffset = 0;
-//int Actor::PosXOffset1 = 0;
-//int Actor::PosYOffset1 = 0;
-//int Actor::PosZOffset1 = 0;
-//int Actor::PosXOffset2 = 0;
-//int Actor::PosYOffset2 = 0;
-//int Actor::PosZOffset2 = 0;
-//
-//int Actor::XHitBoxOffset = 0;
-//int Actor::YHitBoxOffset = 0;
-
 int Actor::LevelOffset = 0;
 
 int Actor::GetAttributeInstance_HealthFunVT = 0;
-uintptr_t Actor::isSneakingCallptr = 0;
+//uintptr_t Actor::isSneakingCallptr = 0;
 uintptr_t* Actor::setVelocityCallptr = nullptr;
 uintptr_t* Actor::getShadowRadiusCallptr = nullptr;
 
@@ -144,8 +134,9 @@ auto Actor::getHealth()->float {
 
 
 auto Actor::isSneaking()->bool {
-	using Fn = bool(__fastcall*)(Actor*);
-	return reinterpret_cast<Fn>(isSneakingCallptr)(this);
+	//using Fn = bool(__fastcall*)(Actor*);
+	//return reinterpret_cast<Fn>(isSneakingCallptr)(this);
+	return getStatusFlag(ActorFlags::isSneaking);
 }
 
 
@@ -161,43 +152,49 @@ auto Actor::getShadowRadius()->float {
 
 // 虚表函数
 
+auto Actor::getStatusFlag(ActorFlags af)->bool
+{
+	return GetVFtableFun<bool, Actor*, ActorFlags>(0)(this, af);
+}
+
 // 原生虚表函数
 auto Actor::setPos(vec3_t* pos)->void* {
-	return GetVFtableFun<void*, Actor*, vec3_t*>(18)(this,pos);
+	return GetVFtableFun<void*, Actor*, vec3_t*>(21)(this,pos);
 }
 
 
 //应该获取的是头部位置，Y值会往上偏两个单位
 auto Actor::getPosition()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(21)(this);
+	return GetVFtableFun<vec3_t*, Actor*>(24)(this);
 }
 
 auto Actor::getPosPrev()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(22)(this);
+	return GetVFtableFun<vec3_t*, Actor*>(25)(this);
 }
 
-auto Actor::setRot(vec2_t* rot)->void {
-	GetVFtableFun<void, Actor*,vec2_t*>(26)(this,rot);
-}
+// 新版本中虚表不存在此函数
+//auto Actor::setRot(vec2_t* rot)->void {
+//	GetVFtableFun<void, Actor*,vec2_t*>(29)(this,rot);
+//}
 
 auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
-	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(43)(this, pos, a1, a2, a3);
+	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(45)(this, pos, a1, a2, a3);
 }
 
 auto Actor::getNameTag()->TextHolder* {
-	return GetVFtableFun<TextHolder*, Actor*>(62)(this);
+	return GetVFtableFun<TextHolder*, Actor*>(65)(this);
 }
 
 // 第19号虚表调用的都是 Player::isPlayer 所以一定返回true
 // 第40号虚表调用的都是 Actor::isPlayer  所以一定返回false
-// 第67号虚表 Actor调用的是 Actor::isPlayer, Player调用的是Player::isPlayer,所以可用
+// 第67->70号虚表 Actor调用的是 Actor::isPlayer, Player调用的是Player::isPlayer,所以可用
 auto Actor::isPlayer()->bool {
-	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[67])(this);
+	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[70])(this);
 }
 
 
 auto Actor::getNameTagAsHash()->unsigned __int64 {
-	return GetVFtableFun<unsigned __int64, Actor*>(63)(this);
+	return GetVFtableFun<unsigned __int64, Actor*>(66)(this);
 }
 
 /*
@@ -214,25 +211,26 @@ _QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
 //这个函数暂存，因为会崩溃
 auto Actor::getFormattedNameTag(void* ret)->void* {
 	//void* ret = malloc(8 * 4);
-	return GetVFtableFun<void*, Actor*,void*>(64)(this,ret);
+	return GetVFtableFun<void*, Actor*,void*>(67)(this,ret);
 }
 
-auto Actor::getRotation()->vec2_t* {
-	return GetVFtableFun<vec2_t*, Actor*>(81)(this);
-}
+//新版本中虚表不存在该函数
+//auto Actor::getRotation()->vec2_t* {
+//	return GetVFtableFun<vec2_t*, Actor*>(81)(this);
+//}
 
 auto Actor::setSneaking(bool b)->void {
-	return GetVFtableFun<void, Actor*, bool>(99)(this, b);
+	return GetVFtableFun<void, Actor*, bool>(102)(this, b);
 }
 
 auto Actor::getEntityTypeId()->int {
-	return GetVFtableFun<unsigned int, Actor*>(169)(this);
+	return GetVFtableFun<unsigned int, Actor*>(172)(this);
 }
 
 auto Actor::causeFallDamage()->void* {
-	return GetVFtableFun<void*, Actor*>(185)(this);
+	return GetVFtableFun<void*, Actor*>(187)(this);
 }
 
 auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
-	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(206)(this, &attribute);
+	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(208)(this, &attribute);
 }
