@@ -34,6 +34,7 @@ GameTimeLock::GameTimeLock() : Module(0, "GameTimeLock", "将游戏时间固定到一个设
 }
 
 auto GameTimeLock::onTick(GameMode* gm)->void {
+	return;
 	auto lp = gm->GetLocalPlayer();
 	if (lp && lp->getLevel()) {
 		if (isEnabled()) {
@@ -42,6 +43,16 @@ auto GameTimeLock::onTick(GameMode* gm)->void {
 		else {
 			time = lp->getLevel()->getTime();
 		}
+	}
+}
+
+auto GameTimeLock::onLevelTick(Level* level)->void
+{
+	if (isEnabled()) {
+		level->setTime(time);
+	}
+	else {
+		time = level->getTime();
 	}
 }
 

@@ -20,13 +20,14 @@ public:
 	static auto ClientInstance_Tick(ClientInstance*, void*)->void;
 	static auto Is_ShowCoordinates_Tick(void*)->bool;
 	static auto NoFallDamage_Tick(class Player*,float*)->void*;
+	static auto Level_Tick(class Level*) -> void;
 	//Player 虚表Hook
 	static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
 	static auto Player_tickWorld(class Player*, class Tick*)->void;
 	static auto Player_getShadowRadius(class Player*)->float;
 
 	static auto AllActor_Tick(class Actor*, float*, float)->float*;
-	static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
+	//static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
 	static auto KeyUpdate(__int64, int)->void*;
 	static auto MouseUpdate(__int64, char, char, __int16, __int16, __int16, __int16, char)->void;
 	static auto RenderDetour(void*, class MinecraftUIRenderContext*)->void;

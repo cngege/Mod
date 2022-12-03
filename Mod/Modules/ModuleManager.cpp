@@ -228,6 +228,14 @@ auto ModuleManager::onLocalPlayerTick(LocalPlayer* lp)->void {
 	}
 }
 
+auto ModuleManager::onLevelTick(Level* level)->void {
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onLevelTick(level);
+	}
+}
+
 
 auto ModuleManager::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	if (!IsInitialized())

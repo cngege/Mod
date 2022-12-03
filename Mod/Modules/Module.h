@@ -102,6 +102,7 @@ public:
 	virtual void onPlayerSightTick(class Player*);
 	virtual void onServerPlayerTick(class ServerPlayer*);
 	virtual void onLocalPlayerTick(class LocalPlayer*);
+	virtual void onLevelTick(class Level*);
 	virtual void onRenderDetour(class MinecraftUIRenderContext*);
 	virtual void onImGUIRender();
 	virtual bool onSendMessage(class TextHolder*);

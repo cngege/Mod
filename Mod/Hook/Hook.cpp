@@ -158,6 +158,19 @@ auto Hook::init() -> void
 		}
 	}
 
+	//Level::Tick 无直接调用者
+	{
+		const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B F1 0F 57 C0";
+		auto level_tick = FindSignature(memcode);
+		if (level_tick != 0x00) {
+			MH_CreateHookEx((LPVOID)level_tick, &Hook::Level_Tick, &Level::tickCall);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", level_tick, memcode);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "level_tick");
+		}
+	}
+
 	// 本地玩家 Tick  改为获取虚表后Hook
 	//{
 	//	const char* memcode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
@@ -521,6 +534,12 @@ auto Hook::NoFallDamage_Tick(Player* _this, float* a1)->void*
 	return noFallDamage_Tickcall(_this, a1);
 }
 
+auto Hook::Level_Tick(Level* level)->void
+{
+	Game::GetModuleManager()->onLevelTick(level);
+	level->Tick();
+}
+
 
 
 auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
@@ -532,6 +551,8 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 		Game::localplayer = _this;
 		logF("Player_Tick localplayer ptr = %llX,localplayerVT = %llX", thisp, *(INT64*)thisp);
 		logF("Player_Tick Clientinstance ptr = %llX,LP->getCI = %llX,CIVT = %llX", Game::Cinstance, _this->getClientInstance(),*(uintptr_t*)_this->getClientInstance());
+		//Level* l = _this->getLevel();
+		//logF("Level VT = %llX , Level::Tick addr= %llX", *reinterpret_cast<uintptr_t*>(l),Utils::GetVTFPtr(*reinterpret_cast<uintptr_t*>(l), 100));
 	}
 	Game::GetModuleManager()->onLocalPlayerTick(_this);
 	return localplayer_getCameraOffsetcall(_this);

@@ -359,6 +359,26 @@ public:
 		return (*static_cast<Fn**>(thisptr))[IIdx](thisptr, argList...);
 	}
 
+	//inline 内联函数 表示函数的内容在类中就已经实现了
+	
+	/// <summary>
+	/// 通过虚表地址 和该函数在虚表中的位置个数获取该函数的地址
+	/// </summary>
+	/// <param name="vf">虚表</param>
+	/// <param name="pos"></param>
+	/// <returns></returns>
+	static inline auto GetVTFPtr(uintptr_t vf, int pos)->uintptr_t* {
+		uintptr_t** _vf = reinterpret_cast<uintptr_t**>(vf);
+		return _vf[pos];
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="ret">返回值的函数的结构</typeparam>
+	/// <param name="sig">特征码定位后的地址</param>
+	/// <param name="offset">sig到跳转值之间的地址</param>
+	/// <returns>返回一个可调用的函数的地址</returns>
 	template < typename ret>
 	static inline auto FuncFromSigOffset(uintptr_t sig, int offset) -> ret {
 		return reinterpret_cast<ret>(sig + offset + 4 + *reinterpret_cast<uintptr_t*>(sig + offset));
