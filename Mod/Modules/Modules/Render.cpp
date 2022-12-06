@@ -76,11 +76,12 @@ auto Render::onImGUIRender()->void {
 		ImGui::SetWindowSize(ImVec2(uiWidth, uiHeight));
 
 		Game::GetModuleManager()->Moduleforeach([](Module* mod) {
-			
-			bool enable = mod->isEnabled();
-			ImGui::Checkbox("", &enable);
-			ImGui::SameLine();
 			std::string showText = mod->getModuleName();		//加上Module本来的名称
+			bool enable = mod->isEnabled();
+			ImGui::PushID(mod->getModuleName().c_str());
+
+			ImGui::Checkbox("##CheckBox", &enable);
+			ImGui::SameLine();
 			if (mod->getBindKeyName() != "") {
 				showText += " [" + mod->getBindKeyName() + "]";
 			}
@@ -110,6 +111,7 @@ auto Render::onImGUIRender()->void {
 				}
 
 			}
+			ImGui::PopID();
 		});
 
 		if (Utils::HelpCollapsingHeader("设置", "读取保存配置等")) {
@@ -118,7 +120,7 @@ auto Render::onImGUIRender()->void {
 				//memcpy(text, config::currentSaveConfigFile.c_str(), sizeof(config::currentSaveConfigFile.c_str()));
 				snprintf(text, sizeof(text), config::currentSaveConfigFile.c_str());
 			}
-			ImGui::InputText("配置文件名", text, sizeof(text));
+			ImGui::InputText("配置文件名", text, IM_ARRAYSIZE(text));
 			if (ImGui::Button("加载使用配置")) {
 				//调用所有模块 加载配置
 				json configdata = config::loadConfigonRootFromFile(config::currentSaveConfigFile);

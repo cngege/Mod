@@ -78,7 +78,8 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			else {
 				ImFont* font = io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
-			ImGui::GetIO().IniFilename = (Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini").c_str();
+			io.IniFilename = (Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini").c_str();
+			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		}
 			
 		ID3D11DeviceContext* ppContext = nullptr;
@@ -266,7 +267,8 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			else {
 				ImFont* font = io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
-			ImGui::GetIO().IniFilename = (Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini").c_str();
+			io.IniFilename = (Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini").c_str();
+			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		}
 		DXGI_SWAP_CHAIN_DESC sdesc;
 		ppSwapChain->GetDesc(&sdesc);
