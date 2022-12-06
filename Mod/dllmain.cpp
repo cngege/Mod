@@ -12,14 +12,6 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dwrite.lib")
 
-#ifdef _DEBUG
-#pragma comment(lib, "../lib/openssl/Debug/libcrypto.lib")
-#pragma comment(lib, "../lib/openssl/Debug/libssl.lib")
-#elif NDEBUG
-#pragma comment(lib, "../lib/openssl/Release/libcrypto.lib")
-#pragma comment(lib, "../lib/openssl/Release/libssl.lib")
-#endif
-
 
 //临时消除出现在Json.hpp 4281行的警告
 //#pragma warning(disable:26800)
