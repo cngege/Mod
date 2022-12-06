@@ -34,6 +34,7 @@ public:
 	//44
 	auto teleportTo(vec3_t*, bool, unsigned int, unsigned int)->void;
 	auto displayChatMessage(class TextHolder*, class TextHolder*)->__int64;
+	auto getSelectedItem() -> class ItemStack*;												/*164*/
 
 	//HookĞé±íº¯Êı
 	auto getShadowRadius()->float;															/*79*/

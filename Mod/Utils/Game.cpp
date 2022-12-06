@@ -6,6 +6,9 @@
 #include "AttributeInstance.h"
 #include "GameMode.h"
 #include "LocalPlayer.h"
+#include "Item.h"
+#include "ItemStack.h"
+
 #include "../Modules/ModuleManager.h"
 
 
@@ -105,6 +108,35 @@ auto Game::init() -> void
 			return;
 		}
 		LocalPlayer::onGroundoffset = *reinterpret_cast<int*>(sigOffset + 2);      // Get Offset from code
+	}
+
+	//获取 Item::getIdEx 所用到的偏移地址 getIdOffset;  特征码来自
+	{
+		auto getIdOffset = FindSignature("0F B7 B8 ? ? ? ? 89 B5 ? ? ? ? 4C 89");
+		if (getIdOffset == 0x0) {
+			logF("[Game::init] [Warn]Find Item::getIdEx Offset is no working!!!,getIdOffset=0");
+			return;
+		}
+		Item::getIdOffset = *reinterpret_cast<int*>(getIdOffset + 3);      // Get Offset from code
+	}
+
+	//获取 ItemStack::use 这个Call
+	{
+		auto ItemStack_use = FindSignature("48 89 74 24 ? 57 48 83 EC ? 48 8B 41 08 48 8B F2 48 8B F9");								//直接特征码搜索这个Call
+		if (ItemStack_use == 0x00) {
+			logF("[Game::init] [!]Find ItemStack_use Call 直接特征码搜索函数失败,将使用第二种方式");
+			auto ItemStack_use2 = FindSignature("E8 ? ? ? ? 48 8B D8 48 8B D0 49 8B CE");
+			if (ItemStack_use2 == 0x00) {
+				logF("[Game::init] [Error]Find ItemStack_use 两种路径查找均失败");
+				return;
+			}
+			else {
+				ItemStack::useCall = Utils::FuncFromSigOffset<uintptr_t*>(ItemStack_use2, 1);
+			}
+		}
+		else {
+			ItemStack::useCall = (uintptr_t*)ItemStack_use;
+		}
 	}
 }
 

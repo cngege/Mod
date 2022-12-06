@@ -11,6 +11,11 @@
 #include "GameMode.h"
 #include "MinecraftUIRenderContext.h"
 
+#include "Item.h"
+#include "FishingHook.h"
+#include "ItemInstance.h"
+#include "ItemStack.h"
+
 #include "../Modules/ModuleManager.h"
 #include "../Modules/Modules/HitBox.h"
 #include "../Modules/Modules/InstantDestroy.h"
@@ -314,6 +319,48 @@ auto Hook::init() -> void
 		}
 	}
 
+	//ItemStack虚表 来自Player::completeUsingItem
+	{
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 85 ? ? ? ? 44 89 BD";
+		auto ItemStackVT_sigOffset = FindSignature(memcode);
+		if (ItemStackVT_sigOffset == 0x00) {
+			logF("[ItemStack::SetVtables] [Error]Find ItemStackVTable_sigOffset is no working!!!");
+		}
+		else {
+			auto ItemStackVT = Utils::FuncFromSigOffset<uintptr_t**>(ItemStackVT_sigOffset, 3);
+			logF("[ItemStack::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", ItemStackVT, ItemStackVT_sigOffset, memcode);
+			ItemStack::SetVFtables(ItemStackVT);
+		}
+	}
+
+	//ItemStackBase虚表 来自Player::completeUsingItem
+	{
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 45 ? 45 33 FF 4C";
+		auto ItemStackBaseVT_sigOffset = FindSignature(memcode);
+		if (ItemStackBaseVT_sigOffset == 0x00) {
+			logF("[ItemStackBase::SetVtables] [Error]Find ItemStackBaseVTable_sigOffset is no working!!!");
+		}
+		else {
+			auto ItemStackBaseVT = Utils::FuncFromSigOffset<uintptr_t**>(ItemStackBaseVT_sigOffset, 3);
+			logF("[ItemStackBase::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", ItemStackBaseVT, ItemStackBaseVT_sigOffset, memcode);
+			ItemStackBase::SetVFtables(ItemStackBaseVT);
+		}
+	}
+
+	//ItemInstance 虚表 来自Player::completeUsingItem
+	{
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 45 ? 49 8D 96";
+		auto ItemInstanceVT_sigOffset = FindSignature(memcode);
+		if (ItemInstanceVT_sigOffset == 0x00) {
+			logF("[ItemInstance::SetVtables] [Error]Find ItemInstanceVTable_sigOffset is no working!!!");
+		}
+		else {
+			auto ItemInstanceVT = Utils::FuncFromSigOffset<uintptr_t**>(ItemInstanceVT_sigOffset, 3);
+			logF("[ItemInstance::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", ItemInstanceVT, ItemInstanceVT_sigOffset, memcode);
+			ItemInstance::SetVFtables(ItemInstanceVT);
+		}
+	}
+
 	//GameMode虚表及相关Hook
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
@@ -340,7 +387,7 @@ auto Hook::init() -> void
 		}
 	}
 
-	//Actor 虚表及相关Hook
+	//Actor 虚表及相关Hook  构造函数特征码：48 89 5C 24 ? 55  56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 49 8B D8 48 8B FA 4C 8B F1
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 49 8B 00 48 89 41 ? 41 8B 40 ? 89 41";
 		auto ActorVTable_sigOffset = FindSignature(memcode);
@@ -365,7 +412,8 @@ auto Hook::init() -> void
 
 	//Actor构造函数下的 获取Actor类中的Level指针偏移
 	{
-		const char* memcode = "49 89 BE ? ? ? ? E8 ? ? ? ? 48 8B D0 49 8D 8E ? ? ? ? E8";
+		const char* memcode = "49 89 BE ? ? ? ? E8 ? ? ? ? 48 8B D0 49 8D 8E ? ? ? ? E8";		//来自三参数Actor构造函数
+		const char* memcode2 = "48 8D 05 ? ? ? ? 48 89 01 49 8B 01 48 89 41 ? 41 8B 41";		//来自四参数Actor构造函数
 		auto ActorGetLevel_sigOffset = FindSignature(memcode);
 		if (ActorGetLevel_sigOffset == 0x00) {
 			logF("[Actor::LevelOffset] [Error]Find Actor ActorGetLevel_sigOffset is no working!!!");
@@ -376,9 +424,25 @@ auto Hook::init() -> void
 		}
 	}
 
+	//FishingHook 虚表
+	{
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 03 C7 83 ? ? ? ? ? ? ? ? C7 83 ? ? ? ? ? ? ? ? 48 C7 83";
+		auto FishingHookVTable_sigoffset = FindSignature(memcode);
+		if (FishingHookVTable_sigoffset == 0x00) {
+			logF("[FishingHook::SetVtables] [Error]Find VTable_sigOffset is no working!!!");
+		}
+		else {
+			auto FishingHookVT = Utils::FuncFromSigOffset<uintptr_t**>(FishingHookVTable_sigoffset, 3);
+			logF("[FishingHook::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", FishingHookVT, FishingHookVTable_sigoffset, memcode);
+			FishingHook::SetVFtables(FishingHookVT);
+		}
+
+	}
+
 	// Mob 虚表及相关Hook
 	{
-		const char* memcode = "40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05";
+		const char* memcode = "40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05";	//来自三参数Mob构造函数
+		const char* memcode2 = "48 8D 05 ? ? ? ? 48 89 07 33 F6 48 89 B7 ? ? ? ? 48 89 B7 ? ? ? ? 48 89 B7";		//来自四参数Mob构造函数
 		auto MobVTable_sigOffset = FindSignature(memcode); //+31
 		if (MobVTable_sigOffset == 0x00) {
 			logF("[Mob::SetVtables] [Error]Find Mob MobVTable_sigOffset is no working!!!");
@@ -473,7 +537,7 @@ auto Hook::init() -> void
 
 		}
 	}
-
+// FishingHook 虚表地址特征码：48 8D 05 ? ? ? ? 48 89 03 C7 83 ? ? ? ? ? ? ? ? C7 83 ? ? ? ? ? ? ? ? 48 C7 83
 }
 
 auto Hook::exit() -> void {
@@ -704,10 +768,13 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 	return _this->tick();
 }
 
-
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
-	//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f, isplayer=%i, islocalplayer=%i", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y,actor->isPlayer(),actor->isLocalPlayer());
-	//logF("attack Lp is isSneaking = %i", _this->GetLocalPlayer()->isSneaking());
+	if (_this->GetLocalPlayer()->isLocalPlayer()) {
+		//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f, isplayer=%i, islocalplayer=%i", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y,actor->isPlayer(),actor->isLocalPlayer());
+		//_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());	//必须是服务玩家才能有效
+		//_this->useItem(_this->GetLocalPlayer()->getSelectedItem());
+	}
+
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;
 	}

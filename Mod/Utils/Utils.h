@@ -351,6 +351,15 @@ public:
 		}
 	};
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TRet"></typeparam>
+	/// <typeparam name="...TArgs"></typeparam>
+	/// <typeparam name="IIdx"></typeparam>
+	/// <param name="thisptr">虚表地址</param>
+	/// <param name="...argList"></param>
+	/// <returns></returns>
 	template <unsigned int IIdx, typename TRet, typename... TArgs>
 	static inline auto CallVFunc(void* thisptr, TArgs... argList) -> TRet {
 		//if (thisptr == nullptr)
@@ -381,7 +390,8 @@ public:
 	/// <returns>返回一个可调用的函数的地址</returns>
 	template < typename ret>
 	static inline auto FuncFromSigOffset(uintptr_t sig, int offset) -> ret {
-		return reinterpret_cast<ret>(sig + offset + 4 + *reinterpret_cast<uintptr_t*>(sig + offset));
+		auto jmpval = *reinterpret_cast<int*>(sig + offset);
+		return reinterpret_cast<ret>(sig + offset + 4 + jmpval);
 	}
 
 	// https://stackoverflow.com/a/34571089

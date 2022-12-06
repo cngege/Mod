@@ -185,8 +185,13 @@
     <ClInclude Include="..\SDK\Actor.h" />
     <ClInclude Include="..\SDK\AttributeInstance.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
+    <ClInclude Include="..\SDK\FishingHook.h" />
     <ClInclude Include="..\SDK\GameMode.h" />
     <ClInclude Include="..\SDK\GuiData.h" />
+    <ClInclude Include="..\SDK\Item.h" />
+    <ClInclude Include="..\SDK\ItemInstance.h" />
+    <ClInclude Include="..\SDK\ItemStack.h" />
+    <ClInclude Include="..\SDK\ItemStackBase.h" />
     <ClInclude Include="..\SDK\Level.h" />
     <ClInclude Include="..\SDK\LocalPlayer.h" />
     <ClInclude Include="..\SDK\MinecraftUIRenderContext.h" />
@@ -231,7 +236,6 @@
     <ClInclude Include="Utils\config.h" />
     <ClInclude Include="Utils\Game.h" />
     <ClInclude Include="Utils\http.hpp" />
-    <ClInclude Include="Utils\httplib.h" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Utils\Utils.h" />
@@ -241,7 +245,12 @@
     <ClCompile Include="..\SDK\Actor.cpp" />
     <ClCompile Include="..\SDK\AttributeInstance.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
+    <ClCompile Include="..\SDK\FishingHook.cpp" />
     <ClCompile Include="..\SDK\GameMode.cpp" />
+    <ClCompile Include="..\SDK\Item.cpp" />
+    <ClCompile Include="..\SDK\ItemInstance.cpp" />
+    <ClCompile Include="..\SDK\ItemStack.cpp" />
+    <ClCompile Include="..\SDK\ItemStackBase.cpp" />
     <ClCompile Include="..\SDK\Level.cpp" />
     <ClCompile Include="..\SDK\LocalPlayer.cpp" />
     <ClCompile Include="..\SDK\MinecraftUIRenderContext.cpp" />

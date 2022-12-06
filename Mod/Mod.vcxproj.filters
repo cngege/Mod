@@ -180,9 +180,6 @@
     <ClInclude Include="imgui\animations\fade.hpp">
       <Filter>IMGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\httplib.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Modules\Modules\AirJump.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
@@ -199,6 +196,21 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\SDK\AABB.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\FishingHook.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\Item.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\ItemStackBase.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\ItemStack.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\ItemInstance.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -339,6 +351,21 @@
       <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\AABB.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\FishingHook.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\Item.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\ItemStackBase.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\ItemStack.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\ItemInstance.cpp">
       <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>

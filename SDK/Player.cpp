@@ -48,6 +48,11 @@ auto Player::displayChatMessage(TextHolder* a1, TextHolder* a2)->__int64{
 	return GetVFtableFun<__int64, Player*, TextHolder*, TextHolder*>(91)(this, a1, a2);
 }
 
+auto Player::getSelectedItem()->ItemStack*
+{
+	return GetVFtableFun<ItemStack*, Player*>(164)(this);
+}
+
 auto Player::getShadowRadius() -> float
 {
 	using Fn = float(__fastcall*)(Player*);
