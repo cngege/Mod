@@ -34,6 +34,7 @@ public:
 	static auto Draw_Text(class MinecraftUIRenderContext*,class BitmapFont*, struct RectangleArea const&, class TextHolder*, struct UIColor const& , float , float , struct TextMeasureData*, uintptr_t*)->void;
 	static auto sendMessage(void*, TextHolder*)->__int64;
 	static auto getLocalPlayerViewPerspective(void*)->int;
+	static auto level_startLeaveGame(class Level*) -> void;
 public:
 	//虚表Hook
 	static auto GameMode_attack(class GameMode*, class Actor*)->bool;
@@ -43,4 +44,5 @@ public:
 	static auto GameMode_useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, vec3_t*, class Block*)->bool;
 
 	static auto ServerPlayer_TickWorld(class ServerPlayer* _this, void* tick)->void*;
+	static auto RemotePlayer_TickWorld(class RemotePlayer* _this) -> void*;						//由于该函数只是个空架子,所以只能接受一个参数
 };

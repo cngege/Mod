@@ -32,7 +32,9 @@ public:
 	auto onPlayerSightTick(class Player*)->void;
 	auto onServerPlayerTick(class ServerPlayer*)->void;
 	auto onLocalPlayerTick(class LocalPlayer*)->void;
+	auto onRemotePlayerTick(class RemotePlayer*)->void;
 	auto onLevelTick(class Level*)->void;
+	auto onstartLeaveGame(class Level*) -> void;
 	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
 	auto onImGUIRender()->void;
 	auto onSendMessage(class TextHolder*)->bool;

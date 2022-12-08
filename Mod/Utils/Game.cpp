@@ -38,6 +38,19 @@ auto Game::init() -> void
 			return;
 		}
 	}
+
+	//Actor::isRemoved() 获取构成该函数的 this到结果的关键偏移
+	{
+		auto offset = FindSignature("53 48 83 EC ? 80 BA ? ? ? ? 0 48 8B D9 75 ? 48 8B 81 ? ? ? ? 48 85 C0");
+		if (offset == 0x00) {
+			logF("[Game::init] [Warn]Find Actor::isRemoved() offset is no working!!!");
+			return;
+		}
+		else {
+			Actor::IsRemovedOffset = *reinterpret_cast<int*>(offset + 7);
+		}
+	}
+
 	//获取玩家视角的指针的偏移地址
 	{
 		auto PlayerView_sigOffset = FindSignature("48 8B 88 ? ? ? ? 48 85 C9 0F 84 ? ? ? ? F3 0F 10 80");
@@ -76,17 +89,6 @@ auto Game::init() -> void
 			logF("[Game::init] [Error]gvoffset == 0x00 ");
 		}
 	}
-
-	//获取Actor::isSneaking 函数位置
-	//{
-	//	auto Actor_Sneaking_sigOffset = FindSignature("E8 ? ? ? ? 84 C0 0F 84 ? ? ? ? 48 8B 4F ? 48 85 C9 74 ? 48 83");
-	//	if (Actor_Sneaking_sigOffset == 0x00) {
-	//		logF("[Game::init] [Warn]Find Player Actor_Sneaking_sigOffset Offset is no working!!!,Actor_Sneaking_sigOffset=0");
-	//		return;
-	//	}
-	//	auto offset = *reinterpret_cast<int*>(Actor_Sneaking_sigOffset + 1);
-	//	Actor::isSneakingCallptr = Actor_Sneaking_sigOffset + offset + 5;
-	//}
 
 	//KeyMap
 	{

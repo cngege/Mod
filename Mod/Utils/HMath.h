@@ -138,6 +138,7 @@ struct vec3_t {
 	inline bool operator==(const vec3_t &o) const { return x == o.x && y == o.y && z == o.z; };
 	bool operator!=(const vec3_t &o) const { return x != o.x || y != o.y || z != o.z; };
 	vec3_t operator-() const { return vec3_t(-x, -y, -z); };
+	//vec3_t operator-(const vec3_t& o) const { return vec3_t(x - o.x, y - o.y, z - o.z); };
 
 	vec3_t mul(const vec3_t &o) const {
 		return vec3_t(x * o.x, y * o.y, z * o.z);
@@ -523,8 +524,8 @@ struct glmatrixf {
 		//viewport tranform to screenCooords
 
 		vec3_t playerscreen;
-		playerscreen.x = (width / 2 * NDC.x) + (NDC.x + width / 2);
-		playerscreen.y = -(height / 2 * NDC.y) + (NDC.y + height / 2);
+		playerscreen.x = ((float)width / 2 * NDC.x) + (NDC.x + (float)width / 2);
+		playerscreen.y = -((float)height / 2 * NDC.y) + (NDC.y + (float)height / 2);
 
 		return playerscreen;
 	}

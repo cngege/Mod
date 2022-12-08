@@ -46,6 +46,8 @@ public:
 	//static int YHitBoxOffset;
 
 	static int LevelOffset;
+	static int IsRemovedOffset;
+	static int GetRotationOffset;
 
 	static int GetAttributeInstance_HealthFunVT;
 	//static uintptr_t isSneakingCallptr;
@@ -76,6 +78,9 @@ public:
 	auto isLocalPlayer()->bool;
 	auto getHealth()->float;
 	auto isSneaking()->bool;
+	auto isRemovedEx()->bool;
+	auto getRotationEx()->vec2_t*;
+	auto isValid()->bool;
 
 public:
 

@@ -16,6 +16,7 @@
 #include "Modules/RenderHealth.h"
 #include "Modules/AutoSprinting.h"
 #include "Modules/FastViewPerspective.h"
+#include "Modules/BioRadar.h"
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -46,9 +47,9 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/
 	moduleList.push_back((Module*)(new ArmsLength()));						/*SHIFT+F10*/
 	moduleList.push_back((Module*)(new RenderHealth()));					/*Ctrl+F10*/
+	moduleList.push_back((Module*)(new BioRadar()));
 
 	isInit = true;
-
 	// 读取 指定的配置文件
 	json configdata = config::loadConfigonRootFromFile(config::currentSaveConfigFile);
 	for (auto& mod : moduleList) {										// 这里有&则代表引用,所有的修改都将作用在原来的数组成员上
@@ -228,6 +229,15 @@ auto ModuleManager::onLocalPlayerTick(LocalPlayer* lp)->void {
 	}
 }
 
+auto ModuleManager::onRemotePlayerTick(RemotePlayer* remoteplayer) -> void
+{
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onRemotePlayerTick(remoteplayer);
+	}
+}
+
 auto ModuleManager::onLevelTick(Level* level)->void {
 	if (!IsInitialized())
 		return;
@@ -236,6 +246,14 @@ auto ModuleManager::onLevelTick(Level* level)->void {
 	}
 }
 
+auto ModuleManager::onstartLeaveGame(Level* level) -> void
+{
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onstartLeaveGame(level);
+	}
+}
 
 auto ModuleManager::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	if (!IsInitialized())

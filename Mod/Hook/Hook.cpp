@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "ServerPlayer.h"
 #include "LocalPlayer.h"
+#include "RemotePlayer.h"
 #include "Actor.h"
 #include "Level.h"
 #include "GameMode.h"
@@ -319,6 +320,19 @@ auto Hook::init() -> void
 		}
 	}
 
+	//Level::startLeaveGame Hook
+	{
+		const char* memcode = "4C 8B DC 49 89 5B ? 49 89 73 ? 57 48 81 EC ? ? ? ? 48 8D 05";
+		auto findptr = FindSignature(memcode);
+		if (findptr != 0x00) {
+			MH_CreateHookEx((LPVOID)findptr, &Hook::level_startLeaveGame, &Level::startLeaveGameCall);
+			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
+		}
+		else {
+			logF("[Hook error] [%s] is no found Hook point", "Level::startLeaveGame");
+		}
+	}
+
 	//ItemStack虚表 来自Player::completeUsingItem
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 85 ? ? ? ? 44 89 BD";
@@ -495,10 +509,30 @@ auto Hook::init() -> void
 			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ServerPlayerVTable_sigOffset, memcode);
 			logF("[ServerPlayer::SetVtables] [Success] ServerPlayerVTable = %llX", ServerPlayerVTable);
 			ServerPlayer::SetVFtables(ServerPlayerVTable);
+			//ServerPlayer::respawn 获取实现 Actor::getRotationEx 的关键偏移(379) +9
+			Actor::GetRotationOffset = *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(379)) + 9);
 
 			//虚表Hook
 			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(369), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
 
+		}
+	}
+
+	//RemotePlayer::RemotePlayer 虚表及相关功能Hook
+	{
+		//48 8D 05 ? ? ? ? 48 89 07 48 8D 05 ? ? ? ? 48 89 06
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 48 8D 05 ? ? ? ? 48 89 06";
+		auto RemotePlayerVTable_sigOffset = FindSignature(memcode);
+		if (RemotePlayerVTable_sigOffset == 0x00) {
+			logF("[RemotePlayer::SetVtables] [Error]Find RemotePlayerVTable_sigOffset is no working!!!");
+		}
+		else {
+			auto RemotePlayerVT = Utils::FuncFromSigOffset<uintptr_t**>(RemotePlayerVTable_sigOffset, 3);
+			logF("[RemotePlayer::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", RemotePlayerVT, RemotePlayerVTable_sigOffset, memcode);
+			RemotePlayer::SetVFtables(RemotePlayerVT);
+			//虚表Hook
+			//TickWorld 不能Hook这个函数,因为函数的内容为 ret 0000
+			MH_CreateHookEx((LPVOID)RemotePlayer::GetVFtableFun(369), &Hook::RemotePlayer_TickWorld, &RemotePlayer::tickWorldCallptr);
 		}
 	}
 
@@ -616,12 +650,13 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 		logF("Player_Tick localplayer ptr = %llX,localplayerVT = %llX", thisp, *(INT64*)thisp);
 		logF("Player_Tick Clientinstance ptr = %llX,LP->getCI = %llX,CIVT = %llX", Game::Cinstance, _this->getClientInstance(),*(uintptr_t*)_this->getClientInstance());
 		//Level* l = _this->getLevel();
-		//logF("Level VT = %llX , Level::Tick addr= %llX", *reinterpret_cast<uintptr_t*>(l),Utils::GetVTFPtr(*reinterpret_cast<uintptr_t*>(l), 100));
+		//logF("Level VT = %llX , Level::startLeaveGame addr= %llX", *reinterpret_cast<uintptr_t*>(l),Utils::GetVTFPtr(*reinterpret_cast<uintptr_t*>(l), 2));
 	}
 	Game::GetModuleManager()->onLocalPlayerTick(_this);
 	return localplayer_getCameraOffsetcall(_this);
 }
 
+//在非本地房间 只有本地玩家才会触发Tick
 auto Hook::Player_tickWorld(Player* player, Tick* tick)->void
 {
 	Game::GetModuleManager()->onPlayerTick(player);
@@ -735,6 +770,13 @@ auto Hook::getLocalPlayerViewPerspective(void* thi)->int {
 	return getLocalPlayerViewPerspectivecall(thi);
 }
 
+auto Hook::level_startLeaveGame(Level* level) -> void
+{
+	Game::localplayer = nullptr;
+	Game::GetModuleManager()->onstartLeaveGame(level);
+	level->startLeaveGame();
+}
+
 //虚表Hook
 auto Hook::GameMode_startDestroyBlock(GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool {
 	static InstantDestroy* idy = Game::GetModuleManager()->GetModule<InstantDestroy*>();
@@ -785,4 +827,13 @@ auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, void* tick)->void* {
 	Game::GetModuleManager()->onServerPlayerTick(_this);
 	//_this->onAllPlayerTick();				//这里应该是 所有serverplayer tick
 	return _this->tickWorld(tick);
+}
+
+auto Hook::RemotePlayer_TickWorld(RemotePlayer* _this) -> void*
+{
+	//判断虚表是否是远程玩家
+	if (_this && *(uintptr_t***)_this == RemotePlayer::GetVFtables()) {
+		Game::GetModuleManager()->onRemotePlayerTick(_this);
+	}
+	return _this->tickWorld();
 }

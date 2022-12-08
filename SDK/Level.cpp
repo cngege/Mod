@@ -1,5 +1,6 @@
 #include "Level.h"
 
+uintptr_t* Level::startLeaveGameCall = nullptr;
 uintptr_t* Level::forEachPlayerCall = nullptr;
 uintptr_t* Level::tickCall = nullptr;
 
@@ -28,6 +29,12 @@ auto Level::setTime(int time)->void {
 }
 
 // Ðé±íHook
+
+auto Level::startLeaveGame() -> void
+{
+	using Fn = void(__fastcall*)(Level*);
+	reinterpret_cast<Fn>(startLeaveGameCall)(this);
+}
 
 auto Level::Tick() -> void
 {

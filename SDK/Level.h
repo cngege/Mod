@@ -4,6 +4,7 @@
 
 class Level {
 public:
+	static uintptr_t* startLeaveGameCall;
 	static uintptr_t* forEachPlayerCall;
 	static uintptr_t* tickCall;
 public:
@@ -14,6 +15,7 @@ public:
 	auto setTime(int)->void;														/*112*/
 	
 	//虚表函数Hook
+	auto startLeaveGame() -> void;													/*2*/
 	auto Tick()->void;																/*101*/
 	auto forEachPlayer(std::function<bool(class Player&)>) -> void;					/*222 / 223 用特征码定位call非虚表 */
 };

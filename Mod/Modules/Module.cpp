@@ -193,7 +193,11 @@ auto Module::onServerPlayerTick(ServerPlayer* serverplayer)->void{}
 
 auto Module::onLocalPlayerTick(LocalPlayer* lp)->void {}
 
+auto Module::onRemotePlayerTick(RemotePlayer* remoteplayer)->void{}
+
 auto Module::onLevelTick(Level* level)->void{}
+
+auto Module::onstartLeaveGame(Level* level)->void{}
 
 auto Module::onRenderDetour(MinecraftUIRenderContext* ctx)->void {}
 

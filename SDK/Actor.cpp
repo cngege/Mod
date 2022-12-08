@@ -12,6 +12,8 @@ int Actor::SpeedOffset = 0;		//玩家指针到玩家速度相关信息指针的�
 
 int Actor::AABBOffset = 0;
 int Actor::LevelOffset = 0;
+int Actor::IsRemovedOffset = 0;
+int Actor::GetRotationOffset = 0;
 
 int Actor::GetAttributeInstance_HealthFunVT = 0;
 //uintptr_t Actor::isSneakingCallptr = 0;
@@ -137,6 +139,21 @@ auto Actor::isSneaking()->bool {
 	//using Fn = bool(__fastcall*)(Actor*);
 	//return reinterpret_cast<Fn>(isSneakingCallptr)(this);
 	return getStatusFlag(ActorFlags::isSneaking);
+}
+
+auto Actor::isRemovedEx()->bool
+{
+	return *(BYTE*)((uintptr_t)this + IsRemovedOffset);
+}
+
+auto Actor::getRotationEx()->vec2_t*
+{
+	return *reinterpret_cast<vec2_t**>(this + GetRotationOffset);
+}
+
+auto Actor::isValid() -> bool
+{
+	return (uintptr_t)this && *(uintptr_t*)this;
 }
 
 

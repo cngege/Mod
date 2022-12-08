@@ -197,6 +197,7 @@
     <ClInclude Include="..\SDK\MinecraftUIRenderContext.h" />
     <ClInclude Include="..\SDK\Mob.h" />
     <ClInclude Include="..\SDK\Player.h" />
+    <ClInclude Include="..\SDK\RemotePlayer.h" />
     <ClInclude Include="..\SDK\ServerPlayer.h" />
     <ClInclude Include="..\SDK\TextHolder.h" />
     <ClInclude Include="framework.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Modules\Modules\AirJump.h" />
     <ClInclude Include="Modules\Modules\ArmsLength.h" />
     <ClInclude Include="Modules\Modules\AutoSprinting.h" />
+    <ClInclude Include="Modules\Modules\BioRadar.h" />
     <ClInclude Include="Modules\Modules\FastViewPerspective.h" />
     <ClInclude Include="Modules\Modules\GameTimeLock.h" />
     <ClInclude Include="Modules\Modules\HitBox.h" />
@@ -256,6 +258,7 @@
     <ClCompile Include="..\SDK\MinecraftUIRenderContext.cpp" />
     <ClCompile Include="..\SDK\Mob.cpp" />
     <ClCompile Include="..\SDK\Player.cpp" />
+    <ClCompile Include="..\SDK\RemotePlayer.cpp" />
     <ClCompile Include="..\SDK\ServerPlayer.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Hook\Hook.cpp" />
@@ -275,6 +278,7 @@
     <ClCompile Include="Modules\Modules\AirJump.cpp" />
     <ClCompile Include="Modules\Modules\ArmsLength.cpp" />
     <ClCompile Include="Modules\Modules\AutoSprinting.cpp" />
+    <ClCompile Include="Modules\Modules\BioRadar.cpp" />
     <ClCompile Include="Modules\Modules\FastViewPerspective.cpp" />
     <ClCompile Include="Modules\Modules\GameTimeLock.cpp" />
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
