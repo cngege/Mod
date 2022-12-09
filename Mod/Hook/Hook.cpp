@@ -697,6 +697,7 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 //触发: 鼠标在窗口中经过就会触发 mousebutton=0,isDown=0
 //mousebutton 1:鼠标左键,2鼠标右键,3:鼠标中键,4:鼠标滚轮滚动(isDown 为+-120左右的值),
 auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8)->void {
+	Game::MouseKeyDown[mousebutton] = isDown;
 	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
 	if (ImGui::GetCurrentContext() != nullptr) {
 		switch (mousebutton) {

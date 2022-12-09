@@ -9,6 +9,7 @@ public:
 	static class BitmapFont* mcfont;
 	static class ClientInstance* Cinstance;
 	static uintptr_t KeyMap;
+	static bool MouseKeyDown[];
 private:
 	static class ModuleManager* modmag;
 public:
@@ -19,5 +20,6 @@ public:
 public:
 	static auto IsKeyDown(int key)->bool;
 	static auto IsKeyPressed(int key)->bool;
+	static auto IsMouseDown(int key) -> bool;
 
 };

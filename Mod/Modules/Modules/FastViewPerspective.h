@@ -9,7 +9,6 @@ public:
 	
 public:
 	virtual auto getBindKeyName()->std::string override;
-	virtual auto onTick(class GameMode* gm)->void override;
 	virtual auto onloadConfigFile(json& data)->void override;
 	virtual auto onsaveConfigFile(json& data)->void override;
 };

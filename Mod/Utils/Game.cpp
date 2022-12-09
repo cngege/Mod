@@ -19,6 +19,7 @@ BitmapFont* Game::mcfont = nullptr;
 ClientInstance* Game::Cinstance = nullptr;
 
 uintptr_t Game::KeyMap = 0x00;
+bool Game::MouseKeyDown[10] = { false };
 
 auto Game::init() -> void
 {
@@ -175,4 +176,9 @@ auto Game::IsKeyPressed(int key)->bool {
 		return true;
 	}
 	return false;
+}
+
+auto Game::IsMouseDown(int key) -> bool
+{
+	return MouseKeyDown[key];
 }

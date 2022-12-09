@@ -20,8 +20,8 @@ static const char* const KeyNames[] = {
 	"VK_RBUTTON",
 	"VK_CANCEL",
 	"VK_MBUTTON",
-	"VK_XBUTTON1",
-	"VK_XBUTTON2",
+	"VK_XBUTTON1",	//鼠标侧键后退
+	"VK_XBUTTON2",	//鼠标侧键前进
 	"Unknown",
 	"VK_BACK",
 	"TAB",
