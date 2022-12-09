@@ -682,14 +682,13 @@ auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 //}
 
 auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
+	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
 	if (ImGui::GetCurrentContext() != nullptr) {
-		ImGui::GetIO().KeysDown[key] = isdown;
+		ImGui::GetIO().KeysDown[key] = isdown == 1;
 		if (ImGui::GetIO().WantCaptureKeyboard || ImGui::GetIO().WantTextInput) {
 			return 0;
 		}
 	}
-
-	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
 	return keyupdatecall(key, isdown);
 }
 
@@ -698,7 +697,7 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 //触发: 鼠标在窗口中经过就会触发 mousebutton=0,isDown=0
 //mousebutton 1:鼠标左键,2鼠标右键,3:鼠标中键,4:鼠标滚轮滚动(isDown 为+-120左右的值),
 auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8)->void {
-
+	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
 	if (ImGui::GetCurrentContext() != nullptr) {
 		switch (mousebutton) {
 		case 1:
@@ -722,8 +721,6 @@ auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX
 	else {
 		mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
 	}
-	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
-	
 }
 
 int frame = 0;		// 按照视频作者的说法，这个函数会在三层每层都调用一次，也就是每一帧调用三次
