@@ -9,7 +9,8 @@
 #include "Level.h"
 #include "TextHolder.h"
 
-BioRadar::BioRadar() : Module(0, "BioRadar", "生物雷达-可在雷达显示屏上看到玩家和其他生物位置信息") {
+BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显示屏上看到玩家和其他生物位置信息") {
+	setcontrolkeysbind({ VK_SHIFT });
 	AddFloatUIValue("地图大小", &radarSide, 200, 1000, 0);						//雷达地图边长 像素
 	AddIntUIValue("地图比例尺", &roomscale, 2, 6);					//雷达像素与游戏中距离的比例，比如2表示  雷达中2像素表示游戏中的一格
 	AddFloatUIValue("屏幕水平边距", &marginx, 0, 1000, 0);
