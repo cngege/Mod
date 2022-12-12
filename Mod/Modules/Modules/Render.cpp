@@ -93,10 +93,21 @@ auto Render::onImGUIRender()->void {
 				}
 				//IntUIValue
 				for (auto &intval : mod->GetIntUIValue()) {
-					ImGui::DragInt(intval.name.c_str(), intval.value, intval.speed, intval.min, intval.max);
+					if (intval.speed <= 1.f) {
+						ImGui::SliderInt(intval.name.c_str(), intval.value, intval.min, intval.max);
+					}
+					else {
+						ImGui::DragInt(intval.name.c_str(), intval.value, intval.speed, intval.min, intval.max);
+					}
 				}
 				for (auto& floatval : mod->GetFloatUIValue()) {
-					ImGui::DragFloat(floatval.name.c_str(), floatval.value, floatval.speed, floatval.min, floatval.max);
+					if (floatval.speed == 0) {
+						//如果对精度没有要求则使用滑块控制
+						ImGui::SliderFloat(floatval.name.c_str(), floatval.value, floatval.min, floatval.max);
+					}
+					else {
+						ImGui::DragFloat(floatval.name.c_str(), floatval.value, floatval.speed, floatval.min, floatval.max);
+					}
 				}
 				for (auto& boolval : mod->GetBoolUIValue()) {
 					ImGui::Checkbox(boolval.name.c_str(), boolval.value);
@@ -152,6 +163,7 @@ auto Render::onImGUIRender()->void {
 		//	if (ImGui::Button("Test")) {
 		//	}
 		//	//ImGui::Toggle("Toggle Snow D3D11", &ImGui::doSnow);
+		
 		//	ImGui::ButtonScrollable("Button Scrollable", ImVec2(300.f, 0.f));
 		//	//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
 		//	ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(355.f, 0.f), ImGuiButtonFlags_MouseButtonRight);

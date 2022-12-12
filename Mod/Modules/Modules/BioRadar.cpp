@@ -10,10 +10,10 @@
 #include "TextHolder.h"
 
 BioRadar::BioRadar() : Module(0, "BioRadar", "生物雷达-可在雷达显示屏上看到玩家和其他生物位置信息") {
-	AddFloatUIValue("地图大小", &radarSide, 200, 1000, 10);						//雷达地图边长 像素
+	AddFloatUIValue("地图大小", &radarSide, 200, 1000, 0);						//雷达地图边长 像素
 	AddIntUIValue("地图比例尺", &roomscale, 2, 6);					//雷达像素与游戏中距离的比例，比如2表示  雷达中2像素表示游戏中的一格
-	AddFloatUIValue("屏幕水平边距", &marginx, 0, 1000, 10);
-	AddFloatUIValue("屏幕垂直边距", &marginy, 0, 1000, 10);
+	AddFloatUIValue("屏幕水平边距", &marginx, 0, 1000, 0);
+	AddFloatUIValue("屏幕垂直边距", &marginy, 0, 1000, 0);
 
 	AddButtonUIEvent("靠左", false, [this]() { this->sideDirectionLeft = true; });
 	AddButtonUIEvent("靠右", true, [this]() { this->sideDirectionLeft = false; });
@@ -102,7 +102,6 @@ auto BioRadar::onstartLeaveGame(Level* _) -> void
 	playerlist.clear();
 }
 
-#include "Logger.h"
 auto BioRadar::onRemotePlayerTick(RemotePlayer* remotePlayer)->void
 {
 	if (!isEnabled()) {

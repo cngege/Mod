@@ -4,7 +4,7 @@
 
 ArmsLength::ArmsLength() : Module(VK_F10, "ArmsLength", "修改玩家攻击距离") {
 	setcontrolkeysbind({ VK_SHIFT });
-	AddFloatUIValue("攻击距离", &distance, 0, 7.f, 0.1f);
+	AddFloatUIValue("攻击距离", &distance, 0, 7.f, 0);
 	auto sigOffset = FindSignature("84 C0 74 ? C7 45 ? ? ? ? ? 48 8D 85 ? ? ? ? 48 8D 4D ? 44 0F 2F ? ? ? ? ? 48 0F 43 C1");
 	if (sigOffset == 0x00) {
 		logF("[ArmsLength::ArmsLength] [error] FindSignature sigOffset NoFound");

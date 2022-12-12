@@ -13,7 +13,7 @@
 #include <Windows.h>
 
 //#include "xorstr.h"
-
+//https://learn.microsoft.com/zh-cn/cpp/windows/predefined-accelerator-keys?view=msvc-170
 static const char* const KeyNames[] = {
 	"Unknown",
 	"VK_LBUTTON",
