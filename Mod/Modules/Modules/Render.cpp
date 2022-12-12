@@ -10,8 +10,8 @@
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
-	AddFloatUIValue("窗口宽度", &uiWidth, 0, 1000.f, 1.f);
-	AddFloatUIValue("窗口高度", &uiHeight, 0, 1000.f,1.f);
+	AddFloatUIValue("窗口宽度", &uiWidth, 0, 1000.f, false, 1.f);
+	AddFloatUIValue("窗口高度", &uiHeight, 0, 1000.f, false,1.f);
 
 	//setEnabled(true);
 }
@@ -93,7 +93,7 @@ auto Render::onImGUIRender()->void {
 				}
 				//IntUIValue
 				for (auto &intval : mod->GetIntUIValue()) {
-					if (intval.speed <= 1.f) {
+					if (intval.slider) {
 						ImGui::SliderInt(intval.name.c_str(), intval.value, intval.min, intval.max);
 					}
 					else {
@@ -101,7 +101,7 @@ auto Render::onImGUIRender()->void {
 					}
 				}
 				for (auto& floatval : mod->GetFloatUIValue()) {
-					if (floatval.speed == 0) {
+					if (floatval.slider) {
 						//如果对精度没有要求则使用滑块控制
 						ImGui::SliderFloat(floatval.name.c_str(), floatval.value, floatval.min, floatval.max);
 					}

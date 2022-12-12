@@ -17,6 +17,7 @@ struct IntUIValue
 	int* value;
 	int min;
 	int max;
+	bool slider;
 	float speed;
 };
 
@@ -26,6 +27,7 @@ struct FloatUIValue
 	float* value;
 	float min;
 	float max;
+	bool slider;
 	float speed;
 };
 
@@ -68,8 +70,8 @@ public:
 	void SetKeyMode(KeyMode km);
 	KeyMode GetKeyMode();
 protected:
-	void AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue, float speed = 1.f);
-	void AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed = 0.05f);
+	void AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue, bool slider = true, float speed = 1.f);
+	void AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, bool slider = true, float speed = 0.05f);
 	void AddBoolUIValue(std::string name, bool* defautvalue_ptr);
 	void AddButtonUIEvent(std::string name, bool sameline, std::function<void()> et);
 public:

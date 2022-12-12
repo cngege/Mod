@@ -6,7 +6,7 @@
 #include "Game.h"
 
 GameTimeLock::GameTimeLock() : Module(0, "GameTimeLock", "将游戏时间固定到一个设置的时间,不会改变真实时间") {
-	AddIntUIValue("时间", &time, 0, 1000000);
+	AddIntUIValue("时间", &time, 0, 1000000,true);
 	AddButtonUIEvent("清晨", false, [this]() {
 		time = 0;
 		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {

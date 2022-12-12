@@ -20,22 +20,24 @@ auto Module::GetKeyMode()->KeyMode {
 	return this->km;
 }
 
-auto Module::AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue,float speed)->void {
+auto Module::AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue, bool slider,float speed)->void {
 	IntUIValue _intUIValue;
 	_intUIValue.name = name;
 	_intUIValue.value = defautvalue_ptr;
 	_intUIValue.min = minvalue;
 	_intUIValue.max = maxvalue;
+	_intUIValue.slider = slider;
 	_intUIValue.speed = speed;
 	intUIValue.push_back(_intUIValue);
 }
 
-auto Module::AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, float speed)->void {
+auto Module::AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, bool slider, float speed)->void {
 	FloatUIValue _floatUIValue;
 	_floatUIValue.name = name;
 	_floatUIValue.value = defautvalue_ptr;
 	_floatUIValue.min = minvalue;
 	_floatUIValue.max = maxvalue;
+	_floatUIValue.slider = slider;
 	_floatUIValue.speed = speed;
 	floatUIValue.push_back(_floatUIValue);
 }
