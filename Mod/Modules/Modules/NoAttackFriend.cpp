@@ -8,7 +8,7 @@
 
 NoAttackFriend::NoAttackFriend() : Module(VK_F4, "NoAttackFriend", "根据玩家名称的颜色识别玩家为队友时拦截攻击") {
 	setcontrolkeysbind({ VK_SHIFT });
-	colorbyte[0] = Utils::ANSItoUTF8(colorbyte[0].c_str());
+	//colorbyte[0] = Utils::ANSItoUTF8(colorbyte[0].c_str());
 }
 
 auto NoAttackFriend::IsFriend(Player* p)->bool {
