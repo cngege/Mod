@@ -715,12 +715,8 @@ auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX
 			ImGui::GetIO().MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
 			break;
 		default:
-			//ImGui::GetIO().MousePos = ImVec2(mouseX, mouseY);
 			break;
 		}
-		/*if (ImGui::GetIO().WantSetMousePos) {
-			ImGui::GetIO().MousePos = ImVec2(mouseX, mouseY);
-		}*/
 		if (!ImGui::GetIO().WantCaptureMouse)
 			mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
 	}
