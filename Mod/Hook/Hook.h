@@ -1,4 +1,5 @@
 ﻿#pragma once
+#pragma execution_character_set("utf-8")
 #include <string>
 #include "../../Memory/MinHook.h"
 #include "../Utils/HMath.h"

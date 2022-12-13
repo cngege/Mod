@@ -1,4 +1,5 @@
-﻿#include "Game.h"
+﻿#pragma execution_character_set("utf-8")
+#include "Game.h"
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "Player.h"
@@ -24,20 +25,18 @@ std::string Game::ImConfigIni = "";
 
 auto Game::init() -> void
 {
-	logF("[Game::init] is start runner");
+	logF("[Game::init] Game模块开始初始化");
 
 	Game::ModState = true;
 	Game::modmag = new ModuleManager;
 	Game::modmag->Init();
 	ImConfigIni = Utils::WStringToString(Utils::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini";
-	logF("[ModuleManager::Disable] now init");
-
-
+	
 	//获取生物位置指针的偏移
 	{
 		Mob::setSprintingFunAddr = FindSignature("48 89 74 24 ? 57 48 83 EC ? 48 8B ? 0F B6 F2 BA");
 		if (Mob::setSprintingFunAddr == 0x00) {
-			logF("[Game::init] [Warn]Find Mob::setSprintingFunAddr FunAddr is no working!!!,Mob::setSprintingFunAddr=0");
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "Mob::setSprintingFunAddr");
 			return;
 		}
 	}
@@ -46,7 +45,7 @@ auto Game::init() -> void
 	{
 		auto offset = FindSignature("53 48 83 EC ? 80 BA ? ? ? ? 0 48 8B D9 75 ? 48 8B 81 ? ? ? ? 48 85 C0");
 		if (offset == 0x00) {
-			logF("[Game::init] [Warn]Find Actor::isRemoved() offset is no working!!!");
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "Actor::isRemoved");
 			return;
 		}
 		else {
@@ -58,7 +57,7 @@ auto Game::init() -> void
 	{
 		auto PlayerView_sigOffset = FindSignature("48 8B 88 ? ? ? ? 48 85 C9 0F 84 ? ? ? ? F3 0F 10 80");
 		if (PlayerView_sigOffset == 0x00) {
-			logF("[Game::init] [Warn]Find Player PlayerView_sigOffset Offset is no working!!!,PlayerView_sigOffset=0");
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "PlayerView_sigOffset");
 			return;
 		}
 		Player::RotPtrOffset = *reinterpret_cast<int*>(PlayerView_sigOffset + 3);
@@ -70,7 +69,7 @@ auto Game::init() -> void
 	{
 		auto getHealthFun_sigOffset = FindSignature("48 8D 15 ? ? ? ? 48 8B 80 ? ? ? ? FF 15 ? ? ? ? F3 0F 10 88 ? ? ? ? F3 0F 2C C1 66 0F 6E");
 		if (getHealthFun_sigOffset == 0x00) {
-			logF("[Game::init] [Warn]Find Player getHealthFun_sigOffset Offset is no working!!!,getHealthFun_sigOffset=0");
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "getHealthFun_sigOffset");
 			return;
 		}
 		auto offset = *reinterpret_cast<int*>(getHealthFun_sigOffset + 3);
@@ -97,19 +96,19 @@ auto Game::init() -> void
 	{
 		auto sigOffset = FindSignature("4C 8D 05 ? ? ? ? 89 54 24 ? 88 4C 24");
 		if (sigOffset == 0x0) {
-			logF("[Game::init] [Warn]Find KeyMap Offset is no working!!!,KeyMap=0");
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "KeyMap");
 			return;
 		}
 		int offset = *reinterpret_cast<int*>((sigOffset + 3));      // Get Offset from code
 		KeyMap = sigOffset + offset + /*length of instruction*/ 7;  // Offset is relative
-		logF("KeyMap: %llX", KeyMap);
+		logF_Debug("KeyMap: %llX", KeyMap);
 	}
 
 	//获取本地玩家OnGround函数的偏移
 	{
 		auto sigOffset = FindSignature("80 B8 ? ? ? ? 00 75 ? 48 8B C8 E8 ? ? ? ? 84");
 		if (sigOffset == 0x0) {
-			logF("[Game::init] [Warn]Find OnGround Offset is no working!!!,OnGround=0");
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "OnGround");
 			return;
 		}
 		LocalPlayer::onGroundoffset = *reinterpret_cast<int*>(sigOffset + 2);      // Get Offset from code
@@ -119,7 +118,7 @@ auto Game::init() -> void
 	{
 		auto getIdOffset = FindSignature("0F B7 B8 ? ? ? ? 89 B5 ? ? ? ? 4C 89");
 		if (getIdOffset == 0x0) {
-			logF("[Game::init] [Warn]Find Item::getIdEx Offset is no working!!!,getIdOffset=0");
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "Item::getIdEx");
 			return;
 		}
 		Item::getIdOffset = *reinterpret_cast<int*>(getIdOffset + 3);      // Get Offset from code
@@ -129,10 +128,10 @@ auto Game::init() -> void
 	{
 		auto ItemStack_use = FindSignature("48 89 74 24 ? 57 48 83 EC ? 48 8B 41 08 48 8B F2 48 8B F9");								//直接特征码搜索这个Call
 		if (ItemStack_use == 0x00) {
-			logF("[Game::init] [!]Find ItemStack_use Call 直接特征码搜索函数失败,将使用第二种方式");
+			logF_Debug("[Game::init] [%s] [!]Find ItemStack_use Call 直接特征码搜索函数失败,将使用第二种方式");
 			auto ItemStack_use2 = FindSignature("E8 ? ? ? ? 48 8B D8 48 8B D0 49 8B CE");
 			if (ItemStack_use2 == 0x00) {
-				logF("[Game::init] [Error]Find ItemStack_use 两种路径查找均失败");
+				logF("[Game::init] [%s] [Error] 特征码寻找其调用者从而定位函数,失败","ItemStack_use");
 				return;
 			}
 			else {
@@ -150,15 +149,13 @@ auto Game::exit() -> void
 {
 	Game::modmag->Disable();
 	delete[] Game::modmag;
-	logF("[ModuleManager::Disable] now Disale");
-
+	logF("[ModuleManager::Disable] 模块管理器实例被关闭");
 	Game::ModState = false;
 }
 
 auto Game::GetModuleManager()->ModuleManager* {
 	return Game::modmag;
 }
-
 
 auto Game::IsKeyDown(int key)->bool {
 	// All keys are mapped as bools, though aligned as ints (4 byte)

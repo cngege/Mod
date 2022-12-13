@@ -1,8 +1,5 @@
-﻿//#define CPPHTTPLIB_OPENSSL_SUPPORT
+﻿#pragma execution_character_set("utf-8")
 #include "Loader.h"
-//httplib
-//#include "httplib.h"
-//#include <Windows.h>
 #include "http.hpp"
 #include <thread>
 
@@ -10,8 +7,6 @@
 #include "Utils/Game.h"
 #include "Hook/Hook.h"
 #include "Utils/Utils.h"
-//SDK
-#include "Player.h"
 //Modules
 #include "Modules/ModuleManager.h"
 
@@ -71,12 +66,14 @@ void Loader::init(void* hmoudle)
 			}
 		}
 	}
-	
+	logF("正在初始化Game模块");
 	Game::init();
+	logF("正在初始化ImGuiHook模块");
 	ImguiHooks::InitImgui();
+	logF("正在进行游戏进程Hook");
 	Hook::init();
 
-	logF("[MH_EnableHook] hook is: %s", MH_StatusToString(MH_EnableHook(MH_ALL_HOOKS)));
+	logF("[MH_EnableHook] Hook状态: %s", MH_StatusToString(MH_EnableHook(MH_ALL_HOOKS)));
 
 }
 
@@ -84,10 +81,11 @@ void Loader::exit(void* hmoudle)
 {
 	if (hookret == MH_OK)
 	{
-		logF("[Hook::exit] Hook IS UnLoad");
+		logF("[Loader::exit] 正在关闭所有Hook");
 		Hook::exit();
-		logF("[MH_Uninitialize] is: %s", MH_StatusToString(MH_Uninitialize()));
+		logF("[Loader::exit] Hook解除状态: %s", MH_StatusToString(MH_Uninitialize()));
 	}
+	logF("[Loader::exit] 正在退出Game模块");
 	Game::exit();
 
 	logF("Removing logger");

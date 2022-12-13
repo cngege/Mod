@@ -1,4 +1,5 @@
-﻿#include "Hook.h"
+﻿#pragma execution_character_set("utf-8")
+#include "Hook.h"
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "../Utils/Game.h"
@@ -89,7 +90,7 @@ LPLP lplpcall;
 
 auto Hook::init() -> void
 {
-	logF("Hook::init is start runner");
+	logF("[Hook::init] 正在初始化");
 
 	//玩家击退  重新在 Actor::setVelocity 中实现
 	/*
@@ -115,7 +116,7 @@ auto Hook::init() -> void
 		clientInstanceTick = FindSignature(memcode);
 		if (clientInstanceTick != 0x00) {
 			MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", clientInstanceTick, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", clientInstanceTick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "clientInstanceTick");
@@ -130,7 +131,7 @@ auto Hook::init() -> void
 		is_ShowCoordinatesTick = FindSignature(memcode);
 		if (is_ShowCoordinatesTick != 0x00) {
 			MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
@@ -157,7 +158,7 @@ auto Hook::init() -> void
 		noFallDamage_tick = FindSignature(memcode);
 		if (noFallDamage_tick != 0x00) {
 			MH_CreateHookEx((LPVOID)noFallDamage_tick, &Hook::NoFallDamage_Tick, &noFallDamage_Tickcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", noFallDamage_tick, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", noFallDamage_tick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
@@ -170,7 +171,7 @@ auto Hook::init() -> void
 		auto level_tick = FindSignature(memcode);
 		if (level_tick != 0x00) {
 			MH_CreateHookEx((LPVOID)level_tick, &Hook::Level_Tick, &Level::tickCall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", level_tick, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", level_tick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "level_tick");
@@ -197,7 +198,7 @@ auto Hook::init() -> void
 		allActor_Tick = FindSignature(memcode);
 		if (allActor_Tick != 0x00) {
 			MH_CreateHookEx((LPVOID)allActor_Tick, &Hook::AllActor_Tick, &allActor_Tickcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", allActor_Tick, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", allActor_Tick, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "allActor_Tick");
@@ -220,7 +221,7 @@ auto Hook::init() -> void
 			//Actor::XHitBoxOffset = Xoffset + 24;
 			//Actor::YHitBoxOffset = Xoffset + 28;
 			//MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", actor_moveBBs, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", actor_moveBBs, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "actor_moveBBs");
@@ -233,7 +234,7 @@ auto Hook::init() -> void
 		keyupdate = FindSignature(memcode);
 		if (keyupdate != 0x00) {
 			MH_CreateHookEx((LPVOID)keyupdate, &Hook::KeyUpdate, &keyupdatecall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", keyupdate, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", keyupdate, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "keyupdate");
@@ -246,7 +247,7 @@ auto Hook::init() -> void
 		mouseupdate = FindSignature(memcode);
 		if (keyupdate != 0x00) {
 			MH_CreateHookEx((LPVOID)mouseupdate, &Hook::MouseUpdate, &mouseupdatecall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", mouseupdate, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", mouseupdate, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "mouseupdate");
@@ -259,7 +260,7 @@ auto Hook::init() -> void
 		renderDetour = FindSignature(memcode);
 		if (renderDetour != 0x00) {
 			MH_CreateHookEx((LPVOID)renderDetour, &Hook::RenderDetour,&renderDetourcall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", renderDetour, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", renderDetour, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "renderDetour");
@@ -272,7 +273,7 @@ auto Hook::init() -> void
 		muicDrawText = FindSignature(memcode);
 		if (muicDrawText != 0x00) {
 			MH_CreateHookEx((LPVOID)muicDrawText, &Hook::Draw_Text, &MinecraftUIRenderContext::drawtextCall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", muicDrawText, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", muicDrawText, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "muicDrawText");
@@ -287,7 +288,7 @@ auto Hook::init() -> void
 			auto offset = *reinterpret_cast<int*>(findptr + 1);
 			sendChatMessage = findptr + 5 + offset;
 			MH_CreateHookEx((LPVOID)sendChatMessage, &Hook::sendMessage, &sendChatMessagecall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "sendChatMessage");
@@ -300,7 +301,7 @@ auto Hook::init() -> void
 		auto findptr = FindSignature(memcode);
 		if (findptr != 0x00) {
 			MH_CreateHookEx((LPVOID)findptr, &Hook::getLocalPlayerViewPerspective, &getLocalPlayerViewPerspectivecall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "getLocalPlayerViewPerspective");
@@ -312,7 +313,7 @@ auto Hook::init() -> void
 		const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B EA 48";
 		Level::forEachPlayerCall = (uintptr_t*)FindSignature(memcode);
 		if (Level::forEachPlayerCall != 0x00) {
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", Level::forEachPlayerCall, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", Level::forEachPlayerCall, memcode);
 		}
 		else {
 			logF("[FindCallPtr error] [%s] is no found ptr point", "Level::forEachPlayerCall");
@@ -326,7 +327,7 @@ auto Hook::init() -> void
 		auto findptr = FindSignature(memcode);
 		if (findptr != 0x00) {
 			MH_CreateHookEx((LPVOID)findptr, &Hook::level_startLeaveGame, &Level::startLeaveGameCall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "Level::startLeaveGame");
@@ -342,7 +343,7 @@ auto Hook::init() -> void
 		}
 		else {
 			auto ItemStackVT = Utils::FuncFromSigOffset<uintptr_t**>(ItemStackVT_sigOffset, 3);
-			logF("[ItemStack::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", ItemStackVT, ItemStackVT_sigOffset, memcode);
+			logF_Debug("[ItemStack::SetVtables] [Success] 虚表指针= %llX , sigoffset= %llX , memcode=%s", ItemStackVT, ItemStackVT_sigOffset, memcode);
 			ItemStack::SetVFtables(ItemStackVT);
 		}
 	}
@@ -356,7 +357,7 @@ auto Hook::init() -> void
 		}
 		else {
 			auto ItemStackBaseVT = Utils::FuncFromSigOffset<uintptr_t**>(ItemStackBaseVT_sigOffset, 3);
-			logF("[ItemStackBase::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", ItemStackBaseVT, ItemStackBaseVT_sigOffset, memcode);
+			logF_Debug("[ItemStackBase::SetVtables] [Success] 虚表指针= %llX , sigoffset= %llX , memcode=%s", ItemStackBaseVT, ItemStackBaseVT_sigOffset, memcode);
 			ItemStackBase::SetVFtables(ItemStackBaseVT);
 		}
 	}
@@ -370,7 +371,7 @@ auto Hook::init() -> void
 		}
 		else {
 			auto ItemInstanceVT = Utils::FuncFromSigOffset<uintptr_t**>(ItemInstanceVT_sigOffset, 3);
-			logF("[ItemInstance::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", ItemInstanceVT, ItemInstanceVT_sigOffset, memcode);
+			logF_Debug("[ItemInstance::SetVtables] [Success] 虚表指针= %llX , sigoffset= %llX , memcode=%s", ItemInstanceVT, ItemInstanceVT_sigOffset, memcode);
 			ItemInstance::SetVFtables(ItemInstanceVT);
 		}
 	}
@@ -383,10 +384,8 @@ auto Hook::init() -> void
 			logF("[GameMode::SetVtables] [Error]Find GameMode GameModeVTable_sigOffset is no working!!!");
 		}
 		else {
-			auto offsize = *reinterpret_cast<int*>(GameModeVTable_sigOffset + 3);
-			auto GameModeVTables = reinterpret_cast<uintptr_t**>(GameModeVTable_sigOffset + offsize + 7);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", GameModeVTable_sigOffset, memcode);
-			logF("[GameMode::SetVtables] [Success] GameModeVTable = %llX", GameModeVTables);
+			auto GameModeVTables = Utils::FuncFromSigOffset<uintptr_t**>(GameModeVTable_sigOffset, 3);
+			logF_Debug("[GameMode::SetVtables] [Success] 虚表指针= %llX , sigoffset= %llX , memcode=%s", GameModeVTables, GameModeVTable_sigOffset, memcode);
 			GameMode::SetVFtables(GameModeVTables);
 			//Hook GameMode_startDestroyBlock
 			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(1), &Hook::GameMode_startDestroyBlock, &GameMode::startDestroyBlockCall);
@@ -410,10 +409,8 @@ auto Hook::init() -> void
 		}
 		else
 		{
-			auto offsize = *reinterpret_cast<int*>(ActorVTable_sigOffset + 3);
-			auto ActorVTable = reinterpret_cast<uintptr_t**>(ActorVTable_sigOffset + offsize + 7);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ActorVTable_sigOffset, memcode);
-			logF("[Actor::SetVtables] [Success] ActorVTable = %llX", ActorVTable);
+			auto ActorVTable = Utils::FuncFromSigOffset<uintptr_t**>(ActorVTable_sigOffset, 3);
+			logF_Debug("[GameMode::SetVtables] [Success] 虚表指针= %llX , sigoffset= %llX , memcode=%s", ActorVTable, ActorVTable_sigOffset, memcode);
 			Actor::SetVFtables(ActorVTable);
 			//虚表Hook
 			//Actor::setVelocity
@@ -430,11 +427,19 @@ auto Hook::init() -> void
 		const char* memcode2 = "48 8D 05 ? ? ? ? 48 89 01 49 8B 01 48 89 41 ? 41 8B 41";		//来自四参数Actor构造函数
 		auto ActorGetLevel_sigOffset = FindSignature(memcode);
 		if (ActorGetLevel_sigOffset == 0x00) {
-			logF("[Actor::LevelOffset] [Error]Find Actor ActorGetLevel_sigOffset is no working!!!");
+			logF_Debug("[Hook::FindSignature] [%s] [!] 使用第一个特征码查找\"地址偏移\"失败","Actor::LevelOffset");
+			ActorGetLevel_sigOffset = FindSignature(memcode2);
+			if (ActorGetLevel_sigOffset == 0x00) {
+				logF("[Hook::FindSignature] [%s] [Error] 使用两个特征码查找\"地址偏移\"全部失败", "Actor::LevelOffset");
+			}
+			else {
+				Actor::LevelOffset = *reinterpret_cast<int*>(ActorGetLevel_sigOffset + 3);
+				logF_Debug("[Actor::LevelOffset] [Success] 偏移地址= %i , sigoffset= %llX , memcode=%s", Actor::LevelOffset, ActorGetLevel_sigOffset, memcode2);
+			}
 		}
 		else {
 			Actor::LevelOffset = *reinterpret_cast<int*>(ActorGetLevel_sigOffset + 3);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ActorGetLevel_sigOffset, memcode);
+			logF_Debug("[Actor::LevelOffset] [Success] 偏移地址= %i , sigoffset= %llX , memcode=%s", Actor::LevelOffset, ActorGetLevel_sigOffset, memcode);
 		}
 	}
 
@@ -447,7 +452,7 @@ auto Hook::init() -> void
 		}
 		else {
 			auto FishingHookVT = Utils::FuncFromSigOffset<uintptr_t**>(FishingHookVTable_sigoffset, 3);
-			logF("[FishingHook::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", FishingHookVT, FishingHookVTable_sigoffset, memcode);
+			logF_Debug("[FishingHook::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", FishingHookVT, FishingHookVTable_sigoffset, memcode);
 			FishingHook::SetVFtables(FishingHookVT);
 		}
 
@@ -465,8 +470,7 @@ auto Hook::init() -> void
 		{
 			auto offsize = *reinterpret_cast<int*>(MobVTable_sigOffset + 31);
 			auto MobVTable = reinterpret_cast<uintptr_t**>(MobVTable_sigOffset + offsize + 35);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", MobVTable_sigOffset, memcode);
-			logF("[Mob::SetVtables] [Success] MobVTable = %llX", MobVTable);
+			logF_Debug("[Mob::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", MobVTable, MobVTable_sigOffset, memcode);
 			Mob::SetVFtables(MobVTable);
 			//虚表Hook
 		}
@@ -480,10 +484,8 @@ auto Hook::init() -> void
 			logF("[Player::SetVtables] [Error]Find Player PlayerVTable_sigOffset is no working!!!");
 		}
 		else {
-			auto offsize = *reinterpret_cast<int*>(PlayerVTable_sigOffset + 3);
-			auto PlayerVTable = reinterpret_cast<uintptr_t**>(PlayerVTable_sigOffset + offsize + 7);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", PlayerVTable_sigOffset, memcode);
-			logF("[Player::SetVtables] [Success] PlayerVTable = %llX", PlayerVTable);
+			auto PlayerVTable = Utils::FuncFromSigOffset<uintptr_t**>(PlayerVTable_sigOffset, 3);
+			logF_Debug("[Player::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", PlayerVTable, PlayerVTable_sigOffset, memcode);
 			Player::SetVFtables(PlayerVTable);
 			//虚表Hook
 			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(80), &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
@@ -504,10 +506,8 @@ auto Hook::init() -> void
 			logF("[ServerPlayer::SetVtables] [Error]Find ServerPlayer ServerPlayerVTable_sigOffset is no working!!!");
 		}
 		else {
-			auto offsize = *reinterpret_cast<int*>(ServerPlayerVTable_sigOffset + 3);
-			auto ServerPlayerVTable = reinterpret_cast<uintptr_t**>(ServerPlayerVTable_sigOffset + offsize + 7);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", ServerPlayerVTable_sigOffset, memcode);
-			logF("[ServerPlayer::SetVtables] [Success] ServerPlayerVTable = %llX", ServerPlayerVTable);
+			auto ServerPlayerVTable = Utils::FuncFromSigOffset<uintptr_t**>(ServerPlayerVTable_sigOffset, 3);
+			logF_Debug("[ServerPlayer::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", ServerPlayerVTable, ServerPlayerVTable_sigOffset, memcode);
 			ServerPlayer::SetVFtables(ServerPlayerVTable);
 			//ServerPlayer::respawn 获取实现 Actor::getRotationEx 的关键偏移(379) +9
 			Actor::GetRotationOffset = *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(379)) + 9);
@@ -528,7 +528,7 @@ auto Hook::init() -> void
 		}
 		else {
 			auto RemotePlayerVT = Utils::FuncFromSigOffset<uintptr_t**>(RemotePlayerVTable_sigOffset, 3);
-			logF("[RemotePlayer::SetVtables] [Success] VTablePtr= %llX, sigoffset= %llX, memcode=%s", RemotePlayerVT, RemotePlayerVTable_sigOffset, memcode);
+			logF_Debug("[RemotePlayer::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", RemotePlayerVT, RemotePlayerVTable_sigOffset, memcode);
 			RemotePlayer::SetVFtables(RemotePlayerVT);
 			//虚表Hook
 			//TickWorld 不能Hook这个函数,因为函数的内容为 ret 0000
@@ -545,23 +545,20 @@ auto Hook::init() -> void
 			logF("[LocalPlayer::SetVtables] [Error]Find LocalPlayer LocalPlayerVTable_sigOffset is no working!!!");
 		}
 		else {
-			auto offset = *reinterpret_cast<int*>(LocalPlayerVTable_sigOffset + 3);
-			auto LocalPlayerVTable = reinterpret_cast<uintptr_t**>(LocalPlayerVTable_sigOffset + offset + 7);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", LocalPlayerVTable_sigOffset, memcode);
-			logF("[LocalPlayer::SetVtables] [Success] LocalPlayerVTable = %llX", LocalPlayerVTable);
+			auto LocalPlayerVTable = Utils::FuncFromSigOffset<uintptr_t**>(LocalPlayerVTable_sigOffset, 3);
+			logF_Debug("[LocalPlayer::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", LocalPlayerVTable, LocalPlayerVTable_sigOffset, memcode);
 			LocalPlayer::SetVFtables(LocalPlayerVTable);
 
 			//找本地玩家到ClientInstance的指针偏移
 			char* LP_CIoffset = (char*)LocalPlayerVTable_sigOffset;
 			for (int i = 0; i <= 500; i++) {
 				if (i == 500) {
-					logF("[LocalPlayer::SetVtables] [Error] Find LocalPlayer To ClientInstance Offset Fail");
-					logF("[LocalPlayer::SetVtables] [Error] LP_CIoffset:%llX", LP_CIoffset);
+					logF("[LocalPlayer::SetVtables] [Error] 寻找 LocalPlayer To ClientInstance 偏移地址失败,LP_CIoffset:%llX", LP_CIoffset);
 					break;
 				}
 				if (*LP_CIoffset == (char)0x48 && *(LP_CIoffset + 1) == (char)0x89 && *(LP_CIoffset + 2) == (char)0xB7/*(char)0xBE*/) {
 					LocalPlayer::toCIoffset = *reinterpret_cast<int*>(LP_CIoffset + 3);
-					logF("[LocalPlayer::SetVtables] [Success] Find LocalPlayer To ClientInstance i:%d",i);
+					logF_Debug("[LocalPlayer::SetVtables] [Success] Find LocalPlayer To ClientInstance i:%d",i);
 					break;
 				}
 				LP_CIoffset++;
@@ -575,7 +572,7 @@ auto Hook::init() -> void
 }
 
 auto Hook::exit() -> void {
-	logF("[MH_DisableHook] is: %s", MH_StatusToString(MH_DisableHook(MH_ALL_HOOKS)));
+	logF("[MH_DisableHook] Hook关闭状态: %s", MH_StatusToString(MH_DisableHook(MH_ALL_HOOKS)));
 	Sleep(10);
 }
 
@@ -647,8 +644,8 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 	if (thisp != p) {
 		p = thisp;
 		Game::localplayer = _this;
-		logF("Player_Tick localplayer ptr = %llX,localplayerVT = %llX", thisp, *(INT64*)thisp);
-		logF("Player_Tick Clientinstance ptr = %llX,LP->getCI = %llX,CIVT = %llX", Game::Cinstance, _this->getClientInstance(),*(uintptr_t*)_this->getClientInstance());
+		logF_Debug("[%s] 本地玩家地址: %llX,虚表 = %llX","LocalPlayer_getCameraOffset", thisp, *(INT64*)thisp);
+		logF_Debug("[%s] Clientinstance: %llX ,通过本地玩家获取的CI: %llX ,虚表 = %llX","LocalPlayer_getCameraOffset", Game::Cinstance, _this->getClientInstance(), *(uintptr_t*)_this->getClientInstance());
 		//Level* l = _this->getLevel();
 		//logF("Level VT = %llX , Level::startLeaveGame addr= %llX", *reinterpret_cast<uintptr_t*>(l),Utils::GetVTFPtr(*reinterpret_cast<uintptr_t*>(l), 2));
 	}
@@ -686,7 +683,7 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	if (ImGui::GetCurrentContext() != nullptr) {
 		ImGui::GetIO().KeysDown[key] = isdown == 1;
 		if (ImGui::GetIO().WantTextInput) {
-			if (key > 0 && key < 0x10000 && isdown == 1) ImGui::GetIO().AddInputCharacterUTF16((UINT)key);
+			//if (key > 0 && key < 0x10000 && isdown == 1) ImGui::GetIO().AddInputCharacterUTF16((UINT)key);
 			return 0;
 		}
 		if (ImGui::GetIO().WantCaptureKeyboard) {
@@ -746,7 +743,6 @@ auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleArea const& a2, TextHolder* a3, UIColor const& a4, float a5, float a6, TextMeasureData* a7, uintptr_t* a8)->void {
 	if (Game::mcfont != a1) {
 		if (Game::mcfont == nullptr) {
-			logF("Font:%llX", a1);
 			Game::mcfont = a1;
 		}
 		//logF("mcfont = %llX,Text = %s", a1,a3->getText());
@@ -811,7 +807,7 @@ auto Hook::GameMode_useItemOn(GameMode* gm, class ItemStack* item, vec3_ti* bpos
 
 
 auto Hook::GameMode_tick(GameMode* _this)->void* {
-	logF("[Hook::GameMode_tick] GameMode_tick 在该版本中恢复工作。。。");
+	logF_Debug("[Hook::GameMode_tick] GameMode_tick 在该版本中恢复工作。。。");
 	Game::GetModuleManager()->onTick(_this);
 	return _this->tick();
 }

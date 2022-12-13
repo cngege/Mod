@@ -21,10 +21,26 @@
 //#define logF(x, ...) Logger::WriteLogFileF(XorString(x), __VA_ARGS__)
 #endif
 
+#ifndef logF_Debug
+#ifdef _DEBUG
+#define logF_Debug(x, ...) Logger::WriteLogFileF(x, __VA_ARGS__)
+#else
+#define logF_Debug(x, ...)
+#endif
+#endif
+
 #ifndef logBF
 //#define logF(x) Logger::WriteLogFileF(XorString(x))
 #define logBF(x, ...) Logger::WriteBigLogFileF(2000, x, __VA_ARGS__)
 //#define logF(x, ...) Logger::WriteLogFileF(XorString(x), __VA_ARGS__)
+#endif
+
+#ifndef logBF_Debug
+#ifdef _DEBUG
+#define logBF_Debug(x, ...) Logger::WriteBigLogFileF(2000, x, __VA_ARGS__)
+#else
+#define logBF_Debug(x, ...)
+#endif
 #endif
 
 struct TextForPrint {

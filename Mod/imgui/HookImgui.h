@@ -73,13 +73,10 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			(void)io;
 
 			std::string font_JNMYT = Utils::WStringToString(Logger::GetRoamingFolderPath()) + std::string("\\Mod\\Assets\\JNMYT.ttf");
-			std::string imgui_ini = Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini";
-			if (_access(font_JNMYT.c_str(), 0 /*F_OK*/) == -1) {
-				ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+			if (_access(font_JNMYT.c_str(), 0 /*F_OK*/) != -1) {
+				io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
-			else {
-				ImFont* font = io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
-			}
+			io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			// 这里注意值如果不是常亮就要当心其被释放掉
 			io.IniFilename = Game::ImConfigIni.c_str();
 
@@ -260,13 +257,10 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			(void)io;
 
 			std::string font_JNMYT = Utils::WStringToString(Logger::GetRoamingFolderPath()) + std::string("\\Mod\\Assets\\JNMYT.ttf");
-			std::string imgui_ini = Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini";
-			if (_access(font_JNMYT.c_str(), 0 /*F_OK*/) == -1) {
-				ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+			if (_access(font_JNMYT.c_str(), 0 /*F_OK*/) != -1) {
+				io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
-			else {
-				ImFont* font = io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
-			}
+			io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			// 这里注意值如果不是常亮就要当心其被释放掉
 			io.IniFilename = Game::ImConfigIni.c_str();
 		}
@@ -328,35 +322,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			//Snowflake::CreateSnowFlakes(snow, SNOW_LIMIT, 5.f /*minimum size*/, 25.f /*maximum size*/, 0 /*imgui window x position*/, 0 /*imgui window y position*/, Utils::getScreenResolution().x, Utils::getScreenResolution().y, Snowflake::vec3(0.f, 0.005f) /*gravity*/, IM_COL32(255, 255, 255, 100) /*color*/);
 
 			initContext = true;
-		};
-		if (d3d12CommandQueue == nullptr)
-			goto out;
-		ImGui_ImplDX12_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
 
-#pragma region SnowFlakes
-		//RECT rect;
-		//GetWindowRect(window, &rect);
-		//ImVec2 size69 = ImVec2(static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top));
-		//if (ImGui::doSnow) {
-		//	ImGui::SetNextWindowPos(ImVec2(size69.x - size69.x, size69.y - size69.y), ImGuiCond_Once);
-		//	ImGui::SetNextWindowSize(ImVec2(size69.x, size69.y));
-		//	ImGui::SetNextWindowBgAlpha(0.f);//Set to 0.25 for a nice background
-
-		//	ImGui::Begin("HELLO!!!", 0, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
-		//	{
-		//		GetWindowRect(window, &rc);
-		//		GetCursorPos(&mouse);
-		//		// render this before anything else so it is the background
-		//		//Snowflake::Update(snow, Snowflake::vec3(mouse.x, mouse.y), Snowflake::vec3(rc.left, rc.top));  // you can change a few things inside the update function
-		//	}
-		//	ImGui::End();
-		//}
-#pragma endregion
-
-		Game::GetModuleManager()->onImGUIRender();
-		{
 			ImGuiStyle* style = &ImGui::GetStyle();
 
 			style->WindowPadding = ImVec2(15, 15);
@@ -409,6 +375,36 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			//style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
 			//style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 
+		};
+		if (d3d12CommandQueue == nullptr)
+			goto out;
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+#pragma region SnowFlakes
+		//RECT rect;
+		//GetWindowRect(window, &rect);
+		//ImVec2 size69 = ImVec2(static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top));
+		//if (ImGui::doSnow) {
+		//	ImGui::SetNextWindowPos(ImVec2(size69.x - size69.x, size69.y - size69.y), ImGuiCond_Once);
+		//	ImGui::SetNextWindowSize(ImVec2(size69.x, size69.y));
+		//	ImGui::SetNextWindowBgAlpha(0.f);//Set to 0.25 for a nice background
+
+		//	ImGui::Begin("HELLO!!!", 0, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
+		//	{
+		//		GetWindowRect(window, &rc);
+		//		GetCursorPos(&mouse);
+		//		// render this before anything else so it is the background
+		//		//Snowflake::Update(snow, Snowflake::vec3(mouse.x, mouse.y), Snowflake::vec3(rc.left, rc.top));  // you can change a few things inside the update function
+		//	}
+		//	ImGui::End();
+		//}
+#pragma endregion
+
+		Game::GetModuleManager()->onImGUIRender();
+		{
+			
 			//ImGuiWindowFlags TargetFlags;
 			//TargetFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
 
