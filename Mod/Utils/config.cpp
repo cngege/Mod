@@ -1,7 +1,7 @@
 #include "config.h"
 #include <io.h>
 #include "Utils.h"
-#include "Logger.h"
+//#include "Logger.h"
 //#include <fstream>
 //#include <iostream>
 //#include <vector>
@@ -9,7 +9,7 @@
 std::string config::currentSaveConfigFile = "Default";					// 指示当前使用的配置文件的默认值 也就是默认使用 Default.json 这个配置文件
 
 std::string config::getConfigFilePath() {
-	static std::string configFilePath = Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\";
+	static std::string configFilePath = Utils::WStringToString(Utils::GetRoamingFolderPath()) + "\\Mod\\Config\\";
 	return configFilePath;
 }
 

@@ -12,6 +12,7 @@
 #include <vector>
 #include <Windows.h>
 
+
 //#include "xorstr.h"
 //https://learn.microsoft.com/zh-cn/cpp/windows/predefined-accelerator-keys?view=msvc-170
 static const char* const KeyNames[] = {
@@ -235,6 +236,8 @@ struct vec3_ti;
 
 class Utils {
 public:
+
+	static std::wstring GetRoamingFolderPath();
 
 	static __forceinline unsigned __int64 rotBy(int in, unsigned int by) {
 		auto mut = static_cast<unsigned __int64>(in);

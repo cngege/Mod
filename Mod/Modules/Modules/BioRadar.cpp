@@ -39,7 +39,7 @@ auto BioRadar::onImGUIRender() -> void
 		return;
 	}
 	RECT rect{};
-	if (::GetWindowRect((HWND)ImGui::GetIO().ImeWindowHandle, (LPRECT)&rect)) {
+	if (::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)) {
 		auto drawList = ImGui::GetForegroundDrawList();
 		float rectwidth = (float)(rect.right - rect.left);
 		float rectheight = (float)(rect.bottom - rect.top);

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <cstdint>
+#include <string>
 
 class Game
 {
@@ -10,6 +11,7 @@ public:
 	static class ClientInstance* Cinstance;
 	static uintptr_t KeyMap;
 	static bool MouseKeyDown[];
+	static std::string ImConfigIni;
 private:
 	static class ModuleManager* modmag;
 public:

@@ -2,5 +2,5 @@
 
 namespace ImGui
 {
-	static bool doSnow;
+	//static bool doSnow;
 }; // namespace ImGui

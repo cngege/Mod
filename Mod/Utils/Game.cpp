@@ -20,6 +20,7 @@ ClientInstance* Game::Cinstance = nullptr;
 
 uintptr_t Game::KeyMap = 0x00;
 bool Game::MouseKeyDown[10] = { false };
+std::string Game::ImConfigIni = "";
 
 auto Game::init() -> void
 {
@@ -28,6 +29,7 @@ auto Game::init() -> void
 	Game::ModState = true;
 	Game::modmag = new ModuleManager;
 	Game::modmag->Init();
+	ImConfigIni = Utils::WStringToString(Utils::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini";
 	logF("[ModuleManager::Disable] now init");
 
 

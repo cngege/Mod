@@ -15,8 +15,13 @@
 #include "Modules/HiveTreasurePos.h"
 #include "Modules/RenderHealth.h"
 #include "Modules/AutoSprinting.h"
-#include "Modules/FastViewPerspective.h"
 #include "Modules/BioRadar.h"
+#include "Modules/FastViewPerspective.h"
+
+
+#ifdef _DEBUG
+#include "Modules/Debug.h"
+#endif
 
 //bool ModuleManager::isInit = false;
 //std::vector<Module*> ModuleManager::moduleList = std::vector<Module*>();
@@ -42,12 +47,15 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new Render()));							/*INS*/
 	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl+F4*/
 	moduleList.push_back((Module*)(new NoAttackFriend()));					/*SHIFT+F4*/
-	moduleList.push_back((Module*)(new AutoSprinting()));					/*F6*/
+	moduleList.push_back((Module*)(new AutoSprinting()));					/*Ctrl+F6*/
+	moduleList.push_back((Module*)(new BioRadar()));						/*SHIFT+F6*/
 	moduleList.push_back((Module*)(new HiveTreasurePos()));					/*F7*/
 	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/
 	moduleList.push_back((Module*)(new ArmsLength()));						/*SHIFT+F10*/
 	moduleList.push_back((Module*)(new RenderHealth()));					/*Ctrl+F10*/
-	moduleList.push_back((Module*)(new BioRadar()));
+#ifdef _DEBUG
+	moduleList.push_back((Module*)(new Debug()));
+#endif
 
 	isInit = true;
 	// 读取 指定的配置文件

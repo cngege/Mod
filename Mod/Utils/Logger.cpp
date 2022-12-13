@@ -30,7 +30,7 @@ bool Logger::isActive() {
 }
 
 std::wstring Logger::GetRoamingFolderPath() {
-
+	return Utils::GetRoamingFolderPath();
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);
 	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve application data statics");

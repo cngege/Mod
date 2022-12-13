@@ -10,8 +10,6 @@
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
-	AddFloatUIValue("窗口宽度", &uiWidth, 0, 1000.f, false, 1.f);
-	AddFloatUIValue("窗口高度", &uiHeight, 0, 1000.f, false,1.f);
 
 	//setEnabled(true);
 }
@@ -73,8 +71,6 @@ auto Render::onImGUIRender()->void {
 		return;
 	}
 	if (ImGui::Begin("模组功能面板  所有Moudle状态")) {
-		ImGui::SetWindowSize(ImVec2(uiWidth, uiHeight));
-
 		Game::GetModuleManager()->Moduleforeach([](Module* mod) {
 			std::string showText = mod->getModuleName();		//加上Module本来的名称
 			bool enable = mod->isEnabled();
@@ -134,6 +130,13 @@ auto Render::onImGUIRender()->void {
 			ImGui::InputText("配置文件名", text, IM_ARRAYSIZE(text));
 			if (ImGui::Button("加载使用配置")) {
 				//调用所有模块 加载配置
+				//将输入框中的配置文件名保存到config.json中
+				json sysdata = config::loadConfigonRootFromFile("config");
+				{
+					config::currentSaveConfigFile = text;
+					sysdata["CurrentConfigFile"] = config::currentSaveConfigFile;
+				}
+				config::writeConfigonRootToFile("config", sysdata);
 				json configdata = config::loadConfigonRootFromFile(config::currentSaveConfigFile);
 				for (auto& mod : Game::GetModuleManager()->GetAllModule()) {
 					mod->onloadConfigFile(configdata[mod->getModuleName()]);
@@ -187,12 +190,8 @@ auto Render::onImGUIRender()->void {
 
 auto Render::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
-	uiWidth = config::readDataFromJson<float>(data, "width", 350.f);
-	uiHeight = config::readDataFromJson<float>(data, "height", 530.f);
 }
 
 auto Render::onsaveConfigFile(json& data)->void {
 	data["enable"] = isEnabled();
-	data["width"] = uiWidth;
-	data["height"] = uiHeight;
 }

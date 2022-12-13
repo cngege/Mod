@@ -127,6 +127,7 @@
       <PreprocessorDefinitions>_DEBUG;MOD_EXPORTS;MINECRAFTDX12WITHIMGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)SDK\;$(SolutionDir)Mod\Utils\;$(SolutionDir)Mod\imgui\imgui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -221,6 +222,7 @@
     <ClInclude Include="Modules\Modules\ArmsLength.h" />
     <ClInclude Include="Modules\Modules\AutoSprinting.h" />
     <ClInclude Include="Modules\Modules\BioRadar.h" />
+    <ClInclude Include="Modules\Modules\Debug.h" />
     <ClInclude Include="Modules\Modules\FastViewPerspective.h" />
     <ClInclude Include="Modules\Modules\GameTimeLock.h" />
     <ClInclude Include="Modules\Modules\HitBox.h" />
@@ -279,6 +281,7 @@
     <ClCompile Include="Modules\Modules\ArmsLength.cpp" />
     <ClCompile Include="Modules\Modules\AutoSprinting.cpp" />
     <ClCompile Include="Modules\Modules\BioRadar.cpp" />
+    <ClCompile Include="Modules\Modules\Debug.cpp" />
     <ClCompile Include="Modules\Modules\FastViewPerspective.cpp" />
     <ClCompile Include="Modules\Modules\GameTimeLock.cpp" />
     <ClCompile Include="Modules\Modules\HitBox.cpp" />

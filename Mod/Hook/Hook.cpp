@@ -685,7 +685,11 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
 	if (ImGui::GetCurrentContext() != nullptr) {
 		ImGui::GetIO().KeysDown[key] = isdown == 1;
-		if (ImGui::GetIO().WantCaptureKeyboard || ImGui::GetIO().WantTextInput) {
+		if (ImGui::GetIO().WantTextInput) {
+			if (key > 0 && key < 0x10000 && isdown == 1) ImGui::GetIO().AddInputCharacterUTF16((UINT)key);
+			return 0;
+		}
+		if (ImGui::GetIO().WantCaptureKeyboard) {
 			return 0;
 		}
 	}
@@ -714,8 +718,12 @@ auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX
 			ImGui::GetIO().MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
 			break;
 		default:
+			//ImGui::GetIO().MousePos = ImVec2(mouseX, mouseY);
 			break;
 		}
+		/*if (ImGui::GetIO().WantSetMousePos) {
+			ImGui::GetIO().MousePos = ImVec2(mouseX, mouseY);
+		}*/
 		if (!ImGui::GetIO().WantCaptureMouse)
 			mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
 	}
@@ -830,7 +838,7 @@ auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, void* tick)->void* {
 auto Hook::RemotePlayer_TickWorld(RemotePlayer* _this) -> void*
 {
 	//判断虚表是否是远程玩家
-	if (_this && *(uintptr_t***)_this == RemotePlayer::GetVFtables()) {
+	if (_this && (uintptr_t)_this > 0xFFFFFFFF && *(uintptr_t***)_this == RemotePlayer::GetVFtables()) {
 		Game::GetModuleManager()->onRemotePlayerTick(_this);
 	}
 	return _this->tickWorld();

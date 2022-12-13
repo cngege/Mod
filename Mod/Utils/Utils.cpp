@@ -3,12 +3,15 @@
 #include <iomanip>
 #include <chrono>
 #include <string>
-
-#include "Logger.h"
 #include <Psapi.h>
 #include "HMath.h"
-
 #include "imgui.h"
+#include <windows.storage.h>
+#include <wrl.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Microsoft::WRL::Wrappers;
 
 void Utils::ApplySystemTime(std::stringstream* ss) {
 	using namespace std::chrono;
@@ -308,7 +311,31 @@ bool Utils::HelpCollapsingHeader(const char* label, const char* helpText, ImGuiT
 }
 
 
+std::wstring Utils::GetRoamingFolderPath() {
+	ComPtr<IApplicationDataStatics> appDataStatics;
+	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);
+	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve application data statics");
 
+	ComPtr<IApplicationData> appData;
+	hr = appDataStatics->get_Current(&appData);
+	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve current application data");
+
+	ComPtr<IStorageFolder> roamingFolder;
+	hr = appData->get_RoamingFolder(&roamingFolder);
+	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve roaming folder");
+
+	ComPtr<IStorageItem> folderItem;
+	hr = roamingFolder.As(&folderItem);
+	if (FAILED(hr)) throw std::runtime_error("Failed to cast roaming folder to IStorageItem");
+
+	HString roamingPathHString;
+	hr = folderItem->get_Path(roamingPathHString.GetAddressOf());
+	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve roaming folder path");
+
+	uint32_t pathLength;
+	auto roamingPathCStr = roamingPathHString.GetRawBuffer(&pathLength);
+	return std::wstring(roamingPathCStr, pathLength);
+}
 
 
 
