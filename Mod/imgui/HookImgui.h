@@ -267,12 +267,8 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			else {
 				ImFont* font = io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
-			io.IniFilename = (Utils::WStringToString(Logger::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini").c_str();
-			//io.IniFilename = NULL;
-			//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-			//if (_access(imgui_ini.c_str(), 0 /*F_OK*/) != -1) {
-			//	ImGui::LoadIniSettingsFromDisk(imgui_ini.c_str());
-			//}
+			// 这里注意值如果不是常亮就要当心其被释放掉
+			io.IniFilename = Game::ImConfigIni.c_str();
 		}
 		DXGI_SWAP_CHAIN_DESC sdesc;
 		ppSwapChain->GetDesc(&sdesc);
@@ -488,6 +484,10 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		d3d12CommandList->SetDescriptorHeaps(1, &d3d12DescriptorHeapImGuiRender);
 		ImGui::EndFrame();
 		ImGui::Render();
+		RECT window_rectangle, childwindow_rectangle;													//
+		GetWindowRect(window, &window_rectangle);														// 计算出ImGui以其所为窗口Y坐标的基准值
+		GetWindowRect(childwindow, &childwindow_rectangle);												// 也就是将标题栏富含进去，默认没有，也就导致鼠标悬浮、点击有Y轴偏移
+		ImGui::GetDrawData()->DisplayPos.y = (float)(childwindow_rectangle.top - window_rectangle.top); //
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), d3d12CommandList);
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;

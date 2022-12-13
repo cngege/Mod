@@ -10,8 +10,6 @@
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
-
-	//setEnabled(true);
 }
 
 auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
