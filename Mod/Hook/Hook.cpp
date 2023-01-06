@@ -23,6 +23,11 @@
 #include "../Modules/Modules/InstantDestroy.h"
 #include "../Modules/Modules/ShowCoordinates.h"
 #include "../Modules/Modules/FastViewPerspective.h"
+#include "../Modules/Modules/AutoSprinting.h"
+
+using LockSprinting = void(__fastcall*)(void* a, void* b);
+LockSprinting lockSprintingcall;
+int LockSprinting_offset = 0;
 
 using ClientInstance_Tick = void(__fastcall*)(ClientInstance* _this, void* a1);
 ClientInstance_Tick clientInstance_Tickcall;
@@ -92,23 +97,19 @@ auto Hook::init() -> void
 {
 	logF("[Hook::init] 正在初始化");
 
-	//玩家击退  重新在 Actor::setVelocity 中实现
-	/*
+	// 锁定疾跑 强制按下疾跑键 | 并不能确定被Hook的这个函数是什么
 	{
-		const char* memcode = "8B 02 89 81 ? ? 00 00 8B 42 04 89 81 ? ? 00 00 8B 42 08 89 81 ? ? 00 00 C3";
-		playerkb = FindSignature(memcode);
-		if (playerkb != 0x00) {
-			Actor::SpeedXOffset = *reinterpret_cast<int*>(playerkb + 4);
-			Actor::SpeedYOffset = *reinterpret_cast<int*>(playerkb + 13);
-			Actor::SpeedZOffset = *reinterpret_cast<int*>(playerkb + 22);
-			MH_CreateHookEx((LPVOID)playerkb, &Hook::PlayerKB, &playercall);
-			logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", playerkb, memcode);
+		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 0F B6 41";
+		auto lockSprintingSign = FindSignature(memcode);
+		if (lockSprintingSign != 0x00) {
+			MH_CreateHookEx((LPVOID)lockSprintingSign, &Hook::LockSprinting, &lockSprintingcall);
+			LockSprinting_offset = (int)*reinterpret_cast<byte*>(lockSprintingSign + 18);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", lockSprintingSign, memcode);
 		}
 		else {
-			logF("[Hook error] [%s] is no found Hook point", "playerkb");
+			logF("[Hook error] [%s] is no found Hook point", "lockSprintingSign");
 		}
 	}
-	*/
 
 	//clientInstance::Tick
 	{
@@ -574,6 +575,15 @@ auto Hook::init() -> void
 auto Hook::exit() -> void {
 	logF("[MH_DisableHook] Hook关闭状态: %s", MH_StatusToString(MH_DisableHook(MH_ALL_HOOKS)));
 	Sleep(10);
+}
+
+auto Hook::LockSprinting(void* a, void* b) -> void
+{
+	static AutoSprinting* as = Game::GetModuleManager()->GetModule<AutoSprinting*>();
+	if (as->isEnabled()) {
+		*(byte*)((uintptr_t)a + LockSprinting_offset) = (byte)1;
+	}
+	lockSprintingcall(a, b);
 }
 
 //无击退效果

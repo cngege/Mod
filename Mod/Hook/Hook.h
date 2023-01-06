@@ -16,6 +16,7 @@ class Hook
 public:
 	static auto init() ->void;
 	static auto exit() ->void;
+	static auto LockSprinting(void* a, void* b) ->void;
 	static auto SetVelocity(class Player* ,vec3_t*)->void*;
 	static auto Actor_getShadowRadius(class Actor*)->float;										//执行对象是所有生物 但不包括玩家
 	static auto ClientInstance_Tick(ClientInstance*, void*)->void;
