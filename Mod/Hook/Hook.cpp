@@ -586,7 +586,7 @@ auto Hook::LockSprinting(void* a, void* b) -> void
 		*(bool*)((uintptr_t)a + LockSprinting_offset) = true;
 	}
 	if (aw->isEnabled()) {
-		// TODO: 这个没必要放在Tick里面，应该只用修改一次就可以了,后面尝试改一下
+		// TODO: 这个没必要放在Tick里面，应该只用修改一次就可以了,后面尝试改一下,关键是要在关闭的时候 将值改为false
 		*(bool*)((uintptr_t)a + LockSprinting_offset + 3) = true;
 	}
 	lockSprintingcall(a, b);
