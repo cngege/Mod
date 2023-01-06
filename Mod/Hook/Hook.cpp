@@ -24,6 +24,7 @@
 #include "../Modules/Modules/ShowCoordinates.h"
 #include "../Modules/Modules/FastViewPerspective.h"
 #include "../Modules/Modules/AutoSprinting.h"
+#include "../Modules/Modules/AutoWalking.h"
 
 using LockSprinting = void(__fastcall*)(void* a, void* b);
 LockSprinting lockSprintingcall;
@@ -580,8 +581,13 @@ auto Hook::exit() -> void {
 auto Hook::LockSprinting(void* a, void* b) -> void
 {
 	static AutoSprinting* as = Game::GetModuleManager()->GetModule<AutoSprinting*>();
+	static AutoWalking* aw = Game::GetModuleManager()->GetModule<AutoWalking*>();
 	if (as->isEnabled()) {
 		*(bool*)((uintptr_t)a + LockSprinting_offset) = true;
+	}
+	if (aw->isEnabled()) {
+		// TODO: 这个没必要放在Tick里面，应该只用修改一次就可以了,后面尝试改一下
+		*(bool*)((uintptr_t)a + LockSprinting_offset + 3) = true;
 	}
 	lockSprintingcall(a, b);
 }

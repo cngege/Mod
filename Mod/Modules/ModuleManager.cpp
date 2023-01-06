@@ -12,6 +12,7 @@
 #include "Modules/Render.h"
 #include "Modules/NoAttackFriend.h"
 #include "Modules/ArmsLength.h"
+#include "Modules/AutoWalking.h"
 #include "Modules/HiveTreasurePos.h"
 #include "Modules/RenderHealth.h"
 #include "Modules/AutoSprinting.h"
@@ -48,8 +49,9 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl+F4*/
 	moduleList.push_back((Module*)(new NoAttackFriend()));					/*SHIFT+F4*/
 	moduleList.push_back((Module*)(new AutoSprinting()));					/*Ctrl+F6*/
-	moduleList.push_back((Module*)(new BioRadar()));						/*SHIFT+F6*/
-	moduleList.push_back((Module*)(new HiveTreasurePos()));					/*F7*/
+	moduleList.push_back((Module*)(new AutoWalking()));						/*SHIFT+F6*/
+	moduleList.push_back((Module*)(new BioRadar()));						/*CTRL+F7*/
+	moduleList.push_back((Module*)(new HiveTreasurePos()));					/*SHIFT+F7*/
 	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/
 	moduleList.push_back((Module*)(new ArmsLength()));						/*SHIFT+F10*/
 	moduleList.push_back((Module*)(new RenderHealth()));					/*Ctrl+F10*/

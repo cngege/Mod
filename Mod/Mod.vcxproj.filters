@@ -222,6 +222,9 @@
     <ClInclude Include="Modules\Modules\Debug.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Modules\AutoWalking.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -384,6 +387,9 @@
       <Filter>SDK\源文件</Filter>
     </ClCompile>
     <ClCompile Include="Modules\Modules\Debug.cpp">
+      <Filter>Modules\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Modules\AutoWalking.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
   </ItemGroup>

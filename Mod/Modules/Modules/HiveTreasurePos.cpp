@@ -6,6 +6,7 @@
 
 HiveTreasurePos::HiveTreasurePos() : Module(VK_F7, "HiveTreasurePos", "在 HIVE 起床战争中,把附近小的宝箱碰撞箱拉过来") {
 	SetKeyMode(KeyMode::Switch);
+	setcontrolkeysbind({ VK_SHIFT });
 }
 
 auto HiveTreasurePos::onActorTick(Actor* actor)->void {
