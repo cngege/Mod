@@ -581,7 +581,7 @@ auto Hook::LockSprinting(void* a, void* b) -> void
 {
 	static AutoSprinting* as = Game::GetModuleManager()->GetModule<AutoSprinting*>();
 	if (as->isEnabled()) {
-		*(byte*)((uintptr_t)a + LockSprinting_offset) = (byte)1;
+		*(bool*)((uintptr_t)a + LockSprinting_offset) = true;
 	}
 	lockSprintingcall(a, b);
 }

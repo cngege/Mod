@@ -16,6 +16,13 @@ auto AirJump::onTick(GameMode* gm)->void {
 	}
 }
 
+auto AirJump::onLocalPlayerTick(LocalPlayer* lp)->void
+{
+	if (isEnabled()) {
+		*lp->isOnGround() = true;
+	}
+}
+
 auto AirJump::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", false));
 }
