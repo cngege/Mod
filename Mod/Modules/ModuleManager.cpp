@@ -49,8 +49,8 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl+F4*/
 	moduleList.push_back((Module*)(new NoAttackFriend()));					/*SHIFT+F4*/
 	moduleList.push_back((Module*)(new AutoSprinting()));					/*Ctrl+F6*/
-	moduleList.push_back((Module*)(new AutoWalking()));						/*SHIFT+F6*/
-	moduleList.push_back((Module*)(new BioRadar()));						/*CTRL+F7*/
+	moduleList.push_back((Module*)(new BioRadar()));						/*SHIFT+F6*/
+	moduleList.push_back((Module*)(new AutoWalking()));						/*CTRL+F7*/
 	moduleList.push_back((Module*)(new HiveTreasurePos()));					/*SHIFT+F7*/
 	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/
 	moduleList.push_back((Module*)(new ArmsLength()));						/*SHIFT+F10*/
