@@ -607,6 +607,7 @@ auto Hook::Actor_getShadowRadius(Actor* actor)->float {
 	return actor->getShadowRadius();
 }
 
+// 这个tick貌似不工作了
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void
 {
 	if (_this != nullptr) Game::Cinstance = _this;

@@ -1,7 +1,7 @@
 ﻿#include "RenderHealth.h"
 #include "Actor.h"
 #include "MinecraftUIRenderContext.h"
-
+#include "imgui.h"
 #include <string.h>
 #pragma execution_character_set("utf-8")
 
@@ -45,9 +45,16 @@ auto RenderHealth::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 			}
 		}
 
+		RECT rect{};
+		vec2_t bg_wh = vec2_t(130.f, 35.f);
+		if (::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)) {
+			float rectwidth = (float)(rect.right - rect.left);
+			showpos.x = (rectwidth - bg_wh.x) / 2.f;
+		}
+
 		UIColor bgcolor = UIColor(0, 0, 0, (tick < 60) ? tick : 60);
 		UIColor textcolor = UIColor(255, 255, 255, (tick < 255) ? tick : 255);
-		ctx->Fillshape(showpos, vec2_t(130.f,35.f), bgcolor);
+		ctx->Fillshape(showpos, bg_wh, bgcolor);
 
 		std::string drawName("Name: ");
 		drawName += currentPlayerName;
