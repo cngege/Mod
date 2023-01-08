@@ -702,11 +702,6 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 		ImGuiIO& io = ImGui::GetIO();
 		io.KeysDown[(int)key] = isdown == 1;
 
-		//io.KeyCtrl = Game::IsKeyDown(VK_CONTROL);
-		//io.KeyShift = Game::IsKeyDown(VK_SHIFT);
-		//io.KeyAlt = Game::IsKeyDown(VK_MENU);
-		//io.KeySuper = Game::IsKeyDown(VK_LWIN);
-
 		io.KeyCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		io.KeyShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 		io.KeyAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
