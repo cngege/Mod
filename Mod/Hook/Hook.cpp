@@ -699,9 +699,33 @@ auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
 	if (ImGui::GetCurrentContext() != nullptr) {
-		ImGui::GetIO().KeysDown[key] = isdown == 1;
-		if (ImGui::GetIO().WantTextInput) {
-			//if (key > 0 && key < 0x10000 && isdown == 1) ImGui::GetIO().AddInputCharacterUTF16((UINT)key);
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[(int)key] = isdown == 1;
+
+		//io.KeyCtrl = Game::IsKeyDown(VK_CONTROL);
+		//io.KeyShift = Game::IsKeyDown(VK_SHIFT);
+		//io.KeyAlt = Game::IsKeyDown(VK_MENU);
+		//io.KeySuper = Game::IsKeyDown(VK_LWIN);
+
+		io.KeyCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
+		io.KeyShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
+		io.KeyAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+		io.KeySuper = ((::GetKeyState(VK_LWIN) | ::GetKeyState(VK_RWIN)) & 0x8000) != 0;
+		
+		if (io.WantTextInput) {
+			//if (key == VK_BACK) {
+			//	io.AddKeyEvent(ImGuiKey_Backspace, isdown == 1);
+			//	return 0;
+			//}
+			if (isdown == 1) {
+				if (key >= 'A' && key <= 'Z') {
+					if (io.KeyShift == false) {
+						io.AddInputCharacter((UINT)key - 'A' + 'a');
+						return 0;
+					}
+				}
+				io.AddInputCharacter((UINT)key);
+			}
 			return 0;
 		}
 		if (ImGui::GetIO().WantCaptureKeyboard) {

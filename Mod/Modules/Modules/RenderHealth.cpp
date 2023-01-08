@@ -49,7 +49,8 @@ auto RenderHealth::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 		vec2_t bg_wh = vec2_t(130.f, 35.f);
 		if (::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)) {
 			float rectwidth = (float)(rect.right - rect.left);
-			showpos.x = (rectwidth - bg_wh.x) / 2.f;
+			showpos.x = (rectwidth - bg_wh.x) / 4.f;
+			//showpos.x = 230.f;
 		}
 
 		UIColor bgcolor = UIColor(0, 0, 0, (tick < 60) ? tick : 60);
