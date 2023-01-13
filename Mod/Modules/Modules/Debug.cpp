@@ -18,11 +18,14 @@ auto Debug::onImGUIRender() -> void
 	static bool ShowFontSelector = false;
 	if (!isEnabled())
 		return;
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.45f, 0.45f, 0.45f, 1.0f));
+	ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.65f, 0.65f, 0.65f, 1.0f));
 	if (ImGui::Begin("Debug窗口")) {
 		ImGui::Toggle("显示Demo窗口", &ShowDemoWindow, toggerConfig_Debug);
 		ImGui::Toggle("显示字体选择", &ShowFontSelector, toggerConfig_Debug);
 	}
 	ImGui::End();
+	ImGui::PopStyleColor(2);
 
 	if (ShowDemoWindow) {
 		ImGui::ShowDemoWindow();
