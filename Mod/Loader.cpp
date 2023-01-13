@@ -80,18 +80,15 @@ void Loader::init(void* hmodule)
 }
 
 static DWORD WINAPI FreeLibraryThread(LPVOID lpParam) {
-	while (true)
+	while (!Loader::Eject_Signal)
 	{
 		Sleep(500);
 		if (Loader::RemoteFreeLib) {
 			logF("[thread while] 检测远程释放库信号.");
 			return 0;
 		}
-		if (Loader::Eject_Signal) {
-			logF("[thread while] 检测到退出信号.");
-			break;
-		}
 	}
+	logF("[thread while] 检测到退出信号.");
 	::FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 0);		//只能退出 CreateThread 创建的线程
 	return 0;
 }
