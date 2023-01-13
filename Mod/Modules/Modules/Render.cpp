@@ -3,13 +3,19 @@
 #include <string>
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"
+#include "../../Loader.h"
 #include "../../Utils/Utils.h"
 #include "../../Utils/config.h"
 #include "imgui.h"
+#include "../../imgui/toggle/imgui_toggle.h"
+#include "..\..\imgui\toggle\imgui_toggle_presets.h"
+
+ImGuiToggleConfig toggerConfig;
 
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
+	toggerConfig = ImGuiTogglePresets::RectangleStyle();
 }
 
 auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
@@ -104,7 +110,7 @@ auto Render::onImGUIRender()->void {
 					}
 				}
 				for (auto& boolval : mod->GetBoolUIValue()) {
-					ImGui::Checkbox(boolval.name.c_str(), boolval.value);
+					ImGui::Toggle(boolval.name.c_str(), boolval.value, toggerConfig);
 				}
 				for (auto& buttonet : mod->GetButtonUIEvent()) {
 					if (buttonet.sameline) {
@@ -157,6 +163,10 @@ auto Render::onImGUIRender()->void {
 				}
 				//写入文件
 				config::writeConfigonRootToFile(config::currentSaveConfigFile, data);
+			}
+			ImGui::Toggle("启用快捷键(CTRL+L)卸载", &Loader::EnableEjectKey, toggerConfig);
+			if (ImGui::Button("卸载")) {
+				Loader::Eject_Signal = true;
 			}
 		}
 		//if (ImGui::CollapsingHeader(("Aura"))) {

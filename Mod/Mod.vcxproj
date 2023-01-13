@@ -214,6 +214,12 @@
     <ClInclude Include="imgui\imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imgui\imstb_truetype.h" />
     <ClInclude Include="imgui\kiero\kiero.h" />
+    <ClInclude Include="imgui\toggle\imgui_offset_rect.h" />
+    <ClInclude Include="imgui\toggle\imgui_toggle.h" />
+    <ClInclude Include="imgui\toggle\imgui_toggle_math.h" />
+    <ClInclude Include="imgui\toggle\imgui_toggle_palette.h" />
+    <ClInclude Include="imgui\toggle\imgui_toggle_presets.h" />
+    <ClInclude Include="imgui\toggle\imgui_toggle_renderer.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Modules\Module.h" />
     <ClInclude Include="Modules\ModuleManager.h" />
@@ -273,6 +279,10 @@
     <ClCompile Include="imgui\imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui\imgui_widgets.cpp" />
     <ClCompile Include="imgui\kiero\kiero.cpp" />
+    <ClCompile Include="imgui\toggle\imgui_toggle.cpp" />
+    <ClCompile Include="imgui\toggle\imgui_toggle_palette.cpp" />
+    <ClCompile Include="imgui\toggle\imgui_toggle_presets.cpp" />
+    <ClCompile Include="imgui\toggle\imgui_toggle_renderer.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Modules\Module.cpp" />
     <ClCompile Include="Modules\ModuleManager.cpp" />

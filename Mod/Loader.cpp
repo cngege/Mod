@@ -18,6 +18,7 @@ MH_STATUS hookret;
 void* Loader::dllHMODULE = nullptr;
 bool Loader::Eject_Signal = false;
 bool Loader::RemoteFreeLib = false;
+bool Loader::EnableEjectKey = true;
 
 static DWORD WINAPI FreeLibraryThread(LPVOID lpParam);
 

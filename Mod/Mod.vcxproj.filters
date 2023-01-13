@@ -37,6 +37,9 @@
     <Filter Include="IMGUI\IMGUI">
       <UniqueIdentifier>{6aa3c014-873b-4750-9796-5f6847a02752}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IMGUI\Toggle">
+      <UniqueIdentifier>{49df237b-9c58-4816-ad50-e4c91780f2f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -222,6 +225,24 @@
     <ClInclude Include="Modules\Modules\AutoWalking.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="imgui\toggle\imgui_offset_rect.h">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\toggle\imgui_toggle.h">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\toggle\imgui_toggle_math.h">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\toggle\imgui_toggle_palette.h">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\toggle\imgui_toggle_presets.h">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\toggle\imgui_toggle_renderer.h">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -385,6 +406,18 @@
     </ClCompile>
     <ClCompile Include="Modules\Modules\AutoWalking.cpp">
       <Filter>Modules\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\toggle\imgui_toggle.cpp">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\toggle\imgui_toggle_palette.cpp">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\toggle\imgui_toggle_presets.cpp">
+      <Filter>IMGUI\Toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\toggle\imgui_toggle_renderer.cpp">
+      <Filter>IMGUI\Toggle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
