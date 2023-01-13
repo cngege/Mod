@@ -30,7 +30,16 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         break;
     }
     case DLL_PROCESS_DETACH:
-        Loader::exit(hModule);
+        if (!Loader::Eject_Signal) {
+            // 表示是外部卸载这个库
+            Loader::RemoteFreeLib = true;
+            Loader::Eject_Signal = true;
+            Sleep(600);
+            Loader::exit(hModule);
+        }
+        else {
+            Loader::exit(hModule);      // 这个有锁 多次调用没有关系
+        }
         break;
     }
     return TRUE;

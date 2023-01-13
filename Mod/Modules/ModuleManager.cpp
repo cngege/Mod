@@ -68,7 +68,7 @@ auto ModuleManager::Init()->void {
 }
 
 
-//关闭所有的 Module 并销毁
+//关闭所有的 Module
 auto ModuleManager::Disable()->void {
 	if (!IsInitialized())
 		return;

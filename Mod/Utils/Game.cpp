@@ -147,10 +147,13 @@ auto Game::init() -> void
 
 auto Game::exit() -> void
 {
-	Game::modmag->Disable();
-	delete[] Game::modmag;
-	logF("[ModuleManager::Disable] 模块管理器实例被关闭");
-	Game::ModState = false;
+	if (Game::ModState) {
+		Game::modmag->Disable();
+		delete Game::modmag;
+		Game::modmag = nullptr;
+		logF("[ModuleManager::Disable] 模块管理器实例被关闭");
+		Game::ModState = false;
+	}
 }
 
 auto Game::GetModuleManager()->ModuleManager* {

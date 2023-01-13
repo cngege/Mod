@@ -3,6 +3,7 @@
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "../Utils/Game.h"
+#include "../Loader.h"
 #include "imgui.h"
 #include "Player.h"
 #include "ServerPlayer.h"
@@ -698,6 +699,13 @@ auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 
 auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
+	//快捷键反注入
+	if (key == 'L' && isdown && Game::IsKeyDown(VK_CONTROL)) {
+		Loader::Eject_Signal = true;
+		return 0;
+	}
+
+	//IMGUI 按键信号传递
 	if (ImGui::GetCurrentContext() != nullptr) {
 		ImGuiIO& io = ImGui::GetIO();
 		io.KeysDown[(int)key] = isdown == 1;

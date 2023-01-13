@@ -16,15 +16,17 @@
 
 MH_STATUS hookret;
 void* Loader::dllHMODULE = nullptr;
+bool Loader::Eject_Signal = false;
+bool Loader::RemoteFreeLib = false;
 
-
+static DWORD WINAPI FreeLibraryThread(LPVOID lpParam);
 
 //在线程
-void Loader::init(void* hmoudle)
+void Loader::init(void* hmodule)
 {
-	logF("DLL HMODULE: %llX", hmoudle);
+	logF("DLL at %s , HMODULE: %llX", __TIMESTAMP__ , hmodule);
 	logF("Minecraft.Windows.exe base: %llX", Utils::getBase());
-	dllHMODULE = hmoudle;
+	dllHMODULE = hmodule;
 	hookret = MH_Initialize();
 	if (hookret != MH_OK)
 	{
@@ -74,22 +76,42 @@ void Loader::init(void* hmoudle)
 	Hook::init();
 
 	logF("[MH_EnableHook] Hook状态: %s", MH_StatusToString(MH_EnableHook(MH_ALL_HOOKS)));
-
+	CreateThread(NULL, NULL, FreeLibraryThread, hmodule, NULL, NULL);
 }
 
-void Loader::exit(void* hmoudle)
-{
-	if (hookret == MH_OK)
+static DWORD WINAPI FreeLibraryThread(LPVOID lpParam) {
+	while (true)
 	{
-		logF("[Loader::exit] 正在关闭所有Hook");
-		Hook::exit();
-		logF("[Loader::exit] Hook解除状态: %s", MH_StatusToString(MH_Uninitialize()));
+		Sleep(500);
+		if (Loader::RemoteFreeLib) {
+			logF("[thread while] 检测远程释放库信号.");
+			return 0;
+		}
+		if (Loader::Eject_Signal) {
+			logF("[thread while] 检测到退出信号.");
+			break;
+		}
 	}
-	logF("[Loader::exit] 正在退出Game模块");
-	Game::exit();
+	::FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 0);		//只能退出 CreateThread 创建的线程
+	return 0;
+}
 
-	logF("Removing logger");
-	Logger::Disable();
-	//关闭被注入程序的时候会调用
+void Loader::exit(void* hmodule)
+{
+	if (Game::ModState) {
+		logF("=============================="); // =x30
+		if (hookret == MH_OK)
+		{
+			logF("[Loader::exit] 正在关闭所有Hook");
+			Hook::exit();
+			logF("[Loader::exit] Hook解除状态: %s", MH_StatusToString(MH_Uninitialize()));
+			hookret = MH_STATUS::MH_UNKNOWN;
+		}
+		logF("[Loader::exit] 正在退出Game模块");
+		Game::exit();
+		logF("Removing logger");
+		Logger::Disable();
+		//关闭被注入程序的时候会调用
+	}
 }
 
