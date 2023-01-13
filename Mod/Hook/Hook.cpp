@@ -700,7 +700,7 @@ auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
 	//快捷键反注入
-	if (key == 'L' && isdown && Game::IsKeyDown(VK_CONTROL)) {
+	if (Loader::EnableEjectKey && key == 'L' && isdown && Game::IsKeyDown(VK_CONTROL)) {
 		Loader::Eject_Signal = true;
 		return 0;
 	}
