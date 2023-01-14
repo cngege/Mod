@@ -5,10 +5,9 @@
 #define VERSION_REVISION 4
 #define VERSION_BUILD 1
 
-#define PLUGIN_AUTHOR "CNGEGE"
 #define PLUGIN_NAME "Mod"
 #define PLUGIN_INTRODUCTION "Minecraft Windows Win10 Mod"
-
+#define PLUGIN_AUTHOR "CNGEGE"
 
 #define VS_FLAG_DEBUG 0x1L
 #define VS_FLAG_RELEASE 0x0L
@@ -22,7 +21,6 @@
 #else
  #define FILE_VERSION_FLAG VS_FLAG_RELEASE
 #endif
-
 
 #define FILE_VERSION_COMPANY_NAME PLUGIN_AUTHOR
 #define FILE_VERSION_LEGAL_COPYRIGHT "Copyright (C) 2022"

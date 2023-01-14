@@ -1,16 +1,17 @@
 ﻿#include "Loader.h"
+#include "version.h"
 #include "http.hpp"
 #include <thread>
-
 #include "Utils/Logger.h"
 #include "Utils/Game.h"
 #include "Hook/Hook.h"
 #include "Utils/Utils.h"
 //Modules
 #include "Modules/ModuleManager.h"
-
+//imgui hook
 #include "imgui/HookImgui.h"
 #include <io.h>
+//config
 #include "Utils/config.h"
 
 MH_STATUS hookret;
@@ -24,7 +25,7 @@ static DWORD WINAPI FreeLibraryThread(LPVOID lpParam);
 //在线程
 void Loader::init(void* hmodule)
 {
-	//logF("DLL ver %s at %s , HMODULE: %llX", FILE_VERSION_FILE_VERSION, __TIMESTAMP__ , hmodule);
+	logF("DLL ver %s at %s , HMODULE: %llX", FILE_VERSION_FILE_VERSION_STRING, __TIMESTAMP__ , hmodule);
 	logF("Minecraft.Windows.exe base: %llX", Utils::getBase());
 	dllHMODULE = hmodule;
 	hookret = MH_Initialize();
