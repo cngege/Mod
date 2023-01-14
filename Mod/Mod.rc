@@ -1,6 +1,7 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
+#include "version.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -51,14 +52,10 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,3,4,0
- PRODUCTVERSION 1,3,4,0
+ FILEVERSION FILE_VERSION_FILE_VERSION
+ PRODUCTVERSION FILE_VERSION_PRODUCT_VERSION
  FILEFLAGSMASK 0x3fL
-#ifdef _DEBUG
- FILEFLAGS 0x1L
-#else
- FILEFLAGS 0x0L
-#endif
+ FILEFLAGS FILE_VERSION_FLAG
  FILEOS 0x40004L
  FILETYPE 0x2L
  FILESUBTYPE 0x0L
@@ -67,14 +64,14 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "CompanyName", "CNGEGE"
-            VALUE "FileDescription", "Minecraft Windows Win10 Mod"
-            VALUE "FileVersion", "1.3.4.0"
-            VALUE "InternalName", "Mod.dll"
-            VALUE "LegalCopyright", "Copyright (C) 2022"
-            VALUE "OriginalFilename", "Mod.dll"
-            VALUE "ProductName", "MInecraft »ùÑÒ°æ Mod¼ÓÔØÆ÷ Ô¤ÀÀ°æ"
-            VALUE "ProductVersion", "1.3.4.0"
+            VALUE "CompanyName", FILE_VERSION_COMPANY_NAME
+            VALUE "FileDescription", FILE_VERSION_FILE_DESCRIPTION
+            VALUE "FileVersion", FILE_VERSION_FILE_VERSION_STRING
+            VALUE "InternalName", FILE_VERSION_INTERNAL_NAME
+            VALUE "LegalCopyright", FILE_VERSION_LEGAL_COPYRIGHT
+            VALUE "OriginalFilename", FILE_VERSION_ORIGINAL_FILENAME
+            VALUE "ProductName", FILE_VERSION_PRODUCT_NAME
+            VALUE "ProductVersion", FILE_VERSION_PRODUCT_VERSION_STRING
         END
     END
     BLOCK "VarFileInfo"

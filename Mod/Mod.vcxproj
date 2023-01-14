@@ -255,6 +255,7 @@
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Utils\Utils.h" />
+    <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SDK\AABB.cpp" />
