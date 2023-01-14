@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 //
-// *Ò»¸ö¼òµ¥µÄÕë¶ÔUWP³ÌĞòµÄ http/https ÇëÇóÊµÏÖ
+// *ä¸€ä¸ªç®€å•çš„é’ˆå¯¹UWPç¨‹åºçš„ http/https è¯·æ±‚å®ç°
 // *CNGEGE
 // *by https://learn.microsoft.com/en-us/windows/uwp/networking/httpclient?source=recommendations
 //
@@ -59,11 +59,11 @@ public:
 	}
 
 	/// <summary>
-	/// ½«IBufferÁ÷Ğ´ÈëÎÄ¼ş
+	/// å°†IBufferæµå†™å…¥æ–‡ä»¶
 	/// </summary>
-	/// <param name="file">±ØĞëÒªÔÚ [Microsoft.MinecraftUWP_8wekyb3d8bbwe] ÎÄ¼ş¼ĞÏÂµÄ¾ø¶ÔÂ·¾¶,·ñÔò±ÀÀ£</param>
-	/// <param name="buff">IBufferÁ÷</param>
-	/// <returns>ÊÇ·ñĞ´Èë³É¹¦</returns>
+	/// <param name="file">å¿…é¡»è¦åœ¨ [Microsoft.MinecraftUWP_8wekyb3d8bbwe] æ–‡ä»¶å¤¹ä¸‹çš„ç»å¯¹è·¯å¾„,å¦åˆ™å´©æºƒ</param>
+	/// <param name="buff">IBufferæµ</param>
+	/// <returns>æ˜¯å¦å†™å…¥æˆåŠŸ</returns>
 	static bool WriteFile(std::string file, winrt::Windows::Storage::Streams::IBuffer& buff) {
 		if (!buff) {
 			return false;

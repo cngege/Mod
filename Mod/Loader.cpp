@@ -1,5 +1,4 @@
-﻿#pragma execution_character_set("utf-8")
-#include "Loader.h"
+﻿#include "Loader.h"
 #include "http.hpp"
 #include <thread>
 
@@ -25,7 +24,7 @@ static DWORD WINAPI FreeLibraryThread(LPVOID lpParam);
 //在线程
 void Loader::init(void* hmodule)
 {
-	logF("DLL at %s , HMODULE: %llX", __TIMESTAMP__ , hmodule);
+	//logF("DLL ver %s at %s , HMODULE: %llX", FILE_VERSION_FILE_VERSION, __TIMESTAMP__ , hmodule);
 	logF("Minecraft.Windows.exe base: %llX", Utils::getBase());
 	dllHMODULE = hmodule;
 	hookret = MH_Initialize();

@@ -1,5 +1,4 @@
-#pragma execution_character_set("utf-8")
-#include "FastViewPerspective.h"
+ï»¿#include "FastViewPerspective.h"
 #include "../../Utils/Game.h"
 #include "../../Utils/Utils.h"
 
@@ -7,13 +6,13 @@
 #include "LocalPlayer.h"
 
 
-FastViewPerspective::FastViewPerspective() : Module(VK_F9, "FastViewPerspective", "¿ìËÙÔ¤ÀÀµÚ¶şÈË³ÆÊÓ½Ç") {
+FastViewPerspective::FastViewPerspective() : Module(VK_F9, "FastViewPerspective", "å¿«é€Ÿé¢„è§ˆç¬¬äºŒäººç§°è§†è§’") {
 	//setEnabled(true);
 }
 
 auto FastViewPerspective::getBindKeyName()->std::string {
 	//ret : CTRL + SHIFT + F
-	std::string name = "(Êó±êºóÍË¼ü) ";
+	std::string name = "(é¼ æ ‡åé€€é”®) ";
 	name += Module::getBindKeyName();
 	return name;
 }

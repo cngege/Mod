@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "..\Mod\Utils\HMath.h"
 #include "Actor.h"
 #include "Mob.h"
@@ -20,23 +20,23 @@ public:
 
 public:
 	
-	static int RotPtrOffset;	//Æ«ÒÆÖ¸Ïò vec2_t Ö¸Õë
-	//static int Rot2;			//Æ«ÒÆÖ¸Ïò vec2_t Ö¸Õë
+	static int RotPtrOffset;	//åç§»æŒ‡å‘ vec2_t æŒ‡é’ˆ
+	//static int Rot2;			//åç§»æŒ‡å‘ vec2_t æŒ‡é’ˆ
 
 public:
-	//ret->x ±íÊ¾ÊúÖ±·½ÏòµÄÖµ
+	//ret->x è¡¨ç¤ºç«–ç›´æ–¹å‘çš„å€¼
 	auto getRotEx1()->vec2_t*;
-	//ret->x ±íÊ¾ÊúÖ±·½ÏòµÄÖµ
+	//ret->x è¡¨ç¤ºç«–ç›´æ–¹å‘çš„å€¼
 	auto getRotEx2()->vec2_t*;
 
 public:
-	//Ðé±íº¯Êý
+	//è™šè¡¨å‡½æ•°
 	//44
 	auto teleportTo(vec3_t*, bool, unsigned int, unsigned int)->void;
 	auto displayChatMessage(class TextHolder*, class TextHolder*)->__int64;
 	auto getSelectedItem() -> class ItemStack*;												/*164*/
 
-	//HookÐé±íº¯Êý
+	//Hookè™šè¡¨å‡½æ•°
 	auto getShadowRadius()->float;															/*79*/
 	auto tickWorld(class Tick*) -> void;													/*371*/
 };

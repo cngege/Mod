@@ -1,4 +1,4 @@
-#include "LocalPlayer.h"
+ï»¿#include "LocalPlayer.h"
 #include "ClientInstance.h"
 #include "TextHolder.h"
 
@@ -23,9 +23,9 @@ auto LocalPlayer::SetVFtables(uintptr_t** vfTable)->void {
 	vfTables = vfTable;
 }
 
-//¶¨Òåº¯Êý
+//å®šä¹‰å‡½æ•°
 auto LocalPlayer::getClientInstance()->ClientInstance* {
-	return *((ClientInstance**)((uintptr_t)this + toCIoffset));			//Õâ¸öÆ«ÒÆÊÇÆ«ÒÆ×Ö½Ú
+	return *((ClientInstance**)((uintptr_t)this + toCIoffset));			//è¿™ä¸ªåç§»æ˜¯åç§»å­—èŠ‚
 }
 
 auto LocalPlayer::isOnGround()->bool* {
@@ -37,18 +37,18 @@ auto LocalPlayer::isOnGround()->bool* {
 //}
 
 
-//Ðé±íº¯Êý
+//è™šè¡¨å‡½æ•°
 
 //auto LocalPlayer::setPos(vec3_t* pos)->__int64 {
 //	return GetVFtableFun<__int64, LocalPlayer*, vec3_t*>(13)(this,pos);	//19?
 //}
 
-//ÎÞ·¨ÑéÖ¤Ðé±í
+//æ— æ³•éªŒè¯è™šè¡¨
 auto LocalPlayer::jumpFromGround()->UINT64 {
 	return GetVFtableFun<UINT64, LocalPlayer*>(346)(this);
 }
 
-//ÎÞ·¨ÑéÖ¤Ðé±í
+//æ— æ³•éªŒè¯è™šè¡¨
 auto LocalPlayer::displayClientMessage(TextHolder* text)->UINT64 {
 	return GetVFtableFun<UINT64, LocalPlayer*, TextHolder*>(389)(this, text);
 }

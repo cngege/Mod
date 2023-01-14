@@ -2,7 +2,6 @@
 #include "../../Utils/Game.h"
 #include "LocalPlayer.h"
 #include "TextHolder.h"
-#pragma execution_character_set("utf-8")
 
 TPPoint::TPPoint() : Module(VK_F3, "TPPoint", "传送坐标点") {
 	SetKeyMode(KeyMode::Trigger);

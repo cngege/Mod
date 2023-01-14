@@ -1,10 +1,9 @@
-#include "Traverse.h"
+ï»¿#include "Traverse.h"
 #include "../../Utils/Game.h"
 #include "Actor.h"
 #include "LocalPlayer.h"
-#pragma execution_character_set("utf-8")
 
-Traverse::Traverse() : Module(VK_F2, "Traverse", "ÏòËùÊÓ·½ÏòÇ°½øÒ»¸ñ") {
+Traverse::Traverse() : Module(VK_F2, "Traverse", "å‘æ‰€è§†æ–¹å‘å‰è¿›ä¸€æ ¼") {
 	//SetKeyMode(KeyMode::Trigger);
 	//setEnabled(true);
 }
@@ -50,7 +49,7 @@ auto Traverse::onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __in
 			vec2_t rot = *lp->getRotEx1();
 			vec3_t pos = *lp->getPosition();
 			if (rot.x > 67.5f) {
-				//Èç¹ûÍæ¼Ò¿´ÏòµØÃæ ÔòÏòÏÂtpÒ»¸ñÒÔ´©¹ýµØÃæ
+				//å¦‚æžœçŽ©å®¶çœ‹å‘åœ°é¢ åˆ™å‘ä¸‹tpä¸€æ ¼ä»¥ç©¿è¿‡åœ°é¢
 				vec3_t toPos = vec3_t(pos.x, pos.y-1, pos.z);
 				lp->setPos(&toPos);
 			}

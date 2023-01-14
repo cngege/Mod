@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -21,8 +21,8 @@ static const char* const KeyNames[] = {
 	"VK_RBUTTON",
 	"VK_CANCEL",
 	"VK_MBUTTON",
-	"VK_XBUTTON1",	//Êó±ê²à¼üºóÍË
-	"VK_XBUTTON2",	//Êó±ê²à¼üÇ°½ø
+	"VK_XBUTTON1",	//é¼ æ ‡ä¾§é”®åé€€
+	"VK_XBUTTON2",	//é¼ æ ‡ä¾§é”®å‰è¿›
 	"Unknown",
 	"VK_BACK",
 	"TAB",
@@ -360,7 +360,7 @@ public:
 	/// <typeparam name="TRet"></typeparam>
 	/// <typeparam name="...TArgs"></typeparam>
 	/// <typeparam name="IIdx"></typeparam>
-	/// <param name="thisptr">Ğé±íµØÖ·</param>
+	/// <param name="thisptr">è™šè¡¨åœ°å€</param>
 	/// <param name="...argList"></param>
 	/// <returns></returns>
 	template <unsigned int IIdx, typename TRet, typename... TArgs>
@@ -371,12 +371,12 @@ public:
 		return (*static_cast<Fn**>(thisptr))[IIdx](thisptr, argList...);
 	}
 
-	//inline ÄÚÁªº¯Êı ±íÊ¾º¯ÊıµÄÄÚÈİÔÚÀàÖĞ¾ÍÒÑ¾­ÊµÏÖÁË
+	//inline å†…è”å‡½æ•° è¡¨ç¤ºå‡½æ•°çš„å†…å®¹åœ¨ç±»ä¸­å°±å·²ç»å®ç°äº†
 	
 	/// <summary>
-	/// Í¨¹ıĞé±íµØÖ· ºÍ¸Ãº¯ÊıÔÚĞé±íÖĞµÄÎ»ÖÃ¸öÊı»ñÈ¡¸Ãº¯ÊıµÄµØÖ·
+	/// é€šè¿‡è™šè¡¨åœ°å€ å’Œè¯¥å‡½æ•°åœ¨è™šè¡¨ä¸­çš„ä½ç½®ä¸ªæ•°è·å–è¯¥å‡½æ•°çš„åœ°å€
 	/// </summary>
-	/// <param name="vf">Ğé±í</param>
+	/// <param name="vf">è™šè¡¨</param>
 	/// <param name="pos"></param>
 	/// <returns></returns>
 	static inline auto GetVTFPtr(uintptr_t vf, int pos)->uintptr_t* {
@@ -387,10 +387,10 @@ public:
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <typeparam name="ret">·µ»ØÖµµÄº¯ÊıµÄ½á¹¹</typeparam>
-	/// <param name="sig">ÌØÕ÷Âë¶¨Î»ºóµÄµØÖ·</param>
-	/// <param name="offset">sigµ½Ìø×ªÖµÖ®¼äµÄµØÖ·</param>
-	/// <returns>·µ»ØÒ»¸ö¿Éµ÷ÓÃµÄº¯ÊıµÄµØÖ·</returns>
+	/// <typeparam name="ret">è¿”å›å€¼çš„å‡½æ•°çš„ç»“æ„</typeparam>
+	/// <param name="sig">ç‰¹å¾ç å®šä½åçš„åœ°å€</param>
+	/// <param name="offset">sigåˆ°è·³è½¬å€¼ä¹‹é—´çš„åœ°å€</param>
+	/// <returns>è¿”å›ä¸€ä¸ªå¯è°ƒç”¨çš„å‡½æ•°çš„åœ°å€</returns>
 	template < typename ret>
 	static inline auto FuncFromSigOffset(uintptr_t sig, int offset) -> ret {
 		auto jmpval = *reinterpret_cast<int*>(sig + offset);

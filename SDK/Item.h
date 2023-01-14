@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "..\Mod\Utils\HMath.h"
 
 class Item {
@@ -15,7 +15,7 @@ public:
 	static auto SetVFtables(uintptr_t** vTables) -> void;
 public:
 	auto isValid() -> bool;
-	auto getIdEx() -> short; //5498 µöÓã¸Íid
+	auto getIdEx() -> short; //5498 é’“é±¼ç«¿id
 
 public:
 	class ItemStack* use(class ItemStack*, class Player*);								/*84*/

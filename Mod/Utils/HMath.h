@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #define PI (3.1415927f)
 
 #include <math.h>
@@ -253,7 +253,7 @@ struct vec3_t {
 		return angles;
 	}
 
-	//»ñÈ¡Á½¸ö×ø±êÖ®¼äµÄ¾àÀë
+	//è·å–ä¸¤ä¸ªåæ ‡ä¹‹é—´çš„è·ç¦»
 	float CoordinateDistance(vec3_t dst) {
 		return sqrtf((x - dst.x) * (x - dst.x) + (y - dst.y) * (y - dst.y) + (z - dst.z) * (z - dst.z));
 	}

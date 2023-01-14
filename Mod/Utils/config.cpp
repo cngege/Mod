@@ -1,4 +1,4 @@
-#include "config.h"
+ï»¿#include "config.h"
 #include <io.h>
 #include "Utils.h"
 //#include "Logger.h"
@@ -6,7 +6,7 @@
 //#include <iostream>
 //#include <vector>
 
-std::string config::currentSaveConfigFile = "Default";					// Ö¸Ê¾µ±Ç°Ê¹ÓÃµÄÅäÖÃÎÄ¼şµÄÄ¬ÈÏÖµ Ò²¾ÍÊÇÄ¬ÈÏÊ¹ÓÃ Default.json Õâ¸öÅäÖÃÎÄ¼ş
+std::string config::currentSaveConfigFile = "Default";					// æŒ‡ç¤ºå½“å‰ä½¿ç”¨çš„é…ç½®æ–‡ä»¶çš„é»˜è®¤å€¼ ä¹Ÿå°±æ˜¯é»˜è®¤ä½¿ç”¨ Default.json è¿™ä¸ªé…ç½®æ–‡ä»¶
 
 std::string config::getConfigFilePath() {
 	static std::string configFilePath = Utils::WStringToString(Utils::GetRoamingFolderPath()) + "\\Mod\\Config\\";
@@ -21,14 +21,14 @@ std::vector<std::string> config::findAllConfigFile() {
 	if ((hFile = _findfirst(getConfigFilePath().append("*.json").c_str(),&fileinfo)) != -1) {
 		do {
 			if (!(fileinfo.attrib & _A_SUBDIR)) {
-				if (strcmp(fileinfo.name, "config.json") != 0) {				// config.json ×÷Îª¹Ì¶¨ÅäÖÃ,ºÍÆäËû±£´æÄ£¿éĞÅÏ¢µÈÅäÖÃ²»Ò»Ñù
+				if (strcmp(fileinfo.name, "config.json") != 0) {				// config.json ä½œä¸ºå›ºå®šé…ç½®,å’Œå…¶ä»–ä¿å­˜æ¨¡å—ä¿¡æ¯ç­‰é…ç½®ä¸ä¸€æ ·
 					auto fname = std::string(fileinfo.name);
 					auto find = fname.find(".json");
 					files.push_back(fname.substr(0, find));
 				}
 			}
 			else {
-				//µİ¹é²éÑ¯ÄÚ²¿ÎÄ¼ş¼Ğ ÕâÀï²»ĞèÒª
+				//é€’å½’æŸ¥è¯¢å†…éƒ¨æ–‡ä»¶å¤¹ è¿™é‡Œä¸éœ€è¦
 			}
 		} while (_findnext(hFile, &fileinfo) == 0);
 	}
@@ -41,7 +41,7 @@ std::vector<std::string> config::findAllConfigFile() {
 json config::loadConfigonRootFromFile(const std::string& name) {
 	json ret = {};
 	std::ifstream f((getConfigFilePath() + name + ".json").c_str());
-	if (f.good())								//±íÊ¾ÅäÖÃÎÄ¼ş´æÔÚ
+	if (f.good())								//è¡¨ç¤ºé…ç½®æ–‡ä»¶å­˜åœ¨
 	{
 		f >> ret;
 		f.close();
@@ -67,7 +67,7 @@ json config::loadConfigFromDefaultFile(std::string key) {
 	return loadConfigFromFile("Default", key);
 }
 
-// Ğ´ÈëÅäÖÃ
+// å†™å…¥é…ç½®
 bool config::writeConfigonRootToFile(const std::string& name, json data) {
 	std::ofstream c((getConfigFilePath() + name + ".json").c_str());
 	c << data.dump(2);

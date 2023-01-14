@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Player.h"
 #include <intsafe.h>
 
@@ -21,13 +21,13 @@ public:
 	//LocalPlayer::displayClientMessage(std::string const&)  //388
 
 public:
-	//¶¨Òåº¯Êý
+	//å®šä¹‰å‡½æ•°
 	auto getClientInstance()->class ClientInstance*;
 	auto isOnGround()->bool*;
 	//auto isValid()->bool;
 
 public:
-	//Ðé±íº¯Êý
+	//è™šè¡¨å‡½æ•°
 	//auto setPos(vec3_t*)->__int64;									/*14*/
 	auto jumpFromGround()->UINT64;										/*346*/
 	auto displayClientMessage(class TextHolder*)->UINT64;				/*389*/

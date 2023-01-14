@@ -2,7 +2,6 @@
 #include "../../Utils/Game.h"
 #include "Actor.h"
 #include "LocalPlayer.h"
-#pragma execution_character_set("utf-8")
 
 HiveTreasurePos::HiveTreasurePos() : Module(VK_F7, "HiveTreasurePos", "在 HIVE 起床战争中,把附近小的宝箱碰撞箱拉过来") {
 	SetKeyMode(KeyMode::Switch);

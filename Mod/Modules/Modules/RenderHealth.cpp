@@ -3,7 +3,6 @@
 #include "MinecraftUIRenderContext.h"
 #include "imgui.h"
 #include <string.h>
-#pragma execution_character_set("utf-8")
 
 RenderHealth::RenderHealth() : Module(VK_F10, "RenderHealth", "显示被攻击生物的血量和名字") {
 	setcontrolkeysbind({ VK_CONTROL });

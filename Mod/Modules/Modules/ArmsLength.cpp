@@ -1,6 +1,5 @@
 ﻿#include "ArmsLength.h"
 #include "../../Utils/Logger.h"
-#pragma execution_character_set("utf-8")
 
 ArmsLength::ArmsLength() : Module(VK_F10, "ArmsLength", "修改玩家攻击距离") {
 	setcontrolkeysbind({ VK_SHIFT });

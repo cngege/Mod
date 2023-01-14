@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include "Json.hpp"
 
@@ -8,16 +8,16 @@ class config {
 public:
 	static std::string currentSaveConfigFile;
 public:
-	//static bool setconfigFile(const std::string& name);								// ÎŞĞèºó×º Í³Ò»ºó×º.json
-	static std::string getConfigFilePath();												// »ñÈ¡ÅäÖÃÎÄ¼şµÄÄ¿Â¼Î»ÖÃ \\½áÎ²
-	static std::vector<std::string> findAllConfigFile();								// ´ÓÅäÖÃÎÄ¼şÄ¿Â¼ÖĞ ¶ÁÈ¡ËùÓĞºó×ºÎªjsonµÄÎÄ¼ş
-	static json loadConfigonRootFromFile(const std::string& name);						// ¶ÁÈ¡Ä³¸öÅäÖÃÎÄ¼şÖĞµÄjson,·µ»ØÕû¸öjsonÄÚÈİ
-	static json loadConfigonRootFromDefaultFile();										// ¶ÁÈ¡Ä¬ÈÏÅäÖÃÎÄ¼şÖĞµÄjson,·µ»ØÕû¸öjsonÄÚÈİ
-	static json loadConfigFromFile(const std::string& name, std::string key);			// ¶ÁÈ¡Ä³¸öÅäÖÃÎÄ¼şÖĞµÄjson,·µ»ØÖ¸¶¨keyµÄjsonÄÚÈİ
-	static json loadConfigFromDefaultFile(std::string key);								// ¶ÁÈ¡Ä¬ÈÏÅäÖÃÎÄ¼şÖĞµÄjson,·µ»ØÖ¸¶¨keyµÄjsonÄÚÈİ(Ä¬ÈÏÅäÖÃÎÄ¼ş:Default.json)
+	//static bool setconfigFile(const std::string& name);								// æ— éœ€åç¼€ ç»Ÿä¸€åç¼€.json
+	static std::string getConfigFilePath();												// è·å–é…ç½®æ–‡ä»¶çš„ç›®å½•ä½ç½® \\ç»“å°¾
+	static std::vector<std::string> findAllConfigFile();								// ä»é…ç½®æ–‡ä»¶ç›®å½•ä¸­ è¯»å–æ‰€æœ‰åç¼€ä¸ºjsonçš„æ–‡ä»¶
+	static json loadConfigonRootFromFile(const std::string& name);						// è¯»å–æŸä¸ªé…ç½®æ–‡ä»¶ä¸­çš„json,è¿”å›æ•´ä¸ªjsonå†…å®¹
+	static json loadConfigonRootFromDefaultFile();										// è¯»å–é»˜è®¤é…ç½®æ–‡ä»¶ä¸­çš„json,è¿”å›æ•´ä¸ªjsonå†…å®¹
+	static json loadConfigFromFile(const std::string& name, std::string key);			// è¯»å–æŸä¸ªé…ç½®æ–‡ä»¶ä¸­çš„json,è¿”å›æŒ‡å®škeyçš„jsonå†…å®¹
+	static json loadConfigFromDefaultFile(std::string key);								// è¯»å–é»˜è®¤é…ç½®æ–‡ä»¶ä¸­çš„json,è¿”å›æŒ‡å®škeyçš„jsonå†…å®¹(é»˜è®¤é…ç½®æ–‡ä»¶:Default.json)
 
-	static bool writeConfigonRootToFile(const std::string& name, json data);			// ½«jsonĞ´Èëµ½Õû¸öÅäÖÃÖĞ
-	static bool writeConfigonRootFromDefaultFile(json data);							// ½«jsonÍêÈ«Ğ´µ½Ä¬ÈÏÅäÖÃÎÄ¼şÖĞ
+	static bool writeConfigonRootToFile(const std::string& name, json data);			// å°†jsonå†™å…¥åˆ°æ•´ä¸ªé…ç½®ä¸­
+	static bool writeConfigonRootFromDefaultFile(json data);							// å°†jsonå®Œå…¨å†™åˆ°é»˜è®¤é…ç½®æ–‡ä»¶ä¸­
 
 	template <class T>
 	static T readDataFromJson(json data, std::string key, T defdata);

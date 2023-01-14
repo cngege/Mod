@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <cstdint>
 #include <functional>
 
@@ -10,12 +10,12 @@ public:
 public:
 	auto getAllPlayer()->std::vector<class Player*>;
 public:
-	//Ğé±íº¯Êı
+	//è™šè¡¨å‡½æ•°
 	auto getTime()->int;															/*111*/
 	auto setTime(int)->void;														/*112*/
 	
-	//Ğé±íº¯ÊıHook
+	//è™šè¡¨å‡½æ•°Hook
 	auto startLeaveGame() -> void;													/*2*/
 	auto Tick()->void;																/*101*/
-	auto forEachPlayer(std::function<bool(class Player&)>) -> void;					/*222 / 223 ÓÃÌØÕ÷Âë¶¨Î»call·ÇĞé±í */
+	auto forEachPlayer(std::function<bool(class Player&)>) -> void;					/*222 / 223 ç”¨ç‰¹å¾ç å®šä½calléè™šè¡¨ */
 };

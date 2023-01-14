@@ -4,7 +4,6 @@
 #include "TextHolder.h"
 #include "../../Utils/Game.h"
 #include "../../Utils/Utils.h"
-#pragma execution_character_set("utf-8")
 
 NoAttackFriend::NoAttackFriend() : Module(VK_F4, "NoAttackFriend", "根据玩家名称的颜色识别玩家为队友时拦截攻击") {
 	setcontrolkeysbind({ VK_SHIFT });

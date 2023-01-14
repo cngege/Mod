@@ -1,5 +1,4 @@
-﻿#pragma execution_character_set("utf-8")
-#include "Render.h"
+﻿#include "Render.h"
 #include <string>
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"

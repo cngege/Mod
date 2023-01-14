@@ -1,4 +1,4 @@
-#include "../Mod/Utils/Utils.h"
+ï»¿#include "../Mod/Utils/Utils.h"
 #include "ServerPlayer.h"
 #include "LocalPlayer.h"
 
@@ -22,12 +22,12 @@ auto ServerPlayer::SetVFtables(uintptr_t** vfTable)->void {
 }
 
 
-//Ðéº¯Êý »Øµ÷
+//è™šå‡½æ•° å›žè°ƒ
 uintptr_t* ServerPlayer::tickWorldCall = nullptr;
 
 
-//Ðéº¯Êý
-//¾ßÓÐÔ­Ê¼¹¦ÄÜµÄµ÷ÓÃ
+//è™šå‡½æ•°
+//å…·æœ‰åŽŸå§‹åŠŸèƒ½çš„è°ƒç”¨
 auto ServerPlayer::tickWorld(void* Tick)->void* {
 	using Fn = void*(__fastcall*)(ServerPlayer*, void*);
 	return reinterpret_cast<Fn>(tickWorldCall)(this, Tick);

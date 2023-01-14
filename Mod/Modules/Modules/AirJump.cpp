@@ -1,9 +1,8 @@
-#pragma execution_character_set("utf-8")
-#include "AirJump.h"
+ï»¿#include "AirJump.h"
 #include "LocalPlayer.h"
 #include "GameMode.h"
 
-AirJump::AirJump() : Module(0, "AirJump", "¿ÕÆøÌø") {
+AirJump::AirJump() : Module(0, "AirJump", "ç©ºæ°”è·³") {
 
 }
 

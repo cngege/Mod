@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Player.h"
 
 class ServerPlayer : public Player
@@ -12,10 +12,8 @@ public:
 	static auto GetVFtables()->uintptr_t**;
 	static auto SetVFtables(uintptr_t** vTables)->void;
 
-	//Ðéº¯Êý
+	//è™šå‡½æ•°
 public:
 	static uintptr_t* tickWorldCall;							/*369*/
 	auto tickWorld(void* Tick)->void*;
-
-
 };

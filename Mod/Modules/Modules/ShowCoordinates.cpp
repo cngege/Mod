@@ -1,7 +1,6 @@
-#include "ShowCoordinates.h"
-#pragma execution_character_set("utf-8")
+ï»¿#include "ShowCoordinates.h"
 
-ShowCoordinates::ShowCoordinates() : Module(0, "ShowCoordinates", "¿ªÆôºóÇ¿ÖÆÏÔÊ¾×óÉÏ½Ç×ø±ê") {
+ShowCoordinates::ShowCoordinates() : Module(0, "ShowCoordinates", "å¼€å¯åå¼ºåˆ¶æ˜¾ç¤ºå·¦ä¸Šè§’åæ ‡") {
 	//setEnabled(true);
 }
 

@@ -1,6 +1,5 @@
 ﻿#include "NoKnockback.h"
 #include "Game.h"
-#pragma execution_character_set("utf-8")
 
 NoKnockback::NoKnockback() : Module(VK_F4, "NoKnockback", "按下快捷键后不会被击退") {
 	setcontrolkeysbind({ VK_CONTROL });

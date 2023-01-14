@@ -1,5 +1,4 @@
-﻿#pragma execution_character_set("utf-8")
-#include "Debug.h"
+﻿#include "Debug.h"
 #include "imgui.h"
 #include "../../imgui/toggle/imgui_toggle.h"
 #include "../../imgui/toggle/imgui_toggle_presets.h"

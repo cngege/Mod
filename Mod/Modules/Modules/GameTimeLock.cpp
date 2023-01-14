@@ -1,31 +1,30 @@
-#pragma execution_character_set("utf-8")
-#include "GameTimeLock.h"
+ï»¿#include "GameTimeLock.h"
 #include "GameMode.h"
 #include "LocalPlayer.h"
 #include "Level.h"
 #include "Game.h"
 
-GameTimeLock::GameTimeLock() : Module(0, "GameTimeLock", "½«ÓÎÏ·Ê±¼ä¹Ì¶¨µ½Ò»¸öÉèÖÃµÄÊ±¼ä,²»»á¸Ä±äÕæÊµÊ±¼ä") {
-	AddIntUIValue("Ê±¼ä", &time, 0, 1000000,true);
-	AddButtonUIEvent("Çå³¿", false, [this]() {
+GameTimeLock::GameTimeLock() : Module(0, "GameTimeLock", "å°†æ¸¸æˆæ—¶é—´å›ºå®šåˆ°ä¸€ä¸ªè®¾ç½®çš„æ—¶é—´,ä¸ä¼šæ”¹å˜çœŸå®žæ—¶é—´") {
+	AddIntUIValue("æ—¶é—´", &time, 0, 1000000,true);
+	AddButtonUIEvent("æ¸…æ™¨", false, [this]() {
 		time = 0;
 		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {
 			Game::localplayer->getLevel()->setTime(time);
 		}
 	});
-	AddButtonUIEvent("ÕýÎç", true, [this]() {
+	AddButtonUIEvent("æ­£åˆ", true, [this]() {
 		time = 6000;
 		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {
 			Game::localplayer->getLevel()->setTime(time);
 		}
 	});
-	AddButtonUIEvent("°øÍí", true, [this]() {
+	AddButtonUIEvent("å‚æ™š", true, [this]() {
 		time = 12000;
 		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {
 			Game::localplayer->getLevel()->setTime(time);
 		}
 	});
-	AddButtonUIEvent("ÎçÒ¹", true, [this]() {
+	AddButtonUIEvent("åˆå¤œ", true, [this]() {
 		time = 18000;
 		if (Game::localplayer->isValid() && Game::localplayer->getLevel()) {
 			Game::localplayer->getLevel()->setTime(time);

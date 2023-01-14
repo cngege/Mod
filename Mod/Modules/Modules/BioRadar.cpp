@@ -1,5 +1,4 @@
-﻿#pragma execution_character_set("utf-8")
-#include "BioRadar.h"
+﻿#include "BioRadar.h"
 #include "imgui.h"
 #include "Game.h"
 #include <cmath>

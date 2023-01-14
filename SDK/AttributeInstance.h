@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 enum Attribute : __int64 {
 	HEALTH = 30064771328,						//25769804032 30064771328
-	MOVEMENT_SPEED = 38654705921				//À´×Ô PlayerµÚ292¸öĞé±íº¯Êı Player::getSpeed 38654705921
+	MOVEMENT_SPEED = 38654705921				//æ¥è‡ª Playerç¬¬292ä¸ªè™šè¡¨å‡½æ•° Player::getSpeed 38654705921
 };
 
 class AttributeInstance {

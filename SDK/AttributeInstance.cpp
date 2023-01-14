@@ -1,7 +1,7 @@
-#include "AttributeInstance.h"
+ï»¿#include "AttributeInstance.h"
 
 int AttributeInstance::getCurrentValueoffset = 0;
 
 auto AttributeInstance::getCurrentValue()->float {
-	return *((float*)((char*)this + getCurrentValueoffset));			//Õâ¸öÆ«ÒÆÊÇÆ«ÒÆ×Ö½Ú
+	return *((float*)((char*)this + getCurrentValueoffset));			//è¿™ä¸ªåç§»æ˜¯åç§»å­—èŠ‚
 }

@@ -1,4 +1,4 @@
-#include "Player.h"
+ï»¿#include "Player.h"
 #include "../Mod/Utils/Utils.h"
 
 int Player::RotPtrOffset = 0;
@@ -27,7 +27,7 @@ auto Player::SetVFtables(uintptr_t** vfTable)->void {
 	vfTables = vfTable;
 }
 
-//vec.x±íÊ¾ÊúÖ±·½ÏòµÄÖµÇÒÊúÖ±·½ÏòµÄÖµÔÚÇ°
+//vec.xè¡¨ç¤ºç«–ç›´æ–¹å‘çš„å€¼ä¸”ç«–ç›´æ–¹å‘çš„å€¼åœ¨å‰
 auto Player::getRotEx1()->vec2_t* {
 	return *(vec2_t**)(this + RotPtrOffset);
 }
@@ -37,7 +37,7 @@ auto Player::getRotEx2()->vec2_t* {
 }
 
 
-//Ðé±íº¯Êý
+//è™šè¡¨å‡½æ•°
 
 auto Player::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
 	GetVFtableFun<void,Player*, vec3_t*,bool, unsigned int, unsigned int>(45)(this,pos,a1,a2,a3);
