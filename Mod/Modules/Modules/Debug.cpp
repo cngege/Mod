@@ -7,7 +7,6 @@ ImGuiToggleConfig toggerConfig_Debug;
 
 
 Debug::Debug() : Module(0, "Debug", "开发者调试") {
-	setEnabled(true);
 	toggerConfig_Debug = ImGuiTogglePresets::RectangleStyle();
 }
 
@@ -32,4 +31,12 @@ auto Debug::onImGUIRender() -> void
 	if (ShowFontSelector) {
 		ImGui::ShowFontSelector("字体选择");
 	}
+}
+
+auto Debug::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", false));
+}
+
+auto Debug::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
 }

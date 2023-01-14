@@ -168,29 +168,6 @@ auto Render::onImGUIRender()->void {
 				Loader::Eject_Signal = true;
 			}
 		}
-		//if (ImGui::CollapsingHeader(("Aura"))) {
-		//	ImGui::Spacing();
-		//	if (ImGui::Button("Test")) {
-		//	}
-		//	//ImGui::Toggle("Toggle Snow D3D11", &ImGui::doSnow);
-		
-		//	ImGui::ButtonScrollable("Button Scrollable", ImVec2(300.f, 0.f));
-		//	//ImGui::ButtonScrollable("Button Scrollable that fits in button size", ImVec2(350.f, 0.f));
-		//	ImGui::ButtonScrollableEx("Button Scrollable (Right-click only!)", ImVec2(355.f, 0.f), ImGuiButtonFlags_MouseButtonRight);
-		//	ImGui::Spacing();
-		//}
-		//if (ImGui::CollapsingHeader(("Client"))) {
-		//	ImGui::Spacing();
-		//	if (ImGui::Button("中国制造汇集全球")) {
-		//	}
-		//	ImGui::Spacing();
-		//}
-		//if (ImGui::CollapsingHeader(("Exploits"))) {
-		//	ImGui::Spacing();
-		//	if (ImGui::Button("中国制造汇集全球")) {
-		//	}
-		//	ImGui::Spacing();
-		//}
 	}
 	ImGui::End();
 }
