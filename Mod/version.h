@@ -3,7 +3,7 @@
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 3
 #define VERSION_REVISION 4
-#define VERSION_BUILD 1
+#define VERSION_BUILD 2
 
 #define PLUGIN_NAME "Mod"
 #define PLUGIN_INTRODUCTION "Minecraft Windows Win10 Mod"

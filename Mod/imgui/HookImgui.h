@@ -86,6 +86,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		ID3D11Texture2D* pBackBuffer = nullptr;
 		ppSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 		ID3D11RenderTargetView* mainRenderTargetView;
+		if (!pBackBuffer) goto out;
 		d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
 		pBackBuffer->Release();
 
@@ -299,6 +300,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			ID3D12Resource* pBackBuffer = nullptr;
 			frameContext[i].main_render_target_descriptor = rtvHandle;
 			ppSwapChain->GetBuffer(i, IID_PPV_ARGS(&pBackBuffer));
+			if (!pBackBuffer) goto out;
 			d3d12Device->CreateRenderTargetView(pBackBuffer, nullptr, rtvHandle);
 			frameContext[i].main_render_target_resource = pBackBuffer;
 			rtvHandle.ptr += rtvDescriptorSize;
