@@ -23,7 +23,7 @@ auto RenderHealth::onAttack(Actor* actor)->bool {
 			currentPlayerName = sname.substr(0, find);
 		}
 
-		tick = 300.f;
+		tick = 400.f;
 		show = true;
 	}
 	return true;
