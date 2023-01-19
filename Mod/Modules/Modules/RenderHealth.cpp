@@ -12,8 +12,17 @@ RenderHealth::RenderHealth() : Module(VK_F10, "RenderHealth", "显示被攻击�
 
 auto RenderHealth::onAttack(Actor* actor)->bool {
 	if (isEnabled()) {
-		currentActorVT = *(uintptr_t*)actor;
-		currentActor = actor;
+		currentPlayerHealth = (int)actor->getHealth();
+
+		std::string sname = std::string(actor->getNameTag()->getText());
+		auto find = sname.find("\n");
+		if (find == -1) {
+			currentPlayerName = std::string(actor->getNameTag()->getText());
+		}
+		else {
+			currentPlayerName = sname.substr(0, find);
+		}
+
 		tick = 300.f;
 		show = true;
 	}
@@ -26,22 +35,6 @@ auto RenderHealth::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 		if (tick <= 0) {
 			show = false;
 			return;
-		}
-		if (*(uintptr_t*)currentActor == currentActorVT) {				//防止实体移除后，后面还会调用这个实体类中的方法
-			currentPlayerHealth = (int)currentActor->getHealth();
-			if (currentPlayerHealth != 0) {								//只有在生物血量不为0的时候才更新生物名称
-				std::string sname = currentActor->getNameTag()->getText();
-				auto find = sname.find("\n");
-				if (find == -1) {
-					currentPlayerName = currentActor->getNameTag()->getText();
-				}
-				else {
-					currentPlayerName = sname.substr(0, find);
-				}
-			}
-			else {
-				currentActorVT = -1;
-			}
 		}
 
 		RECT rect{};

@@ -40,12 +40,23 @@ struct TextMeasureData {
 };
 
 class BitmapFont;
-class CaretMeasureData;
+class CaretMeasureData {
+public:
+	int a;
+	int b;
+public:
+	CaretMeasureData(int paramA = 0xFFFFFFFF, bool paramB = false) {
+		this->a = paramA;
+		this->b = paramB;
+	};
+};
 
-using MUICDrawText = void(__fastcall*)(class MinecraftUIRenderContext*, BitmapFont*, RectangleArea const&, TextHolder* , UIColor const&, float, float, TextMeasureData*, uintptr_t*);
+using MUICDrawText = void(__fastcall*)(class MinecraftUIRenderContext*, BitmapFont*, RectangleArea const&, TextHolder* , UIColor const&, float, float, TextMeasureData*, CaretMeasureData*);
 //MUICDrawText drawtextCall;
 
 class MinecraftUIRenderContext {
+public:
+	class ClientInstance* CI;
 private:
 	virtual void Destructor();
 public:
@@ -54,8 +65,8 @@ private:
 	virtual int getTextAlpha();
 	virtual void setTextAlpha();
 public:
-	virtual void drawDebugText(RectangleArea const&, std::string const&, UIColor const&, float, float, TextMeasureData const&, CaretMeasureData const&);
-	virtual void drawText(BitmapFont&, RectangleArea const&, std::string const&, UIColor const&, float, float, TextMeasureData const&, CaretMeasureData const&);
+	virtual void drawDebugText(RectangleArea const&, std::string*, UIColor const&, float, float, TextMeasureData*, CaretMeasureData*);
+	virtual void drawText(BitmapFont&, RectangleArea const&, std::string*, UIColor const&, float, float, TextMeasureData*, CaretMeasureData*);
 	virtual void flushText(float);
 private:
 	virtual void drawImage();
@@ -91,7 +102,7 @@ public:
 
 	void Drawtext(const vec2_t& pos, std::string* textStr, const UIColor& color, float textSize) {
 		
-		static uintptr_t caretMeasureData = 0xFFFFFFFF;
+		CaretMeasureData caretMeasureData{};
 		if (!Game::mcfont)
 		{
 			return;

@@ -775,13 +775,15 @@ auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	renderDetourcall(_this, ctx);
 	if (frame >= 3) {
 		frame = 0;
+		if (Game::Cinstance == nullptr) logF("[Hook::RenderDetour] CI: %llx", ctx->CI);
+		Game::Cinstance = ctx->CI;
 		Game::GetModuleManager()->onRenderDetour(ctx);
 	}
 	frame++;
 }
 
 
-auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleArea const& a2, TextHolder* a3, UIColor const& a4, float a5, float a6, TextMeasureData* a7, uintptr_t* a8)->void {
+auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleArea const& a2, TextHolder* a3, UIColor const& a4, float a5, float a6, TextMeasureData* a7, CaretMeasureData* a8)->void {
 	if (Game::mcfont != a1) {
 		if (Game::mcfont == nullptr) {
 			Game::mcfont = a1;
