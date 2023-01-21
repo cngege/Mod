@@ -20,6 +20,8 @@ int Actor::GetAttributeInstance_HealthFunVT = 0;
 uintptr_t* Actor::setVelocityCallptr = nullptr;
 uintptr_t* Actor::getShadowRadiusCallptr = nullptr;
 
+uintptr_t* Actor::getDimensionConstCallptr = 0;
+
 uintptr_t** Actor::vfTables = nullptr;
 
 template <typename TRet, typename... TArgs>
@@ -156,8 +158,20 @@ auto Actor::isValid() -> bool
 	return (uintptr_t)this && *(uintptr_t*)this;
 }
 
+auto Actor::getDimensionConst() -> class Dimension*{
+	using Fn = Dimension*(__fastcall*)(Actor*);
+	return reinterpret_cast<Fn>(getDimensionConstCallptr)(this);
+}
 
-auto Actor::setVelocity(vec3_t* sp)->void* {
+auto Actor::setIsInWater(bool isinwater) -> void
+{
+	// 来自 Actor的第 * 个虚表函数 Actor::IsInWater(), 从这个函数中获取玩家是否在水中的偏移
+	static int offset = *reinterpret_cast<int*>((uintptr_t)GetVFtableFun(73) + 3);
+	*reinterpret_cast<bool*>((uintptr_t)this + offset) = isinwater;
+}
+
+
+auto Actor::setVelocity(vec3_t* sp)->void*{
 	using Fn = void*(__fastcall*)(Actor*, vec3_t*);
 	return reinterpret_cast<Fn>(setVelocityCallptr)(this,sp);
 }
@@ -169,8 +183,7 @@ auto Actor::getShadowRadius()->float {
 
 // 虚表函数
 
-auto Actor::getStatusFlag(ActorFlags af)->bool
-{
+auto Actor::getStatusFlag(ActorFlags af)->bool{
 	return GetVFtableFun<bool, Actor*, ActorFlags>(0)(this, af);
 }
 
@@ -207,6 +220,11 @@ auto Actor::getNameTag()->TextHolder* {
 // 第67->70号虚表 Actor调用的是 Actor::isPlayer, Player调用的是Player::isPlayer,所以可用
 auto Actor::isPlayer()->bool {
 	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[70])(this);
+}
+
+auto Actor::isInWater() -> bool
+{
+	return GetVFtableFun<bool, Actor*>(73)(this);
 }
 
 

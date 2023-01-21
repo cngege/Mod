@@ -192,6 +192,7 @@
     <ClInclude Include="..\SDK\Actor.h" />
     <ClInclude Include="..\SDK\AttributeInstance.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
+    <ClInclude Include="..\SDK\Dimension.h" />
     <ClInclude Include="..\SDK\FishingHook.h" />
     <ClInclude Include="..\SDK\GameMode.h" />
     <ClInclude Include="..\SDK\GuiData.h" />
@@ -262,6 +263,7 @@
     <ClCompile Include="..\SDK\Actor.cpp" />
     <ClCompile Include="..\SDK\AttributeInstance.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
+    <ClCompile Include="..\SDK\Dimension.cpp" />
     <ClCompile Include="..\SDK\FishingHook.cpp" />
     <ClCompile Include="..\SDK\GameMode.cpp" />
     <ClCompile Include="..\SDK\Item.cpp" />

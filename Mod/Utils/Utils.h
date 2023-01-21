@@ -385,7 +385,7 @@ public:
 	}
 
 	/// <summary>
-	/// 
+	/// 可在一个函数的调用者处定位这个函数
 	/// </summary>
 	/// <typeparam name="ret">返回值的函数的结构</typeparam>
 	/// <param name="sig">特征码定位后的地址</param>

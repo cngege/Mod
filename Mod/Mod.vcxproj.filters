@@ -246,6 +246,9 @@
     <ClInclude Include="version.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SDK\Dimension.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -421,6 +424,9 @@
     </ClCompile>
     <ClCompile Include="imgui\toggle\imgui_toggle_renderer.cpp">
       <Filter>IMGUI\Toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\Dimension.cpp">
+      <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

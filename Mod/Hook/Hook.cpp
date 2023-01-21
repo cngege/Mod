@@ -413,7 +413,7 @@ auto Hook::init() -> void
 		else
 		{
 			auto ActorVTable = Utils::FuncFromSigOffset<uintptr_t**>(ActorVTable_sigOffset, 3);
-			logF_Debug("[GameMode::SetVtables] [Success] 虚表指针= %llX , sigoffset= %llX , memcode=%s", ActorVTable, ActorVTable_sigOffset, memcode);
+			logF_Debug("[Actor::SetVtables] [Success] 虚表指针= %llX , sigoffset= %llX , memcode=%s", ActorVTable, ActorVTable_sigOffset, memcode);
 			Actor::SetVFtables(ActorVTable);
 			//虚表Hook
 			//Actor::setVelocity
@@ -665,8 +665,7 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 		Game::localplayer = _this;
 		logF_Debug("[%s] 本地玩家地址: %llX,虚表 = %llX","LocalPlayer_getCameraOffset", thisp, *(INT64*)thisp);
 		logF_Debug("[%s] Clientinstance: %llX ,通过本地玩家获取的CI: %llX ,虚表 = %llX","LocalPlayer_getCameraOffset", Game::Cinstance, _this->getClientInstance(), *(uintptr_t*)_this->getClientInstance());
-		//Level* l = _this->getLevel();
-		//logF("Level VT = %llX , Level::startLeaveGame addr= %llX", *reinterpret_cast<uintptr_t*>(l),Utils::GetVTFPtr(*reinterpret_cast<uintptr_t*>(l), 2));
+		logF_Debug("本地玩家所在的维度的指针: %llX", _this->getDimensionConst());
 	}
 	Game::GetModuleManager()->onLocalPlayerTick(_this);
 	return localplayer_getCameraOffsetcall(_this);
@@ -775,7 +774,6 @@ auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	renderDetourcall(_this, ctx);
 	if (frame >= 3) {
 		frame = 0;
-		if (Game::Cinstance == nullptr) logF("[Hook::RenderDetour] CI: %llx", ctx->CI);
 		Game::Cinstance = ctx->CI;
 		Game::GetModuleManager()->onRenderDetour(ctx);
 	}
@@ -788,9 +786,7 @@ auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleA
 		if (Game::mcfont == nullptr) {
 			Game::mcfont = a1;
 		}
-		//logF("mcfont = %llX,Text = %s", a1,a3->getText());
 	}
-	
 	reinterpret_cast<MUICDrawText>(MinecraftUIRenderContext::drawtextCall)(_this, a1, a2, a3, a4, a5, a6, a7, a8);
 }
 

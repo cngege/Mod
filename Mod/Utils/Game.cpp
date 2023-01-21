@@ -53,6 +53,24 @@ auto Game::init() -> void
 		}
 	}
 
+	//Actor::getDimensionConst(this);
+	{
+		auto offset = FindSignature("48 83 EC ? 48 8B 91 ? ? ? ? 4C 8B C1 48 85 D2");				// 该函数的地址
+		if (offset == 0x00) {
+			offset = FindSignature("E8 ? ? ? ? 45 33 C9 4C 8D 44 24 ? 48 8B D3");							// 调用者调用处的地址 : Actor::onEffectAdded
+			if (offset == 0x00) {
+				logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "Actor::getDimensionConst");
+				return;
+			}
+			else {
+				Actor::getDimensionConstCallptr = Utils::FuncFromSigOffset<uintptr_t*>(offset, 1);
+			}
+		}
+		else {
+			Actor::getDimensionConstCallptr = reinterpret_cast<uintptr_t*>(offset);
+		}
+	}
+
 	//获取玩家视角的指针的偏移地址
 	{
 		auto PlayerView_sigOffset = FindSignature("48 8B 88 ? ? ? ? 48 85 C9 0F 84 ? ? ? ? F3 0F 10 80");
