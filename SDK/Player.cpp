@@ -9,6 +9,7 @@ uintptr_t** Player::vfTables = nullptr;
 
 uintptr_t* Player::tickWorldCallptr = nullptr;
 uintptr_t* Player::getShadowRadiusCallptr = nullptr;
+uintptr_t* Player::startSwimmingCallptr = nullptr;
 
 template <typename TRet, typename... TArgs>
 auto Player::GetVFtableFun(int a)->auto* {
@@ -57,6 +58,12 @@ auto Player::getShadowRadius() -> float
 {
 	using Fn = float(__fastcall*)(Player*);
 	return reinterpret_cast<Fn>(getShadowRadiusCallptr)(this);
+}
+
+auto Player::startSwimming() -> void
+{
+	using Fn = void(__fastcall*)(Player*);
+	reinterpret_cast<Fn>(startSwimmingCallptr)(this);
 }
 
 auto Player::tickWorld(Tick* tick) -> void

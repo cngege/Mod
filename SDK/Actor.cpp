@@ -19,6 +19,7 @@ int Actor::GetAttributeInstance_HealthFunVT = 0;
 //uintptr_t Actor::isSneakingCallptr = 0;
 uintptr_t* Actor::setVelocityCallptr = nullptr;
 uintptr_t* Actor::getShadowRadiusCallptr = nullptr;
+uintptr_t* Actor::isInWaterCallptr = nullptr;
 
 uintptr_t* Actor::getDimensionConstCallptr = 0;
 
@@ -168,6 +169,13 @@ auto Actor::setVelocity(vec3_t* sp)->void*{
 	return reinterpret_cast<Fn>(setVelocityCallptr)(this,sp);
 }
 
+auto Actor::isInWater() -> bool{
+	//isInWaterCallptr
+	using Fn = bool(__fastcall*)(Actor*);
+	return reinterpret_cast<Fn>(isInWaterCallptr)(this);
+}
+
+
 auto Actor::getShadowRadius()->float {
 	using Fn = float(__fastcall*)(Actor*);
 	return reinterpret_cast<Fn>(getShadowRadiusCallptr)(this);
@@ -213,12 +221,6 @@ auto Actor::getNameTag()->TextHolder* {
 auto Actor::isPlayer()->bool {
 	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[70])(this);
 }
-
-auto Actor::isInWater() -> bool
-{
-	return GetVFtableFun<bool, Actor*>(73)(this);
-}
-
 
 auto Actor::getNameTagAsHash()->unsigned __int64 {
 	return GetVFtableFun<unsigned __int64, Actor*>(66)(this);

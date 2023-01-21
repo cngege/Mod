@@ -11,6 +11,7 @@ protected:
 public:
 	static uintptr_t* tickWorldCallptr;
 	static uintptr_t* getShadowRadiusCallptr;
+	static uintptr_t* startSwimmingCallptr;
 public:
 	template <typename TRet, typename... TArgs>
 	static auto GetVFtableFun(int)->auto*;
@@ -38,5 +39,6 @@ public:
 
 	//Hook虚表函数
 	auto getShadowRadius()->float;															/*79*/
+	auto startSwimming()->void;																/*202*/
 	auto tickWorld(class Tick*) -> void;													/*371*/
 };

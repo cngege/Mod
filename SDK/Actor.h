@@ -53,6 +53,7 @@ public:
 	//static uintptr_t isSneakingCallptr;
 	static uintptr_t* setVelocityCallptr;
 	static uintptr_t* getShadowRadiusCallptr;
+	static uintptr_t* isInWaterCallptr;
 
 	// 使用特征码直接找到的函数地址
 	static uintptr_t* getDimensionConstCallptr;
@@ -90,6 +91,7 @@ public:
 public:
 	// Hook的函数
 	auto setVelocity(vec3_t*)->void*;												/*46*/
+	auto isInWater()->bool;															/*73*/
 	auto getShadowRadius()->float;													/*79*/
 public:
 
@@ -105,7 +107,7 @@ public:
 	auto getNameTagAsHash()->unsigned __int64;										/*63*/
 	auto getFormattedNameTag(void*)->void*;											/*64*/
 	auto isPlayer()->bool;															/*67*/  // 因为MC中该函数功能的实现方法是 Player类重写,现在由类地址获取虚表获取该函数地址
-	auto isInWater()->bool;															/*73*/
+	
 	//获取玩家的移动方向 该函数在1.19.50.02 版本开始没有了
 	//auto getRotation()->vec2_t*;													/*81*/
 	auto setSneaking(bool)->void;													/*99*/

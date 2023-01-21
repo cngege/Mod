@@ -20,6 +20,7 @@
 #include "ItemStack.h"
 
 #include "../Modules/ModuleManager.h"
+#include "../Modules/Modules/NoWaterResistence.h"
 #include "../Modules/Modules/HitBox.h"
 #include "../Modules/Modules/InstantDestroy.h"
 #include "../Modules/Modules/ShowCoordinates.h"
@@ -419,8 +420,8 @@ auto Hook::init() -> void
 			//Actor::setVelocity
 			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(48), &Hook::SetVelocity, &Actor::setVelocityCallptr);
 			Actor::SpeedOffset = *reinterpret_cast<int*>((uintptr_t)Actor::GetVFtableFun(48) + 7);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(73), &Hook::Actor_isInWater, &Actor::isInWaterCallptr);
 			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(82), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
-
 		}
 	}
 
@@ -496,6 +497,8 @@ auto Hook::init() -> void
 			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(82), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
 			//Player::tickWorld
 			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(369), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
+			//Player::startSwimming
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(202), &Hook::Player_startSwimming, &Player::startSwimmingCallptr);
 		}
 	}
 
@@ -603,6 +606,16 @@ auto Hook::SetVelocity(Player* player,vec3_t* kb)->void*
 	return player->setVelocity(kb);
 }
 
+auto Hook::Actor_isInWater(Actor* actor) -> bool
+{
+	static NoWaterResistence* nwr = Game::GetModuleManager()->GetModule<NoWaterResistence*>();
+	if (nwr->isEnabled()) {
+		return 0;
+	}
+
+	return actor->isInWater();
+}
+
 auto Hook::Actor_getShadowRadius(Actor* actor)->float {
 	Game::GetModuleManager()->onActorSightTick(actor);
 	return actor->getShadowRadius();
@@ -665,7 +678,7 @@ auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 		Game::localplayer = _this;
 		logF_Debug("[%s] 本地玩家地址: %llX,虚表 = %llX","LocalPlayer_getCameraOffset", thisp, *(INT64*)thisp);
 		logF_Debug("[%s] Clientinstance: %llX ,通过本地玩家获取的CI: %llX ,虚表 = %llX","LocalPlayer_getCameraOffset", Game::Cinstance, _this->getClientInstance(), *(uintptr_t*)_this->getClientInstance());
-		logF_Debug("本地玩家所在的维度的指针: %llX", _this->getDimensionConst());
+		//logF_Debug("本地玩家所在的维度的指针: %llX", _this->getDimensionConst());
 	}
 	Game::GetModuleManager()->onLocalPlayerTick(_this);
 	return localplayer_getCameraOffsetcall(_this);
@@ -682,6 +695,15 @@ auto Hook::Player_getShadowRadius(Player* player) -> float
 {
 	Game::GetModuleManager()->onPlayerSightTick(player);
 	return player->getShadowRadius();
+}
+
+auto Hook::Player_startSwimming(Player* player) ->void
+{
+	static NoWaterResistence* nwr = Game::GetModuleManager()->GetModule<NoWaterResistence*>();
+	if (nwr->isEnabled()) {
+		return;
+	}
+	player->startSwimming();
 }
 
 //一直调用 且每位玩家都调用 这个函数好像是Player::getShadowRadius 不确定
