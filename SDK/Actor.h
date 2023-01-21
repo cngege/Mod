@@ -86,7 +86,6 @@ public:
 	auto isValid()->bool;
 
 	auto getDimensionConst()->class Dimension*;			/* 原版函数 通过特征码获取 */
-	auto setIsInWater(bool)->void;						/* form VT:73 isInWater */
 
 public:
 	// Hook的函数

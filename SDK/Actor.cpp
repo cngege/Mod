@@ -163,14 +163,6 @@ auto Actor::getDimensionConst() -> class Dimension*{
 	return reinterpret_cast<Fn>(getDimensionConstCallptr)(this);
 }
 
-auto Actor::setIsInWater(bool isinwater) -> void
-{
-	// 来自 Actor的第 * 个虚表函数 Actor::IsInWater(), 从这个函数中获取玩家是否在水中的偏移
-	static int offset = *reinterpret_cast<int*>((uintptr_t)GetVFtableFun(73) + 3);
-	*reinterpret_cast<bool*>((uintptr_t)this + offset) = isinwater;
-}
-
-
 auto Actor::setVelocity(vec3_t* sp)->void*{
 	using Fn = void*(__fastcall*)(Actor*, vec3_t*);
 	return reinterpret_cast<Fn>(setVelocityCallptr)(this,sp);

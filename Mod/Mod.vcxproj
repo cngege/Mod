@@ -243,6 +243,7 @@
     <ClInclude Include="Modules\Modules\InstantDestroy.h" />
     <ClInclude Include="Modules\Modules\NoAttackFriend.h" />
     <ClInclude Include="Modules\Modules\NoKnockback.h" />
+    <ClInclude Include="Modules\Modules\NoWaterResistence.h" />
     <ClInclude Include="Modules\Modules\Render.h" />
     <ClInclude Include="Modules\Modules\RenderHealth.h" />
     <ClInclude Include="Modules\Modules\ShowCoordinates.h" />
@@ -308,6 +309,7 @@
     <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
     <ClCompile Include="Modules\Modules\NoAttackFriend.cpp" />
     <ClCompile Include="Modules\Modules\NoKnockback.cpp" />
+    <ClCompile Include="Modules\Modules\NoWaterResistence.cpp" />
     <ClCompile Include="Modules\Modules\Render.cpp" />
     <ClCompile Include="Modules\Modules\RenderHealth.cpp" />
     <ClCompile Include="Modules\Modules\ShowCoordinates.cpp" />
