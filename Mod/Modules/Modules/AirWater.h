@@ -1,9 +1,11 @@
 ﻿#pragma once
 #include "../Module.h"
 
-class NoWaterResistence : public Module {
+class AirWater : public Module {
 public:
-	NoWaterResistence();
+	AirWater();
+
+public:
 
 	virtual auto onEnable() -> void override;
 	virtual auto onloadConfigFile(json& data) -> void override;

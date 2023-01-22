@@ -231,6 +231,7 @@
     <ClInclude Include="Modules\Module.h" />
     <ClInclude Include="Modules\ModuleManager.h" />
     <ClInclude Include="Modules\Modules\AirJump.h" />
+    <ClInclude Include="Modules\Modules\AirWater.h" />
     <ClInclude Include="Modules\Modules\ArmsLength.h" />
     <ClInclude Include="Modules\Modules\AutoSprinting.h" />
     <ClInclude Include="Modules\Modules\AutoWalking.h" />
@@ -297,6 +298,7 @@
     <ClCompile Include="Modules\Module.cpp" />
     <ClCompile Include="Modules\ModuleManager.cpp" />
     <ClCompile Include="Modules\Modules\AirJump.cpp" />
+    <ClCompile Include="Modules\Modules\AirWater.cpp" />
     <ClCompile Include="Modules\Modules\ArmsLength.cpp" />
     <ClCompile Include="Modules\Modules\AutoSprinting.cpp" />
     <ClCompile Include="Modules\Modules\AutoWalking.cpp" />

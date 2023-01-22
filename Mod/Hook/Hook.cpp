@@ -20,6 +20,7 @@
 #include "ItemStack.h"
 
 #include "../Modules/ModuleManager.h"
+#include "../Modules/Modules/AirWater.h"
 #include "../Modules/Modules/NoWaterResistence.h"
 #include "../Modules/Modules/HitBox.h"
 #include "../Modules/Modules/InstantDestroy.h"
@@ -609,8 +610,12 @@ auto Hook::SetVelocity(Player* player,vec3_t* kb)->void*
 auto Hook::Actor_isInWater(Actor* actor) -> bool
 {
 	static NoWaterResistence* nwr = Game::GetModuleManager()->GetModule<NoWaterResistence*>();
-	if (nwr->isEnabled()) {
-		return 0;
+	static AirWater* aw = Game::GetModuleManager()->GetModule<AirWater*>();
+	if (actor->isLocalPlayer() && nwr->isEnabled()) {
+		return false;
+	}
+	if (actor->isLocalPlayer() && aw->isEnabled()) {
+		return true;
 	}
 
 	return actor->isInWater();
