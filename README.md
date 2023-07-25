@@ -1,4 +1,7 @@
 ﻿# Minecraft  C++ Mod
+### **开发**
+关于游戏更新时特征码的查找以及 偏移的查找等
+已将相关方案记录在[Wiki](https://github.com/cngege/Mod/wiki)中, 开发者以及合作开发者请阅读
 
 ### **功能更新**
 
