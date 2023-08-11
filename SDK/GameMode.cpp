@@ -53,9 +53,9 @@ auto GameMode::useItem(class ItemStack* item)->bool {
 	return reinterpret_cast<Fn>(useItemCall)(this, item);
 }
 
-auto GameMode::useItemOn(class ItemStack* item, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
-	using Fn = bool(__fastcall*)(GameMode*, class ItemStack*, vec3_ti*, uint8_t*, vec3_t*, class Block*);
-	return reinterpret_cast<Fn>(useItemOnCall)(this, item,bpos,face,f,block);
+auto GameMode::useItemOn(class ItemStack* item, class ItemInstance* itemins, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
+	using Fn = bool(__fastcall*)(GameMode*, class ItemStack*, class ItemInstance* itemins, vec3_ti*, uint8_t*, vec3_t*, class Block*);
+	return reinterpret_cast<Fn>(useItemOnCall)(this, item, itemins, bpos, face, f, block);
 }
 
 //虚表函数实现

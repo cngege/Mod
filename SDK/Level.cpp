@@ -43,7 +43,7 @@ auto Level::Tick() -> void
 	reinterpret_cast<Fn>(tickCall)(this);
 }
 
-// 虚表
+// 虚表 检查版本 1.20
 auto Level::forEachPlayer(std::function<bool(class Player&)> fp)->void {
 #if PRIORITY_USE_VTF == 1
 	return reinterpret_cast<void(__fastcall*)(Level*, std::function<bool(class Player&)>)>((*(uintptr_t**)this)[207])(this, fp);

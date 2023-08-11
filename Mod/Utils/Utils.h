@@ -397,6 +397,11 @@ public:
 		return reinterpret_cast<ret>(sig + offset + 4 + jmpval);
 	}
 
+	static inline auto FuncFromSigOffset(uintptr_t sig, int offset) -> uintptr_t {
+		auto jmpval = *reinterpret_cast<int*>(sig + offset);
+		return sig + offset + 4 + jmpval;
+	}
+
 	// https://stackoverflow.com/a/34571089
 	static std::string base64_encode(const std::string& in) {
 		std::string out;
@@ -475,6 +480,44 @@ public:
 	}
 
 	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature);
+
+	/**
+	 * @brief 从某个给定的地址开始 寻找特征码, 不超过 border 范围
+	 * @param szPtr 给定的开始地址
+	 * @param szSignature 
+	 * @param border 
+	 * @return 
+	*/
+	static uintptr_t FindSignatureRelay(uintptr_t szPtr, const char* szSignature, int border) {
+		//uintptr_t startPtr = szPtr;
+		const char* pattern = szSignature;
+		for (;;) {
+			if (border <= 0) return 0;
+			pattern = szSignature;
+			uintptr_t startPtr = szPtr;
+			for (;;) {
+				if (*pattern == ' ') {
+					pattern++;
+				}
+				if (*pattern == '\0') {
+					return szPtr;
+				}
+				if (*pattern == '\?') {
+					pattern++;
+					startPtr++;
+					continue;
+				}
+				if (*(BYTE*)startPtr == GET_BYTE(pattern)) {
+					pattern+=2;
+					startPtr++;
+					continue;
+				}
+				break;
+			}
+			szPtr++;
+			border--;
+		}
+	};
 
 	static void WriteMemBytes(void*, std::vector<BYTE>);
 

@@ -13,28 +13,28 @@ enum KeyMode {
 
 struct IntUIValue
 {
-	std::string name;
-	int* value;
-	int min;
-	int max;
-	bool slider;
-	float speed;
+	std::string name{};
+	int* value = nullptr;
+	int min = 0;
+	int max = 0;
+	bool slider = false;
+	float speed = 0;
 };
 
 struct FloatUIValue
 {
-	std::string name;
-	float* value;
-	float min;
-	float max;
-	bool slider;
-	float speed;
+	std::string name{};
+	float* value = nullptr;
+	float min = 0;
+	float max = 0;
+	bool slider = false;
+	float speed = 0;
 };
 
 struct BoolUIValue
 {
 	std::string name;
-	bool* value;
+	bool* value = nullptr;
 };
 
 struct ButtonUIEvent
@@ -96,7 +96,7 @@ public:
 	virtual void onDisable();
 	virtual bool onAttack(class Actor*);				// 返回值可以拦截该事件
 	virtual bool useItem(class GameMode*,class ItemStack*);
-	virtual bool useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, struct vec3_t*, class Block*);
+	virtual bool useItemOn(class GameMode*, class ItemStack*, class ItemInstance* itemins, vec3_ti*, uint8_t*, struct vec3_t*, class Block*);
 	virtual bool onKnockback(class LocalPlayer*, struct vec3_t*);
 	virtual void onActorTick(class Actor*);
 	virtual void onActorSightTick(class Actor*);

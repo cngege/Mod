@@ -159,10 +159,27 @@ auto Actor::isValid() -> bool
 	return (uintptr_t)this && *(uintptr_t*)this;
 }
 
+/* 原版函数 通过特征码获取 */
 auto Actor::getDimensionConst() -> class Dimension*{
 	using Fn = Dimension*(__fastcall*)(Actor*);
 	return reinterpret_cast<Fn>(getDimensionConstCallptr)(this);
 }
+
+auto Actor::setPos(vec3_t* pos)->void* {
+	static uintptr_t setPosPtr = FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B DA 48 8B F9 48 8B CB");
+	using Fn = void* (__fastcall*)(Actor*, vec3_t*);
+	return reinterpret_cast<Fn>(setPosPtr)(this, pos);
+	//return GetVFtableFun<void*, Actor*, vec3_t*>(21)(this,pos);
+}
+
+auto Actor::setPosPrev(vec3_t* pos)->void* {
+	static uintptr_t setPosPtr = FindSignature("48 83 EC ? 4C 8B 81 ? ? ? ? 4D 85 C0 74 ? 8B 02");
+	using Fn = void* (__fastcall*)(Actor*, vec3_t*);
+	return reinterpret_cast<Fn>(setPosPtr)(this, pos);
+	//return GetVFtableFun<void*, Actor*, vec3_t*>(21)(this,pos);
+}
+
+
 
 auto Actor::setVelocity(vec3_t* sp)->void*{
 	using Fn = void*(__fastcall*)(Actor*, vec3_t*);
@@ -187,19 +204,16 @@ auto Actor::getStatusFlag(ActorFlags af)->bool{
 	return GetVFtableFun<bool, Actor*, ActorFlags>(0)(this, af);
 }
 
-// 原生虚表函数
-auto Actor::setPos(vec3_t* pos)->void* {
-	return GetVFtableFun<void*, Actor*, vec3_t*>(21)(this,pos);
-}
+
 
 
 //应该获取的是头部位置，Y值会往上偏两个单位
 auto Actor::getPosition()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(24)(this);
+	return GetVFtableFun<vec3_t*, Actor*>(22)(this);	// 更新自 1.20
 }
 
 auto Actor::getPosPrev()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(25)(this);
+	return GetVFtableFun<vec3_t*, Actor*>(23)(this);	// 更新自 1.20
 }
 
 // 新版本中虚表不存在此函数
@@ -212,18 +226,18 @@ auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->
 }
 
 auto Actor::getNameTag()->TextHolder* {
-	return GetVFtableFun<TextHolder*, Actor*>(65)(this);
+	return GetVFtableFun<TextHolder*, Actor*>(57)(this);
 }
 
-// 第19号虚表调用的都是 Player::isPlayer 所以一定返回true
+// 第19号虚表调用的都是 Player::isPlayer 所以一定返回true > 20 35 62ok 71 77 81 82 84 86ok
 // 第40号虚表调用的都是 Actor::isPlayer  所以一定返回false
 // 第67->70号虚表 Actor调用的是 Actor::isPlayer, Player调用的是Player::isPlayer,所以可用
 auto Actor::isPlayer()->bool {
-	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[70])(this);
+	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[62])(this);
 }
 
 auto Actor::getNameTagAsHash()->unsigned __int64 {
-	return GetVFtableFun<unsigned __int64, Actor*>(66)(this);
+	return GetVFtableFun<unsigned __int64, Actor*>(58)(this);
 }
 
 /*
@@ -240,7 +254,7 @@ _QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
 //这个函数暂存，因为会崩溃
 auto Actor::getFormattedNameTag(void* ret)->void* {
 	//void* ret = malloc(8 * 4);
-	return GetVFtableFun<void*, Actor*,void*>(67)(this,ret);
+	return GetVFtableFun<void*, Actor*,void*>(59)(this,ret);
 }
 
 //新版本中虚表不存在该函数
@@ -249,17 +263,17 @@ auto Actor::getFormattedNameTag(void* ret)->void* {
 //}
 
 auto Actor::setSneaking(bool b)->void {
-	return GetVFtableFun<void, Actor*, bool>(102)(this, b);
+	return GetVFtableFun<void, Actor*, bool>(87)(this, b);
 }
 
 auto Actor::getEntityTypeId()->int {
-	return GetVFtableFun<unsigned int, Actor*>(172)(this);
+	return GetVFtableFun<unsigned int, Actor*>(153)(this);
 }
 
 auto Actor::causeFallDamage()->void* {
-	return GetVFtableFun<void*, Actor*>(187)(this);
+	return GetVFtableFun<void*, Actor*>(168)(this);
 }
 
 auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
-	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(208)(this, &attribute);
+	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(188)(this, &attribute);
 }

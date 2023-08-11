@@ -26,8 +26,6 @@
 #include "../Modules/Modules/InstantDestroy.h"
 #include "../Modules/Modules/ShowCoordinates.h"
 #include "../Modules/Modules/FastViewPerspective.h"
-//#include "../Modules/Modules/AutoSprinting.h"
-//#include "../Modules/Modules/AutoWalking.h"
 #include "../Modules/Modules/LockControlInput.h"
 
 using LockControl = void*(__fastcall*)(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, void* a11);
@@ -101,22 +99,8 @@ LPLP lplpcall;
 auto Hook::init() -> void
 {
 	logF("[Hook::init] 正在初始化");
-	/*
+	
 	// 锁定疾跑 强制按下疾跑键 | 并不能确定被Hook的这个函数是什么
-	{
-		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 0F B6 41";
-		auto lockSprintingSign = FindSignature(memcode);
-		if (lockSprintingSign != 0x00) {
-			MH_CreateHookEx((LPVOID)lockSprintingSign, &Hook::LockSprinting, &lockSprintingcall);
-			LockSprinting_offset = (int)*reinterpret_cast<byte*>(lockSprintingSign + 18);
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", lockSprintingSign, memcode);
-		}
-		else {
-			logF("[Hook error] [%s] is no found Hook point", "lockSprintingSign");
-		}
-	}
-	*/
-
 	{
 		const char* memcode_offset = "41 0F 10 47 ? 0F 11 45 00 41 0F 10 4F";	// 这个是找参数指针到控制结构指针的偏移 这个特征码在下面call特征码的内部 
 		const char* memcode_call = "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 83 EC ? 4D 8B F9 4C 8B EA 4C";
@@ -359,7 +343,6 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[FindCallPtr error] [%s] is no found ptr point", "Level::forEachPlayerCall");
-			return;
 		}
 	}
 
@@ -417,7 +400,8 @@ auto Hook::init() -> void
 			ItemInstance::SetVFtables(ItemInstanceVT);
 		}
 	}
-	
+
+	// 虚表函数核对时间 : 1.20.12
 	//GameMode虚表及相关Hook
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
@@ -442,6 +426,7 @@ auto Hook::init() -> void
 		}
 	}
 
+	// 虚表函数核对时间 : 1.20.12
 	//Actor 虚表及相关Hook  构造函数特征码：48 89 5C 24 ? 55  56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 49 8B D8 48 8B FA 4C 8B F1
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 49 8B 00 48 89 41 ? 41 8B 40 ? 89 41";
@@ -456,10 +441,10 @@ auto Hook::init() -> void
 			Actor::SetVFtables(ActorVTable);
 			//虚表Hook
 			//Actor::setVelocity
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(48), &Hook::SetVelocity, &Actor::setVelocityCallptr);
-			Actor::SpeedOffset = *reinterpret_cast<int*>((uintptr_t)Actor::GetVFtableFun(48) + 7);
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(73), &Hook::Actor_isInWater, &Actor::isInWaterCallptr);
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(82), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(41), &Hook::SetVelocity, &Actor::setVelocityCallptr);
+			Actor::SpeedOffset = *reinterpret_cast<int*>((uintptr_t)Actor::GetVFtableFun(41) + 7);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(65), &Hook::Actor_isInWater, &Actor::isInWaterCallptr);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(69), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
 		}
 	}
 
@@ -499,8 +484,8 @@ auto Hook::init() -> void
 		}
 
 	}
-
-	// Mob 虚表及相关Hook
+	/*
+	// Mob 虚表及相关Hook  XX Mob虚表的定位有问题，直接从Player虚表获取 该部分函数待删除,因为现在改为从后面Player部分获取
 	{
 		const char* memcode = "40 53 56 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9 48 89 4C 24 ? E8 ? ? ? ? 90 48 8D 05";	//来自三参数Mob构造函数
 		const char* memcode2 = "48 8D 05 ? ? ? ? 48 89 07 33 F6 48 89 B7 ? ? ? ? 48 89 B7 ? ? ? ? 48 89 B7";		//来自四参数Mob构造函数
@@ -517,10 +502,11 @@ auto Hook::init() -> void
 			//虚表Hook
 		}
 	}
-
+	*/
+	// 虚表函数核对时间 : 1.20.12
 	//Player 虚表及相关Hook
 	{
-		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 45 33 E4 44 89 A7 ? ? ? ? 44 88 A7";
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 33 DB 48 89 9E ? ? ? ? 48 89 9E ? ? ? ? 48 89 9E";
 		auto PlayerVTable_sigOffset = FindSignature(memcode);
 		if (PlayerVTable_sigOffset == 0x00) {
 			logF("[Player::SetVtables] [Error]Find Player PlayerVTable_sigOffset is no working!!!");
@@ -530,21 +516,37 @@ auto Hook::init() -> void
 			logF_Debug("[Player::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", PlayerVTable, PlayerVTable_sigOffset, memcode);
 			Player::SetVFtables(PlayerVTable);
 			//虚表Hook
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(80), &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
+			//MH_CreateHookEx((LPVOID)Player::GetVFtableFun(80), &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall); // 没找到
 			//Player::getShadowRadius
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(82), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
-			//Player::tickWorld
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(369), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(69), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
 			//Player::startSwimming
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(202), &Hook::Player_startSwimming, &Player::startSwimmingCallptr);
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(182), &Hook::Player_startSwimming, &Player::startSwimmingCallptr);
+			//Player::tickWorld
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(332), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
+			// Mob 虚表及相关Hook
+			{
+				// 在 PlayerVTable_sigOffset 地址定位之前的汇编是 E8 X X X X 90 ....
+				// 所以 将 PlayerVTable_sigOffset-5 就是 Mob::Mob 此构造函数
+				// 流程: 这里找到了Player虚表 ,Player继承自Mob, 所以这里有Mob的Call, 进入Mob::Mob, 往下找到
+				auto Mob_Constructor = Utils::FuncFromSigOffset(PlayerVTable_sigOffset - 5, 0);	// Mob 构造函数地址
+				auto offset = Utils::FindSignatureRelay(Mob_Constructor, "48 8D 05", 200);	// offset 值大概是 35
+				if (offset != 0x00) {
+					auto MobVTable = Utils::FuncFromSigOffset<uintptr_t**>(offset, 3);
+					logF_Debug("[Mob::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode= from PlayerVTable", MobVTable, Mob_Constructor);
+					Mob::SetVFtables(MobVTable);
+				}
+				else {
+					logF("[Mob::SetVtables] [Error] 没能从 Player 虚表获取函数中找到Mob虚表(进入Mob构造函数,看看虚表赋值从48 8D 05变为了什么)");
+				}
+			}
 		}
 	}
 
-
+	// 虚表函数核对时间 : 1.20.12
 	//ServerPlayer 虚表及相关Hook
 	{
-		//48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B
-		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 4C 89 A6 ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D ? 48 89 7B";
+		//48 8D 05 ? ? ? ? 48 89 06 4C 89 BE ? ? ? ? 48 8D 9E ? ? ? ? 48
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 4C 89 ? ? ? ? ? 48 8D 9E ? ? ? ? 48 89 5D";
 		auto ServerPlayerVTable_sigOffset = FindSignature(memcode);
 		if (ServerPlayerVTable_sigOffset == 0x00) {
 			logF("[ServerPlayer::SetVtables] [Error]Find ServerPlayer ServerPlayerVTable_sigOffset is no working!!!");
@@ -553,11 +555,14 @@ auto Hook::init() -> void
 			auto ServerPlayerVTable = Utils::FuncFromSigOffset<uintptr_t**>(ServerPlayerVTable_sigOffset, 3);
 			logF_Debug("[ServerPlayer::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", ServerPlayerVTable, ServerPlayerVTable_sigOffset, memcode);
 			ServerPlayer::SetVFtables(ServerPlayerVTable);
-			//ServerPlayer::respawn 获取实现 Actor::getRotationEx 的关键偏移(379) +9
-			Actor::GetRotationOffset = *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(379)) + 9);
+			//ServerPlayer::respawn 获取实现 Actor::getRotationEx 的关键偏移(342) +9
+			//logF("ServerPlayer::GetVFtableFun(342) %d", reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(342)));
+			//DebugBreak();
+			Actor::GetRotationOffset = *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(342)) + 9);	// 检查版本 1.20
+
 
 			//虚表Hook
-			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(369), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
+			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(332), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall); // 检查版本 1.20
 
 		}
 	}
@@ -580,10 +585,10 @@ auto Hook::init() -> void
 		}
 	}
 
-	//LocalPlayer虚表及相关Hook
+	//LocalPlayer虚表及相关Hook	LocalPlayer 构造函数第二个参数应该就是 CI
 	//啥用没有 虚函数没找到能用的  仅在 Actor::isLocalPlayer() 中使用
 	{
-		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 C6 87 ? ? ? ? 0 4C 89 B7";
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 07 C6 87 ? ? ? ? 00 4C 89 ? ? ? ? ? 48";
 		auto LocalPlayerVTable_sigOffset = FindSignature(memcode);
 		if (LocalPlayerVTable_sigOffset == 0x00) {
 			logF("[LocalPlayer::SetVtables] [Error]Find LocalPlayer LocalPlayerVTable_sigOffset is no working!!!");
@@ -594,19 +599,30 @@ auto Hook::init() -> void
 			LocalPlayer::SetVFtables(LocalPlayerVTable);
 
 			//找本地玩家到ClientInstance的指针偏移
+			auto LP_CIoffset = Utils::FindSignatureRelay(LocalPlayerVTable_sigOffset, "48 89 B7", 500);
+			if (LP_CIoffset) {
+				LocalPlayer::toCIoffset = *reinterpret_cast<int*>(LP_CIoffset + 3);
+				logF_Debug("[LocalPlayer::SetVtables] [Success] Find LocalPlayer To ClientInstance offset");
+			}
+			else {
+				logF("[LocalPlayer::SetVtables] [Error] 寻找 LocalPlayer To ClientInstance 偏移地址失败,LP_CIoffset:%llX", LP_CIoffset);
+			}
+			/*
+			//找本地玩家到ClientInstance的指针偏移
 			char* LP_CIoffset = (char*)LocalPlayerVTable_sigOffset;
 			for (int i = 0; i <= 500; i++) {
 				if (i == 500) {
 					logF("[LocalPlayer::SetVtables] [Error] 寻找 LocalPlayer To ClientInstance 偏移地址失败,LP_CIoffset:%llX", LP_CIoffset);
 					break;
 				}
-				if (*LP_CIoffset == (char)0x48 && *(LP_CIoffset + 1) == (char)0x89 && *(LP_CIoffset + 2) == (char)0xB7/*(char)0xBE*/) {
+				if (*LP_CIoffset == (char)0x48 && *(LP_CIoffset + 1) == (char)0x89 && *(LP_CIoffset + 2) == (char)0xB7) {	//(char)0xBE
 					LocalPlayer::toCIoffset = *reinterpret_cast<int*>(LP_CIoffset + 3);
 					logF_Debug("[LocalPlayer::SetVtables] [Success] Find LocalPlayer To ClientInstance i:%d",i);
 					break;
 				}
 				LP_CIoffset++;
 			}
+			*/
 			//虚表Hook
 			//MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(374), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
 
@@ -721,7 +737,7 @@ auto Hook::Level_Tick(Level* level)->void
 }
 
 
-
+// TODO 一直在两个地址之间跳
 auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
 {
 	static INT64 p = 0;
@@ -912,12 +928,12 @@ auto Hook::GameMode_useItem(GameMode* gm, class ItemStack* item)->bool
 }
 
 //对着方块右键 会一直触发
-auto Hook::GameMode_useItemOn(GameMode* gm, class ItemStack* item, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool
+auto Hook::GameMode_useItemOn(GameMode* gm, class ItemStack* item, class ItemInstance* itemins, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool
 {
-	if (!Game::GetModuleManager()->useItemOn(gm, item,bpos,face,f,block)) {
+	if (!Game::GetModuleManager()->useItemOn(gm, item, itemins,bpos,face,f,block)) {
 		return false;
 	}
-	return gm->useItemOn(item,bpos,face,f,block);
+	return gm->useItemOn(item, itemins,bpos,face,f,block);
 }
 
 
@@ -927,11 +943,16 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 	return _this->tick();
 }
 
+#include "../Modules/Modules/Debug.h"
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
+// 本地房间攻击的时候 会调用两次, 先调用的是本地玩家,后调用的可能是服务玩家，在他人房间只会调用一次 就是本地玩家
 	if (_this->GetLocalPlayer()->isLocalPlayer()) {
 		//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f, isplayer=%i, islocalplayer=%i", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y,actor->isPlayer(),actor->isLocalPlayer());
 		//_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());	//必须是服务玩家才能有效
 		//_this->useItem(_this->GetLocalPlayer()->getSelectedItem());
+	}
+	if (Game::GetModuleManager()->GetModule<Debug*>()->isEnabled()) {
+		logF_Debug("LocalPlayer: %llX, CI: %llX", (uintptr_t)_this->GetLocalPlayer(), (uintptr_t)_this->GetLocalPlayer()->getClientInstance());
 	}
 
 	if (!Game::GetModuleManager()->onAttack(actor)) {

@@ -45,7 +45,7 @@ public:
 	static auto GameMode_tick(class GameMode*)->void*;
 	static auto GameMode_startDestroyBlock(class GameMode* _this, vec3_ti* a2, uint8_t* face, void* a3, void* a4)->bool;
 	static auto GameMode_useItem(class GameMode*,class ItemStack*)->bool;
-	static auto GameMode_useItemOn(class GameMode*, class ItemStack*, vec3_ti*, uint8_t*, vec3_t*, class Block*)->bool;
+	static auto GameMode_useItemOn(class GameMode*, class ItemStack*, class ItemInstance*, vec3_ti*, uint8_t*, vec3_t*, class Block*)->bool;
 
 	static auto ServerPlayer_TickWorld(class ServerPlayer* _this, void* tick)->void*;
 	static auto RemotePlayer_TickWorld(class RemotePlayer* _this) -> void*;						//由于该函数只是个空架子,所以只能接受一个参数

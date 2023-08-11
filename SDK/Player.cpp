@@ -39,19 +39,20 @@ auto Player::getRotEx2()->vec2_t* {
 
 
 //虚表函数
-
+// 检查版本 1.20
 auto Player::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
-	GetVFtableFun<void,Player*, vec3_t*,bool, unsigned int, unsigned int>(45)(this,pos,a1,a2,a3);
+	GetVFtableFun<void,Player*, vec3_t*,bool, unsigned int, unsigned int>(38)(this,pos,a1,a2,a3);
 }
 
-//91
+// 检查版本 1.20
 auto Player::displayChatMessage(TextHolder* a1, TextHolder* a2)->__int64{
-	return GetVFtableFun<__int64, Player*, TextHolder*, TextHolder*>(91)(this, a1, a2);
+	return GetVFtableFun<__int64, Player*, TextHolder*, TextHolder*>(78)(this, a1, a2);
 }
 
+// 检查版本 1.20
 auto Player::getSelectedItem()->ItemStack*
 {
-	return GetVFtableFun<ItemStack*, Player*>(164)(this);
+	return GetVFtableFun<ItemStack*, Player*>(145)(this);
 }
 
 auto Player::getShadowRadius() -> float

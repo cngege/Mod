@@ -141,9 +141,6 @@
     <ClInclude Include="Modules\Modules\RenderHealth.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Modules\AutoSprinting.h">
-      <Filter>Modules\头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Modules\Modules\FastViewPerspective.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
@@ -220,9 +217,6 @@
       <Filter>SDK\头文件</Filter>
     </ClInclude>
     <ClInclude Include="Modules\Modules\Debug.h">
-      <Filter>Modules\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\Modules\AutoWalking.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
     <ClInclude Include="imgui\toggle\imgui_offset_rect.h">
@@ -350,9 +344,6 @@
     <ClCompile Include="Modules\Modules\RenderHealth.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\Modules\AutoSprinting.cpp">
-      <Filter>Modules\源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Modules\Modules\FastViewPerspective.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
@@ -420,9 +411,6 @@
       <Filter>SDK\源文件</Filter>
     </ClCompile>
     <ClCompile Include="Modules\Modules\Debug.cpp">
-      <Filter>Modules\源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Modules\Modules\AutoWalking.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="imgui\toggle\imgui_toggle.cpp">

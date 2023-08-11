@@ -85,9 +85,11 @@ public:
 	auto isRemovedEx()->bool;
 	auto getRotationEx()->vec2_t*;
 	auto isValid()->bool;
-
-	auto getDimensionConst()->class Dimension*;			/* 原版函数 通过特征码获取 */
-
+public:
+	/* 原版函数 通过特征码获取 */
+	auto getDimensionConst()->class Dimension*;
+	auto setPos(vec3_t*) -> void*;
+	auto setPosPrev(vec3_t*) -> void*;
 public:
 	// Hook的函数
 	auto setVelocity(vec3_t*)->void*;												/*46*/
@@ -95,9 +97,12 @@ public:
 	auto getShadowRadius()->float;													/*79*/
 public:
 
+
+
+
 	//原生虚表函数
 	auto getStatusFlag(ActorFlags)->bool;											/*0*/
-	auto setPos(vec3_t*)->void*;													/*18*/
+	
 	auto getPosition()->vec3_t*;													/*21*/
 	auto getPosPrev()->vec3_t*;														/*22*/
 	//设置玩家移动的方向  这个函数在1.19.50.02 版本开始没有了

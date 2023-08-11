@@ -175,7 +175,7 @@ auto Module::useItem(GameMode* gm, class ItemStack* item)->bool {
 	return true;
 }
 
-auto Module::useItemOn(GameMode* gm, class ItemStack* item, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
+auto Module::useItemOn(GameMode* gm, class ItemStack* item,class ItemInstance* itemins, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
 	return true;
 }
 

@@ -14,10 +14,10 @@
 #include "Modules/Render.h"
 #include "Modules/NoAttackFriend.h"
 #include "Modules/ArmsLength.h"
-#include "Modules/AutoWalking.h"
+//#include "Modules/AutoWalking.h"
 #include "Modules/HiveTreasurePos.h"
 #include "Modules/RenderHealth.h"
-#include "Modules/AutoSprinting.h"
+//#include "Modules/AutoSprinting.h"
 #include "Modules/BioRadar.h"
 #include "Modules/FastViewPerspective.h"
 #include "Modules/LockControlInput.h"
@@ -53,9 +53,9 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new Render()));							/*INS*/
 	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl+F4*/
 	moduleList.push_back((Module*)(new NoAttackFriend()));					/*SHIFT+F4*/
-	moduleList.push_back((Module*)(new AutoSprinting()));					/*Ctrl+F6*/
+	//moduleList.push_back((Module*)(new AutoSprinting()));							/*Ctrl+F6*/
 	moduleList.push_back((Module*)(new BioRadar()));						/*SHIFT+F6*/
-	moduleList.push_back((Module*)(new AutoWalking()));						/*CTRL+F7*/
+	//moduleList.push_back((Module*)(new AutoWalking()));							/*CTRL+F7*/
 	moduleList.push_back((Module*)(new HiveTreasurePos()));					/*SHIFT+F7*/
 	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/
 	moduleList.push_back((Module*)(new ArmsLength()));						/*SHIFT+F10*/
@@ -171,12 +171,12 @@ auto ModuleManager::useItem(GameMode* gm, class ItemStack* item)->bool {
 	return RunOriginalFun;
 }
 
-auto ModuleManager::useItemOn(GameMode* gm, class ItemStack* item, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
+auto ModuleManager::useItemOn(GameMode* gm, class ItemStack* item, class ItemInstance* itemins, vec3_ti* bpos, uint8_t* face, vec3_t* f, class Block* block)->bool {
 	bool RunOriginalFun = true;
 	if (!IsInitialized())
 		return RunOriginalFun;
 	for (auto pMod : moduleList) {
-		if (!pMod->useItemOn(gm, item,bpos,face, f, block))
+		if (!pMod->useItemOn(gm, item,itemins,bpos,face, f, block))
 			RunOriginalFun = false;
 	}
 	return RunOriginalFun;

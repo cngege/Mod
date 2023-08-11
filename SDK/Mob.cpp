@@ -1,4 +1,4 @@
-#include "Mob.h"
+﻿#include "Mob.h"
 
 uintptr_t** Mob::vfTables = nullptr;
 
@@ -38,11 +38,12 @@ auto Mob::isSprinting()-> bool{
 
 
 //虚表函数
+// 检查版本 1.20
 auto Mob::setSprinting(bool v)->void {
-	GetVFtableFun<void, Mob*,bool>(284)(this,v);
+	GetVFtableFun<void, Mob*,bool>(256)(this,v);
 }
 
-
+// 检查版本 1.20
 auto Mob::lookAt(Actor* actor,float f1, float f2)->void {
-	GetVFtableFun<void, Mob*, Actor*,float,float>(298)(this, actor,f1,f2);
+	GetVFtableFun<void, Mob*, Actor*,float,float>(267)(this, actor,f1,f2);
 }

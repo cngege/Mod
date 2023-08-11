@@ -1,4 +1,4 @@
-#include "Item.h"
+﻿#include "Item.h"
 #include "Utils.h"
 #include "ItemStackBase.h"
 
@@ -34,13 +34,14 @@ auto Item::getIdEx()->short
 }
 
 
-
+// 检查版本 1.20
 auto Item::use(ItemStack* item, Player* player)->ItemStack* {
 	using Fn = ItemStack*(__fastcall*)(Item*, ItemStack*, Player*);
 	return reinterpret_cast<Fn>((*(uintptr_t**)this)[84])(this, item, player);
 	//return Utils::CallVFunc<84, ItemStack&, Item*, ItemStack&, Player&>(*(void**)this, this, item, player);
 }
 
+// 检查版本 1.20
 auto Item::buildDescriptionName(TextHolder& text, ItemStackBase item)->TextHolder& {
 	//using Fn = TextHolder& (__fastcall*)(Item*, TextHolder&, ItemStackBase&);
 	//return reinterpret_cast<Fn>((*(uintptr_t**)this)[94])(this, text, item);
