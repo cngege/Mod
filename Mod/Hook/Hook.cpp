@@ -122,7 +122,7 @@ auto Hook::init() -> void
 		}
 	}
 
-	//clientInstance::Tick
+	//clientInstance::Tick // 1.20 虚表 - 19号
 	{
 		const char* memcode = "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F9 48 8B 01";
 		clientInstanceTick = FindSignature(memcode);
@@ -693,7 +693,10 @@ auto Hook::Actor_getShadowRadius(Actor* actor)->float {
 // 这个tick貌似不工作了
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void
 {
-	if (_this != nullptr) Game::Cinstance = _this;
+	if (_this != nullptr) {
+		logF_Debug("Game::Cinstance : %llX", (uintptr_t)_this);
+		Game::Cinstance = _this;
+	}
 	clientInstance_Tickcall(_this, a1);
 }
 
