@@ -1,4 +1,4 @@
-//     __ _____ _____ _____
+﻿//     __ _____ _____ _____
 //  __|  |   __|     |   | |  JSON for Modern C++
 // |  |  |__   |  |  | | | |  version 3.11.2
 // |_____|_____|_____|_|___|  https://github.com/nlohmann/json
@@ -17,6 +17,8 @@
 
 #ifndef INCLUDE_NLOHMANN_JSON_HPP_
 #define INCLUDE_NLOHMANN_JSON_HPP_
+
+#pragma warning (disable: 26800)
 
 #include <algorithm> // all_of, find, for_each
 #include <cstddef> // nullptr_t, ptrdiff_t, size_t
@@ -8164,8 +8166,8 @@ class lexer : public lexer_base<BasicJsonType>
                             break;
                     }
                 }
+                break;
             }
-
             // multi-line comments skip input until */ is read
             case '*':
             {
@@ -8199,8 +8201,8 @@ class lexer : public lexer_base<BasicJsonType>
                             continue;
                     }
                 }
+                break;
             }
-
             // unexpected character after reading '/'
             default:
             {

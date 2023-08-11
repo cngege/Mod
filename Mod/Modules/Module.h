@@ -109,6 +109,7 @@ public:
 	virtual void onstartLeaveGame(class Level*);
 	virtual void onRenderDetour(class MinecraftUIRenderContext*);
 	virtual void onImGUIRender();
+	virtual void onInternalImGUIRender();
 	virtual bool onSendMessage(class TextHolder*);
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();

@@ -73,7 +73,7 @@ auto Game::init() -> void
 
 	//获取玩家视角的指针的偏移地址
 	{
-		auto PlayerView_sigOffset = FindSignature("48 8B 88 ? ? ? ? 48 85 C9 0F 84 ? ? ? ? F3 0F 10 80");
+		auto PlayerView_sigOffset = FindSignature("48 8B 80 ? ? ? ? 48 85 ? 0F 84 ? ? ? ? F3 0F 10 ? F3 0F 10 78");
 		if (PlayerView_sigOffset == 0x00) {
 			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "PlayerView_sigOffset");
 			return;

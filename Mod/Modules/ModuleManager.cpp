@@ -20,6 +20,7 @@
 #include "Modules/AutoSprinting.h"
 #include "Modules/BioRadar.h"
 #include "Modules/FastViewPerspective.h"
+#include "Modules/LockControlInput.h"
 
 
 #ifdef _DEBUG
@@ -59,6 +60,8 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/
 	moduleList.push_back((Module*)(new ArmsLength()));						/*SHIFT+F10*/
 	moduleList.push_back((Module*)(new RenderHealth()));					/*Ctrl+F10*/
+																				/*F11 = 全屏*/
+	moduleList.push_back((Module*)(new LockControlInput()));				/*Ctrl+F12*/
 #ifdef _DEBUG
 	moduleList.push_back((Module*)(new Debug()));
 #endif

@@ -128,7 +128,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)SDK\;$(SolutionDir)Mod\Utils\;$(SolutionDir)Mod\imgui\imgui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /await %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,7 +171,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8  /await %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -206,6 +206,7 @@
     <ClInclude Include="..\SDK\Mob.h" />
     <ClInclude Include="..\SDK\Player.h" />
     <ClInclude Include="..\SDK\RemotePlayer.h" />
+    <ClInclude Include="..\SDK\sdk.h" />
     <ClInclude Include="..\SDK\ServerPlayer.h" />
     <ClInclude Include="..\SDK\TextHolder.h" />
     <ClInclude Include="framework.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Modules\Modules\HitBox.h" />
     <ClInclude Include="Modules\Modules\HiveTreasurePos.h" />
     <ClInclude Include="Modules\Modules\InstantDestroy.h" />
+    <ClInclude Include="Modules\Modules\LockControlInput.h" />
     <ClInclude Include="Modules\Modules\NoAttackFriend.h" />
     <ClInclude Include="Modules\Modules\NoKnockback.h" />
     <ClInclude Include="Modules\Modules\NoWaterResistence.h" />
@@ -309,6 +311,7 @@
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
     <ClCompile Include="Modules\Modules\HiveTreasurePos.cpp" />
     <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
+    <ClCompile Include="Modules\Modules\LockControlInput.cpp" />
     <ClCompile Include="Modules\Modules\NoAttackFriend.cpp" />
     <ClCompile Include="Modules\Modules\NoKnockback.cpp" />
     <ClCompile Include="Modules\Modules\NoWaterResistence.cpp" />

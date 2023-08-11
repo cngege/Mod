@@ -17,5 +17,6 @@ public:
 	//虚表函数Hook
 	auto startLeaveGame() -> void;													/*2*/
 	auto Tick()->void;																/*101*/
-	auto forEachPlayer(std::function<bool(class Player&)>) -> void;					/*222 / 223 用特征码定位call非虚表 */
+	// 虚表函数
+	auto forEachPlayer(std::function<bool(class Player&)>) -> void;					/*207-208 / 223 用特征码定位call非虚表 */
 };

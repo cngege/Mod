@@ -205,6 +205,8 @@ auto Module::onRenderDetour(MinecraftUIRenderContext* ctx)->void {}
 
 auto Module::onImGUIRender()->void {}
 
+auto Module::onInternalImGUIRender()->void {}
+
 auto Module::onSendMessage(TextHolder*)->bool {
 	return true;
 }

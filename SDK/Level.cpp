@@ -1,4 +1,5 @@
 ﻿#include "Level.h"
+#include "sdk.h"
 
 uintptr_t* Level::startLeaveGameCall = nullptr;
 uintptr_t* Level::forEachPlayerCall = nullptr;
@@ -21,11 +22,11 @@ auto Level::getAllPlayer()->std::vector<Player*> {
 
 
 auto Level::getTime()->int {
-	return reinterpret_cast<int(__fastcall*)(Level*)>((*(uintptr_t**)this)[114])(this);
+	return reinterpret_cast<int(__fastcall*)(Level*)>((*(uintptr_t**)this)[112])(this);
 }
 
 auto Level::setTime(int time)->void {
-	return reinterpret_cast<void(__fastcall*)(Level*,int)>((*(uintptr_t**)this)[115])(this,time);
+	return reinterpret_cast<void(__fastcall*)(Level*,int)>((*(uintptr_t**)this)[113])(this,time);
 }
 
 // 虚表Hook
@@ -42,6 +43,11 @@ auto Level::Tick() -> void
 	reinterpret_cast<Fn>(tickCall)(this);
 }
 
+// 虚表
 auto Level::forEachPlayer(std::function<bool(class Player&)> fp)->void {
+#if PRIORITY_USE_VTF == 1
+	return reinterpret_cast<void(__fastcall*)(Level*, std::function<bool(class Player&)>)>((*(uintptr_t**)this)[207])(this, fp);
+#else
 	return reinterpret_cast<void(__fastcall*)(Level*, std::function<bool(class Player&)>)>(forEachPlayerCall)(this, fp);
+#endif
 }

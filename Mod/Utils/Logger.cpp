@@ -42,14 +42,8 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 		initializedLogger = true;
 		InitializeCriticalSection(&loggerLock);
 		EnterCriticalSection(&loggerLock);
-
-#ifdef _DEBUG
-		std::string s("C:\\Users\\CNGEGE\\Desktop");
-		std::wstring roam(s.begin(), s.end());
-#else
 		std::wstring roam = GetRoamingFolderPath();
 		roam += L"\\Mod";
-#endif
 		sprintf_s(logPath, 200, "%S\\logs.txt", roam.c_str());
 
 		try {

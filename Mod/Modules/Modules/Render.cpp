@@ -99,6 +99,7 @@ auto Render::onImGUIRender()->void {
 						ImGui::DragInt(intval.name.c_str(), intval.value, intval.speed, intval.min, intval.max);
 					}
 				}
+				//FloatUIValue
 				for (auto& floatval : mod->GetFloatUIValue()) {
 					if (floatval.slider) {
 						//如果对精度没有要求则使用滑块控制
@@ -108,9 +109,11 @@ auto Render::onImGUIRender()->void {
 						ImGui::DragFloat(floatval.name.c_str(), floatval.value, floatval.speed, floatval.min, floatval.max);
 					}
 				}
+				//BoolUIValue
 				for (auto& boolval : mod->GetBoolUIValue()) {
 					ImGui::Toggle(boolval.name.c_str(), boolval.value, toggerConfig);
 				}
+				//ButtonUI
 				for (auto& buttonet : mod->GetButtonUIEvent()) {
 					if (buttonet.sameline) {
 						ImGui::SameLine();
@@ -120,6 +123,8 @@ auto Render::onImGUIRender()->void {
 					}
 				}
 
+				// 调用模块的内部UI渲染事件
+				mod->onInternalImGUIRender();
 			}
 			ImGui::PopID();
 		});

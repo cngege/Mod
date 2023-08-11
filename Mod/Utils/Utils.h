@@ -525,4 +525,20 @@ public:
 
 	typedef int ImGuiTreeNodeFlags;
 	static bool HelpCollapsingHeader(const char* label, const char* helpText, ImGuiTreeNodeFlags flag = 0);
+
+	uintptr_t getFunFromSigAndCall(const char* funSig, const char* callSig, int callSigOffset = 1) {
+		auto sig = FindSignature(funSig);
+		if (sig == 0x00) {
+			sig = FindSignature(callSig);
+			if (sig == 0x00) {
+				return 0;
+			}
+			else {
+				Utils::FuncFromSigOffset<uintptr_t*>(sig, callSigOffset);
+			}
+		}
+		else {
+			return sig;
+		}
+	}
 };

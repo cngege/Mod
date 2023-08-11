@@ -1,6 +1,8 @@
 ﻿#pragma once
 #define PI (3.1415927f)
 
+#pragma warning (disable: 26495)
+
 #include <math.h>
 
 static constexpr float DEG_RAD2 = PI / 360.0f;

@@ -14,6 +14,7 @@
 //config
 #include "Utils/config.h"
 
+
 MH_STATUS hookret;
 void* Loader::dllHMODULE = nullptr;
 bool Loader::Eject_Signal = false;
@@ -71,7 +72,7 @@ void Loader::init(void* hmodule)
 	}
 	logF("正在初始化Game模块");
 	Game::init();
-	logF("正在初始化ImGuiHook模块");		// Hook 的先后顺序无关紧要，因为都是统一的开启Hook MH_EnableHook(MH_ALL_HOOKS)
+	//logF("正在初始化ImGuiHook模块");		// Hook 的先后顺序无关紧要，因为都是统一的开启Hook MH_EnableHook(MH_ALL_HOOKS)
 	ImguiHooks::InitImgui();
 	logF("正在进行游戏进程Hook");
 	Hook::init();

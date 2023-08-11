@@ -16,13 +16,13 @@ class Hook
 public:
 	static auto init() ->void;
 	static auto exit() ->void;
-	static auto LockSprinting(void* a, void* b) ->void;
+	static auto LockControlInputCallBack(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, void* a11) -> void*;
 	static auto SetVelocity(class Player* ,vec3_t*)->void*;
 	static auto Actor_isInWater(class Actor*) -> bool;
 	static auto Actor_getShadowRadius(class Actor*)->float;										//执行对象是所有生物 但不包括玩家
 	static auto ClientInstance_Tick(ClientInstance*, void*)->void;
 	static auto Is_ShowCoordinates_Tick(void*)->bool;
-	static auto NoFallDamage_Tick(class Player*,float*)->void*;
+	//static auto NoFallDamage_Tick(class Player*,float*)->void*;
 	static auto Level_Tick(class Level*) -> void;
 	//Player 虚表Hook
 	static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
@@ -34,7 +34,7 @@ public:
 	//static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
 	static auto KeyUpdate(__int64, int)->void*;
 	static auto MouseUpdate(__int64, char, char, __int16, __int16, __int16, __int16, char)->void;
-	static auto RenderDetour(void*, class MinecraftUIRenderContext*)->void;
+	//static auto RenderDetour(void*, class MinecraftUIRenderContext*)->void;
 	static auto Draw_Text(class MinecraftUIRenderContext*,class BitmapFont*, struct RectangleArea const&, class TextHolder*, struct UIColor const& , float , float , struct TextMeasureData*, class CaretMeasureData*)->void;
 	static auto sendMessage(void*, TextHolder*)->__int64;
 	static auto getLocalPlayerViewPerspective(void*)->int;

@@ -26,12 +26,13 @@
 #include "../Modules/Modules/InstantDestroy.h"
 #include "../Modules/Modules/ShowCoordinates.h"
 #include "../Modules/Modules/FastViewPerspective.h"
-#include "../Modules/Modules/AutoSprinting.h"
-#include "../Modules/Modules/AutoWalking.h"
+//#include "../Modules/Modules/AutoSprinting.h"
+//#include "../Modules/Modules/AutoWalking.h"
+#include "../Modules/Modules/LockControlInput.h"
 
-using LockSprinting = void(__fastcall*)(void* a, void* b);
-LockSprinting lockSprintingcall;
-int LockSprinting_offset = 0;
+using LockControl = void*(__fastcall*)(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, void* a11);
+LockControl LockControlInputcall;
+int LockControlInput_offset = 0;
 
 using ClientInstance_Tick = void(__fastcall*)(ClientInstance* _this, void* a1);
 ClientInstance_Tick clientInstance_Tickcall;
@@ -48,9 +49,9 @@ uintptr_t is_ShowCoordinatesTick;
 //uintptr_t getHungerValAddressTick;
 
 //48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01
-using NoFallDamage_tick = void* (__fastcall*)(void* _this, float* a1);
-NoFallDamage_tick noFallDamage_Tickcall;
-uintptr_t noFallDamage_tick;
+//using NoFallDamage_tick = void* (__fastcall*)(void* _this, float* a1);
+//NoFallDamage_tick noFallDamage_Tickcall;
+//uintptr_t noFallDamage_tick;
 
 //0.6 0.2 4
 //48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA
@@ -83,9 +84,9 @@ using MouseUpdate = void(__fastcall*)(__int64, char, char, __int16, __int16, __i
 MouseUpdate mouseupdatecall;
 uintptr_t mouseupdate;
 
-using RenderDetour = void(__fastcall*)(void*, MinecraftUIRenderContext*);
-RenderDetour renderDetourcall;
-uintptr_t renderDetour;
+//using RenderDetour = void(__fastcall*)(void*, MinecraftUIRenderContext*);
+//RenderDetour renderDetourcall;
+//uintptr_t renderDetour;
 
 using SendChatMessage = uint8_t(__fastcall*)(void*, TextHolder*);
 SendChatMessage sendChatMessagecall;
@@ -100,7 +101,7 @@ LPLP lplpcall;
 auto Hook::init() -> void
 {
 	logF("[Hook::init] 正在初始化");
-
+	/*
 	// 锁定疾跑 强制按下疾跑键 | 并不能确定被Hook的这个函数是什么
 	{
 		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 0F B6 41";
@@ -112,6 +113,28 @@ auto Hook::init() -> void
 		}
 		else {
 			logF("[Hook error] [%s] is no found Hook point", "lockSprintingSign");
+		}
+	}
+	*/
+
+	{
+		const char* memcode_offset = "41 0F 10 47 ? 0F 11 45 00 41 0F 10 4F";	// 这个是找参数指针到控制结构指针的偏移 这个特征码在下面call特征码的内部 
+		const char* memcode_call = "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 83 EC ? 4D 8B F9 4C 8B EA 4C";
+		auto LockControlInputOffset = FindSignature(memcode_offset);
+		
+		if (LockControlInputOffset != 0x00) {
+			LockControlInput_offset = (int)*reinterpret_cast<byte*>(LockControlInputOffset + 4);
+			auto LockControlInputSign = FindSignature(memcode_call);
+			if (LockControlInputSign != 0x00) {
+				MH_CreateHookEx((LPVOID)LockControlInputSign, &Hook::LockControlInputCallBack, &LockControlInputcall);
+				logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", LockControlInputSign, memcode_call);
+			}
+			else {
+				logF("[Hook error] [%s] 定位偏移的特征码找到了 但是定位Hook函数的特征码没找到", "LockControlInputSign");
+			}
+		}
+		else {
+			logF("[Hook error] [%s] is no found Offset point", "LockControlInputOffset");
 		}
 	}
 
@@ -127,19 +150,27 @@ auto Hook::init() -> void
 			logF("[Hook error] [%s] is no found Hook point", "clientInstanceTick");
 		}
 	}
-
+	
 
 
 	//是否显示坐标 Tick
 	{
-		const char* memcode = "48 83 EC ? 48 8B 49 ? 48 8B 01 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48 85 C0 74 ? 48 8B 88";
-		is_ShowCoordinatesTick = FindSignature(memcode);
-		if (is_ShowCoordinatesTick != 0x00) {
-			MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, memcode);
+		const char* memcode1 = "48 89 5C 24 10 57 48 83 EC ? 48 8B 41 30";
+		const char* memcode2 = "E8 ? ? ? ? E9 ? ? ? ? 41 81 F8 82 FB 70 6D 75 ? E8";
+		is_ShowCoordinatesTick = FindSignature(memcode1);
+		if (is_ShowCoordinatesTick == 0x00) {
+			is_ShowCoordinatesTick = FindSignature(memcode2);
+			if (is_ShowCoordinatesTick != 0x00) {
+				MH_CreateHookEx((LPVOID)Utils::FuncFromSigOffset<uintptr_t*>(is_ShowCoordinatesTick, 1), &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
+				logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, memcode2);
+			}
+			else {
+				logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
+			}
 		}
 		else {
-			logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
+			MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, memcode1);
 		}
 	}
 
@@ -157,18 +188,19 @@ auto Hook::init() -> void
 	//	}
 	//}
 
-	//掉落无伤 仅本地有效
-	{
-		const char* memcode = "48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01";
-		noFallDamage_tick = FindSignature(memcode);
-		if (noFallDamage_tick != 0x00) {
-			MH_CreateHookEx((LPVOID)noFallDamage_tick, &Hook::NoFallDamage_Tick, &noFallDamage_Tickcall);
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", noFallDamage_tick, memcode);
-		}
-		else {
-			logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
-		}
-	}
+	// https://github.com/cngege/Mod/wiki/%E5%85%B3%E4%BA%8EHook%E5%87%BD%E6%95%B0%E6%88%96%E5%81%8F%E7%A7%BB%E7%9A%84%E6%9F%A5%E6%89%BE%E4%BB%A5%E5%8F%8A%E6%9D%82%E9%A1%B9#%E4%B8%8B%E8%90%BD%E6%97%A0%E4%BC%A4%E5%AE%B32
+	//掉落无伤 仅本地有效 // 暂时不修复
+	//{
+	//	const char* memcode = "48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01";
+	//	noFallDamage_tick = FindSignature(memcode);
+	//	if (noFallDamage_tick != 0x00) {
+	//		MH_CreateHookEx((LPVOID)noFallDamage_tick, &Hook::NoFallDamage_Tick, &noFallDamage_Tickcall);
+	//		logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", noFallDamage_tick, memcode);
+	//	}
+	//	else {
+	//		logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
+	//	}
+	//}
 
 	//Level::Tick 无直接调用者
 	{
@@ -182,7 +214,7 @@ auto Hook::init() -> void
 			logF("[Hook error] [%s] is no found Hook point", "level_tick");
 		}
 	}
-
+	
 	// 本地玩家 Tick  改为获取虚表后Hook
 	//{
 	//	const char* memcode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
@@ -196,10 +228,11 @@ auto Hook::init() -> void
 	//	}
 	//}
 
+	// https://github.com/cngege/Mod/wiki/%E5%85%B3%E4%BA%8EHook%E5%87%BD%E6%95%B0%E6%88%96%E5%81%8F%E7%A7%BB%E7%9A%84%E6%9F%A5%E6%89%BE%E4%BB%A5%E5%8F%8A%E6%9D%82%E9%A1%B9#%E6%89%80%E6%9C%89%E7%8E%A9%E5%AE%B6tick
 	//所有玩家TICK ,所有生物TICK,对玩家来说应该是渲染相关得函数,只有看向 那个玩家，那个玩家才会触发这个函数，其中出现的玩家指针是Player 不是ServerPlayer
 	//非掉落物实体，都只会在视野中才会触发  这个特征码比较旧了，不知道Hook的函数正不正确
 	{
-		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 30 48 8B 01 48 8B F2 0F 29 74 24 ? 48 8B D9 0F 28 F2";
+		const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 57 48 83 EC ? 48 8B 01 41 8B E8 48 8B FA";
 		allActor_Tick = FindSignature(memcode);
 		if (allActor_Tick != 0x00) {
 			MH_CreateHookEx((LPVOID)allActor_Tick, &Hook::AllActor_Tick, &allActor_Tickcall);
@@ -210,12 +243,12 @@ auto Hook::init() -> void
 		}
 	}
 
-	//生物移动消息
+	//获取 Actor AABB 偏移
 	{
-		const char* memcode = "40 53 48 83 EC ? 48 8B 81 ? ? ? ? 48 8B D9 48 85 C0 0F 84 ? ? ? ? F3 0F 10";
+		const char* memcode = "48 83 EC 28 48 8B 81 ? ? ? ? 48 85 C0 74 ? F3";
 		auto actor_moveBBs = FindSignature(memcode);
 		if (actor_moveBBs != 0x00) {
-			Actor::AABBOffset = *reinterpret_cast<int*>(actor_moveBBs + 9);//这个结果应该是由Actor指向AABB类的偏移
+			Actor::AABBOffset = *reinterpret_cast<int*>(actor_moveBBs + 7);//这个结果应该是由Actor指向AABB类的偏移
 			//Actor::PosXOffset1 = Xoffset;
 			//Actor::PosYOffset1 = Xoffset + 4;
 			//Actor::PosZOffset1 = Xoffset + 8;
@@ -245,7 +278,7 @@ auto Hook::init() -> void
 			logF("[Hook error] [%s] is no found Hook point", "keyupdate");
 		}
 	}
-
+	
 	//MouseUpdate
 	{
 		const char* memcode = "48 8B C4 48 89 58 ? 48 89 68 ? 48 89 70 ? 57 41 54 41 55 41 56 41 57 48 83 EC ? 44 0F";
@@ -258,7 +291,8 @@ auto Hook::init() -> void
 			logF("[Hook error] [%s] is no found Hook point", "mouseupdate");
 		}
 	}
-
+	
+	/*
 	// 渲染
 	{
 		const char* memcode = "48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? ? ? 70 B8 ? ? 78 A8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C";
@@ -284,8 +318,9 @@ auto Hook::init() -> void
 			logF("[Hook error] [%s] is no found Hook point", "muicDrawText");
 		}
 	}
+	*/
 
-	//SendChatMessage
+	//SendChatMessage // 这个暂时不修复,因为没用上
 	{
 		const char* memcode = "E8 ? ? ? ? 3C ? 75 ? 48 8B 8F ? ? ? ? 48 8B 01 4C 89 75";
 		auto findptr = FindSignature(memcode);
@@ -300,9 +335,11 @@ auto Hook::init() -> void
 		}
 	}
 
-	//获取本地玩家人称视角函数
+	// https://github.com/cngege/Mod/wiki/Player.hpp-(ServerPlayer---LocalPlayer---ALL)#%E8%AE%BE%E7%BD%AE%E7%8E%A9%E5%AE%B6%E4%BA%BA%E7%A7%B0%E8%A7%86%E8%A7%92-perspective-%E7%AC%ACn%E4%BA%BA%E7%A7%B0%E8%A7%86%E8%A7%92
+	// 获取本地玩家人称视角函数
+	// 从找调用可以看出，这是某个类的虚表函数
 	{
-		const char* memcode = "48 83 EC ? 48 8B ? 48 8D 54 24 ? 41 B8 02 00 00 00";
+		const char* memcode = "48 83 EC ? 48 8B ? 48 8D 54 24 ? 41 B8 03 00 00 00";
 		auto findptr = FindSignature(memcode);
 		if (findptr != 0x00) {
 			MH_CreateHookEx((LPVOID)findptr, &Hook::getLocalPlayerViewPerspective, &getLocalPlayerViewPerspectivecall);
@@ -312,8 +349,8 @@ auto Hook::init() -> void
 			logF("[Hook error] [%s] is no found Hook point", "getLocalPlayerViewPerspective");
 		}
 	}
-
-	//寻找 Level::foreachplayer 的call 非Hook
+	
+	//寻找 Level::foreachplayer 的call 非Hook // 其实是225号虚表地址
 	{
 		const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B EA 48";
 		Level::forEachPlayerCall = (uintptr_t*)FindSignature(memcode);
@@ -380,7 +417,7 @@ auto Hook::init() -> void
 			ItemInstance::SetVFtables(ItemInstanceVT);
 		}
 	}
-
+	
 	//GameMode虚表及相关Hook
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
@@ -580,22 +617,33 @@ auto Hook::init() -> void
 
 auto Hook::exit() -> void {
 	logF("[MH_DisableHook] Hook关闭状态: %s", MH_StatusToString(MH_DisableHook(MH_ALL_HOOKS)));
+	logF("[MH_RemoveHook] Hook移除状态: %s", MH_StatusToString(MH_RemoveHook(MH_ALL_HOOKS)));
 	Sleep(10);
 }
 
-auto Hook::LockSprinting(void* a, void* b) -> void
+/*
+__int64 __fastcall sub_141C45E20(
+__int64** a1,
+_DWORD* a2,
+__int64* a3,
+__int64 a4,
+__int64 a5,
+__int64 a6,
+__int64 a7,
+__int64 a8,
+__int64 a9,
+__int64 a10,
+__int64 a11)
+*/
+//41 0F 10 47 ? 0F 11 45 00 41 0F 10 4F
+//auto Hook::LockControlInput(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, void* a11) -> void*
+auto Hook::LockControlInputCallBack(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, void* a11) -> void*
 {
-	static AutoSprinting* as = Game::GetModuleManager()->GetModule<AutoSprinting*>();
-	static AutoWalking* aw = Game::GetModuleManager()->GetModule<AutoWalking*>();
-	if (as->isEnabled()) {
-		*(bool*)((uintptr_t)a + LockSprinting_offset) = true;
+	static LockControlInput* lci = Game::GetModuleManager()->GetModule<LockControlInput*>();
+	if (lci) {
+		lci->ControlTick((LockControlInput::ControlKey*)((uintptr_t)a4 + LockControlInput_offset));
 	}
-	if (aw->isEnabled()) {
-		// TODO: 这个没必要放在Tick里面，应该只用修改一次就可以了,后面尝试改一下,关键是要在关闭的时候 将值改为false
-		*(bool*)((uintptr_t)a + LockSprinting_offset + 3) = true;
-		aw->setEnabled(false);
-	}
-	lockSprintingcall(a, b);
+	return LockControlInputcall(thi, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
 }
 
 //无击退效果
@@ -659,12 +707,12 @@ auto Hook::Is_ShowCoordinates_Tick(void* _this)->bool
 
 
 //仅仅在本地房间时有效 _this 应该是serverplayer
-auto Hook::NoFallDamage_Tick(Player* _this, float* a1)->void*
-{
-	//this + 1D4
-	//*reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x1D4) = 0.0f;
-	return noFallDamage_Tickcall(_this, a1);
-}
+//auto Hook::NoFallDamage_Tick(Player* _this, float* a1)->void*
+//{
+//	//this + 1D4
+//	//*reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x1D4) = 0.0f;
+//	return noFallDamage_Tickcall(_this, a1);
+//}
 
 auto Hook::Level_Tick(Level* level)->void
 {
@@ -796,17 +844,18 @@ auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX
 	}
 }
 
+/**
 int frame = 0;		// 按照视频作者的说法，这个函数会在三层每层都调用一次，也就是每一帧调用三次
 auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	renderDetourcall(_this, ctx);
 	if (frame >= 3) {
 		frame = 0;
 		Game::Cinstance = ctx->CI;
-		Game::GetModuleManager()->onRenderDetour(ctx);
+		//Game::GetModuleManager()->onRenderDetour(ctx);
 	}
 	frame++;
 }
-
+*/
 
 auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleArea const& a2, TextHolder* a3, UIColor const& a4, float a5, float a6, TextMeasureData* a7, CaretMeasureData* a8)->void {
 	if (Game::mcfont != a1) {
