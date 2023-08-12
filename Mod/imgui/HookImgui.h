@@ -1,6 +1,6 @@
 ﻿//ImGui Shit
+
 #include "../Utils/Logger.h"
-//#include "../../imgui/animations/fade.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -21,12 +21,16 @@
 
 #include <io.h>
 
-//auto GetDllMod(void) -> HMODULE {
-//	MEMORY_BASIC_INFORMATION info;
-//	size_t len = VirtualQueryEx(GetCurrentProcess(), (void*)GetDllMod, &info, sizeof(info));
-//	assert(len == sizeof(info));
-//	return len ? (HMODULE)info.AllocationBase : NULL;
-//}
+
+auto GetDllMod(void) -> HMODULE {
+	MEMORY_BASIC_INFORMATION info;
+	size_t len = VirtualQueryEx(GetCurrentProcess(), (void*)GetDllMod, &info, sizeof(info));
+	assert(len == sizeof(info));
+	return len ? (HMODULE)info.AllocationBase : NULL;
+}
+
+//Index shit
+int countnum = -1;
 
 typedef HRESULT(__thiscall* PresentD3D12)(IDXGISwapChain3*, UINT, UINT);
 PresentD3D12 oPresentD3D12;
@@ -40,20 +44,20 @@ enum ID3D_Device_Type {
 struct FrameContext {
 	ID3D12CommandAllocator* commandAllocator = nullptr;
 	ID3D12Resource* main_render_target_resource = nullptr;
-	D3D12_CPU_DESCRIPTOR_HANDLE main_render_target_descriptor = {};
+	D3D12_CPU_DESCRIPTOR_HANDLE main_render_target_descriptor;
 };
-UINT buffersCounts = -1;
+uint64_t buffersCounts = -1;
 FrameContext* frameContext = nullptr;
 ID3D12DescriptorHeap* d3d12DescriptorHeapImGuiRender = nullptr;
 ID3D12DescriptorHeap* d3d12DescriptorHeapBackBuffers = nullptr;
 ID3D12GraphicsCommandList* d3d12CommandList = nullptr;
 ID3D12CommandAllocator* allocator = nullptr;
+D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle;
 ID3D12CommandQueue* d3d12CommandQueue = nullptr;
 bool initContext = false;
 HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags) {
 	auto deviceType = ID3D_Device_Type::INVALID_DEVICE_TYPE;
-	static auto window = (HWND)FindWindowA(nullptr, (LPCSTR)"Minecraft");
-	static auto childwindow = (HWND)FindWindowExA(window, NULL, NULL, (LPCSTR)"Minecraft");
+	auto window = (HWND)FindWindowA(nullptr, (LPCSTR)"Minecraft");
 	if (window == NULL) {
 		goto out;
 	};
@@ -67,8 +71,21 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		goto out;
 	};
 	if (deviceType == ID3D_Device_Type::D3D11) {
-		if (!initContext) {
+		if (!initContext)
 			ImGui::CreateContext();
+		ID3D11DeviceContext* ppContext = nullptr;
+		d3d11Device->GetImmediateContext(&ppContext);
+		ID3D11Texture2D* pBackBuffer;
+		ppSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+		ID3D11RenderTargetView* mainRenderTargetView;
+		d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
+		pBackBuffer->Release();
+		//POINT mouse;
+		//RECT rc = { 0 };
+		//md::FadeInOut fade;
+		ImGui_ImplWin32_Init(window);
+		ImGui_ImplDX11_Init(d3d11Device, ppContext);
+		if (!initContext) {
 			ImGuiIO& io = ImGui::GetIO();
 			(void)io;
 
@@ -80,108 +97,40 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			// 这里注意值如果不是常亮就要当心其被释放掉
 			io.IniFilename = Game::ImConfigIni.c_str();
 
-		}
-		ID3D11DeviceContext* ppContext = nullptr;
-		d3d11Device->GetImmediateContext(&ppContext);
-		ID3D11Texture2D* pBackBuffer = nullptr;
-		ppSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-		ID3D11RenderTargetView* mainRenderTargetView;
-		if (!pBackBuffer) goto out;
-		d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
-		pBackBuffer->Release();
-
-		if (!initContext) {
-			ImGui_ImplWin32_Init(window);
-			ImGui_ImplDX11_Init(d3d11Device, ppContext);
-			// Fonts
 			initContext = true;
-
-			{
-				ImGuiStyle* style = &ImGui::GetStyle();
-
-				style->WindowPadding = ImVec2(15, 15);
-				style->WindowRounding = 10.f;
-				style->FramePadding = ImVec2(5, 5);
-				style->FrameRounding = 6.f;
-				style->ItemSpacing = ImVec2(12, 8);
-				style->ItemInnerSpacing = ImVec2(8, 6);
-				style->IndentSpacing = 20.0f;
-				style->ScrollbarSize = 10.0f;
-				style->ScrollbarRounding = 9.0f;
-				style->GrabMinSize = 5.0f;
-				style->GrabRounding = 3.0f;
-				style->WindowTitleAlign = ImVec2(0.5, 0.5);
-				/*
-				style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-				style->Colors[ImGuiCol_Separator] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-				style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-				style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-				style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-				style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
-				style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
-				style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-				style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-				style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-				style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-				style->Colors[ImGuiCol_CheckMark] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-				style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 0.98f, 0.95f, 0.75f);
-				style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-				style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-				style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-				style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-				style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-				style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-				style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-				style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-				style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-				style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-				style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-				style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-				style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-				style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-				style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-				style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-				style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-				style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-				style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-				style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-				style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-				style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-				style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);*/
-
-			}
 		}
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 		
-		Game::GetModuleManager()->onImGUIRender();
+		{
+			ImGuiStyle* style = &ImGui::GetStyle();
 
+			style->WindowPadding = ImVec2(15, 15);
+			style->WindowRounding = 10.f;
+			style->FramePadding = ImVec2(5, 5);
+			style->FrameRounding = 6.f;
+			style->ItemSpacing = ImVec2(12, 8);
+			style->ItemInnerSpacing = ImVec2(8, 6);
+			style->IndentSpacing = 20.0f;
+			style->ScrollbarSize = 10.0f;
+			style->ScrollbarRounding = 9.0f;
+			style->GrabMinSize = 5.0f;
+			style->GrabRounding = 3.0f;
+			style->WindowTitleAlign = ImVec2(0.5, 0.5);
+		}
+
+		Game::GetModuleManager()->onImGUIRender();
+		
 		ImGui::Render();
 		ppContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
-		RECT window_rectangle, childwindow_rectangle;													//
-		GetWindowRect(window, &window_rectangle);														// 计算出ImGui以其所为窗口Y坐标的基准值
-		GetWindowRect(childwindow, &childwindow_rectangle);												// 也就是将标题栏富含进去，默认没有，也就导致鼠标悬浮、点击有Y轴偏移
-		ImGui::GetDrawData()->DisplayPos.y = (float)(childwindow_rectangle.top - window_rectangle.top); //
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		mainRenderTargetView->Release();
 		d3d11Device->Release();
 	}
 	else if (deviceType == ID3D_Device_Type::D3D12) {
 		if (!initContext)
-		{
 			ImGui::CreateContext();
-			ImGuiIO& io = ImGui::GetIO();
-			(void)io;
-
-			std::string font_JNMYT = Utils::WStringToString(Logger::GetRoamingFolderPath()) + std::string("\\Mod\\Assets\\JNMYT.ttf");
-			if (_access(font_JNMYT.c_str(), 0 /*F_OK*/) != -1) {
-				io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
-			}
-			io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
-			// 这里注意值如果不是常亮就要当心其被释放掉
-			io.IniFilename = Game::ImConfigIni.c_str();
-		}
 		DXGI_SWAP_CHAIN_DESC sdesc;
 		ppSwapChain->GetDesc(&sdesc);
 		sdesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
@@ -197,35 +146,31 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorImGuiRender, IID_PPV_ARGS(&d3d12DescriptorHeapImGuiRender))))
 				goto out;
 		if (d3d12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator)) != S_OK)
-			return 0;
+			return false;
 		for (size_t i = 0; i < buffersCounts; i++) {
 			frameContext[i].commandAllocator = allocator;
 		};
 		if (d3d12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocator, NULL, IID_PPV_ARGS(&d3d12CommandList)) != S_OK ||
 			d3d12CommandList->Close() != S_OK)
-			return 0;
-		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers = {};
+			return false;
+		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers;
 		descriptorBackBuffers.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		descriptorBackBuffers.NumDescriptors = buffersCounts;
 		descriptorBackBuffers.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		descriptorBackBuffers.NodeMask = 1;
 		if (d3d12Device->CreateDescriptorHeap(&descriptorBackBuffers, IID_PPV_ARGS(&d3d12DescriptorHeapBackBuffers)) != S_OK)
-			return 0;
+			return false;
 		const auto rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
-		for (UINT i = 0; i < buffersCounts; i++) {
+		rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
+		for (size_t i = 0; i < buffersCounts; i++) {
 			ID3D12Resource* pBackBuffer = nullptr;
 			frameContext[i].main_render_target_descriptor = rtvHandle;
 			ppSwapChain->GetBuffer(i, IID_PPV_ARGS(&pBackBuffer));
-			if (!pBackBuffer) goto out;
 			d3d12Device->CreateRenderTargetView(pBackBuffer, nullptr, rtvHandle);
 			frameContext[i].main_render_target_resource = pBackBuffer;
 			rtvHandle.ptr += rtvDescriptorSize;
 			pBackBuffer->Release();
 		};
-		//POINT mouse;
-		RECT rc = { 0 };
-		//md::FadeInOut fade;
 		if (!initContext) {
 			ImGui_ImplWin32_Init(window);
 			ImGui_ImplDX12_Init(d3d12Device, buffersCounts,
@@ -234,9 +179,26 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 				d3d12DescriptorHeapImGuiRender->GetCPUDescriptorHandleForHeapStart(),
 				d3d12DescriptorHeapImGuiRender->GetGPUDescriptorHandleForHeapStart());
 
-			
-			initContext = true;
+			ImGuiIO& io = ImGui::GetIO();
+			(void)io;
 
+			std::string font_JNMYT = Utils::WStringToString(Logger::GetRoamingFolderPath()) + std::string("\\Mod\\Assets\\JNMYT.ttf");
+			if (_access(font_JNMYT.c_str(), 0 /*F_OK*/) != -1) {
+				io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+			}
+			io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+			// 这里注意值如果不是常亮就要当心其被释放掉
+			io.IniFilename = Game::ImConfigIni.c_str();
+
+			initContext = true;
+		};
+		if (d3d12CommandQueue == nullptr)
+			goto out;
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+		
+		{
 			ImGuiStyle* style = &ImGui::GetStyle();
 
 			style->WindowPadding = ImVec2(15, 15);
@@ -245,62 +207,20 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			style->FrameRounding = 6.f;
 			style->ItemSpacing = ImVec2(12, 8);
 			style->ItemInnerSpacing = ImVec2(8, 6);
-			style->IndentSpacing = 25.0f;
-			style->ScrollbarSize = 15.0f;
+			style->IndentSpacing = 20.0f;
+			style->ScrollbarSize = 10.0f;
 			style->ScrollbarRounding = 9.0f;
 			style->GrabMinSize = 5.0f;
 			style->GrabRounding = 3.0f;
 			style->WindowTitleAlign = ImVec2(0.5, 0.5);
-
-			//style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-			//style->Colors[ImGuiCol_Separator] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			//style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-			//style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			//style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-			//style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
-			//style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
-			//style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			//style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-			//style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			//style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			//style->Colors[ImGuiCol_CheckMark] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			//style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 0.98f, 0.95f, 0.75f);
-			//style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-			//style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			//style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			//style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-			//style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			//style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			//style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-			//style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-			//style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			//style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			//style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-			//style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			//style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-			//style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			//style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			//style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-			//style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-			//style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-			//style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-			//style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-			//style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-			//style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-			//style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
-
-		};
-		if (d3d12CommandQueue == nullptr)
-			goto out;
-		ImGui_ImplDX12_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
+		}
 
 		Game::GetModuleManager()->onImGUIRender();
-		
+
+
 		FrameContext& currentFrameContext = frameContext[ppSwapChain->GetCurrentBackBufferIndex()];
 		currentFrameContext.commandAllocator->Reset();
-		D3D12_RESOURCE_BARRIER barrier = {};
+		D3D12_RESOURCE_BARRIER barrier;
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 		barrier.Transition.pResource = currentFrameContext.main_render_target_resource;
@@ -313,39 +233,81 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		d3d12CommandList->SetDescriptorHeaps(1, &d3d12DescriptorHeapImGuiRender);
 		ImGui::EndFrame();
 		ImGui::Render();
-		RECT window_rectangle, childwindow_rectangle;													//
-		GetWindowRect(window, &window_rectangle);														// 计算出ImGui以其所为窗口Y坐标的基准值
-		GetWindowRect(childwindow, &childwindow_rectangle);												// 也就是将标题栏富含进去，默认没有，也就导致鼠标悬浮、点击有Y轴偏移
-		ImGui::GetDrawData()->DisplayPos.y = (float)(childwindow_rectangle.top - window_rectangle.top); //
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), d3d12CommandList);
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 		d3d12CommandList->ResourceBarrier(1, &barrier);
 		d3d12CommandList->Close();
 		d3d12CommandQueue->ExecuteCommandLists(1, reinterpret_cast<ID3D12CommandList* const*>(&d3d12CommandList));
-
 		d3d12DescriptorHeapBackBuffers->Release();
 		d3d12CommandList->Release();
 		allocator->Release();
 		currentFrameContext.main_render_target_resource->Release();
 		currentFrameContext.commandAllocator->Release();
 		d3d12Device->Release();
-		delete[] frameContext;
+		delete frameContext;
 	};
 	goto out;
 out:
 	return oPresentD3D12(ppSwapChain, syncInterval, flags);
 };
 
+//CommandList
 typedef void(__thiscall* ExecuteCommandListsD3D12)(ID3D12CommandQueue*, UINT, ID3D12CommandList*);
 ExecuteCommandListsD3D12 oExecuteCommandListsD3D12;
-
 void hookExecuteCommandListsD3D12(ID3D12CommandQueue* queue, UINT NumCommandLists, ID3D12CommandList* ppCommandLists) {
 	if (!d3d12CommandQueue)
 		d3d12CommandQueue = queue;
-
 	oExecuteCommandListsD3D12(queue, NumCommandLists, ppCommandLists);
 };
+
+//Instanced
+typedef void(__stdcall* D3D12DrawInstanced)(ID3D12GraphicsCommandList* dCommandList, UINT VertexCountPerInstance, UINT InstanceCount, UINT StartVertexLocation, UINT StartInstanceLocation);
+D3D12DrawInstanced o_D12DrawInstanced = NULL;
+void __stdcall hkDrawInstancedD12(ID3D12GraphicsCommandList* dCommandList, UINT VertexCountPerInstance, UINT InstanceCount, UINT StartVertexLocation, UINT StartInstanceLocation) {
+	return o_D12DrawInstanced(dCommandList, VertexCountPerInstance, InstanceCount, StartVertexLocation, StartInstanceLocation);
+}
+
+//Indexed
+typedef void(__stdcall* D3D12DrawIndexedInstanced)(ID3D12GraphicsCommandList* dCommandList, UINT IndexCount, UINT InstanceCount, UINT StartIndex, INT BaseVertex);
+D3D12DrawIndexedInstanced o_D12DrawIndexedInstanced = NULL;
+void __stdcall hkDrawIndexedInstancedD12(ID3D12GraphicsCommandList* dCommandList, UINT IndexCount, UINT InstanceCount, UINT StartIndex, INT BaseVertex) {
+	//Tests
+	 
+	//for (int i = -3; i <= 3; i++) {
+	//	INT offset = BaseVertex + i * 10;
+	//	o_D12DrawIndexedInstanced(dCommandList, IndexCount, InstanceCount, StartIndex, offset); /multiply rendering
+	//}
+
+	//IndexCount = 3; // Only draw the first three triangles of the mesh
+
+	//static float time = 0.0f;
+	//BaseVertex += static_cast<int>(sin(time) * 10.0f); // Offset the vertices based on a sine wave
+	//time += 0.01f;
+
+	//IndexCount += rand() % 10; // Add a random offset to IndexCount
+	//StartIndex += rand() % 10; // Add a random offset to StartIndex
+	//BaseVertex += rand() % 10; // Add a random offset to BaseVertex
+
+	//static float time = 0.0f;
+	//time += 0.1f; // Increase time to make the wave move faster
+	//float wave = sin(time) * 10.0f; // Calculate the wave value based on the current time
+	//BaseVertex += (INT)wave; // Add the wave value to the BaseVertex parameter
+
+	//Wireframe
+	//dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+
+	//static float time = 0.0f;
+	//time += 0.001f; // Increase time to make the wave move faster
+	//float wave = sin(time) * 10.0f; // Calculate the wave value based on the current time
+	//if (IndexCount == 72 || IndexCount == 180) {
+	//	BaseVertex += static_cast<int>(wave); // Add the wave value to the BaseVertex parameter
+	//}
+
+	return o_D12DrawIndexedInstanced(dCommandList, IndexCount, InstanceCount, StartIndex, BaseVertex);
+}
+
+//Hooks
 class ImguiHooks {
 public:
 	static void InitImgui() {
@@ -357,5 +319,7 @@ public:
 
 		kiero::bind(54, (void**)&oExecuteCommandListsD3D12, hookExecuteCommandListsD3D12);
 		kiero::bind(140, (void**)&oPresentD3D12, hookPresentD3D12);
+		kiero::bind(84, (void**)&o_D12DrawInstanced, hkDrawInstancedD12);
+		kiero::bind(85, (void**)&o_D12DrawIndexedInstanced, hkDrawIndexedInstancedD12);
 	}
 };

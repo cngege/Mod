@@ -851,23 +851,25 @@ auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX
 	Game::MouseKeyDown[mousebutton] = isDown;
 	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
 	if (ImGui::GetCurrentContext() != nullptr) {
+		ImGuiIO& io = ImGui::GetIO();
+		io.MousePos = ImVec2(mouseX, mouseY);
 		switch (mousebutton) {
 		case 1:
-			ImGui::GetIO().MouseDown[0] = isDown;
+			io.MouseDown[0] = isDown;
 			break;
 		case 2:
-			ImGui::GetIO().MouseDown[1] = isDown;
+			io.MouseDown[1] = isDown;
 			break;
 		case 3:
-			ImGui::GetIO().MouseDown[2] = isDown;
+			io.MouseDown[2] = isDown;
 			break;
 		case 4:
-			ImGui::GetIO().MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
+			io.MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
 			break;
 		default:
 			break;
 		}
-		if (!ImGui::GetIO().WantCaptureMouse)
+		if (!io.WantCaptureMouse)
 			mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
 	}
 	else {
