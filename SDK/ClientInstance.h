@@ -450,9 +450,9 @@ private:
 	virtual void subFunction(void) const;
 
 public:
-	virtual void grabMouse(void);													//this
-	virtual void releaseMouse(void);	
-	virtual void refocusMouse(void);
+	virtual void grabMouse_VT(void);													//this
+	virtual void releaseMouse_VT(void);	
+	virtual void refocusMouse_VT(void);
 
 private:
 	virtual __int64 resetBai(int);
@@ -569,7 +569,7 @@ private:
 public:
 
 	// 这里的 0x330 有点特殊 Wiki 待补充
-	class glmatrixf* getGlmatrixf() {
+	struct glmatrixf* getGlmatrixf() {
 		return (glmatrixf*)(((uintptr_t)this) + 0x330);
 	}
 

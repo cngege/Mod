@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "LocalPlayer.h"
+#include "ClientInstance.h"
 #include "RemotePlayer.h"
 #include "Level.h"
 #include "TextHolder.h"
@@ -34,9 +35,11 @@ auto BioRadar::onImGUIRender() -> void
 	if (!isEnabled()) {
 		return;
 	}
-	if (!Game::localplayer->isValid()) {
+	if (!Game::Cinstance->getCILocalPlayer()->isValid()) {
 		return;
 	}
+	
+	
 	RECT rect{};
 	if (::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)) {
 		auto drawList = ImGui::GetForegroundDrawList();

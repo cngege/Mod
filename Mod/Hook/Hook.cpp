@@ -333,7 +333,7 @@ auto Hook::init() -> void
 		}
 	}
 	
-	//寻找 Level::foreachplayer 的call 非Hook // 其实是225号虚表地址
+	//寻找 Level::foreachplayer 的call 非Hook // 其实是225 / 207号虚表地址
 	{
 		const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B EA 48";
 		Level::forEachPlayerCall = (uintptr_t*)FindSignature(memcode);
@@ -579,8 +579,21 @@ auto Hook::init() -> void
 			logF_Debug("[RemotePlayer::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", RemotePlayerVT, RemotePlayerVTable_sigOffset, memcode);
 			RemotePlayer::SetVFtables(RemotePlayerVT);
 			//虚表Hook
-			//TickWorld 不能Hook这个函数,因为函数的内容为 ret 0000
-			MH_CreateHookEx((LPVOID)RemotePlayer::GetVFtableFun(369), &Hook::RemotePlayer_TickWorld, &RemotePlayer::tickWorldCallptr);
+#ifdef _DEBUG
+			{
+				// RemotePlayer_TickWorld 这个虚表位置只能靠代码跑了, 靠人找太难了 可能在 302就找到了， 没关系 都是同一个函数
+				for (int i = 300; i < 500; i++) {
+					// 从200开始跑到500虚表
+					const char* bt = *(char**)(((uintptr_t)RemotePlayerVT) + (uintptr_t)i * 8);
+					if (*bt == (char)0xC2 && *(bt + 1) == (char)0x00 && *(bt + 2) == (char)0x00 && *(bt + 3) == (char)0xCC) {
+						logF_Debug("RemotePlayer_TickWorld 的虚表位应该是: %d", i);
+						break;
+					}
+				}
+			}
+#endif // _DEBUG
+			//TickWorld 不能Hook这个函数,因为函数的内容为 ret 0000 (C2 00 00) 302 304     374
+			MH_CreateHookEx((LPVOID)RemotePlayer::GetVFtableFun(374), &Hook::RemotePlayer_TickWorld, &RemotePlayer::tickWorldCallptr);
 		}
 	}
 
@@ -969,6 +982,7 @@ auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, void* tick)->void* {
 	return _this->tickWorld(tick);
 }
 
+// 1.20 没有远程玩家调用这个函数
 auto Hook::RemotePlayer_TickWorld(RemotePlayer* _this) -> void*
 {
 	//判断虚表是否是远程玩家

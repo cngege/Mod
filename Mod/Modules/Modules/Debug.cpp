@@ -3,11 +3,28 @@
 #include "../../imgui/toggle/imgui_toggle.h"
 #include "../../imgui/toggle/imgui_toggle_presets.h"
 
+#include "Game.h"
+#include "HMath.h"
+#include "ClientInstance.h"
+
+#include "Level.h"
+#include "LocalPlayer.h"
+#include "Logger.h"
+
 ImGuiToggleConfig toggerConfig_Debug;
 
 
 Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	toggerConfig_Debug = ImGuiTogglePresets::RectangleStyle();
+
+	AddButtonUIEvent("Debug -", false, [&]() {
+		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+		if (lp != nullptr) {
+			auto count = lp->getLevel()->getAllPlayer().size();
+			logF("all player num: %d", count);
+		}
+		});
+
 }
 
 auto Debug::onImGUIRender() -> void
@@ -31,12 +48,24 @@ auto Debug::onImGUIRender() -> void
 	if (ShowFontSelector) {
 		ImGui::ShowFontSelector("字体选择");
 	}
+
+
+
+	// 尝试世界到屏幕
+	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+	if (lp) {
+		
+
+
+
+	}
+
 }
 
 auto Debug::onloadConfigFile(json& data)->void {
-	setEnabled(config::readDataFromJson<bool>(data, "enable", false));
+	//setEnabled(config::readDataFromJson<bool>(data, "enable", false));
 }
 
 auto Debug::onsaveConfigFile(json& data)->void {
-	data["enable"] = isEnabled();
+	//data["enable"] = isEnabled();
 }
