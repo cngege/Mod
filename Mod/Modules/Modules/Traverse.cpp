@@ -2,6 +2,7 @@
 #include "../../Utils/Game.h"
 #include "Actor.h"
 #include "LocalPlayer.h"
+#include "ClientInstance.h"
 
 Traverse::Traverse() : Module(VK_F2, "Traverse", "向所视方向前进一格") {
 	//SetKeyMode(KeyMode::Trigger);
@@ -41,7 +42,8 @@ auto Traverse::getBindKeyName()->std::string {
 auto Traverse::onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY)->void {
 	if (isEnabled()) {
 		if (mousebutton == VK_CANCEL && isdown) {
-			LocalPlayer* lp = Game::localplayer;
+			//LocalPlayer* lp = Game::localplayer;
+			LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 			if (lp == nullptr || !lp->isValid()) {
 				return;
 			}

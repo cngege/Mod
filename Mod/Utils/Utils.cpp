@@ -155,7 +155,10 @@ void Utils::setClipboardText(std::string& text) {
 		CloseClipboard();
 		return;
 	}
-	memcpy(GlobalLock(hg), text.c_str(), text.size() + 1);
+	auto lock = GlobalLock(hg);
+	if (lock != NULL) {
+		memcpy(lock, text.c_str(), text.size() + 1);
+	}
 	GlobalUnlock(hg);
 	SetClipboardData(CF_TEXT, hg);
 	CloseClipboard();

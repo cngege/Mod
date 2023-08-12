@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "Level.h"
 #include "Player.h"
 
 #include <cstdint>
 #include <string>
 #include "..\Mod\Utils\HMath.h"
-
+#include "Utils.h"
 
 
 //From	https://github.com/NRGJobro/Horion-Open-SRC/blob/master/SDK/CClientInstance.h
@@ -33,7 +33,7 @@ public:
 private:
 	virtual __int64 resetPrimaryClient(void);
 	virtual __int64 resetGameSession(void);
-	virtual __int64 tick(void);
+	virtual __int64 tick(void);									// 1.20 - 19(+4)
 	virtual __int64 frameUpdate(__int64&);
 	virtual __int64 update(bool);
 	virtual __int64 endFrame(void);
@@ -44,8 +44,8 @@ public:
 
 private:
 	virtual __int64 sub_1400C5D00(void) const;
-	virtual __int64 getLocalC_Player(void);
-	virtual __int64 getLocalC_Player(void) const;
+	virtual __int64 getLocalC_Player(void);						// 1.20 - 27
+	virtual __int64 getLocalC_Player(void) const;				// 1.20 - 28 28 return 0000
 	virtual __int64 getCameraEntity(void) const;
 
 public:
@@ -450,8 +450,8 @@ private:
 	virtual void subFunction(void) const;
 
 public:
-	virtual void grabMouse(void);
-	virtual void releaseMouse(void);
+	virtual void grabMouse(void);													//this
+	virtual void releaseMouse(void);	
 	virtual void refocusMouse(void);
 
 private:
@@ -565,4 +565,25 @@ private:
 	virtual __int64 onGameSessionReset(void);
 	virtual __int64 onLevelExit(void);
 	virtual __int64 updateScreens(void);
+
+public:
+
+	// 这里的 0x330 有点特殊 Wiki 待补充
+	class glmatrixf* getGlmatrixf() {
+		return (glmatrixf*)(((uintptr_t)this) + 0x330);
+	}
+
+	class LocalPlayer* getCILocalPlayer() {
+		return Utils::CallVFunc<27, class LocalPlayer*>(this);
+	}
+
+	auto grabMouse(void) -> void {
+		Utils::CallVFunc<306, void>(this);
+	};
+	auto releaseMouse(void) -> void {
+		Utils::CallVFunc<307, void>(this);
+	};
+	auto refocusMouse(void) -> void {
+		Utils::CallVFunc<308, void>(this);
+	};
 };

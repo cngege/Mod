@@ -20,7 +20,7 @@ public:
 	static auto SetVelocity(class Player* ,vec3_t*)->void*;
 	static auto Actor_isInWater(class Actor*) -> bool;
 	static auto Actor_getShadowRadius(class Actor*)->float;										//执行对象是所有生物 但不包括玩家
-	static auto ClientInstance_Tick(ClientInstance*, void*)->void;
+	static auto ClientInstance_Tick(ClientInstance*, void*)-> uintptr_t;
 	static auto Is_ShowCoordinates_Tick(void*)->bool;
 	//static auto NoFallDamage_Tick(class Player*,float*)->void*;
 	static auto Level_Tick(class Level*) -> void;

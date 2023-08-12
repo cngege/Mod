@@ -32,7 +32,7 @@ using LockControl = void*(__fastcall*)(void* thi, void* a2, void* a3, void* a4, 
 LockControl LockControlInputcall;
 int LockControlInput_offset = 0;
 
-using ClientInstance_Tick = void(__fastcall*)(ClientInstance* _this, void* a1);
+using ClientInstance_Tick = uintptr_t(__fastcall*)(ClientInstance* _this, void* a1);
 ClientInstance_Tick clientInstance_Tickcall;
 uintptr_t clientInstanceTick;
 
@@ -99,7 +99,6 @@ LPLP lplpcall;
 auto Hook::init() -> void
 {
 	logF("[Hook::init] 正在初始化");
-	
 	// 锁定疾跑 强制按下疾跑键 | 并不能确定被Hook的这个函数是什么
 	{
 		const char* memcode_offset = "41 0F 10 47 ? 0F 11 45 00 41 0F 10 4F";	// 这个是找参数指针到控制结构指针的偏移 这个特征码在下面call特征码的内部 
@@ -124,7 +123,7 @@ auto Hook::init() -> void
 
 	//clientInstance::Tick // 1.20 虚表 - 19号
 	{
-		const char* memcode = "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F9 48 8B 01";
+		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B DA 48 8B F9 0F 57 C0 0F 11 44 24 ? 0F 11 44 24";
 		clientInstanceTick = FindSignature(memcode);
 		if (clientInstanceTick != 0x00) {
 			MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
@@ -691,13 +690,13 @@ auto Hook::Actor_getShadowRadius(Actor* actor)->float {
 }
 
 // 这个tick貌似不工作了
-auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> void
+auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> uintptr_t
 {
-	if (_this != nullptr) {
+	if (Game::Cinstance == nullptr) {
 		logF_Debug("Game::Cinstance : %llX", (uintptr_t)_this);
 		Game::Cinstance = _this;
 	}
-	clientInstance_Tickcall(_this, a1);
+	return clientInstance_Tickcall(_this, a1);
 }
 
 
