@@ -57,7 +57,10 @@ ID3D12CommandQueue* d3d12CommandQueue = nullptr;
 bool initContext = false;
 HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags) {
 	auto deviceType = ID3D_Device_Type::INVALID_DEVICE_TYPE;
-	auto window = (HWND)FindWindowA(nullptr, (LPCSTR)"Minecraft");
+	//auto window = (HWND)FindWindowA(nullptr, (LPCSTR)"Minecraft");
+	static auto window = (HWND)FindWindowA(nullptr, (LPCSTR)"Minecraft");
+	static auto childwindow = (HWND)FindWindowExA(window, NULL, NULL, (LPCSTR)"Minecraft");
+
 	if (window == NULL) {
 		goto out;
 	};

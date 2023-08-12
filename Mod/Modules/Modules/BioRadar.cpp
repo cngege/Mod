@@ -38,10 +38,10 @@ auto BioRadar::onImGUIRender() -> void
 	if (!Game::Cinstance->getCILocalPlayer()->isValid()) {
 		return;
 	}
-	
-	
 	RECT rect{};
-	if (::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)) {
+	//::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)
+	// ::GetWindowRect((HWND)ImGui::GetIO().ImeWindowHandle, (LPRECT)&rect) // 可以
+	if (::GetWindowRect((HWND)Game::WindowsHandle, (LPRECT)&rect)) {
 		auto drawList = ImGui::GetForegroundDrawList();
 		float rectwidth = (float)(rect.right - rect.left);
 		float rectheight = (float)(rect.bottom - rect.top);
@@ -110,10 +110,13 @@ auto BioRadar::onRemotePlayerTick(RemotePlayer* remotePlayer)->void
 	if (!isEnabled()) {
 		return;
 	}
-	if (Game::localplayer->isValid() && !remotePlayer->isLocalPlayer()) {
+
+	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+
+	if (lp && lp->isValid() && !remotePlayer->isLocalPlayer()) {
 		//获得本地玩家的位置视角相关信息
-		vec3_t* lpos = Game::localplayer->getPosition();
-		vec2_t* lrot = Game::localplayer->getRotationEx();
+		vec3_t* lpos = lp->getPosition();
+		vec2_t* lrot = lp->getRotationEx();
 		//获得 对方玩家对本地玩家的相对位置 即本地玩家对远程玩家的空间向量
 		vec3_t xdpos = remotePlayer->getPosition()->sub(*lpos);
 		//获取向量长度 也就是斜边长度

@@ -9,6 +9,7 @@ public:
 	static class LocalPlayer* localplayer;
 	static class BitmapFont* mcfont;
 	static class ClientInstance* Cinstance;
+	static void* WindowsHandle;
 	static uintptr_t KeyMap;
 	static bool MouseKeyDown[];
 	static std::string ImConfigIni;

@@ -18,6 +18,7 @@ ModuleManager* Game::modmag = nullptr;
 LocalPlayer* Game::localplayer = nullptr;
 BitmapFont* Game::mcfont = nullptr;
 ClientInstance* Game::Cinstance = nullptr;
+void* Game::WindowsHandle = nullptr;
 
 uintptr_t Game::KeyMap = 0x00;
 bool Game::MouseKeyDown[10] = { false };
@@ -31,7 +32,8 @@ auto Game::init() -> void
 	Game::modmag = new ModuleManager;
 	Game::modmag->Init();
 	ImConfigIni = Utils::WStringToString(Utils::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini";
-	
+	Game::WindowsHandle = FindWindowA(nullptr, (LPCSTR)"Minecraft");
+
 	//获取生物位置指针的偏移
 	{
 		Mob::setSprintingFunAddr = FindSignature("48 89 74 24 ? 57 48 83 EC ? 48 8B ? 0F B6 F2 BA");
