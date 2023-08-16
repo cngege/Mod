@@ -122,10 +122,10 @@ static const char* const KeyNames[] = {
 	"NUMPAD7",
 	"NUMPAD8",
 	"NUMPAD9",
-	"VK_MULTIPLY",
+	"VK_MULTIPLY",	// 乘
 	"VK_ADD",
 	"VK_SEPARATOR",
-	"VK_SUBTRACT",
+	"VK_SUBTRACT",	// 减少
 	"VK_DECIMAL",
 	"VK_DIVIDE",
 	"F1",
@@ -217,8 +217,8 @@ static const char* const KeyNames[] = {
 #define GETKEYSTATE(VK_NONAME) ((GetKeyState(VK_NONAME) & 0x0001) ? 1 : 0)
 
 
-static inline float ImFmod(float x, float y) { return fmodf(x, y); }
-static inline float ImFabs(float x) { return fabsf(x); }
+static inline float ImFmod(float x, float y) { return fmodf(x, y); }	// 计算两个浮点数的余数
+static inline float ImFabs(float x) { return fabsf(x); }					// 返回这个浮点数的绝对值
 template <typename T>
 static inline void ImSwap(T& a, T& b) {
 	T tmp = a;

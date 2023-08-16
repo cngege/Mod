@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <functional>
 
-//LevelForILevel
+//LevelForILevel 已确定
 class Level {
 public:
 	static uintptr_t* startLeaveGameCall;

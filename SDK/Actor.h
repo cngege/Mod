@@ -76,6 +76,7 @@ public:
 	auto setHitBox(vec2_t)->void;
 	auto resetHitBox()->void;
 	auto getLevel()->class Level*;
+	auto getActorCollision() -> class ActorCollision*;
 
 public:
 	//auto onMoveBBs(vec3_t)->void;

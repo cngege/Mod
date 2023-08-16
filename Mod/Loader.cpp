@@ -14,7 +14,6 @@
 //config
 #include "Utils/config.h"
 
-
 MH_STATUS hookret;
 void* Loader::dllHMODULE = nullptr;
 bool Loader::Eject_Signal = false;

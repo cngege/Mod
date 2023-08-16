@@ -100,7 +100,7 @@ public:
 	virtual bool onKnockback(class LocalPlayer*, struct vec3_t*);
 	virtual void onActorTick(class Actor*);
 	virtual void onActorSightTick(class Actor*);
-	virtual void onPlayerTick(class Player*);
+	virtual void onPlayerTick(class Player*);					// 这个在远程服务器只有本地玩家会调用
 	virtual void onPlayerSightTick(class Player*);
 	virtual void onServerPlayerTick(class ServerPlayer*);
 	virtual void onLocalPlayerTick(class LocalPlayer*);

@@ -21,6 +21,11 @@
 
 #include <io.h>
 
+//#pragma warning (disable: 4244)
+//#pragma warning (disable: 4267)
+//#pragma warning (disable: 6216)
+#pragma warning (disable: 6278)
+#pragma warning (disable: 26495)
 
 auto GetDllMod(void) -> HMODULE {
 	MEMORY_BASIC_INFORMATION info;
@@ -78,7 +83,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			ImGui::CreateContext();
 		ID3D11DeviceContext* ppContext = nullptr;
 		d3d11Device->GetImmediateContext(&ppContext);
-		ID3D11Texture2D* pBackBuffer;
+		ID3D11Texture2D* pBackBuffer = nullptr;
 		ppSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 		ID3D11RenderTargetView* mainRenderTargetView;
 		d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
@@ -149,20 +154,20 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorImGuiRender, IID_PPV_ARGS(&d3d12DescriptorHeapImGuiRender))))
 				goto out;
 		if (d3d12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator)) != S_OK)
-			return false;
+			return NULL;
 		for (size_t i = 0; i < buffersCounts; i++) {
 			frameContext[i].commandAllocator = allocator;
 		};
 		if (d3d12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocator, NULL, IID_PPV_ARGS(&d3d12CommandList)) != S_OK ||
 			d3d12CommandList->Close() != S_OK)
-			return false;
-		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers;
+			return NULL;
+		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers{};
 		descriptorBackBuffers.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		descriptorBackBuffers.NumDescriptors = buffersCounts;
 		descriptorBackBuffers.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		descriptorBackBuffers.NodeMask = 1;
 		if (d3d12Device->CreateDescriptorHeap(&descriptorBackBuffers, IID_PPV_ARGS(&d3d12DescriptorHeapBackBuffers)) != S_OK)
-			return false;
+			return NULL;
 		const auto rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
 		for (size_t i = 0; i < buffersCounts; i++) {
@@ -223,7 +228,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 
 		FrameContext& currentFrameContext = frameContext[ppSwapChain->GetCurrentBackBufferIndex()];
 		currentFrameContext.commandAllocator->Reset();
-		D3D12_RESOURCE_BARRIER barrier;
+		D3D12_RESOURCE_BARRIER barrier{};
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 		barrier.Transition.pResource = currentFrameContext.main_render_target_resource;
@@ -248,7 +253,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		currentFrameContext.main_render_target_resource->Release();
 		currentFrameContext.commandAllocator->Release();
 		d3d12Device->Release();
-		delete frameContext;
+		delete[] frameContext;
 	};
 	goto out;
 out:

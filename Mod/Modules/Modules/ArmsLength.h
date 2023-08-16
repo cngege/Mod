@@ -6,8 +6,12 @@ public:
 	ArmsLength();
 
 private:
-	float* arms;
-	float distance = 7;
+	//float* arms = nullptr;
+	//float distance = 7;
+
+
+	BYTE sJumpaddr;							// 未作修改是jmp地址的值，以用作还原
+	BYTE* jumpaddr;
 public:
 	virtual auto onEnable()->void override;
 	virtual auto onDisable()->void override;

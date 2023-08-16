@@ -78,8 +78,8 @@ using KeyUpdate = void* (__fastcall*)(__int64 key, int isdown);
 KeyUpdate keyupdatecall;
 uintptr_t keyupdate;
 
-using MouseUpdate = void(__fastcall*)(__int64, char, char, __int16, __int16, __int16, __int16, char);
-MouseUpdate mouseupdatecall;
+using MouseUpdata = void(__fastcall*)(__int64, char, char, __int16, __int16, __int16, __int16, char);
+MouseUpdata mouseupdatecall;
 uintptr_t mouseupdate;
 
 //using RenderDetour = void(__fastcall*)(void*, MinecraftUIRenderContext*);
@@ -95,6 +95,45 @@ GetViewPerspective getLocalPlayerViewPerspectivecall;
 
 using LPLP = void* (__fastcall*)(void*, void*, void*, void*, int, void*, char, void*, void*, void*, void*, void*);
 LPLP lplpcall;
+
+
+// 这个函数 在KeyUpdate调用处上面的一个call，但是这个只在游戏的输入框中才会触发
+using InputBoxUpdata = void (__fastcall*)(__int64 key, byte a2, byte a3);
+InputBoxUpdata inputBoxUpdatacall;
+uintptr_t inputBoxUpdata;
+
+void InputBoxUpdataCallBack(__int64 key, byte a2, byte a3) {
+	//	[01:42 : 11.1296] key: z, a2 : 0, a3 : 169
+	//	[01:42 : 11.1446] key : h, a2 : 0, a3 : 170
+	//	[01:42 : 11.1523] key : o, a2 : 0, a3 : 171
+	//	[01:42 : 11.1749] key : n, a2 : 0, a3 : 172
+	//	[01:42 : 12.2149] key : ', a2: 0, a3: 173
+	//	[01:42 : 12.2149] key : w, a2 : 0, a3 : 174
+	//	[01:42 : 12.2229] key : e, a2 : 0, a3 : 175
+	//	[01:42 : 12.2310] key : n, a2 : 0, a3 : 176
+	//	[01:42 : 12.2523] key : , a2: 0, a3 : 177
+	//	[01:42 : 12.2523] key : , a2: 0, a3 : 178
+	//	[01:42 : 12.2524] key : , a2: 0, a3 : 179
+	//	[01:42 : 12.2524] key : , a2: 0, a3 : 180
+	//	[01:42 : 12.2524] key : , a2: 0, a3 : 181
+	//	[01:42 : 12.2524] key : , a2: 0, a3 : 182
+	//	[01:42 : 12.2525] key : , a2: 0, a3 : 183
+	//	[01:42 : 12.2525] key : , a2: 0, a3 : 184
+	//	[01:42 : 12.2525] key : 中, a2 : 0, a3 : 185
+	//	[01:42 : 12.2525] key : 文, a2 : 0, a3 : 186
+	//	[01:42 : 12.2845] key : a, a2 : 0, a3 : 187
+	//	[01:42 : 13.3056] key : ', a2: 0, a3: 188
+	//	[01:42 : 13.3056] key : a, a2 : 0, a3 : 189
+	//	[01:42 : 13.3403] key : , a2: 0, a3 : 190
+	//	[01:42 : 13.3403] key : , a2: 0, a3 : 191
+	//	[01:42 : 13.3404] key : a, a2 : 0, a3 : 192
+	//	[01:42 : 14.4443] key : a, a2 : 0, a3 : 193
+	logF("key: %s, a2: %d, a3: %d", ((char*)key), a2, a3);
+	
+	inputBoxUpdatacall(key, a2, a3);
+}
+
+
 
 auto Hook::init() -> void
 {
@@ -345,9 +384,11 @@ auto Hook::init() -> void
 		}
 	}
 
+	// 检查版本 1.20.12
 	//Level::startLeaveGame Hook
+	// 40 53 48 83 EC ? 48 8D 05 ? ? ? ? C6 81 ? ? ? ? 01 48 89
 	{
-		const char* memcode = "4C 8B DC 49 89 5B ? 49 89 73 ? 57 48 81 EC ? ? ? ? 48 8D 05";
+		const char* memcode = "40 53 48 83 EC ? 48 8D 05 ? ? ? ? C6 81 ? ? ? ? 01 48 89";
 		auto findptr = FindSignature(memcode);
 		if (findptr != 0x00) {
 			MH_CreateHookEx((LPVOID)findptr, &Hook::level_startLeaveGame, &Level::startLeaveGameCall);
@@ -447,10 +488,11 @@ auto Hook::init() -> void
 		}
 	}
 
+	//三参数Actor构造函数核对时间 : 1.20.12
 	//Actor构造函数下的 获取Actor类中的Level指针偏移
 	{
-		const char* memcode = "49 89 BE ? ? ? ? E8 ? ? ? ? 48 8B D0 49 8D 8E ? ? ? ? E8";		//来自三参数Actor构造函数
-		const char* memcode2 = "48 8D 05 ? ? ? ? 48 89 01 49 8B 01 48 89 41 ? 41 8B 41";		//来自四参数Actor构造函数
+		const char* memcode = "4C 89 B6 ? ? ? ? E8 ? ? ? ? 48 8B D0 48 8D 8E ? ? ? ? E8";		//来自三参数Actor构造函数
+		const char* memcode2 = "48 8D 05 ? ? ? ? 48 89 01 49 8B 01 48 89 41 ? 41 8B 41";		//来自四参数Actor构造函数(四参数构造函数参数好像没有Level)
 		auto ActorGetLevel_sigOffset = FindSignature(memcode);
 		if (ActorGetLevel_sigOffset == 0x00) {
 			logF_Debug("[Hook::FindSignature] [%s] [!] 使用第一个特征码查找\"地址偏移\"失败","Actor::LevelOffset");
@@ -561,7 +603,7 @@ auto Hook::init() -> void
 
 
 			//虚表Hook
-			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(332), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall); // 检查版本 1.20
+			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(332), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall); // （记得同步修改RemotePlayer）检查版本 1.20
 
 		}
 	}
@@ -592,8 +634,8 @@ auto Hook::init() -> void
 				}
 			}
 #endif // _DEBUG
-			//TickWorld 不能Hook这个函数,因为函数的内容为 ret 0000 (C2 00 00) 302 304     374
-			MH_CreateHookEx((LPVOID)RemotePlayer::GetVFtableFun(374), &Hook::RemotePlayer_TickWorld, &RemotePlayer::tickWorldCallptr);
+			//TickWorld 不能Hook这个函数,因为函数的内容为 ret 0000 (C2 00 00) 302 304 这里的虚表位置应该和ServerPlayer::tick 的虚表位置是一样的
+			MH_CreateHookEx((LPVOID)RemotePlayer::GetVFtableFun(332), &Hook::RemotePlayer_TickWorld, &RemotePlayer::tickWorldCallptr);
 		}
 	}
 
@@ -641,6 +683,18 @@ auto Hook::init() -> void
 		}
 	}
 // FishingHook 虚表地址特征码：48 8D 05 ? ? ? ? 48 89 03 C7 83 ? ? ? ? ? ? ? ? C7 83 ? ? ? ? ? ? ? ? 48 C7 83
+
+	{
+		// 输入框事件Hook
+		//48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 0F B6 D8
+		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 0F B6 D8";
+		auto inputBoxUpdata = FindSignature(memcode);
+		if (inputBoxUpdata != 0x00) {
+			MH_CreateHookEx((LPVOID)inputBoxUpdata, &InputBoxUpdataCallBack, &inputBoxUpdatacall);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", inputBoxUpdata, memcode);
+		}
+
+	}
 }
 
 auto Hook::exit() -> void {
@@ -803,40 +857,42 @@ auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 //}
 
 auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
-	Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
+
+	// 防止在ImGui输入框中触发热键
+	if (ImGui::GetCurrentContext() == nullptr || !ImGui::GetIO().WantTextInput) {
+		Game::GetModuleManager()->onKeyUpdate((int)key, isdown == 1);
+	}
+	
 	//快捷键反注入
 	if (Loader::EnableEjectKey && key == 'L' && isdown && Game::IsKeyDown(VK_CONTROL)) {
 		Loader::Eject_Signal = true;
 		return 0;
 	}
-
 	//IMGUI 按键信号传递
 	if (ImGui::GetCurrentContext() != nullptr) {
 		ImGuiIO& io = ImGui::GetIO();
 		io.KeysDown[(int)key] = isdown == 1;
-
+		
 		io.KeyCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		io.KeyShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 		io.KeyAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
 		io.KeySuper = ((::GetKeyState(VK_LWIN) | ::GetKeyState(VK_RWIN)) & 0x8000) != 0;
-		
 		if (io.WantTextInput) {
-			//if (key == VK_BACK) {
-			//	io.AddKeyEvent(ImGuiKey_Backspace, isdown == 1);
-			//	return 0;
-			//}
 			if (isdown == 1) {
-				if (key >= 'A' && key <= 'Z') {
-					if (io.KeyShift == false) {
-						io.AddInputCharacter((UINT)key - 'A' + 'a');
+				//if (Game::Cinstance) Game::Cinstance->setSuspendInput(false);
+				BYTE kb[256];
+				if (GetKeyboardState(kb)) {
+					wchar_t ch[6] = {};
+					int ret = ToUnicode(static_cast<UINT>(key), MapVirtualKey(static_cast<UINT>(key), MAPVK_VK_TO_VSC), kb, (LPWSTR)ch, 5, 0);
+					if (ret > 0) {
+						io.AddInputCharacterUTF16(ch[0]);
 						return 0;
 					}
 				}
-				io.AddInputCharacter((UINT)key);
 			}
 			return 0;
 		}
-		if (ImGui::GetIO().WantCaptureKeyboard) {
+		if (ImGui::GetIO().WantCaptureKeyboard) {	// 这里应该是指焦点在ImGui上, 可能不在输入框里
 			return 0;
 		}
 	}

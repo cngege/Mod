@@ -6,7 +6,7 @@
 #include <string>
 #include "..\Mod\Utils\HMath.h"
 #include "Utils.h"
-
+#include "Logger.h"
 
 //From	https://github.com/NRGJobro/Horion-Open-SRC/blob/master/SDK/CClientInstance.h
 class ClientInstance {
@@ -443,16 +443,16 @@ private:
 	virtual __int64 getClientSubId(void) const;
 
 public:
-	virtual void setSuspendInput(bool);
-	virtual void setDisableInput(bool);
+	virtual void setSuspendInput_VT(bool);												// 304
+	virtual void setDisableInput_VT(bool);												// 305
 
 private:
-	virtual void subFunction(void) const;
+	//virtual void subFunction(void) const; // void* xx(bool)
 
 public:
-	virtual void grabMouse_VT(void);													//this
+	virtual void grabMouse_VT(void);													//this 306
 	virtual void releaseMouse_VT(void);	
-	virtual void refocusMouse_VT(void);
+	virtual void refocusMouse_VT(void);													// 308
 
 private:
 	virtual __int64 resetBai(int);
@@ -575,6 +575,83 @@ public:
 
 	class LocalPlayer* getCILocalPlayer() {
 		return Utils::CallVFunc<27, class LocalPlayer*>(this);
+	}
+
+	// 这个方法的作用就是获取FOV所在的结构地址
+	// 怎么定位这个方法的特征码：首先找到下面fov的X, 然后找写入(或者找访问，写入只有一条，访问有两条, 其中有一条是和写入相同的)
+	// 进入汇编 发现 mov [r9+00000148],eax , 这里r9+148的值就是 FOV X的指针, 这里的r9就是我们要获取的地址,也就是这个函数的返回值
+	// 往上找 我们看r9是怎么来的, mov r9, rax  , 这里的r9是rax复制过来的 , 而再上面有个call， rax就是这个call的返回值
+	// 再往上面我们可以看到 mov rax,[rax+00000B40] ,可以判断这个 call就是 CI的虚表函数, 且是第(B40 / 8)个虚表函数
+	// 为什么笃定是CI的虚表函数呢, 通过断点可以知道 这里赋值前的rax就是CI的虚表由此判断, 所以我们要通过特征码获取这个 B40
+	void* getFovSubStructure() {
+		//48 8B 80 ? ? ? ? FF 15 ? ? ? ? 4C 8B C8 48 8D 8E
+		static int offset = 0;
+		if (!offset) {
+			auto memcodePos = FindSignature("48 8B 80 ? ? ? ? FF 15 ? ? ? ? 4C 8B C8 48 8D 8E");
+			if (memcodePos) {
+				offset = *reinterpret_cast<int*>(memcodePos + 3);
+			}
+			else {
+				logF("[%s::%s] 特征码查找失败", "ClientInstance", "getFovSubStructure");
+				throw "ClientInstance::getFovSubStructure 特征码查找失败";
+			}
+		}
+		using Fn = void*(__thiscall*)(ClientInstance*);
+		return (*reinterpret_cast<Fn*>(*(uintptr_t*)this + offset))(this);
+	}
+
+
+	// 这个fov找法和鼠标坐标什么的差不多,它的位置大概是鼠标坐标地址后面一点, 特点是只有在窗口大小变化, 
+	// 从 CI到 FOV确实有一个固定偏移 0x6D0
+	// 但无法从特征码中获取这个偏移, 游戏中Fov获取的原理是, 首先由CI调用一个虚表函数(也就是上面获取的函数),
+	// 然后这个函数的返回值是一个结构, 从这个结构到fov可以在特征码中定位, 这个偏移就是我们先要获取的
+	// 这个结构我们可以通过上面的函数获取, 而返回值到fov的偏移就是这里要获取的
+	vec2_t getFov() {
+		//float x = *(float*)(((uintptr_t)this) + 0x6D0);
+		//float y = *(float*)(((uintptr_t)this) + 0x6E4);
+		//return vec2_t(x, y);
+
+		//4C 8D 80 ? ? ? ? 49 8B D0 48 8D 85 ? ? ? ? 48 2B D0 0F 1F
+		static int offset = 0;
+		if (!offset) {
+			auto memcodePos = FindSignature("4C 8D 80 ? ? ? ? 49 8B D0 48 8D 85 ? ? ? ? 48 2B D0 0F 1F");
+			if (memcodePos) {
+				offset = *reinterpret_cast<int*>(memcodePos + 3);
+			}
+			else {
+				logF("[%s::%s] 特征码查找失败", "ClientInstance", "getFovSubStructure");
+				throw "ClientInstance::getFovSubStructure 特征码查找失败";
+			}
+		}
+		uintptr_t fovstruct = (uintptr_t)getFovSubStructure();
+		float x = *(float*)(fovstruct + offset);
+		float y = *(float*)(fovstruct + offset + 0x14);
+		return vec2_t(x, y);
+	}
+
+	// 检查版本 1.20.12
+	// 0x498 // 这个偏移好找,先找到CI,然后看内存，显示单浮点，打开背包，动动鼠标，看看哪个数变了
+	vec2_t* getMousepos() {
+		static int offset = 0;
+		if (!offset) {
+			auto memcodePos = FindSignature("F3 0F 11 89 ? ? ? ? F3 0F 11 91 ? ? ? ? F3 0F 11 99 ? ? ? ? C3");
+			if (memcodePos) {
+				offset = *reinterpret_cast<int*>(memcodePos + 4);
+			}
+			else {
+				logF("[%s::%s] 特征码查找失败", "ClientInstance", "getMousepos");
+				throw "ClientInstance::getMousepos 特征码查找失败";
+			}
+		}
+		return (vec2_t*)(((uintptr_t)this) + offset);
+	}
+
+	auto setSuspendInput(bool v) -> void* {
+		return Utils::CallVFunc<304, void*, bool>(this, v);
+	}
+
+	auto setDisableInput(bool v) -> void* {
+		return Utils::CallVFunc<305, void*,bool>(this, v);
 	}
 
 	auto grabMouse(void) -> void {

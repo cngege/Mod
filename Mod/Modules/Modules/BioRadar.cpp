@@ -110,7 +110,7 @@ auto BioRadar::onRemotePlayerTick(RemotePlayer* remotePlayer)->void
 	if (!isEnabled()) {
 		return;
 	}
-
+	return;
 	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 
 	if (lp && lp->isValid() && !remotePlayer->isLocalPlayer()) {

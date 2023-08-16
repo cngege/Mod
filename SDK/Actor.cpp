@@ -117,7 +117,13 @@ auto Actor::resetHitBox()->void {
 
 
 auto Actor::getLevel()->class Level* {
-	return *reinterpret_cast<class Level**>((intptr_t)this + LevelOffset);
+	return *reinterpret_cast<class Level**>((uintptr_t)this + LevelOffset);
+}
+
+// ActorCollision没有虚表
+auto Actor::getActorCollision() -> class ActorCollision*
+{
+	return (ActorCollision*)((uintptr_t)this + 8);
 }
 
 //auto Actor::onMoveBBs(vec3_t p)->void {

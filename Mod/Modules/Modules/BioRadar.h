@@ -25,7 +25,7 @@ private:
 public:
 	virtual auto onImGUIRender() -> void override;
 	virtual auto onstartLeaveGame(class Level*) -> void override;
-	virtual auto onRemotePlayerTick(class RemotePlayer*)->void override;
+	virtual auto onRemotePlayerTick(class RemotePlayer*)->void override;		// 远程玩家tick不好使
 	virtual auto onloadConfigFile(json& data) -> void override;
 	virtual auto onsaveConfigFile(json& data) -> void override;
 

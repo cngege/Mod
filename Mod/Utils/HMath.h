@@ -409,7 +409,7 @@ struct glmatrixf {
 	};
 
 	inline bool OWorldToScreen(vec3_t origin, vec3_t pos, vec2_t &screen, vec2_t fov, vec2_t displaySize) {
-		pos = pos.sub(origin);
+		pos = pos.sub(origin);			// 以origin 的坐标系原点 计算pos坐标位置
 
 		float x = transformx(pos);
 		float y = transformy(pos);
