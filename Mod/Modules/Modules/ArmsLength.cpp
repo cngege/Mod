@@ -28,7 +28,7 @@ ArmsLength::ArmsLength() : Module(VK_F10, "ArmsLength", "修改玩家攻击距�
 
 auto ArmsLength::onEnable()->void {
 	DWORD old_Page;
-	bool b = VirtualProtect(jumpaddr, sizeof(BYTE), PAGE_READWRITE, &old_Page);
+	bool b = VirtualProtect(jumpaddr, sizeof(BYTE), PAGE_EXECUTE_READWRITE, &old_Page);
 	if (b) {
 		*jumpaddr = sJumpaddr - 2;
 		VirtualProtect(jumpaddr, sizeof(BYTE), old_Page, &old_Page);
@@ -48,7 +48,7 @@ auto ArmsLength::onDisable()->void {
 
 	// new
 	DWORD old_Page;
-	bool b = VirtualProtect(jumpaddr, sizeof(BYTE), PAGE_READWRITE, &old_Page);
+	bool b = VirtualProtect(jumpaddr, sizeof(BYTE), PAGE_EXECUTE_READWRITE, &old_Page);
 	if (b) {
 		*jumpaddr = sJumpaddr;
 		VirtualProtect(jumpaddr, sizeof(BYTE), old_Page, &old_Page);
