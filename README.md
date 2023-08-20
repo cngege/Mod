@@ -61,3 +61,6 @@
 
 - **Dear ImGui**
   - https://github.com/ocornut/imgui
+
+- **fmt**
+  - https://github.com/fmtlib/fmt.git
