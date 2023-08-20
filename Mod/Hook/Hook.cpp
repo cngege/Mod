@@ -373,16 +373,16 @@ auto Hook::init() -> void
 	}
 	
 	//寻找 Level::foreachplayer 的call 非Hook // 其实是225 / 207号虚表地址
-	{
-		const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B EA 48";
-		Level::forEachPlayerCall = (uintptr_t*)FindSignature(memcode);
-		if (Level::forEachPlayerCall != 0x00) {
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", Level::forEachPlayerCall, memcode);
-		}
-		else {
-			logF("[FindCallPtr error] [%s] is no found ptr point", "Level::forEachPlayerCall");
-		}
-	}
+	//{
+	//	const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B EA 48";
+	//	Level::forEachPlayerCall = (uintptr_t*)FindSignature(memcode);
+	//	if (Level::forEachPlayerCall != 0x00) {
+	//		logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", Level::forEachPlayerCall, memcode);
+	//	}
+	//	else {
+	//		logF("[FindCallPtr error] [%s] is no found ptr point", "Level::forEachPlayerCall");
+	//	}
+	//}
 
 	// 检查版本 1.20.12
 	//Level::startLeaveGame Hook
@@ -628,8 +628,7 @@ auto Hook::init() -> void
 					// 从200开始跑到500虚表
 					const char* bt = *(char**)(((uintptr_t)RemotePlayerVT) + (uintptr_t)i * 8);
 					if (*bt == (char)0xC2 && *(bt + 1) == (char)0x00 && *(bt + 2) == (char)0x00 && *(bt + 3) == (char)0xCC) {
-						logF_Debug("RemotePlayer_TickWorld 的虚表位应该是: %d", i);
-						break;
+						logF_Debug("RemotePlayer_TickWorld 的虚表位应该是: %d, 地址: %llX", i, bt);
 					}
 				}
 			}
@@ -967,13 +966,15 @@ auto Hook::sendMessage(void* a1, TextHolder* a2)->__int64 {
 
 //返回值0-2 分别对应玩家第一二三人称视角
 auto Hook::getLocalPlayerViewPerspective(void* thi)->int {
+	int _sourceViewPerspective = getLocalPlayerViewPerspectivecall(thi);
+
 	static FastViewPerspective* idy = Game::GetModuleManager()->GetModule<FastViewPerspective*>();
 	if (idy) {
-		if (idy->isEnabled() && idy->isToggle()) {
-			return 2;
+		if (idy->isEnabled()) {
+			return idy->getViewPerspective(_sourceViewPerspective);
 		}
 	}
-	return getLocalPlayerViewPerspectivecall(thi);
+	return _sourceViewPerspective;
 }
 
 auto Hook::level_startLeaveGame(Level* level) -> void
