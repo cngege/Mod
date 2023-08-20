@@ -249,9 +249,6 @@
     <ClInclude Include="Modules\Modules\AirWater.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\SDK\sdk.h">
-      <Filter>SDK\头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Modules\Modules\LockControlInput.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>

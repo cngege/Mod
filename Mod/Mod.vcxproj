@@ -206,7 +206,6 @@
     <ClInclude Include="..\SDK\Mob.h" />
     <ClInclude Include="..\SDK\Player.h" />
     <ClInclude Include="..\SDK\RemotePlayer.h" />
-    <ClInclude Include="..\SDK\sdk.h" />
     <ClInclude Include="..\SDK\ServerPlayer.h" />
     <ClInclude Include="..\SDK\TextHolder.h" />
     <ClInclude Include="framework.h" />
