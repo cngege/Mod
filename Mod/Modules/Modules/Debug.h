@@ -4,6 +4,8 @@
 class Debug : public Module {
 public:
 	Debug();
+private:
+
 public:
 	virtual auto onImGUIRender() -> void override;
 	virtual auto onInternalImGUIRender() -> void override;

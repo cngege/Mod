@@ -14,7 +14,12 @@
 #include "LocalPlayer.h"
 #include "ServerPlayer.h"
 #include "RemotePlayer.h"
+#include "TextHolder.h"
+#include "GameMode.h"
+
 #include "Logger.h"
+#include "../Hook/Hook.h"
+#include "../Modules/ModuleManager.h"
 
 ImGuiToggleConfig toggerConfig_Debug;
 std::shared_ptr<glmatrixf> refdef;
@@ -24,7 +29,15 @@ bool ShowFontSelectForm = false;
 bool renderW2SDebugBox = false;
 bool ShowPtrList = false;
 
+bool Hundred_Times = false;
+bool Hundred_Times_isHook = false;
+
 vec2_t outFov;
+
+
+bool Hundred_TimesHook(GameMode* gm, vec3_ti* pos, unsigned char f);
+using Hundred_TimesHookFn = bool(__fastcall*)(GameMode*, vec3_ti*, unsigned char);
+uintptr_t* Hundred_TimesHookCall = nullptr;
 
 Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	toggerConfig_Debug = ImGuiTogglePresets::RectangleStyle();
@@ -33,6 +46,7 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	AddBoolUIValue("显示字体选择", &ShowFontSelectForm);
 	AddBoolUIValue("尝试方框透视", &renderW2SDebugBox);
 	AddBoolUIValue("显示常用指针", &ShowPtrList);
+	AddBoolUIValue("百倍掉落物(重复破坏同一个位置无效)", &Hundred_Times);
 
 	AddFloatUIValue("FovX", &outFov.x, 0, 10);
 	AddFloatUIValue("FovY", &outFov.y, 0, 10);
@@ -40,13 +54,32 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	AddButtonUIEvent("DebugBtn", false, [&]() {
 		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 		if (lp != nullptr) {
-			auto count = lp->getLevel()->getAllPlayer().size();
-			logF("all player num: %d", count);
+			//logF("玩家 %s 飞", lp->getStatusFlag(ActorFlags::canFly) ? "可以" : "不可以");
+			//logF("NameTag: %s", lp->getFormattedNameTag().getText());
 		}
 		});
-
+	
+	AddButtonUIEvent("百倍掉落物Hook", false, [&]() {
+		if (!Hundred_Times_isHook) {
+			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(2), (LPVOID)&(Hundred_TimesHook), &Hundred_TimesHookCall);
+			MH_EnableHook((LPVOID)GameMode::GetVFtableFun(2));
+			Hundred_Times_isHook = true;
+		}
+		});
 }
 
+// Block::playerDestroy
+bool Hundred_TimesHook(GameMode* gm, vec3_ti* pos, unsigned char f) {
+	static Debug* deg = Game::GetModuleManager()->GetModule<Debug*>();
+	if (Hundred_Times && !gm->GetLocalPlayer()->isLocalPlayer()) {
+		if (deg && deg->isEnabled()) {
+			for (int i = 0; i < 100; i++) {
+				((Hundred_TimesHookFn)Hundred_TimesHookCall)(gm, pos, f);
+			}
+		}
+	}
+	return ((Hundred_TimesHookFn)Hundred_TimesHookCall)(gm, pos, f);
+}
 
 void RenderDebugBox() {
 	// 尝试世界到屏幕
@@ -166,6 +199,17 @@ void AddOffsetAndPrint(void* baseptr, int* offset, const char* tip) {
 	ImGui::InputInt((std::string("###InputInt") + std::to_string((uintptr_t)baseptr)).c_str(), offset, 1, 100, ImGuiInputTextFlags_CharsHexadecimal);
 }
 
+
+struct PlayerInfo {
+	//Ptr: %llX, 本地玩家:{%d},服务玩家:{%d},远程玩家:{%d},Player:{%d}
+	bool isLocalPlayer = false;
+	bool isServerPlayer = false;
+	bool isRemotePlayer = false;
+	bool isPlayerVT = false;
+};
+std::unordered_map<Player*, PlayerInfo> playerlist;
+
+
 void ShowPtr() {
 	if (ImGui::Begin("指针", &ShowPtrList)) {
 		if (Game::Cinstance) {
@@ -202,15 +246,30 @@ void ShowPtr() {
 
 					// 显示所有玩家
 					ImGui::Text("All Player - Level::forEachPlayer");
-					lvl->forEachPlayer([](Player& player) {
-						if (ImGui::Button((std::string("复制地址###") + std::to_string((uintptr_t)(&player))).c_str())) {
-							std::string lvl_copy = fmt::format("{:X}", (uintptr_t)(&player));
+					
+					//static std::vector<Player*> players = lvl->getAllPlayer();
+					if (ImGui::Button("更新")) {
+						playerlist.clear();
+						auto players = lvl->getAllPlayer();
+						lvl->forEachPlayer([&](Player& player) {
+							PlayerInfo info;
+							info.isLocalPlayer = player.isLocalPlayer();
+							info.isRemotePlayer = player.isRemotePlayer();
+							info.isServerPlayer = *(uintptr_t***)&player == ServerPlayer::GetVFtables();
+							info.isPlayerVT = *(uintptr_t***)&player == Player::GetVFtables();
+							playerlist[&player] = info;
+							return true;
+							});
+					}
+
+					for (auto& kv : playerlist) {
+						if (ImGui::Button((std::string("复制地址###") + std::to_string((uintptr_t)(kv.first))).c_str())) {
+							std::string lvl_copy = fmt::format("{:X}", (uintptr_t)(kv.first));
 							ImGui::SetClipboardText(lvl_copy.c_str());
 						}
 						ImGui::SameLine();
-						ImGui::Text("Ptr: %llX, 本地玩家:{%d},服务玩家:{%d},远程玩家:{%d}", &player, player.isLocalPlayer(), *(uintptr_t***)&player == ServerPlayer::GetVFtables(), *(uintptr_t***)&player == RemotePlayer::GetVFtables());
-						return true;
-						});
+						ImGui::Text("Ptr: %llX, 本地玩家:{%d},服务玩家:{%d},远程玩家:{%d},Player:{%d}", kv.first, kv.second.isLocalPlayer, kv.second.isServerPlayer, kv.second.isRemotePlayer, kv.second.isPlayerVT);
+					}
 				}
 			}
 		}
