@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include <string>
-//#include <WinUser.h>
 #include <functional>
 #include "../Utils/Utils.h"
 #include "../Utils/config.h"
+#include "HMath.h"
 
 enum KeyMode {
 	Trigger = 0,						//按下 触发 onTrigger();
@@ -96,8 +96,8 @@ public:
 	virtual void onDisable();
 	virtual bool onAttack(class Actor*);				// 返回值可以拦截该事件
 	virtual bool useItem(class GameMode*,class ItemStack*);
-	virtual bool useItemOn(class GameMode*, class ItemStack*, class ItemInstance* itemins, vec3_ti*, uint8_t*, struct vec3_t*, class Block*);
-	virtual bool onKnockback(class LocalPlayer*, struct vec3_t*);
+	virtual bool useItemOn(class GameMode*, class ItemStack*, class ItemInstance*, vec3_ti* , uint8_t*, vec3_t* , class Block*);
+	virtual bool onKnockback(class LocalPlayer*, vec3_t*);
 	virtual void onActorTick(class Actor*);
 	virtual void onActorSightTick(class Actor*);
 	virtual void onPlayerTick(class Player*);					// 这个在远程服务器只有本地玩家会调用
