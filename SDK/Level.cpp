@@ -1,8 +1,7 @@
 ﻿#include "Level.h"
-#include "sdk.h"
 
 uintptr_t* Level::startLeaveGameCall = nullptr;
-uintptr_t* Level::forEachPlayerCall = nullptr;
+//uintptr_t* Level::forEachPlayerCall = nullptr;
 uintptr_t* Level::tickCall = nullptr;
 
 
@@ -47,9 +46,5 @@ auto Level::Tick() -> void
 // 208 Level::forEachPlayer(class std::function<bool __cdecl(class Player const & __ptr64)>)
 // 虚表 检查版本 1.20
 auto Level::forEachPlayer(std::function<bool(class Player&)> fp)->void {
-#if PRIORITY_USE_VTF == 1
 	return reinterpret_cast<void(__fastcall*)(Level*, std::function<bool(class Player&)>)>((*(uintptr_t**)this)[207])(this, fp);
-#else
-	return reinterpret_cast<void(__fastcall*)(Level*, std::function<bool(class Player&)>)>(forEachPlayerCall)(this, fp);
-#endif
 }

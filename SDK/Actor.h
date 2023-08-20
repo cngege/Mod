@@ -4,6 +4,23 @@
 
 #include "AttributeInstance.h"
 
+template <typename A, typename T>
+class AutomaticID {
+	T id;
+
+public:
+	AutomaticID() {
+		id = 0;
+	}
+
+	AutomaticID(T x) {
+		id = x;
+	}
+
+	inline operator T() const {
+		return id;
+	}
+};
 
 enum ActorType {
 	player = 1,
@@ -17,7 +34,8 @@ enum ActorType {
 
 enum ActorFlags {
 	isSneaking = 1,
-	isSprinting = 3
+	isSprinting = 3,
+	//canFly = 21					// 这就是直接从 bds里看来的 Actor::canFly内部( 未检验->不是21
 };
 
 class Actor
@@ -76,7 +94,7 @@ public:
 	auto setHitBox(vec2_t)->void;
 	auto resetHitBox()->void;
 	auto getLevel()->class Level*;
-	auto getActorCollision() -> class ActorCollision*;
+	auto getActorCollision() -> class ActorCollision*;		//this + 8bit
 
 public:
 	//auto onMoveBBs(vec3_t)->void;
@@ -102,7 +120,8 @@ public:
 
 
 	//原生虚表函数
-	auto getStatusFlag(ActorFlags)->bool;											/*0*/
+	auto getStatusFlag(ActorFlags) -> bool;											/*0*/
+	auto setStatusFlag(ActorFlags,bool)->void;										/*1*/
 	
 	auto getPosition()->vec3_t*;													/*21*/
 	auto getPosPrev()->vec3_t*;														/*22*/
@@ -111,13 +130,19 @@ public:
 	auto teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void;	/*43*/
 	auto getNameTag()->class TextHolder*;											/*62*/
 	auto getNameTagAsHash()->unsigned __int64;										/*63*/
-	auto getFormattedNameTag(void*)->void*;											/*64*/
+	auto getFormattedNameTag()-> TextHolder;										/*64*/
 	auto isPlayer()->bool;															/*67*/  // 因为MC中该函数功能的实现方法是 Player类重写,现在由类地址获取虚表获取该函数地址
 	
 	//获取玩家的移动方向 该函数在1.19.50.02 版本开始没有了
 	//auto getRotation()->vec2_t*;													/*81*/
-	auto setSneaking(bool)->void;													/*99*/
-	auto getEntityTypeId()->int;													/*169*/	//可能是 Player::getEntityTypeId()
-	auto causeFallDamage()->void*;													/*185*/
-	auto getAttribute(Attribute)->class AttributeInstance*;							/*206*/
+	auto setSneaking(bool)->void;													/*87*/	// 1.20.15
+	auto isOnFire(void) -> bool;													/*91*/
+	auto isRemotePlayer() -> bool;													/*97*/	// 1.20.15
+	auto getEntityTypeId() -> int;													/*153*/	// 1.20.15 可能是 Player::getEntityTypeId()
+	// 需要serverActor权限
+	auto changeDimension(AutomaticID<class Dimension, int>)->void;					/*165*/ // 1.20.15
+	auto checkFallDamage(float, bool) -> void*;										/*167*/	// 1.20.15
+	//auto causeFallDamage(float, float, class ActorDamageSource*)->void*;			/*168*/ // 1.20.15
+	auto getAttribute(Attribute) -> class AttributeInstance*;						/*206*/
+	auto setSize(float,float)->void;												/*212*/
 };

@@ -8,6 +8,7 @@
 #include "../Mod/Utils/Game.h"
 #include <math.h>
 
+
 int Actor::SpeedOffset = 0;		//玩家指针到玩家速度相关信息指针的偏移
 
 int Actor::AABBOffset = 0;
@@ -210,6 +211,10 @@ auto Actor::getStatusFlag(ActorFlags af)->bool{
 	return GetVFtableFun<bool, Actor*, ActorFlags>(0)(this, af);
 }
 
+auto Actor::setStatusFlag(ActorFlags af, bool flag)->void {
+	GetVFtableFun<void, Actor*, ActorFlags,bool>(1)(this, af, flag);
+}
+
 
 
 
@@ -258,9 +263,11 @@ _QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
 }
 */
 //这个函数暂存，因为会崩溃
-auto Actor::getFormattedNameTag(void* ret)->void* {
+auto Actor::getFormattedNameTag()->TextHolder {
 	//void* ret = malloc(8 * 4);
-	return GetVFtableFun<void*, Actor*,void*>(59)(this,ret);
+	TextHolder ret;
+	GetVFtableFun<TextHolder, Actor*, TextHolder>(59)(this,ret);
+	return ret;
 }
 
 //新版本中虚表不存在该函数
@@ -272,14 +279,37 @@ auto Actor::setSneaking(bool b)->void {
 	return GetVFtableFun<void, Actor*, bool>(87)(this, b);
 }
 
+// 是否着火
+auto Actor::isOnFire(void) -> bool
+{
+	return GetVFtableFun<bool, Actor*>(91)(this);
+}
+
+auto Actor::isRemotePlayer()->bool {
+	return GetVFtableFun<bool, Actor*>(97)(this);
+}
+
 auto Actor::getEntityTypeId()->int {
 	return GetVFtableFun<unsigned int, Actor*>(153)(this);
 }
 
-auto Actor::causeFallDamage()->void* {
-	return GetVFtableFun<void*, Actor*>(168)(this);
+auto Actor::changeDimension(AutomaticID<class Dimension, int> dim)->void {
+	return GetVFtableFun<void, Actor*, class AutomaticID<class Dimension, int>>(165)(this,dim);
 }
+
+// 造成跌落伤害 
+auto Actor::checkFallDamage(float a, bool b)->void* {
+	return GetVFtableFun<void*, Actor*, float, bool>(167)(this,a,b);
+}
+
+//auto Actor::causeFallDamage(float a, float b, ActorDamageSource* c)->void* {
+//	return GetVFtableFun<void*, Actor*, float, float, ActorDamageSource*>(168)(this,a,b,c);
+//}
 
 auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
 	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(188)(this, &attribute);
+}
+
+auto Actor::setSize(float width, float height)->void {
+	return GetVFtableFun<void, Actor*, float,float >(212)(this, width, height);
 }

@@ -6,7 +6,7 @@
 class Level {
 public:
 	static uintptr_t* startLeaveGameCall;
-	static uintptr_t* forEachPlayerCall;
+	//static uintptr_t* forEachPlayerCall;
 	static uintptr_t* tickCall;
 public:
 	auto getAllPlayer()->std::vector<class Player*>;
