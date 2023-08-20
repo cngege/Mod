@@ -51,7 +51,7 @@ struct FrameContext {
 	ID3D12Resource* main_render_target_resource = nullptr;
 	D3D12_CPU_DESCRIPTOR_HANDLE main_render_target_descriptor;
 };
-uint64_t buffersCounts = -1;
+unsigned int buffersCounts = -1;
 FrameContext* frameContext = nullptr;
 ID3D12DescriptorHeap* d3d12DescriptorHeapImGuiRender = nullptr;
 ID3D12DescriptorHeap* d3d12DescriptorHeapBackBuffers = nullptr;
@@ -170,7 +170,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			return NULL;
 		const auto rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
-		for (size_t i = 0; i < buffersCounts; i++) {
+		for (unsigned int i = 0; i < buffersCounts; i++) {
 			ID3D12Resource* pBackBuffer = nullptr;
 			frameContext[i].main_render_target_descriptor = rtvHandle;
 			ppSwapChain->GetBuffer(i, IID_PPV_ARGS(&pBackBuffer));
