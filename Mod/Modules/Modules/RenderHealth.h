@@ -16,7 +16,7 @@ private:
 
 public:
 	virtual auto onAttack(class Actor*)->bool override;
-	virtual auto onRenderDetour(class MinecraftUIRenderContext*)->void override;
+	virtual auto onImGUIRender() -> void override;
 	virtual auto onloadConfigFile(json& data)->void override;
 	virtual auto onsaveConfigFile(json& data)->void override;
 };
