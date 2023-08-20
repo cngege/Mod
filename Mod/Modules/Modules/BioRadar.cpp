@@ -35,9 +35,26 @@ auto BioRadar::onImGUIRender() -> void
 	if (!isEnabled()) {
 		return;
 	}
-	if (!Game::Cinstance->getCILocalPlayer()->isValid()) {
+	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+	if (!lp)
+	{
 		return;
 	}
+	if (!lp->isValid()) {
+		return;
+	}
+
+	{
+		// 临时修补方案 ,远程玩家不再调用tick函数了
+		Level* lvl = lp->getLevel();
+		if (lvl) {
+			lvl->forEachPlayer([&](Player& player) {
+				onRemotePlayerTick((RemotePlayer*)&player);
+				return true;
+				});
+		}
+	}
+
 	RECT rect{};
 	//::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)
 	// ::GetWindowRect((HWND)ImGui::GetIO().ImeWindowHandle, (LPRECT)&rect) // 可以
@@ -110,7 +127,9 @@ auto BioRadar::onRemotePlayerTick(RemotePlayer* remotePlayer)->void
 	if (!isEnabled()) {
 		return;
 	}
-	return;
+	if (!Game::Cinstance) {
+		return;
+	}
 	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 
 	if (lp && lp->isValid() && !remotePlayer->isLocalPlayer()) {
