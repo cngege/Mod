@@ -190,7 +190,7 @@ auto Actor::getMovementProxy() -> class ActorMovementProxy*
 {
 	static uintptr_t sig = 0;
 	if (!sig) {
-		uintptr_t sigcall = FindSignature("E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2");	// 来自 Actor::getHeadLookVector 的第一个call
+		uintptr_t sigcall = FindSignature("E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2");	// 来自 Actor::getHeadLookVector 的第一个call (未测试, 需要在ida中对比)
 		if (!sigcall) {
 			throw "Actor::getMovementProxy() Error, sig no fond";
 		}
