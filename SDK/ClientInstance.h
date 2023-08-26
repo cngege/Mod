@@ -474,7 +474,7 @@ private:
 	virtual __int64 onPlayerLoaded(Player&);
 
 public:
-	virtual void setClientGameMode(__int64);
+	virtual void setClientGameMode(__int64);//322?
 
 private:
 	virtual __int64 resetToDefaultGameMode(void);
