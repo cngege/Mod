@@ -226,7 +226,7 @@ auto Hook::init() -> void
 
 	//Level::Tick 无直接调用者
 	{
-		const char* memcode = "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B F1 0F 57 C0";
+		const char* memcode = "48 89 5C 24 ? 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 48 8B D9 48 8B 01 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48";
 		auto level_tick = FindSignature(memcode);
 		if (level_tick != 0x00) {
 			MH_CreateHookEx((LPVOID)level_tick, &Hook::Level_Tick, &Level::tickCall);
@@ -1022,11 +1022,20 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 // 本地房间攻击的时候 会调用两次, 先调用的是本地玩家,后调用的可能是服务玩家，在他人房间只会调用一次 就是本地玩家
 	if (_this->GetLocalPlayer()->isLocalPlayer()) {
 		//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f, isplayer=%i, islocalplayer=%i", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y,actor->isPlayer(),actor->isLocalPlayer());
-		//_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());	//必须是服务玩家才能有效
+		//_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());	//必须是服务玩家才能有效， 否则可能崩溃
 		//_this->useItem(_this->GetLocalPlayer()->getSelectedItem());
 	}
+	
 	if (Game::GetModuleManager()->GetModule<Debug*>()->isEnabled()) {
 		logF_Debug("LocalPlayer: %llX, CI: %llX", (uintptr_t)_this->GetLocalPlayer(), (uintptr_t)_this->GetLocalPlayer()->getClientInstance());
+
+
+		// TODO: use这个函数坏了, 没修, 后面再考虑
+		if (!_this->GetLocalPlayer()->isClientSide()) {
+			//	_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());
+			_this->useItem(_this->GetLocalPlayer()->getSelectedItem());
+			// 更新背包
+		}
 	}
 
 	if (!Game::GetModuleManager()->onAttack(actor)) {
