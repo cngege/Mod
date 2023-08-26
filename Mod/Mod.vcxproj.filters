@@ -252,6 +252,9 @@
     <ClInclude Include="Modules\Modules\LockControlInput.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SDK\ActorMovementProxy.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -433,6 +436,9 @@
     </ClCompile>
     <ClCompile Include="Modules\Modules\LockControlInput.cpp">
       <Filter>Modules\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\ActorMovementProxy.cpp">
+      <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

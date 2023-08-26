@@ -172,6 +172,7 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/utf-8  /await %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -190,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="..\SDK\AABB.h" />
     <ClInclude Include="..\SDK\Actor.h" />
+    <ClInclude Include="..\SDK\ActorMovementProxy.h" />
     <ClInclude Include="..\SDK\AttributeInstance.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
     <ClInclude Include="..\SDK\Dimension.h" />
@@ -262,6 +264,7 @@
   <ItemGroup>
     <ClCompile Include="..\SDK\AABB.cpp" />
     <ClCompile Include="..\SDK\Actor.cpp" />
+    <ClCompile Include="..\SDK\ActorMovementProxy.cpp" />
     <ClCompile Include="..\SDK\AttributeInstance.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
     <ClCompile Include="..\SDK\Dimension.cpp" />
