@@ -109,6 +109,8 @@ public:
 	auto getDimensionConst()->class Dimension*;
 	auto setPos(vec3_t*) -> void*;
 	auto setPosPrev(vec3_t*) -> void*;
+	//E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2
+	auto getMovementProxy() -> class ActorMovementProxy*;
 public:
 	// Hook的函数
 	auto setVelocity(vec3_t*)->void*;												/*46*/
@@ -143,6 +145,23 @@ public:
 	auto changeDimension(AutomaticID<class Dimension, int>)->void;					/*165*/ // 1.20.15
 	auto checkFallDamage(float, bool) -> void*;										/*167*/	// 1.20.15
 	//auto causeFallDamage(float, float, class ActorDamageSource*)->void*;			/*168*/ // 1.20.15
-	auto getAttribute(Attribute) -> class AttributeInstance*;						/*206*/
+	auto isClientSide() -> bool;													/*186*/ // 1.20.15
+	auto getAttribute(Attribute) -> class AttributeInstance*;						/*188*/
+	/*211*/
+	// Actor::setAuxValue(int)
+	// Actor::resetUserPos(bool) 
+	// Actor::animateHurt(void) 
+	// Actor::onTame(void) 
+	// Actor::reloadHardcoded(enum Actor::InitializationMethod,class VariantParameterList const & __ptr64)
+	// Actor::buildDebugInfo(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > & __ptr64)
+	// Actor::setEquippedSlot(enum EquipmentSlot,class ItemStack const & __ptr64)
+	// Actor::healEffects(int)
+	// Actor::playerTouch(class Player & __ptr64)
+	// Actor::stopSpinAttack(void)
+	// Actor::onBounceStarted(class BlockPos const & __ptr64,class Block const & __ptr64)
+	// Actor::swing(void)
+	// ...
+	// Actor::setSleeping(bool)
+	// Actor::changeDimension(class ChangeDimensionPacket const & __ptr64)
 	auto setSize(float,float)->void;												/*212*/
 };
