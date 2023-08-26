@@ -26,7 +26,10 @@ static DWORD WINAPI FreeLibraryThread(LPVOID lpParam);
 void Loader::init(void* hmodule)
 {
 	logF("DLL VER: %s at %s , HMODULE: %llX", FILE_VERSION_FILE_VERSION_STRING, __TIMESTAMP__ , hmodule);
-	logF("Minecraft.Windows.exe base: %llX", Utils::getBase());
+	std::string mcVersion = Utils::getMCVersion();
+	logF("Minecraft.Windows.exe base: %llX, Ver: %s", Utils::getBase(), mcVersion.c_str());
+
+
 	dllHMODULE = hmodule;
 	hookret = MH_Initialize();
 	if (hookret != MH_OK)
