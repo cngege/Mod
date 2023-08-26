@@ -16,6 +16,7 @@
 #include "RemotePlayer.h"
 #include "TextHolder.h"
 #include "GameMode.h"
+#include "ItemStack.h"
 
 #include "Logger.h"
 #include "../Hook/Hook.h"
@@ -32,6 +33,8 @@ bool ShowPtrList = false;
 bool Hundred_Times = false;
 bool Hundred_Times_isHook = false;
 
+bool KeyUseItem = false;
+
 vec2_t outFov;
 
 
@@ -47,6 +50,7 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	AddBoolUIValue("尝试方框透视", &renderW2SDebugBox);
 	AddBoolUIValue("显示常用指针", &ShowPtrList);
 	AddBoolUIValue("百倍掉落物(重复破坏同一个位置无效)", &Hundred_Times);
+	AddBoolUIValue("G健使用手中物品", &KeyUseItem);
 
 	AddFloatUIValue("FovX", &outFov.x, 0, 10);
 	AddFloatUIValue("FovY", &outFov.y, 0, 10);
@@ -296,6 +300,27 @@ auto Debug::onImGUIRender() -> void
 		ShowPtr();
 	}
 	
+}
+
+auto Debug::onKeyUpdate(int key, bool isdown) -> void
+{
+	if (isEnabled() && isdown) {
+		if (key == 'G' && KeyUseItem) {
+			if (Game::Cinstance && Game::Cinstance->getCILocalPlayer()) {
+				//Game::Cinstance->getCILocalPlayer()->getSelectedItem()->use(Game::Cinstance->getCILocalPlayer());
+				Game::Cinstance->grabMouse();
+				logF("被调用G");
+			}
+		}
+		if (key == 'H') {
+			if (Game::Cinstance && Game::Cinstance->getCILocalPlayer()) {
+				//Game::Cinstance->getCILocalPlayer()->getSelectedItem()->use(Game::Cinstance->getCILocalPlayer());
+
+				Game::Cinstance->getCILocalPlayer()->getLevel()->setSimPaused(false);
+				logF("被调用H");
+			}
+		}
+	}
 }
 
 auto Debug::onInternalImGUIRender()->void {
