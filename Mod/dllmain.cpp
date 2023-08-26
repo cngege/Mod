@@ -11,7 +11,7 @@
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dwrite.lib")
-
+#pragma comment(lib, "version")
 
 //临时消除出现在Json.hpp 4281行的警告
 //#pragma warning(disable:26800)
