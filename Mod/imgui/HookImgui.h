@@ -113,7 +113,6 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		
 		{
 			ImGuiStyle* style = &ImGui::GetStyle();
-
 			style->WindowPadding = ImVec2(15, 15);
 			style->WindowRounding = 10.f;
 			style->FramePadding = ImVec2(5, 5);
