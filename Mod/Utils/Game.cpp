@@ -27,7 +27,6 @@ std::string Game::ImConfigIni = "";
 auto Game::init() -> void
 {
 	logF("[Game::init] Game模块开始初始化");
-
 	Game::ModState = true;
 	Game::modmag = new ModuleManager;
 	Game::modmag->Init();

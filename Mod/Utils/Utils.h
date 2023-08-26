@@ -12,6 +12,8 @@
 #include <vector>
 #include <Windows.h>
 
+#define FMT_HEADER_ONLY
+#include "fmt/core.h"
 
 //#include "xorstr.h"
 //https://learn.microsoft.com/zh-cn/cpp/windows/predefined-accelerator-keys?view=msvc-170
@@ -437,6 +439,38 @@ public:
 			}
 		}
 		return out;
+	}
+
+
+	static std::string getFileVersion(TCHAR* PATH) {
+		std::string ret;
+		UINT sz = GetFileVersionInfoSize(PATH, 0);
+		if (sz == 0) {
+			return "";
+		}
+		ret.resize(sz, 0);
+		char* pBuf = new char[sz];
+		VS_FIXEDFILEINFO* pVsInfo;
+		if (GetFileVersionInfo(PATH, 0, sz, pBuf)) {
+			if (VerQueryValue(pBuf, L"\\", (void**)&pVsInfo, &sz)) {
+				//sprintf(pBuf, "%d.%d.%d.%d", HIWORD(pVsInfo->dwFileVersionMS), LOWORD(pVsInfo->dwFileVersionMS), HIWORD(pVsInfo->dwFileVersionLS), LOWORD(pVsInfo->dwFileVersionLS));
+				//ret = pBuf;
+				ret = fmt::format("{:d}.{:d}.{:d}.{:d}", HIWORD(pVsInfo->dwFileVersionMS), LOWORD(pVsInfo->dwFileVersionMS), HIWORD(pVsInfo->dwFileVersionLS), LOWORD(pVsInfo->dwFileVersionLS));
+			}
+		}
+		delete[] pBuf;
+		return ret;
+	}
+
+
+	static std::string getMCVersion() {
+		static std::string mcVer;
+		if (mcVer.empty()) {
+			TCHAR szPath[_MAX_PATH] = { 0 };
+			GetModuleFileName((HMODULE)Utils::getBase(), szPath, _MAX_PATH - 1);
+			mcVer = getFileVersion(szPath);
+		}
+		return mcVer;
 	}
 
 	static inline std::string randomString(const int size) {
