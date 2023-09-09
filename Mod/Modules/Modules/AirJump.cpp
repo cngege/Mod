@@ -13,17 +13,7 @@ AirJump::AirJump() : Module(0, "AirJump", "空气跳") {
 auto AirJump::onPlayerTick(Player* player) -> void
 {
 	if (isEnabled() && player->isLocalPlayer()) {
-		uintptr_t* out = new uintptr_t[2];
-		//player->getMovementProxy((uintptr_t)out)->setOnGround(true);
-		if (*(uintptr_t***)(player->getMovementProxy((uintptr_t)out)) == PlayerMovementProxy::GetVFtables()) {
-			logF_Debug("*(uintptr_t***)(player->getMovementProxy((uintptr_t)out)) == PlayerMovementProxy::GetVFtables() => true");
-		}
-		else {
-			logF_Debug("*(uintptr_t***)(player->getMovementProxy((uintptr_t)out)) == PlayerMovementProxy::GetVFtables() => false");
-		}
-		player->getMovementProxy((uintptr_t)out)->setOnGround(true);
-		delete[] out;
-		//player->getMovementProxy();
+		player->getMovementProxy()->setOnGround(true);
 	}
 }
 

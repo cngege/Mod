@@ -95,6 +95,8 @@ public:
 	auto resetHitBox()->void;
 	auto getLevel()->class Level*;
 	auto getActorCollision() -> class ActorCollision*;		//this + 8bit
+	auto getDimensionBlockSource() -> class BlockSource*;
+		//E8 ? ? ? ? 48 8B CF 48 8B 90 ? ? ? ? 48 8B C3 FF 15 ? ? ? ? 48
 
 public:
 	//auto onMoveBBs(vec3_t)->void;
@@ -110,7 +112,7 @@ public:
 	auto setPos(vec3_t*) -> void*;
 	auto setPosPrev(vec3_t*) -> void*;
 	//E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2
-	auto getMovementProxy(uintptr_t) -> class ActorMovementProxy*;
+	auto getMovementProxy() -> class ActorMovementProxy*;
 public:
 	// Hook的函数
 	auto setVelocity(vec3_t*)->void*;												/*46*/

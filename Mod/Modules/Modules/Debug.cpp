@@ -18,6 +18,7 @@
 #include "GameMode.h"
 #include "ItemStack.h"
 
+
 #include "Logger.h"
 #include "../Hook/Hook.h"
 #include "../Modules/ModuleManager.h"
@@ -42,6 +43,9 @@ bool Hundred_TimesHook(GameMode* gm, vec3_ti* pos, unsigned char f);
 using Hundred_TimesHookFn = bool(__fastcall*)(GameMode*, vec3_ti*, unsigned char);
 uintptr_t* Hundred_TimesHookCall = nullptr;
 
+#include "ActorMovementProxy.h"
+#include "BlockSource.h"
+
 Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	toggerConfig_Debug = ImGuiTogglePresets::RectangleStyle();
 
@@ -60,6 +64,7 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		if (lp != nullptr) {
 			//logF("玩家 %s 飞", lp->getStatusFlag(ActorFlags::canFly) ? "可以" : "不可以");
 			//logF("NameTag: %s", lp->getFormattedNameTag().getText());
+			logF("Block: %llX", lp->getMovementProxy()->getDimensionBlockSource()->getBlock(56,-44,-2));
 		}
 		});
 	

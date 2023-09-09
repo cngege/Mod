@@ -3,6 +3,7 @@
 
 struct vec3_ti;
 
+// XXBlock 继承于 BlockLegacy
 
 class BlockSource {
 public:

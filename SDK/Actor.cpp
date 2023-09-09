@@ -127,6 +127,17 @@ auto Actor::getActorCollision() -> class ActorCollision*
 	return (ActorCollision*)((uintptr_t)this + 8);
 }
 
+auto Actor::getDimensionBlockSource() -> class BlockSource*
+{
+	// 来自 getDimensionBlockSource调用者 getDimensionBlockSource来自 BlockLegacy::playerDestroy 这个函数可在Block虚表中找到
+	static uintptr_t offset = FindSignature("E8 ? ? ? ? 48 8B CF 48 8B 90 ? ? ? ? 48 8B C3 FF 15 ? ? ? ? 48");
+	if (!offset) {
+		throw "Actor::getDimensionBlockSource() Error, sig no fond";
+	}
+	using getDimensionBlockSourceFn = BlockSource * (__fastcall*)(Actor*);
+	return Utils::FuncFromSigOffset<getDimensionBlockSourceFn>(offset, 1)(this);
+}
+
 //auto Actor::onMoveBBs(vec3_t p)->void {
 //
 //}
@@ -187,7 +198,7 @@ auto Actor::setPosPrev(vec3_t* pos)->void* {
 }
 
 
-auto Actor::getMovementProxy(uintptr_t out) -> class ActorMovementProxy*
+auto Actor::getMovementProxy() -> class ActorMovementProxy*
 {
 	static uintptr_t sig = 0;
 	if (!sig) {
