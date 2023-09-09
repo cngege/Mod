@@ -258,6 +258,9 @@
     <ClInclude Include="..\SDK\ActorCollision.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SDK\BlockSource.h">
+      <Filter>SDK\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -441,6 +444,9 @@
       <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\ActorMovementProxy.cpp">
+      <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDK\BlockSource.cpp">
       <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>

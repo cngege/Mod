@@ -68,3 +68,8 @@ auto ActorMovementProxy::setRotation(vec2_t* rot) -> void
 {
 	Utils::CallVFunc<74, void, vec2_t*>(this, rot);
 }
+
+auto ActorMovementProxy::getDimensionBlockSource() -> class BlockSource*
+{
+	return Utils::CallVFunc<81, BlockSource*>(this);
+}

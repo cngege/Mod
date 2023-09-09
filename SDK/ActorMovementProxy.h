@@ -20,6 +20,7 @@ public:
 	auto getHealth() -> int;								/*43*/	//1.20.15
 	auto getRotation() -> struct vec2_t*;					/*73*/	//1.20.15
 	auto setRotation(struct vec2_t*) ->void;				/*74*/	//1.20.15
+	auto getDimensionBlockSource() -> class BlockSource*;	/*81*/	//1.20.15
 };
 
 //DirectPlayerMovementProxy::`vftable'{for `IBoatMovementProxy'}

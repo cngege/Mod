@@ -194,6 +194,7 @@
     <ClInclude Include="..\SDK\ActorCollision.h" />
     <ClInclude Include="..\SDK\ActorMovementProxy.h" />
     <ClInclude Include="..\SDK\AttributeInstance.h" />
+    <ClInclude Include="..\SDK\BlockSource.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
     <ClInclude Include="..\SDK\Dimension.h" />
     <ClInclude Include="..\SDK\FishingHook.h" />
@@ -267,6 +268,7 @@
     <ClCompile Include="..\SDK\Actor.cpp" />
     <ClCompile Include="..\SDK\ActorMovementProxy.cpp" />
     <ClCompile Include="..\SDK\AttributeInstance.cpp" />
+    <ClCompile Include="..\SDK\BlockSource.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
     <ClCompile Include="..\SDK\Dimension.cpp" />
     <ClCompile Include="..\SDK\FishingHook.cpp" />
