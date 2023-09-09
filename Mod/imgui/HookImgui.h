@@ -102,6 +102,8 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 				io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
 			io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+			std::wstring mcfolderPath = Utils::getMCFolderPath();
+			io.Fonts->AddFontFromFileTTF((Utils::WStringToString(mcfolderPath) + std::string("\\data\\fonts\\Mojangles.ttf")).c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			// 这里注意值如果不是常亮就要当心其被释放掉
 			io.IniFilename = Game::ImConfigIni.c_str();
 
@@ -194,6 +196,9 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 				io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
 			io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+			std::wstring mcfolderPath = Utils::getMCFolderPath();
+			io.Fonts->AddFontFromFileTTF((Utils::WStringToString(mcfolderPath) + std::string("\\data\\fonts\\Mojangles.ttf")).c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+
 			// 这里注意值如果不是常亮就要当心其被释放掉
 			io.IniFilename = Game::ImConfigIni.c_str();
 

@@ -3,6 +3,47 @@
 #include "Utils.h"
 #include "HMath.h"
 
+
+uintptr_t** ActorMovementProxy::vfTables = nullptr;
+
+template <typename TRet, typename... TArgs>
+auto ActorMovementProxy::GetVFtableFun(int a)->auto* {
+	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
+}
+
+auto ActorMovementProxy::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
+}
+
+auto ActorMovementProxy::GetVFtables()->uintptr_t** {
+	return vfTables;
+}
+
+auto ActorMovementProxy::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
+}
+
+
+uintptr_t** PlayerMovementProxy::vfTables = nullptr;
+
+template <typename TRet, typename... TArgs>
+auto PlayerMovementProxy::GetVFtableFun(int a)->auto* {
+	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
+}
+
+auto PlayerMovementProxy::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
+}
+
+auto PlayerMovementProxy::GetVFtables()->uintptr_t** {
+	return vfTables;
+}
+
+auto PlayerMovementProxy::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
+}
+
+
 auto ActorMovementProxy::isOnGround() -> bool
 {
 	return Utils::CallVFunc<39, bool>(this);

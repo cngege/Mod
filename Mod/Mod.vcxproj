@@ -191,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="..\SDK\AABB.h" />
     <ClInclude Include="..\SDK\Actor.h" />
+    <ClInclude Include="..\SDK\ActorCollision.h" />
     <ClInclude Include="..\SDK\ActorMovementProxy.h" />
     <ClInclude Include="..\SDK\AttributeInstance.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />

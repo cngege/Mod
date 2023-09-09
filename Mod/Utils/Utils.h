@@ -11,6 +11,7 @@
 #include <random>
 #include <vector>
 #include <Windows.h>
+#include <filesystem>
 
 #define FMT_HEADER_ONLY
 #include "fmt/core.h"
@@ -462,13 +463,27 @@ public:
 		return ret;
 	}
 
+	static std::wstring getMCRunnerPath() {
+		static std::wstring mcPath;
+		if (mcPath.empty()) {
+			TCHAR szPath[_MAX_PATH] = { 0 };
+			GetModuleFileName((HMODULE)Utils::getBase(), szPath, _MAX_PATH - 1);
+			mcPath = szPath;
+		}
+		return mcPath;
+	}
+
+	static std::wstring getMCFolderPath() {
+		auto mcPath			= getMCRunnerPath();
+		auto filepath	= std::filesystem::path(mcPath);
+		return filepath.parent_path().wstring();
+	}
 
 	static std::string getMCVersion() {
 		static std::string mcVer;
 		if (mcVer.empty()) {
-			TCHAR szPath[_MAX_PATH] = { 0 };
-			GetModuleFileName((HMODULE)Utils::getBase(), szPath, _MAX_PATH - 1);
-			mcVer = getFileVersion(szPath);
+			std::wstring mcPath = getMCRunnerPath();
+			mcVer = getFileVersion(const_cast<TCHAR*>(mcPath.c_str()));
 		}
 		return mcVer;
 	}

@@ -186,21 +186,23 @@ auto Actor::setPosPrev(vec3_t* pos)->void* {
 	//return GetVFtableFun<void*, Actor*, vec3_t*>(21)(this,pos);
 }
 
-auto Actor::getMovementProxy() -> class ActorMovementProxy*
+
+auto Actor::getMovementProxy(uintptr_t out) -> class ActorMovementProxy*
 {
 	static uintptr_t sig = 0;
 	if (!sig) {
-		uintptr_t sigcall = FindSignature("E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2");	// 来自 Actor::getHeadLookVector 的第一个call (未测试, 需要在ida中对比)
+		uintptr_t sigcall = FindSignature("E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2");	// 来自 Actor::getHeadLookVector 的第一个call (未测试, 需要在ida中对比/ 调用就会崩溃)
 		if (!sigcall) {
 			throw "Actor::getMovementProxy() Error, sig no fond";
 		}
 		sig = Utils::FuncFromSigOffset(sigcall, 1);
 	}
-	uintptr_t unknow = 0;
-	using Fn = ActorMovementProxy * (__fastcall*)(Actor*, uintptr_t*);
-	return reinterpret_cast<Fn>(sig)(this, &unknow);
+	uintptr_t* unknow1 = **(uintptr_t***)((uintptr_t)this + 8);
+	DWORD* unknow2 = (DWORD*)((uintptr_t)this + 16);
+	using Fn = ActorMovementProxy * (__fastcall*)(uintptr_t*, DWORD*);
+	uintptr_t* ActorMovementProxyComponent = (uintptr_t*)reinterpret_cast<Fn>(sig)(unknow1, unknow2);
+	return *(ActorMovementProxy**)ActorMovementProxyComponent;
 }
-
 
 
 auto Actor::setVelocity(vec3_t* sp)->void*{

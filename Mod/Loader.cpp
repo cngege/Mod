@@ -15,10 +15,10 @@
 #include "Utils/config.h"
 
 MH_STATUS hookret;
-void* Loader::dllHMODULE = nullptr;
-bool Loader::Eject_Signal = false;
-bool Loader::RemoteFreeLib = false;
-bool Loader::EnableEjectKey = true;
+void* Loader::dllHMODULE		= nullptr;
+bool  Loader::Eject_Signal		= false;
+bool  Loader::RemoteFreeLib		= false;
+bool  Loader::EnableEjectKey	= true;
 
 static DWORD WINAPI FreeLibraryThread(LPVOID lpParam);
 
@@ -28,7 +28,6 @@ void Loader::init(void* hmodule)
 	logF("DLL VER: %s at %s , HMODULE: %llX", FILE_VERSION_FILE_VERSION_STRING, __TIMESTAMP__ , hmodule);
 	std::string mcVersion = Utils::getMCVersion();
 	logF("Minecraft.Windows.exe base: %llX, Ver: %s", Utils::getBase(), mcVersion.c_str());
-
 
 	dllHMODULE = hmodule;
 	hookret = MH_Initialize();

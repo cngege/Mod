@@ -110,7 +110,7 @@ public:
 	auto setPos(vec3_t*) -> void*;
 	auto setPosPrev(vec3_t*) -> void*;
 	//E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2
-	auto getMovementProxy() -> class ActorMovementProxy*;
+	auto getMovementProxy(uintptr_t) -> class ActorMovementProxy*;
 public:
 	// Hook的函数
 	auto setVelocity(vec3_t*)->void*;												/*46*/

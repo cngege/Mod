@@ -13,16 +13,16 @@
 #include "../Modules/ModuleManager.h"
 
 
-bool Game::ModState = false;
-ModuleManager* Game::modmag = nullptr;
-LocalPlayer* Game::localplayer = nullptr;
-BitmapFont* Game::mcfont = nullptr;
+bool			Game::ModState = false;
+ModuleManager*  Game::modmag = nullptr;
+LocalPlayer*	Game::localplayer = nullptr;
+BitmapFont*		Game::mcfont = nullptr;
 ClientInstance* Game::Cinstance = nullptr;
-void* Game::WindowsHandle = nullptr;
+void*			Game::WindowsHandle = nullptr;
 
-uintptr_t Game::KeyMap = 0x00;
-bool Game::MouseKeyDown[10] = { false };
-std::string Game::ImConfigIni = "";
+uintptr_t		Game::KeyMap = 0x00;
+bool			Game::MouseKeyDown[10] = { false };
+std::string		Game::ImConfigIni = "";
 
 auto Game::init() -> void
 {
@@ -123,15 +123,15 @@ auto Game::init() -> void
 		logF_Debug("KeyMap: %llX", KeyMap);
 	}
 
-	//获取本地玩家OnGround函数的偏移
-	{
-		auto sigOffset = FindSignature("80 B8 ? ? ? ? 00 75 ? 48 8B C8 E8 ? ? ? ? 84");
-		if (sigOffset == 0x0) {
-			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "OnGround");
-			return;
-		}
-		LocalPlayer::onGroundoffset = *reinterpret_cast<int*>(sigOffset + 2);      // Get Offset from code
-	}
+	//获取本地玩家OnGround函数的偏移		// 新版已经没有这个方案了
+	//{
+	//	auto sigOffset = FindSignature("80 B8 ? ? ? ? 00 75 ? 48 8B C8 E8 ? ? ? ? 84");
+	//	if (sigOffset == 0x0) {
+	//		logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "OnGround");
+	//		return;
+	//	}
+	//	LocalPlayer::onGroundoffset = *reinterpret_cast<int*>(sigOffset + 2);      // Get Offset from code
+	//}
 
 	//获取 Item::getIdEx 所用到的偏移地址 getIdOffset;  特征码来自
 	{

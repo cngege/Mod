@@ -13,7 +13,6 @@ RenderHealth::RenderHealth() : Module(VK_F10, "RenderHealth", "显示被攻击�
 auto RenderHealth::onAttack(Actor* actor)->bool {
 	if (isEnabled()) {
 		currentPlayerHealth = (int)actor->getHealth();
-
 		std::string sname = std::string(actor->getNameTag()->getText());
 		auto find = sname.find("\n");
 		if (find == -1) {
@@ -45,7 +44,7 @@ auto RenderHealth::onImGUIRender() -> void
 			float rectwidth = (float)(rect.right - rect.left);
 			float rectheight = (float)(rect.bottom - rect.top);
 
-			float bgWidth = 130;
+			float bgWidth = 150;
 			float bgHeight = 40;
 
 			ImVec2 LTop = { rectwidth * 0.5f - bgWidth * 0.5f, rectheight * 0.75f };

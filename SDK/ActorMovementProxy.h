@@ -1,7 +1,16 @@
 ﻿#pragma once
+#include <cstdint>
 
-
+//const DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
 class ActorMovementProxy {
+protected:
+	static uintptr_t** vfTables;
+public:
+	template <typename TRet, typename... TArgs>
+	static auto GetVFtableFun(int) -> auto*;
+	static auto GetVFtableFun(int) -> uintptr_t*;
+	static auto GetVFtables() -> uintptr_t**;
+	static auto SetVFtables(uintptr_t** vTables) -> void;
 
 public:
 
@@ -12,3 +21,16 @@ public:
 	auto getRotation() -> struct vec2_t*;					/*73*/	//1.20.15
 	auto setRotation(struct vec2_t*) ->void;				/*74*/	//1.20.15
 };
+
+//DirectPlayerMovementProxy::`vftable'{for `IBoatMovementProxy'}
+class PlayerMovementProxy {
+protected:
+	static uintptr_t** vfTables;
+public:
+	template <typename TRet, typename... TArgs>
+	static auto GetVFtableFun(int) -> auto*;
+	static auto GetVFtableFun(int) -> uintptr_t*;
+	static auto GetVFtables() -> uintptr_t**;
+	static auto SetVFtables(uintptr_t** vTables) -> void;
+};
+

@@ -1,5 +1,4 @@
-﻿#pragma execution_character_set("utf-8")
-#include "Hook.h"
+﻿#include "Hook.h"
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "../Utils/Game.h"
@@ -13,6 +12,7 @@
 #include "Level.h"
 #include "GameMode.h"
 #include "MinecraftUIRenderContext.h"
+#include "ActorMovementProxy.h"
 
 #include "Item.h"
 #include "FishingHook.h"
@@ -27,6 +27,8 @@
 #include "../Modules/Modules/ShowCoordinates.h"
 #include "../Modules/Modules/FastViewPerspective.h"
 #include "../Modules/Modules/LockControlInput.h"
+
+#include "../Modules/Modules/Debug.h"
 
 using LockControl = void*(__fastcall*)(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, void* a11);
 LockControl LockControlInputcall;
@@ -508,6 +510,36 @@ auto Hook::init() -> void
 		else {
 			Actor::LevelOffset = *reinterpret_cast<int*>(ActorGetLevel_sigOffset + 3);
 			logF_Debug("[Actor::LevelOffset] [Success] 偏移地址= %i , sigoffset= %llX , memcode=%s", Actor::LevelOffset, ActorGetLevel_sigOffset, memcode);
+		}
+
+		// DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
+		// DirectPlayerMovementProxy::`vftable'{for `IBoatMovementProxy'}
+		if (ActorGetLevel_sigOffset != 0x00) {
+			// 获取一个函数，这个函数内部有 const DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
+			//E8 ? ? ? ? 90 48
+			uintptr_t call_sigoffset = Utils::FindSignatureRelay(ActorGetLevel_sigOffset, "E8 ? ? ? ? 90 48", 2000);
+			if (call_sigoffset != 0x00) {
+				// 进入这个函数内部
+				uintptr_t thiscall = Utils::FuncFromSigOffset(call_sigoffset, 1);
+				// 然后在这个call中定位到赋值虚表处
+				//48 8D 05 ? ? ? ? 48 89 43 10 48 8D 05
+				uintptr_t MovementProxy_sigoffset = Utils::FindSignatureRelay(thiscall, "48 8D 05 ? ? ? ? 48 89 43 10 48 8D 05", 300);
+				if (MovementProxy_sigoffset != 0x00) {
+					auto AMovementProxyVT = Utils::FuncFromSigOffset<uintptr_t**>(MovementProxy_sigoffset, 3);
+					auto PMovementProxyVT = Utils::FuncFromSigOffset<uintptr_t**>(MovementProxy_sigoffset, 14);
+
+					logF_Debug("[ActorMovementProxy::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX", AMovementProxyVT, MovementProxy_sigoffset);
+					logF_Debug("[PlayerMovementProxy::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX", PMovementProxyVT, MovementProxy_sigoffset);
+					ActorMovementProxy::SetVFtables(AMovementProxyVT);
+					PlayerMovementProxy::SetVFtables(PMovementProxyVT);
+				}
+				else {
+					logF("[Hook::FindSignature] [%s] [Error] 从Actor构造函数中的未知函数中定位移动代理虚表位置未找到", "MovementProxy::`vftable");
+				}
+			}
+			else {
+				logF("[Hook::FindSignature] [%s] [Error] 从Actor构造函数中定位包含Actor移动代理的函数未找到", "MovementProxy::`vftable");
+			}
 		}
 	}
 
@@ -1017,7 +1049,7 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 	return _this->tick();
 }
 
-#include "../Modules/Modules/Debug.h"
+
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 // 本地房间攻击的时候 会调用两次, 先调用的是本地玩家,后调用的可能是服务玩家，在他人房间只会调用一次 就是本地玩家
 	if (_this->GetLocalPlayer()->isLocalPlayer()) {
