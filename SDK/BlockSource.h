@@ -12,6 +12,8 @@ public:
 	auto getBlockEntity(vec3_ti*) -> class BlockActor*;				/*4*/  // 1.20.15
 
 	auto hasBlock(vec3_ti*) -> bool;								/*7*/  // 1.20.15
+
+	// 获取亮度
 	auto getBrightness(vec3_ti*) -> float;							/*19*/ // 1.20.15
 
 	// 是实体阻塞方块
