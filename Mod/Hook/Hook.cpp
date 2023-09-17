@@ -646,19 +646,6 @@ auto Hook::init() -> void
 			auto RemotePlayerVT = Utils::FuncFromSigOffset<uintptr_t**>(RemotePlayerVTable_sigOffset, 3);
 			logF_Debug("[RemotePlayer::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", RemotePlayerVT, RemotePlayerVTable_sigOffset, memcode);
 			RemotePlayer::SetVFtables(RemotePlayerVT);
-			//虚表Hook
-#ifdef _DEBUG
-			{
-				// RemotePlayer_TickWorld 这个虚表位置只能靠代码跑了, 靠人找太难了 可能在 302就找到了， 没关系 都是同一个函数
-				for (int i = 300; i < 500; i++) {
-					// 从200开始跑到500虚表
-					const char* bt = *(char**)(((uintptr_t)RemotePlayerVT) + (uintptr_t)i * 8);
-					if (*bt == (char)0xC2 && *(bt + 1) == (char)0x00 && *(bt + 2) == (char)0x00 && *(bt + 3) == (char)0xCC) {
-						logF_Debug("RemotePlayer_TickWorld 的虚表位应该是: %d, 地址: %llX", i, bt);
-					}
-				}
-			}
-#endif // _DEBUG
 			//TickWorld 不能Hook这个函数,因为函数的内容为 ret 0000 (C2 00 00) 302 304 这里的虚表位置应该和ServerPlayer::tick 的虚表位置是一样的
 			MH_CreateHookEx((LPVOID)RemotePlayer::GetVFtableFun(332), &Hook::RemotePlayer_TickWorld, &RemotePlayer::tickWorldCallptr);
 		}
@@ -1044,8 +1031,8 @@ auto Hook::LocalPlayer_TickWorld(LocalPlayer* _this, void* tick) -> void*
 	if (thisp != p) {
 		p = thisp;
 		Game::localplayer = _this;
-		logF_Debug("[%s] 本地玩家地址: %llX,虚表 = %llX", "LocalPlayer_getCameraOffset", thisp, *(INT64*)thisp);
-		logF_Debug("[%s] Clientinstance: %llX ,通过本地玩家获取的CI: %llX ,虚表 = %llX", "LocalPlayer_getCameraOffset", Game::Cinstance, _this->getClientInstance(), *(uintptr_t*)_this->getClientInstance());
+		logF_Debug("[%s] 本地玩家地址: %llX,虚表 = %llX", "LocalPlayer_tick", thisp, *(INT64*)thisp);
+		logF_Debug("[%s] Clientinstance: %llX ,通过本地玩家获取的CI: %llX ,虚表 = %llX", "LocalPlayer_tick", Game::Cinstance, _this->getClientInstance(), *(uintptr_t*)_this->getClientInstance());
 		//logF_Debug("本地玩家所在的维度的指针: %llX", _this->getDimensionConst());
 	}
 
