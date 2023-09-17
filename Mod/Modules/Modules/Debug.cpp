@@ -6,8 +6,9 @@
 #include "Game.h"
 #include "HMath.h"
 
-#define FMT_HEADER_ONLY
-#include "fmt/core.h"
+//#define FMT_HEADER_ONLY
+//#include "fmt/core.h"
+#include <format>
 
 #include "ClientInstance.h"
 #include "Level.h"
@@ -224,7 +225,7 @@ void ShowPtr() {
 	if (ImGui::Begin("指针", &ShowPtrList)) {
 		if (Game::Cinstance) {
 			if (ImGui::Button("复制###Cinstance")) {
-				std::string ci_copy = fmt::format("{:X}", (uintptr_t)Game::Cinstance);
+				std::string ci_copy = std::format("{:X}", (uintptr_t)Game::Cinstance);
 				ImGui::SetClipboardText(ci_copy.c_str());
 			}
 			ImGui::SameLine();
@@ -235,7 +236,7 @@ void ShowPtr() {
 			LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 			if (lp) {
 				if (ImGui::Button("复制###LocalPlayer")) {
-					std::string lp_copy = fmt::format("{:X}", (uintptr_t)(lp));
+					std::string lp_copy = std::format("{:X}", (uintptr_t)(lp));
 					ImGui::SetClipboardText(lp_copy.c_str());
 				}
 				ImGui::SameLine();
@@ -246,7 +247,7 @@ void ShowPtr() {
 				Level* lvl = lp->getLevel();
 				if (lvl) {
 					if (ImGui::Button("复制###Level")) {
-						std::string lvl_copy = fmt::format("{:X}", (uintptr_t)(lvl));
+						std::string lvl_copy = std::format("{:X}", (uintptr_t)(lvl));
 						ImGui::SetClipboardText(lvl_copy.c_str());
 					}
 					ImGui::SameLine();
@@ -274,7 +275,7 @@ void ShowPtr() {
 
 					for (auto& kv : playerlist) {
 						if (ImGui::Button((std::string("复制地址###") + std::to_string((uintptr_t)(kv.first))).c_str())) {
-							std::string lvl_copy = fmt::format("{:X}", (uintptr_t)(kv.first));
+							std::string lvl_copy = std::format("{:X}", (uintptr_t)(kv.first));
 							ImGui::SetClipboardText(lvl_copy.c_str());
 						}
 						ImGui::SameLine();
@@ -333,7 +334,7 @@ auto Debug::onInternalImGUIRender()->void {
 
 	if (ImGui::Button("PrintFov")) {
 		if(Game::Cinstance)
-			logF(fmt::format("X: {},Y: {}", *(float*)((uintptr_t)Game::Cinstance + 0x6D0), *(float*)((uintptr_t)Game::Cinstance + 0x6E4)).c_str());
+			logF(std::format("X: {},Y: {}", *(float*)((uintptr_t)Game::Cinstance + 0x6D0), *(float*)((uintptr_t)Game::Cinstance + 0x6E4)).c_str());
 	}
 }
 

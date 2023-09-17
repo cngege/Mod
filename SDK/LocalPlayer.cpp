@@ -6,6 +6,8 @@ uintptr_t** LocalPlayer::vfTables = nullptr;
 int LocalPlayer::toCIoffset = 0;
 int LocalPlayer::onGroundoffset = 0;
 
+uintptr_t* LocalPlayer::tickWorldCall = nullptr;
+
 template <typename TRet, typename... TArgs>
 auto LocalPlayer::GetVFtableFun(int a)->auto* {
 	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);

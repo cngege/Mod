@@ -143,10 +143,7 @@ auto Actor::getDimensionBlockSource() -> class BlockSource*
 //}
 
 auto Actor::isLocalPlayer()->bool {
-	if (*(__int64*)this == (__int64)LocalPlayer::GetVFtables())
-		return true;
-	else
-		return false;
+	return (*(__int64*)this == (__int64)LocalPlayer::GetVFtables());
 }
 
 auto Actor::getHealth()->float {

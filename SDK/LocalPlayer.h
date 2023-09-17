@@ -20,6 +20,10 @@ public:
 	static auto SetVFtables(uintptr_t** vTables)->void;
 	//LocalPlayer::displayClientMessage(std::string const&)  //388
 
+	// Hook函数回调
+public:
+	static uintptr_t* tickWorldCall;									/*332*/
+
 public:
 	//定义函数
 	auto getClientInstance()->class ClientInstance*;

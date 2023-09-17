@@ -14,6 +14,6 @@ public:
 
 	//虚函数
 public:
-	static uintptr_t* tickWorldCall;							/*369*/
+	static uintptr_t* tickWorldCall;							/*332*/
 	auto tickWorld(void* Tick)->void*;
 };

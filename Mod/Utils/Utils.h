@@ -13,8 +13,9 @@
 #include <Windows.h>
 #include <filesystem>
 
-#define FMT_HEADER_ONLY
-#include "fmt/core.h"
+//#define FMT_HEADER_ONLY
+//#include "fmt/core.h"
+#include <format>
 
 //#include "xorstr.h"
 //https://learn.microsoft.com/zh-cn/cpp/windows/predefined-accelerator-keys?view=msvc-170
@@ -456,7 +457,7 @@ public:
 			if (VerQueryValue(pBuf, L"\\", (void**)&pVsInfo, &sz)) {
 				//sprintf(pBuf, "%d.%d.%d.%d", HIWORD(pVsInfo->dwFileVersionMS), LOWORD(pVsInfo->dwFileVersionMS), HIWORD(pVsInfo->dwFileVersionLS), LOWORD(pVsInfo->dwFileVersionLS));
 				//ret = pBuf;
-				ret = fmt::format("{:d}.{:d}.{:d}.{:d}", HIWORD(pVsInfo->dwFileVersionMS), LOWORD(pVsInfo->dwFileVersionMS), HIWORD(pVsInfo->dwFileVersionLS), LOWORD(pVsInfo->dwFileVersionLS));
+				ret = std::format("{:d}.{:d}.{:d}.{:d}", HIWORD(pVsInfo->dwFileVersionMS), LOWORD(pVsInfo->dwFileVersionMS), HIWORD(pVsInfo->dwFileVersionLS), LOWORD(pVsInfo->dwFileVersionLS));
 			}
 		}
 		delete[] pBuf;

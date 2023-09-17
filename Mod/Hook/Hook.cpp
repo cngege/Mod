@@ -243,6 +243,7 @@ auto Hook::init() -> void
 	//{
 	// //48 83 EC ? 80 BA ? ? ? ? 00 74 ? 48 8B 02 48 8B CA 48 8B 80 ? ? ? ? FF
 	// // char __fastcall sub_143053BE0(__int64 a1, _BYTE *a2) 1.20.15 // 要验证本地世界多玩家是否还是 rdx只有本地玩家
+	// // 后续：在本地房间 本地玩家+所有服务玩家会触发
 	// 
 	//	const char* memcode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
 	//	localplayer_getCameraOffset = FindSignature(memcode);
@@ -685,23 +686,8 @@ auto Hook::init() -> void
 			else {
 				logF("[LocalPlayer::SetVtables] [Error] 寻找 LocalPlayer To ClientInstance 偏移地址失败,LP_CIoffset:%llX", LP_CIoffset);
 			}
-			/*
-			//找本地玩家到ClientInstance的指针偏移
-			char* LP_CIoffset = (char*)LocalPlayerVTable_sigOffset;
-			for (int i = 0; i <= 500; i++) {
-				if (i == 500) {
-					logF("[LocalPlayer::SetVtables] [Error] 寻找 LocalPlayer To ClientInstance 偏移地址失败,LP_CIoffset:%llX", LP_CIoffset);
-					break;
-				}
-				if (*LP_CIoffset == (char)0x48 && *(LP_CIoffset + 1) == (char)0x89 && *(LP_CIoffset + 2) == (char)0xB7) {	//(char)0xBE
-					LocalPlayer::toCIoffset = *reinterpret_cast<int*>(LP_CIoffset + 3);
-					logF_Debug("[LocalPlayer::SetVtables] [Success] Find LocalPlayer To ClientInstance i:%d",i);
-					break;
-				}
-				LP_CIoffset++;
-			}
-			*/
 			//虚表Hook
+			MH_CreateHookEx((LPVOID)LocalPlayer::GetVFtableFun(332), &Hook::LocalPlayer_TickWorld, &LocalPlayer::tickWorldCall);
 			//MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(374), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
 
 		}
@@ -1066,6 +1052,15 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 		return false;
 	}
 	return _this->attack(actor);
+}
+
+auto Hook::LocalPlayer_TickWorld(LocalPlayer* _this, void* tick) -> void*
+{
+	if (!_this->isLocalPlayer()) {
+		logF_Debug("非本地玩家");
+	}
+	using Fn = void*(__fastcall*)(LocalPlayer*, void*);
+	return reinterpret_cast<Fn>(LocalPlayer::tickWorldCall)(_this, tick);
 }
 
 auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, void* tick)->void* {
