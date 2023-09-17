@@ -13,7 +13,7 @@ AirJump::AirJump() : Module(0, "AirJump", "空气跳") {
 auto AirJump::onPlayerTick(Player* player) -> void
 {
 	if (isEnabled() && player->isLocalPlayer()) {
-		player->getMovementProxy()->setOnGround(true);
+		//player->getMovementProxy()->setOnGround(true);
 	}
 }
 
@@ -31,7 +31,7 @@ auto AirJump::onTick(GameMode* gm)->void {
 auto AirJump::onLocalPlayerTick(LocalPlayer* lp)->void
 {
 	if (isEnabled()) {
-		//lp->getMovementProxy()->setOnGround(true);
+		lp->getMovementProxy()->setOnGround(true);
 	}
 }
 

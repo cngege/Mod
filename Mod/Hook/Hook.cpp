@@ -814,23 +814,6 @@ auto Hook::Level_Tick(Level* level)->void
 	level->Tick();
 }
 
-
-// TODO 一直在两个地址之间跳
-auto Hook::LocalPlayer_getCameraOffset(LocalPlayer* _this)->vec2_t*
-{
-	static INT64 p = 0;
-	auto thisp = reinterpret_cast<INT64>(_this);
-	if (thisp != p) {
-		p = thisp;
-		Game::localplayer = _this;
-		logF_Debug("[%s] 本地玩家地址: %llX,虚表 = %llX","LocalPlayer_getCameraOffset", thisp, *(INT64*)thisp);
-		logF_Debug("[%s] Clientinstance: %llX ,通过本地玩家获取的CI: %llX ,虚表 = %llX","LocalPlayer_getCameraOffset", Game::Cinstance, _this->getClientInstance(), *(uintptr_t*)_this->getClientInstance());
-		//logF_Debug("本地玩家所在的维度的指针: %llX", _this->getDimensionConst());
-	}
-	Game::GetModuleManager()->onLocalPlayerTick(_this);
-	return localplayer_getCameraOffsetcall(_this);
-}
-
 //在非本地房间 只有本地玩家才会触发Tick
 auto Hook::Player_tickWorld(Player* player, Tick* tick)->void
 {
@@ -1056,9 +1039,18 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 
 auto Hook::LocalPlayer_TickWorld(LocalPlayer* _this, void* tick) -> void*
 {
-	if (!_this->isLocalPlayer()) {
-		logF_Debug("非本地玩家");
+	static INT64 p = 0;
+	auto thisp = reinterpret_cast<INT64>(_this);
+	if (thisp != p) {
+		p = thisp;
+		Game::localplayer = _this;
+		logF_Debug("[%s] 本地玩家地址: %llX,虚表 = %llX", "LocalPlayer_getCameraOffset", thisp, *(INT64*)thisp);
+		logF_Debug("[%s] Clientinstance: %llX ,通过本地玩家获取的CI: %llX ,虚表 = %llX", "LocalPlayer_getCameraOffset", Game::Cinstance, _this->getClientInstance(), *(uintptr_t*)_this->getClientInstance());
+		//logF_Debug("本地玩家所在的维度的指针: %llX", _this->getDimensionConst());
 	}
+
+
+	Game::GetModuleManager()->onLocalPlayerTick(_this);
 	using Fn = void*(__fastcall*)(LocalPlayer*, void*);
 	return reinterpret_cast<Fn>(LocalPlayer::tickWorldCall)(_this, tick);
 }
