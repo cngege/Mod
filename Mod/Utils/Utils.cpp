@@ -233,6 +233,20 @@ uintptr_t Utils::FindSignatureModule(const char* szModule, const char* szSignatu
 	return 0u;
 }
 
+
+bool Utils::isCursorVisible()
+{
+	CURSORINFO ci{ sizeof(CURSORINFO) };
+	if (!GetCursorInfo(&ci))
+		return false;
+
+	const auto handle = ci.hCursor;
+	if ((handle > (HCURSOR)50000) && (handle < (HCURSOR)100000))
+		return true;
+
+	return false;
+}
+
 void Utils::WriteMemBytes(void* addr, std::vector<BYTE> bytes) {
 	for (size_t i = 0; i < bytes.size(); i++) {
 		*(BYTE*)(reinterpret_cast<INT64>(addr) + i) = bytes[i];

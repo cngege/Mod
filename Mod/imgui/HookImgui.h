@@ -256,7 +256,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		allocator->Release();
 		currentFrameContext.main_render_target_resource->Release();
 		currentFrameContext.commandAllocator->Release();
-		d3d12Device->Release();
+		if(d3d12Device) d3d12Device->Release();
 		delete[] frameContext;
 	};
 	goto out;

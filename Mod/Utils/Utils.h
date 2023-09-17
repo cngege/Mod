@@ -568,6 +568,12 @@ public:
 		}
 	};
 
+	/**
+	 * @brief 鼠标是否可见
+	 * @return 
+	*/
+	static bool isCursorVisible();
+
 	static void WriteMemBytes(void*, std::vector<BYTE>);
 
 	static void GetCurrentSystemTime(tm& timeInfo);

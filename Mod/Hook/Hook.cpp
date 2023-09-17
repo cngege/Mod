@@ -4,6 +4,7 @@
 #include "../Utils/Game.h"
 #include "../Loader.h"
 #include "imgui.h"
+
 #include "Player.h"
 #include "ServerPlayer.h"
 #include "LocalPlayer.h"
@@ -13,7 +14,6 @@
 #include "GameMode.h"
 #include "MinecraftUIRenderContext.h"
 #include "ActorMovementProxy.h"
-
 #include "Item.h"
 #include "FishingHook.h"
 #include "ItemInstance.h"
@@ -130,7 +130,7 @@ void InputBoxUpdataCallBack(__int64 key, byte a2, byte a3) {
 	//	[01:42 : 13.3403] key : , a2: 0, a3 : 191
 	//	[01:42 : 13.3404] key : a, a2 : 0, a3 : 192
 	//	[01:42 : 14.4443] key : a, a2 : 0, a3 : 193
-	logF("key: %s, a2: %d, a3: %d", ((char*)key), a2, a3);
+	logF_Debug("key: %s, a2: %d, a3: %d", ((char*)key), a2, a3);
 	
 	inputBoxUpdatacall(key, a2, a3);
 }
@@ -241,6 +241,9 @@ auto Hook::init() -> void
 	
 	// 本地玩家 Tick  改为获取虚表后Hook
 	//{
+	// //48 83 EC ? 80 BA ? ? ? ? 00 74 ? 48 8B 02 48 8B CA 48 8B 80 ? ? ? ? FF
+	// // char __fastcall sub_143053BE0(__int64 a1, _BYTE *a2) 1.20.15 // 要验证本地世界多玩家是否还是 rdx只有本地玩家
+	// 
 	//	const char* memcode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
 	//	localplayer_getCameraOffset = FindSignature(memcode);
 	//	if (localplayer_getCameraOffset != 0x00) {
@@ -273,16 +276,6 @@ auto Hook::init() -> void
 		auto actor_moveBBs = FindSignature(memcode);
 		if (actor_moveBBs != 0x00) {
 			Actor::AABBOffset = *reinterpret_cast<int*>(actor_moveBBs + 7);//这个结果应该是由Actor指向AABB类的偏移
-			//Actor::PosXOffset1 = Xoffset;
-			//Actor::PosYOffset1 = Xoffset + 4;
-			//Actor::PosZOffset1 = Xoffset + 8;
-			//Actor::PosXOffset2 = Xoffset + 12;
-			//Actor::PosYOffset2 = Xoffset + 16;
-			//Actor::PosZOffset2 = Xoffset + 20;
-
-			//Actor::XHitBoxOffset = Xoffset + 24;
-			//Actor::YHitBoxOffset = Xoffset + 28;
-			//MH_CreateHookEx((LPVOID)actor_moveBBs, &Hook::Actor_moveBBs, &actor_moveBBscall);
 			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", actor_moveBBs, memcode);
 		}
 		else {
@@ -787,7 +780,6 @@ auto Hook::Actor_getShadowRadius(Actor* actor)->float {
 	return actor->getShadowRadius();
 }
 
-// 这个tick貌似不工作了
 auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> uintptr_t
 {
 	if (Game::Cinstance == nullptr) {

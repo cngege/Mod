@@ -65,6 +65,7 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 			//logF("玩家 %s 飞", lp->getStatusFlag(ActorFlags::canFly) ? "可以" : "不可以");
 			//logF("NameTag: %s", lp->getFormattedNameTag().getText());
 			logF("Block: %llX", lp->getMovementProxy()->getDimensionBlockSource()->getBlock(56,-44,-2));
+			logF("MovementProxyVT: %d", ActorMovementProxy::GetVFtables() == *(uintptr_t***)lp->getMovementProxy());
 		}
 		});
 	

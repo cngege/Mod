@@ -38,7 +38,7 @@ auto FastViewPerspective::isToggle()->bool {
 
 auto FastViewPerspective::getViewPerspective(int source) -> int
 {
-	if (isToggle()) {
+	if (isToggle() && !Utils::isCursorVisible()) {
 		return ViewPerspective;
 	}
 	return source;
