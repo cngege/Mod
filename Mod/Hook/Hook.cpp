@@ -18,6 +18,10 @@
 #include "FishingHook.h"
 #include "ItemInstance.h"
 #include "ItemStack.h"
+#include "Block.h"
+
+
+
 
 #include "../Modules/ModuleManager.h"
 #include "../Modules/Modules/AirWater.h"
@@ -27,6 +31,7 @@
 #include "../Modules/Modules/ShowCoordinates.h"
 #include "../Modules/Modules/FastViewPerspective.h"
 #include "../Modules/Modules/LockControlInput.h"
+#include "../Modules/Modules/HundredTimesMoreDrops.h"
 
 #include "../Modules/Modules/Debug.h"
 
@@ -136,10 +141,52 @@ void InputBoxUpdataCallBack(__int64 key, byte a2, byte a3) {
 }
 
 
+using BlockPlayerDestroy = char*(__fastcall*)(Block* block, Player* player, vec3_ti pos);
+BlockPlayerDestroy blockPlayerDestroyCall;
+
+char* Block_playerDestroy(Block* block, Player* player, vec3_ti pos) {
+	static HundredTimesMoreDrops* HTMD = Game::GetModuleManager()->GetModule<HundredTimesMoreDrops*>();
+	if (HTMD->isEnabled()) {
+		for (int i = 0; i < HTMD->multiple; i++) {
+			blockPlayerDestroyCall(block, player, pos);
+		}
+	}
+
+	return blockPlayerDestroyCall(block, player, pos);
+}
+
 
 auto Hook::init() -> void
 {
 	logF("[Hook::init] 正在初始化");
+
+	//48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E8 4C 8B FA 48 8B F1
+	//Block::playerDestroy
+	{
+		// 这就是本函数
+		const char* memcode_call = "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E8 4C 8B FA 48 8B F1";
+		// 这是函数的调用者
+		const char* memcode_offset = "E8 ? ? ? ? 48 8B 47 ? 48 8B 90 ? ? ? ? 80 BA ? ? ? ? ? 75 ? 48 8B 8A";
+		auto BlockplayerDestroyCall = FindSignature(memcode_call);
+		if (BlockplayerDestroyCall != 0x00) {
+			MH_CreateHookEx((LPVOID)BlockplayerDestroyCall, &Block_playerDestroy, &blockPlayerDestroyCall);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", BlockplayerDestroyCall, memcode_call);
+		}
+		else {
+			logF_Debug("Block_playerDestroy 直接定位函数失败,特征码失效");
+			BlockplayerDestroyCall = FindSignature(memcode_offset);
+			if (BlockplayerDestroyCall != 0x00) {
+				BlockplayerDestroyCall = Utils::FuncFromSigOffset(BlockplayerDestroyCall, 1);
+				MH_CreateHookEx((LPVOID)BlockplayerDestroyCall, &Block_playerDestroy, &blockPlayerDestroyCall);
+				logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", BlockplayerDestroyCall, memcode_offset);
+			}
+			else {
+				logF("Block_playerDestroy 双特征码失效");
+			}
+		}
+	}
+
+
 	// 锁定疾跑 强制按下疾跑键 | 并不能确定被Hook的这个函数是什么
 	{
 		const char* memcode_offset = "41 0F 10 47 ? 0F 11 45 00 41 0F 10 4F";	// 这个是找参数指针到控制结构指针的偏移 这个特征码在下面call特征码的内部 
@@ -699,6 +746,10 @@ auto Hook::exit() -> void {
 	logF("[MH_RemoveHook] Hook移除状态: %s", MH_StatusToString(MH_RemoveHook(MH_ALL_HOOKS)));
 	Sleep(10);
 }
+
+
+
+
 
 /*
 __int64 __fastcall sub_141C45E20(

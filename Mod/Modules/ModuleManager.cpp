@@ -21,7 +21,7 @@
 #include "Modules/BioRadar.h"
 #include "Modules/FastViewPerspective.h"
 #include "Modules/LockControlInput.h"
-
+#include "Modules/HundredTimesMoreDrops.h"
 
 #ifdef _DEBUG
 #include "Modules/Debug.h"
@@ -62,6 +62,8 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new RenderHealth()));					/*Ctrl+F10*/
 																				/*F11 = 全屏*/
 	moduleList.push_back((Module*)(new LockControlInput()));				/*Ctrl+F12*/
+
+	moduleList.push_back((Module*)(new HundredTimesMoreDrops()));
 #ifdef _DEBUG
 	moduleList.push_back((Module*)(new Debug()));
 #endif

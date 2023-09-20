@@ -452,11 +452,9 @@ public:
 		}
 		ret.resize(sz, 0);
 		char* pBuf = new char[sz];
-		VS_FIXEDFILEINFO* pVsInfo;
+		VS_FIXEDFILEINFO* pVsInfo = nullptr;
 		if (GetFileVersionInfo(PATH, 0, sz, pBuf)) {
 			if (VerQueryValue(pBuf, L"\\", (void**)&pVsInfo, &sz)) {
-				//sprintf(pBuf, "%d.%d.%d.%d", HIWORD(pVsInfo->dwFileVersionMS), LOWORD(pVsInfo->dwFileVersionMS), HIWORD(pVsInfo->dwFileVersionLS), LOWORD(pVsInfo->dwFileVersionLS));
-				//ret = pBuf;
 				ret = std::format("{:d}.{:d}.{:d}.{:d}", HIWORD(pVsInfo->dwFileVersionMS), LOWORD(pVsInfo->dwFileVersionMS), HIWORD(pVsInfo->dwFileVersionLS), LOWORD(pVsInfo->dwFileVersionLS));
 			}
 		}

@@ -46,6 +46,7 @@ uintptr_t* Hundred_TimesHookCall = nullptr;
 
 #include "ActorMovementProxy.h"
 #include "BlockSource.h"
+#include "Block.h"
 
 Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	toggerConfig_Debug = ImGuiTogglePresets::RectangleStyle();
@@ -65,8 +66,13 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		if (lp != nullptr) {
 			//logF("玩家 %s 飞", lp->getStatusFlag(ActorFlags::canFly) ? "可以" : "不可以");
 			//logF("NameTag: %s", lp->getFormattedNameTag().getText());
-			logF("Block: %llX", lp->getMovementProxy()->getDimensionBlockSource()->getBlock(56,-44,-2));
-			logF("MovementProxyVT: %d", ActorMovementProxy::GetVFtables() == *(uintptr_t***)lp->getMovementProxy());
+			Block* block = lp->getMovementProxy()->getDimensionBlockSource()->getBlock(0, -61, 0);
+			logF("Block: %llX", block);
+			logF("BlockLegacy: %llX", block->getBlockLegacy());
+
+
+			logF("BlockLegacy::playerDestroy for Block: %llX", Utils::GetVTFPtr(*(uintptr_t*)block, 186));
+			logF("BlockLegacy::playerDestroy for BlockLegacy: %llX", Utils::GetVTFPtr(*(uintptr_t*)block->getBlockLegacy(), 184));
 		}
 		});
 	

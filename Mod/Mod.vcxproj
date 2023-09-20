@@ -194,6 +194,8 @@
     <ClInclude Include="..\SDK\ActorCollision.h" />
     <ClInclude Include="..\SDK\ActorMovementProxy.h" />
     <ClInclude Include="..\SDK\AttributeInstance.h" />
+    <ClInclude Include="..\SDK\Block.h" />
+    <ClInclude Include="..\SDK\BlockLegacy.h" />
     <ClInclude Include="..\SDK\BlockSource.h" />
     <ClInclude Include="..\SDK\ClientInstance.h" />
     <ClInclude Include="..\SDK\Dimension.h" />
@@ -243,6 +245,7 @@
     <ClInclude Include="Modules\Modules\GameTimeLock.h" />
     <ClInclude Include="Modules\Modules\HitBox.h" />
     <ClInclude Include="Modules\Modules\HiveTreasurePos.h" />
+    <ClInclude Include="Modules\Modules\HundredTimesMoreDrops.h" />
     <ClInclude Include="Modules\Modules\InstantDestroy.h" />
     <ClInclude Include="Modules\Modules\LockControlInput.h" />
     <ClInclude Include="Modules\Modules\NoAttackFriend.h" />
@@ -268,6 +271,8 @@
     <ClCompile Include="..\SDK\Actor.cpp" />
     <ClCompile Include="..\SDK\ActorMovementProxy.cpp" />
     <ClCompile Include="..\SDK\AttributeInstance.cpp" />
+    <ClCompile Include="..\SDK\Block.cpp" />
+    <ClCompile Include="..\SDK\BlockLegacy.cpp" />
     <ClCompile Include="..\SDK\BlockSource.cpp" />
     <ClCompile Include="..\SDK\ClientInstance.cpp" />
     <ClCompile Include="..\SDK\Dimension.cpp" />
@@ -311,6 +316,7 @@
     <ClCompile Include="Modules\Modules\GameTimeLock.cpp" />
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
     <ClCompile Include="Modules\Modules\HiveTreasurePos.cpp" />
+    <ClCompile Include="Modules\Modules\HundredTimesMoreDrops.cpp" />
     <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
     <ClCompile Include="Modules\Modules\LockControlInput.cpp" />
     <ClCompile Include="Modules\Modules\NoAttackFriend.cpp" />
