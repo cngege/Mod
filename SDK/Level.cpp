@@ -22,19 +22,16 @@ auto Level::getAllPlayer()->std::vector<Player*> {
 
 
 auto Level::getTime()->int {
-	return Utils::CallVFunc<112, int>(this);
-	//return reinterpret_cast<int(__fastcall*)(Level*)>((*(uintptr_t**)this)[112])(this);
+	return Utils::CallVFunc<111, int>(this);											//更新自 1.20.30
 }
 
 auto Level::setTime(int time)->void {
-	return Utils::CallVFunc<113, void,int>(this, time);
-	//return reinterpret_cast<void(__fastcall*)(Level*,int)>((*(uintptr_t**)this)[113])(this,time);
+	return Utils::CallVFunc<112, void,int>(this, time);						//更新自 1.20.30
 }
 
 auto Level::getSeed() -> unsigned int
 {
-	return Utils::CallVFunc<114, unsigned int>(this);
-	//return reinterpret_cast<unsigned int(__fastcall*)(Level*)>((*(uintptr_t**)this)[114])(this);
+	return Utils::CallVFunc<113, unsigned int>(this);								//更新自 1.20.30
 }
 
 // 虚表Hook
@@ -51,27 +48,26 @@ auto Level::Tick() -> void
 	reinterpret_cast<Fn>(tickCall)(this);
 }
 
-// 207 Level::forEachPlayer(class std::function<bool __cdecl(class Player const & __ptr64)>)const
+// 207 Level::forEachPlayer(class std::function<bool __cdecl(class Player const & __ptr64)>)const 取这个
 // 208 Level::forEachPlayer(class std::function<bool __cdecl(class Player const & __ptr64)>)
-// 虚表 检查版本 1.20
+// 虚表 检查版本 1.20.30
 auto Level::forEachPlayer(std::function<bool(class Player&)> fp)->void {
-	return Utils::CallVFunc<207, void, std::function<bool(class Player&)>>(this, fp);
+	return Utils::CallVFunc<203, void, std::function<bool(class Player&)>>(this, fp);
 	//return reinterpret_cast<void(__fastcall*)(Level*, std::function<bool(class Player&)>)>((*(uintptr_t**)this)[207])(this, fp);
 }
 
-// 虚表 检查版本 1.20.15
 auto Level::isClientSide() -> bool
 {
-	return Utils::CallVFunc<291, bool>(this);
+	return Utils::CallVFunc<287, bool>(this);								//更新自 1.20.30
 	//return reinterpret_cast<bool(__fastcall*)(Level*)>((*(uintptr_t**)this)[291])(this);
 }
 
 auto Level::setSimPaused(bool v) -> void
 {
-	return Utils::CallVFunc<322, void, bool>(this, v);
+	return Utils::CallVFunc<319, void, bool>(this, v);				//更新自 1.20.30
 }
 
 auto Level::getSimPaused() -> bool
 {
-	return Utils::CallVFunc<323, bool>(this);
+	return Utils::CallVFunc<320, bool>(this);								//更新自 1.20.30
 }

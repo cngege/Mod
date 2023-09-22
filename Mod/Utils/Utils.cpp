@@ -25,10 +25,8 @@ void Utils::ApplySystemTime(std::stringstream* ss) {
 #endif
 }
 
-uintptr_t cachedBase = 0;
-
 uintptr_t Utils::getBase() {
-	if (cachedBase == 0) cachedBase = (uintptr_t)GetModuleHandleA("Minecraft.Windows.exe");
+	static auto cachedBase = (uintptr_t)GetModuleHandleA("Minecraft.Windows.exe");
 	return cachedBase;
 }
 

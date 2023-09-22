@@ -61,15 +61,15 @@ auto ActorMovementProxy::getHealth() -> int
 
 auto ActorMovementProxy::getRotation() -> vec2_t*
 {
-	return Utils::CallVFunc<73, vec2_t*>(this);
+	return Utils::CallVFunc<51, vec2_t*>(this);				//更新自 1.20.30
 }
 
 auto ActorMovementProxy::setRotation(vec2_t* rot) -> void
 {
-	Utils::CallVFunc<74, void, vec2_t*>(this, rot);
+	Utils::CallVFunc<52, void, vec2_t*>(this, rot);	//更新自 1.20.30
 }
 
 auto ActorMovementProxy::getDimensionBlockSource() -> class BlockSource*
 {
-	return Utils::CallVFunc<81, BlockSource*>(this);
+	return Utils::CallVFunc<58, BlockSource*>(this);			//更新自 1.20.30
 }

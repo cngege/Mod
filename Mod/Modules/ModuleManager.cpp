@@ -69,11 +69,14 @@ auto ModuleManager::Init()->void {
 #endif
 
 	isInit = true;
+
+#ifndef _REPAIR
 	// 读取 指定的配置文件
 	json configdata = config::loadConfigonRootFromFile(config::currentSaveConfigFile);
 	for (auto& mod : moduleList) {										// 这里有&则代表引用,所有的修改都将作用在原来的数组成员上
 		mod->onloadConfigFile(configdata[mod->getModuleName()]);
 	}
+#endif // !_REPAIR
 }
 
 

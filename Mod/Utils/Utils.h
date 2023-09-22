@@ -579,6 +579,10 @@ public:
 
 	static void ApplySystemTime(std::stringstream* ss);
 
+	/**
+	 * @brief 获取MC基址
+	 * @return 
+	*/
 	static uintptr_t getBase();
 
 	static std::string sanitize(std::string text);

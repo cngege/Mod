@@ -467,6 +467,9 @@
     <ClCompile Include="Modules\Modules\HundredTimesMoreDrops.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\SDK\ActorCollision.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Mod.rc">

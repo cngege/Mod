@@ -6,7 +6,7 @@
 
 RenderHealth::RenderHealth() : Module(VK_F10, "RenderHealth", "显示被攻击生物的血量和名字") {
 	setcontrolkeysbind({ VK_CONTROL });
-	setEnabled(true);
+	//setEnabled(true);
 }
 
 

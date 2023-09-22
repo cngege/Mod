@@ -3,6 +3,7 @@
 #include "ServerPlayer.h"
 #include "TextHolder.h"
 #include "AttributeInstance.h"
+#include "ActorCollision.h"
 #include "AABB.h"
 #include "../Mod/Utils/Utils.h"
 #include "../Mod/Utils/Game.h"
@@ -147,9 +148,10 @@ auto Actor::isLocalPlayer()->bool {
 }
 
 auto Actor::getHealth()->float {
-	AttributeInstance* AI = this->getAttribute(Attribute::HEALTH);
-	float v = AI->getCurrentValue();
-	return ceil(v);
+	//AttributeInstance* AI = this->getAttribute(Attribute::HEALTH);
+	//float v = AI->getCurrentValue();
+	//return ceil(v);
+	return this->getActorCollision()->getHealth();
 }
 
 
@@ -245,11 +247,11 @@ auto Actor::setStatusFlag(ActorFlags af, bool flag)->void {
 
 //应该获取的是头部位置，Y值会往上偏两个单位
 auto Actor::getPosition()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(22)(this);	// 更新自 1.20
+	return GetVFtableFun<vec3_t*, Actor*>(22)(this);	// 更新自 1.20.30
 }
 
 auto Actor::getPosPrev()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(23)(this);	// 更新自 1.20
+	return GetVFtableFun<vec3_t*, Actor*>(23)(this);	// 更新自 1.20.30
 }
 
 // 新版本中虚表不存在此函数
@@ -258,22 +260,22 @@ auto Actor::getPosPrev()->vec3_t* {
 //}
 
 auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
-	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(45)(this, pos, a1, a2, a3);
+	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(38)(this, pos, a1, a2, a3);	//更新自 1.20.30
 }
 
 auto Actor::getNameTag()->TextHolder* {
-	return GetVFtableFun<TextHolder*, Actor*>(57)(this);
+	return GetVFtableFun<TextHolder*, Actor*>(56)(this);			//更新自 1.20.30
 }
 
 // 第19号虚表调用的都是 Player::isPlayer 所以一定返回true > 20 35 62ok 71 77 81 82 84 86ok
 // 第40号虚表调用的都是 Actor::isPlayer  所以一定返回false
-// 第67->70号虚表 Actor调用的是 Actor::isPlayer, Player调用的是Player::isPlayer,所以可用
+// 第67->70号虚表 Actor调用的是 Actor::isPlayer, Player调用的是Player::isPlayer,所以可用	//Actor::setNameTag -X- Actor::setScoreTag
 auto Actor::isPlayer()->bool {
-	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[62])(this);
+	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[61])(this);
 }
 
 auto Actor::getNameTagAsHash()->unsigned __int64 {
-	return GetVFtableFun<unsigned __int64, Actor*>(58)(this);
+	return GetVFtableFun<unsigned __int64, Actor*>(57)(this);	    //更新自 1.20.30
 }
 
 /*
@@ -291,7 +293,7 @@ _QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
 auto Actor::getFormattedNameTag()->TextHolder {
 	//void* ret = malloc(8 * 4);
 	TextHolder ret;
-	GetVFtableFun<TextHolder, Actor*, TextHolder>(59)(this,ret);
+	GetVFtableFun<TextHolder, Actor*, TextHolder>(58)(this,ret);//更新自 1.20.30
 	return ret;
 }
 
@@ -301,30 +303,30 @@ auto Actor::getFormattedNameTag()->TextHolder {
 //}
 
 auto Actor::setSneaking(bool b)->void {
-	return GetVFtableFun<void, Actor*, bool>(87)(this, b);
+	return GetVFtableFun<void, Actor*, bool>(86)(this, b);	  //更新自 1.20.30
 }
 
 // 是否着火
 auto Actor::isOnFire(void) -> bool
 {
-	return GetVFtableFun<bool, Actor*>(91)(this);
+	return GetVFtableFun<bool, Actor*>(90)(this);				  //更新自 1.20.30
 }
 
 auto Actor::isRemotePlayer()->bool {
-	return GetVFtableFun<bool, Actor*>(97)(this);
+	return GetVFtableFun<bool, Actor*>(96)(this);				  //更新自 1.20.30
 }
 
 auto Actor::getEntityTypeId()->int {
-	return GetVFtableFun<unsigned int, Actor*>(153)(this);
+	return GetVFtableFun<unsigned int, Actor*>(151)(this);	  //更新自 1.20.30
 }
 
 auto Actor::changeDimension(AutomaticID<class Dimension, int> dim)->void {
-	return GetVFtableFun<void, Actor*, class AutomaticID<class Dimension, int>>(165)(this,dim);
+	return GetVFtableFun<void, Actor*, class AutomaticID<class Dimension, int>>(163)(this,dim);	//更新自 1.20.30
 }
 
 // 造成跌落伤害 
 auto Actor::checkFallDamage(float a, bool b)->void* {
-	return GetVFtableFun<void*, Actor*, float, bool>(167)(this,a,b);
+	return GetVFtableFun<void*, Actor*, float, bool>(165)(this,a,b);								//更新自 1.20.30
 }
 
 //auto Actor::causeFallDamage(float a, float b, ActorDamageSource* c)->void* {
@@ -333,13 +335,13 @@ auto Actor::checkFallDamage(float a, bool b)->void* {
 
 auto Actor::isClientSide() -> bool
 {
-	return GetVFtableFun<bool, Actor*>(186)(this);
+	return GetVFtableFun<bool, Actor*>(182)(this);			//更新自 1.20.30
 }
 
 auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
-	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(188)(this, &attribute);
+	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(184)(this, &attribute);			//更新自 1.20.30
 }
 
 auto Actor::setSize(float width, float height)->void {
-	return GetVFtableFun<void, Actor*, float,float >(212)(this, width, height);
+	return GetVFtableFun<void, Actor*, float,float >(208)(this, width, height);					//更新自 1.20.30
 }

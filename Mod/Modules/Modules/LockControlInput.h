@@ -8,7 +8,7 @@ public:
 public:
 	struct ControlKey
 	{
-		bool SquatDown;
+		bool Sneak;							// 潜行
 		BYTE __unknowkey1;
 		bool ProhibitionOfFloating;			// 禁止上浮(在水中无法上浮和创造模式自动下沉)
 		BYTE __unknowkey3;
@@ -22,6 +22,11 @@ public:
 		bool S;
 		bool A;
 		bool D;
+		BYTE __unknowkey6[2];
+		BYTE __unknowkey7[16];
+		BYTE __unknowkey8[8];
+		float HorizontalRocker;				// 水平的值（左右 左1  右-1  好像是只读
+		float VerticalRocker;				// 垂直的值 (前后 前1  后-1  好像是只读
 	};
 
 public:

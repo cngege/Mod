@@ -31,15 +31,15 @@ auto BlockSource::hasBlock(vec3_ti* BlockPos) -> bool
 
 auto BlockSource::getBrightness(vec3_ti* BlockPos) -> float
 {
-	return Utils::CallVFunc<19, float, vec3_ti*>(this, BlockPos);
+	return Utils::CallVFunc<20, float, vec3_ti*>(this, BlockPos);
 }
 
 auto BlockSource::isSolidBlockingBlock(int x, int y, int z) -> bool
 {
-	return Utils::CallVFunc<36, bool, int, int, int>(this, x, y, x);
+	return Utils::CallVFunc<37, bool, int, int, int>(this, x, y, x);
 }
 
 auto BlockSource::isSolidBlockingBlock(vec3_ti* BlockPos) -> bool
 {
-	return Utils::CallVFunc<37, bool, vec3_ti*>(this, BlockPos);
+	return Utils::CallVFunc<38, bool, vec3_ti*>(this, BlockPos);
 }

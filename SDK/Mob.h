@@ -12,10 +12,11 @@ public:
 	static auto SetVFtables(uintptr_t** vTables)->void;
 
 public:
-	static uintptr_t setSprintingFunAddr;
+	//static uintptr_t setSprintingFunAddr;
 
 public:
-	auto setSprintingEx(bool)->char;							//即使放在Tick中执行，也不会被HIVE踢
+	//即使放在Tick中执行，也不会被HIVE踢 - 这个应该是 Mob::isSprinting 内部中的某个函数
+	//auto setSprintingEx(bool)->char;							
 	auto isSprinting()->bool;
 
 	//虚表函数

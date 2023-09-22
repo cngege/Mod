@@ -2,7 +2,7 @@
 
 uintptr_t** Mob::vfTables = nullptr;
 
-uintptr_t Mob::setSprintingFunAddr = 0x00;
+//uintptr_t Mob::setSprintingFunAddr = 0x00;
 
 template <typename TRet, typename... TArgs>
 auto Mob::GetVFtableFun(int a)->auto* {
@@ -21,11 +21,13 @@ auto Mob::SetVFtables(uintptr_t** vfTable)->void {
 	vfTables = vfTable;
 }
 
-//
+
+/*
 auto Mob::setSprintingEx(bool v)->char {
 	using FunsetSprinting = char(__fastcall*)(Mob*, bool);
 	return reinterpret_cast<FunsetSprinting>(setSprintingFunAddr)(this,v);
 }
+*/
 
 /*
 __int64 __fastcall Mob::isSprinting(Mob* this)
@@ -38,12 +40,12 @@ auto Mob::isSprinting()-> bool{
 
 
 //虚表函数
-// 检查版本 1.20
+// 检查版本 1.20.30
 auto Mob::setSprinting(bool v)->void {
-	GetVFtableFun<void, Mob*,bool>(256)(this,v);
+	GetVFtableFun<void, Mob*,bool>(251)(this,v);
 }
 
-// 检查版本 1.20
+// 检查版本 1.20.30
 auto Mob::lookAt(Actor* actor,float f1, float f2)->void {
-	GetVFtableFun<void, Mob*, Actor*,float,float>(267)(this, actor,f1,f2);
+	GetVFtableFun<void, Mob*, Actor*,float,float>(261)(this, actor,f1,f2);
 }

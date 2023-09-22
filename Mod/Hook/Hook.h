@@ -16,7 +16,7 @@ class Hook
 public:
 	static auto init() ->void;
 	static auto exit() ->void;
-	static auto LockControlInputCallBack(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, void* a11) -> void*;
+	static auto LockControlInputCallBack(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6) -> void*;
 	static auto SetVelocity(class Player* ,vec3_t*)->void*;
 	static auto Actor_isInWater(class Actor*) -> bool;
 	static auto Actor_getShadowRadius(class Actor*)->float;										//执行对象是所有生物 但不包括玩家
@@ -25,7 +25,7 @@ public:
 	//static auto NoFallDamage_Tick(class Player*,float*)->void*;
 	static auto Level_Tick(class Level*) -> void;
 	//Player 虚表Hook
-	static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
+	//static auto LocalPlayer_getCameraOffset(class LocalPlayer*)->vec2_t*;
 	static auto Player_tickWorld(class Player*, class Tick*)->void;
 	static auto Player_getShadowRadius(class Player*)->float;
 	static auto Player_startSwimming(class Player*) -> void;

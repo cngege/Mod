@@ -5,7 +5,7 @@ bool disableSignal = false;
 LockControlInput::LockControlInput() : Module(VK_F12, "LockControlInput", "锁定移动控制键") {
 	setcontrolkeysbind({ VK_CONTROL });
 
-	AddBoolUIValue("锁定下蹲", &ControlKeyStatus.SquatDown);
+	AddBoolUIValue("锁定下蹲", &ControlKeyStatus.Sneak);
 	AddBoolUIValue("锁定跳跃", &ControlKeyStatus.Jump);
 	AddBoolUIValue("锁定疾跑", &ControlKeyStatus.Sprinting);
 	AddBoolUIValue("锁定W", &ControlKeyStatus.W);
@@ -20,7 +20,7 @@ auto LockControlInput::onDisable() -> void{
 
 auto LockControlInput::onloadConfigFile(json& data)->void {
 	//setEnabled(config::readDataFromJson<bool>(data, "enable", true));
-	ControlKeyStatus.SquatDown = config::readDataFromJson<bool>(data, "ControlKeyStatus_SquatDown", false);
+	ControlKeyStatus.Sneak = config::readDataFromJson<bool>(data, "ControlKeyStatus_Sneak", false);
 	ControlKeyStatus.Jump = config::readDataFromJson<bool>(data, "ControlKeyStatus_Jump", false);
 	ControlKeyStatus.Sprinting = config::readDataFromJson<bool>(data, "ControlKeyStatus_Sprinting", false);
 	ControlKeyStatus.W = config::readDataFromJson<bool>(data, "ControlKeyStatus_W", false);
@@ -30,7 +30,7 @@ auto LockControlInput::onloadConfigFile(json& data)->void {
 }
 auto LockControlInput::onsaveConfigFile(json& data)->void {
 	//data["enable"] = isEnabled();
-	data["ControlKeyStatus_SquatDown"] = ControlKeyStatus.SquatDown;
+	data["ControlKeyStatus_Sneak"] = ControlKeyStatus.Sneak;
 	data["ControlKeyStatus_Jump"] = ControlKeyStatus.Jump;
 	data["ControlKeyStatus_Sprinting"] = ControlKeyStatus.Sprinting;
 	data["ControlKeyStatus_W"] = ControlKeyStatus.W;
@@ -41,7 +41,7 @@ auto LockControlInput::onsaveConfigFile(json& data)->void {
 
 auto LockControlInput::ControlTick(ControlKey* keyStatus)->void {
 	if (isEnabled()) {
-		if (ControlKeyStatus.SquatDown) keyStatus->SquatDown = ControlKeyStatus.SquatDown;
+		if (ControlKeyStatus.Sneak) keyStatus->Sneak = ControlKeyStatus.Sneak;
 		if (ControlKeyStatus.Jump) keyStatus->Jump = ControlKeyStatus.Jump;
 		if (ControlKeyStatus.Sprinting) keyStatus->Sprinting = ControlKeyStatus.Sprinting;
 		if (ControlKeyStatus.W) keyStatus->W = ControlKeyStatus.W;
@@ -52,7 +52,7 @@ auto LockControlInput::ControlTick(ControlKey* keyStatus)->void {
 	else {
 		if (disableSignal) {
 			disableSignal = false;
-			memset(keyStatus, '\0', sizeof(ControlKey));
+			memset(keyStatus, '\0', 14);
 		}
 	}
 }

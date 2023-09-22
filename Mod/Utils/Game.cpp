@@ -32,8 +32,8 @@ auto Game::init() -> void
 	Game::modmag->Init();
 	ImConfigIni = Utils::WStringToString(Utils::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini";
 	Game::WindowsHandle = FindWindowA(nullptr, (LPCSTR)"Minecraft");
-
 	//获取生物位置指针的偏移
+	/*
 	{
 		Mob::setSprintingFunAddr = FindSignature("48 89 74 24 ? 57 48 83 EC ? 48 8B ? 0F B6 F2 BA");
 		if (Mob::setSprintingFunAddr == 0x00) {
@@ -41,6 +41,7 @@ auto Game::init() -> void
 			return;
 		}
 	}
+	*/
 
 	//Actor::isRemoved() 获取构成该函数的 this到结果的关键偏移
 	{
@@ -74,7 +75,7 @@ auto Game::init() -> void
 
 	//获取玩家视角的指针的偏移地址
 	{
-		auto PlayerView_sigOffset = FindSignature("48 8B 80 ? ? ? ? 48 85 ? 0F 84 ? ? ? ? F3 0F 10 ? F3 0F 10 78");
+		auto PlayerView_sigOffset = FindSignature("48 8B 86 ? ? ? ? 48 85 C0 74 ? F3 0F 10 58 ? F3");
 		if (PlayerView_sigOffset == 0x00) {
 			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "PlayerView_sigOffset");
 			return;
@@ -84,6 +85,7 @@ auto Game::init() -> void
 		//Player::Rot2 = offset + 8;
 	}
 
+	/* 在 ActorCollision 中实现,没问题后删掉
 	//获取 获取玩家血量函数的相关偏移
 	{
 		auto getHealthFun_sigOffset = FindSignature("48 8D 15 ? ? ? ? 48 8B 80 ? ? ? ? FF 15 ? ? ? ? F3 0F 10 88 ? ? ? ? F3 0F 2C C1 66 0F 6E");
@@ -110,6 +112,7 @@ auto Game::init() -> void
 			logF("[Game::init] [Error]gvoffset == 0x00 ");
 		}
 	}
+	*/
 
 	//KeyMap
 	{
@@ -145,9 +148,9 @@ auto Game::init() -> void
 
 	//获取 ItemStack::use 这个Call
 	{
-		auto ItemStack_use = FindSignature("48 89 74 24 ? 57 48 83 EC ? 48 8B 41 08 48 8B F2 48 8B F9");								//直接特征码搜索这个Call
+		auto ItemStack_use = FindSignature("48 83 EC ? 48 8B ? 48 8D 54 24 ? 4C 8B ? 8B 41 ? 49 8B C8 89 44 24 ? E8 ? ? ? ? 48 85 ? 75");//直接特征码搜索这个Call
 		if (ItemStack_use == 0x00) {
-			logF_Debug("[Game::init] [%s] [!]Find ItemStack_use Call 直接特征码搜索函数失败,将使用第二种方式");
+			logF_Debug("[Game::init] [%s] [!]Find ItemStack_use Call 直接特征码搜索函数失败,将使用第二种方式", "ItemStack_use");
 			auto ItemStack_use2 = FindSignature("E8 ? ? ? ? 48 8B D8 48 8B D0 49 8B CE");
 			if (ItemStack_use2 == 0x00) {
 				logF("[Game::init] [%s] [Error] 特征码寻找其调用者从而定位函数,失败","ItemStack_use");

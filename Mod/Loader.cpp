@@ -73,8 +73,8 @@ void Loader::init(void* hmodule)
 	}
 	logF("正在初始化Game模块");
 	Game::init();
-	//logF("正在初始化ImGuiHook模块");		// Hook 的先后顺序无关紧要，因为都是统一的开启Hook MH_EnableHook(MH_ALL_HOOKS)
-	ImguiHooks::InitImgui();
+	logF("正在初始化ImGuiHook模块");		// Hook 的先后顺序无关紧要，因为都是统一的开启Hook MH_EnableHook(MH_ALL_HOOKS)
+	ImguiHooks::InitImgui();			// 23/9/21 最后检测结果, 注释此条则Mod不会崩溃
 	logF("正在进行游戏进程Hook");
 	Hook::init();
 

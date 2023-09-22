@@ -37,6 +37,9 @@ public:
 	auto displayChatMessage(class TextHolder*, class TextHolder*)->__int64;
 	auto getSelectedItem() -> class ItemStack*;												/*164*/
 
+	auto getSpeed() -> float;																/*254*/
+	auto setSpeed(float s) -> void;															/*255*/
+
 	//Hook虚表函数
 	auto getShadowRadius()->float;															/*79*/
 	auto startSwimming()->void;																/*202*/
