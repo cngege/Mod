@@ -42,10 +42,16 @@ auto Level::startLeaveGame() -> void
 	reinterpret_cast<Fn>(startLeaveGameCall)(this);
 }
 
-auto Level::Tick() -> void
+auto Level::Tick() -> void*
 {
-	using Fn = float(__fastcall*)(Level*);
-	reinterpret_cast<Fn>(tickCall)(this);
+	try
+	{
+		using Fn = void* (__fastcall*)(Level*);
+		return reinterpret_cast<Fn>(tickCall)(this);
+	}
+	catch (const std::exception&)
+	{}
+	return nullptr;
 }
 
 // 207 Level::forEachPlayer(class std::function<bool __cdecl(class Player const & __ptr64)>)const 取这个
@@ -59,7 +65,6 @@ auto Level::forEachPlayer(std::function<bool(class Player&)> fp)->void {
 auto Level::isClientSide() -> bool
 {
 	return Utils::CallVFunc<287, bool>(this);								//更新自 1.20.30
-	//return reinterpret_cast<bool(__fastcall*)(Level*)>((*(uintptr_t**)this)[291])(this);
 }
 
 auto Level::setSimPaused(bool v) -> void
