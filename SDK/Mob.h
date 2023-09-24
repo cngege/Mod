@@ -21,6 +21,8 @@ public:
 
 	//虚表函数
 public:
-	auto setSprinting(bool)->void;								/*288*///函数是对的，但在Tick中执行会持续发包（猜测），会被HIVE踢
+	auto setSprinting(bool)->void;								/*251*///函数是对的，但在Tick中执行会持续发包（猜测），会被HIVE踢
+	auto getSpeed() -> float;									/*254*/
+	auto setSpeed(float s) -> void;								/*255*/
 	auto lookAt(Actor*, float, float)->void;					/*303*///最后两个参数始终调试不正确
 };

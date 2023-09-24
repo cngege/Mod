@@ -10,8 +10,6 @@
 #include <math.h>
 
 
-int Actor::SpeedOffset = 0;		//玩家指针到玩家速度相关信息指针的偏移
-
 int Actor::AABBOffset = 0;
 int Actor::LevelOffset = 0;
 int Actor::IsRemovedOffset = 0;
@@ -22,10 +20,14 @@ int Actor::GetAttributeInstance_HealthFunVT = 0;
 uintptr_t* Actor::setVelocityCallptr = nullptr;
 uintptr_t* Actor::getShadowRadiusCallptr = nullptr;
 uintptr_t* Actor::isInWaterCallptr = nullptr;
+uintptr_t* Actor::isInvisibleCallptr = nullptr;
 
 uintptr_t* Actor::getDimensionConstCallptr = 0;
 
 uintptr_t** Actor::vfTables = nullptr;
+
+
+
 
 template <typename TRet, typename... TArgs>
 auto Actor::GetVFtableFun(int a)->auto*{
@@ -44,13 +46,6 @@ auto Actor::SetVFtables(uintptr_t** vfTable)->void {
 	vfTables = vfTable;
 }
 
-auto Actor::getSpeed()->vec3_t {
-	return *(vec3_t*)(*(uintptr_t*)(this + SpeedOffset) + 24);			//+24 是因为前面有两组相同的坐标数据 两个vec3_t
-}
-
-auto Actor::setSpeed(vec3_t v) ->void {
-	*(vec3_t*)(*(uintptr_t*)(this + SpeedOffset) + 24) = v;
-}
 
 auto Actor::getAABB()->AABB* {
 	if (AABBOffset == 0) {
@@ -218,6 +213,12 @@ auto Actor::getMovementProxy() -> class ActorMovementProxy*
 auto Actor::setVelocity(vec3_t* sp)->void*{
 	using Fn = void*(__fastcall*)(Actor*, vec3_t*);
 	return reinterpret_cast<Fn>(setVelocityCallptr)(this,sp);
+}
+
+auto Actor::isInvisible() -> bool
+{
+	using Fn = bool (__fastcall*)(Actor*);
+	return reinterpret_cast<Fn>(isInvisibleCallptr)(this);
 }
 
 auto Actor::isInWater() -> bool{

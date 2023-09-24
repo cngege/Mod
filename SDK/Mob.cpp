@@ -45,6 +45,16 @@ auto Mob::setSprinting(bool v)->void {
 	GetVFtableFun<void, Mob*,bool>(251)(this,v);
 }
 
+auto Mob::getSpeed() -> float
+{
+	return GetVFtableFun<float, Mob*>(254)(this);
+}
+
+auto Mob::setSpeed(float s) -> void
+{
+	GetVFtableFun<void, Mob*, float>(255)(this, s);
+}
+
 // 检查版本 1.20.30
 auto Mob::lookAt(Actor* actor,float f1, float f2)->void {
 	GetVFtableFun<void, Mob*, Actor*,float,float>(261)(this, actor,f1,f2);

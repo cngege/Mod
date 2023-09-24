@@ -4,6 +4,8 @@
 
 #include "AttributeInstance.h"
 
+#include "../Hook/HookFunction.h"
+
 template <typename A, typename T>
 class AutomaticID {
 	T id;
@@ -50,7 +52,6 @@ public:
 	static auto SetVFtables(uintptr_t** vTables)->void;
 
 public:
-	static int SpeedOffset;
 
 	static int AABBOffset;
 	//static int PosXOffset1;
@@ -72,17 +73,17 @@ public:
 	static uintptr_t* setVelocityCallptr;
 	static uintptr_t* getShadowRadiusCallptr;
 	static uintptr_t* isInWaterCallptr;
+	static uintptr_t* isInvisibleCallptr;
 
 	// 使用特征码直接找到的函数地址
 	static uintptr_t* getDimensionConstCallptr;
+
 
 public:
 	
 	auto isPlayerEx()->bool;
 
 public:
-	auto getSpeed()->vec3_t;			//获取瞬间速度
-	auto setSpeed(vec3_t)->void;		//设置瞬间速度
 
 	auto getAABB()->class AABB*;
 	auto getPosEx()->vec3_t;
@@ -116,6 +117,11 @@ public:
 public:
 	// Hook的函数
 	auto setVelocity(vec3_t*)->void*;												/*46*/
+	/**
+	 * @brief 是隐形的
+	 * @return 
+	*/
+	auto isInvisible() -> bool;														/*52*/
 	auto isInWater()->bool;															/*73*/
 	auto getShadowRadius()->float;													/*79*/
 public:
