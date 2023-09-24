@@ -308,6 +308,7 @@
     <ClInclude Include="..\SDK\TextHolder.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Hook\Hook.h" />
+    <ClInclude Include="Hook\HookFunction.h" />
     <ClInclude Include="imgui\HookImgui.h" />
     <ClInclude Include="imgui\imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui\imgui.h" />
@@ -348,7 +349,6 @@
     <ClInclude Include="Modules\Modules\ShowCoordinates.h" />
     <ClInclude Include="Modules\Modules\TPPoint.h" />
     <ClInclude Include="Modules\Modules\Traverse.h" />
-    <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utils\config.h" />
     <ClInclude Include="Utils\Game.h" />
@@ -420,14 +420,6 @@
     <ClCompile Include="Modules\Modules\ShowCoordinates.cpp" />
     <ClCompile Include="Modules\Modules\TPPoint.cpp" />
     <ClCompile Include="Modules\Modules\Traverse.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Repair|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Repair|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Utils\config.cpp" />
     <ClCompile Include="Utils\Game.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
