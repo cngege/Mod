@@ -17,15 +17,18 @@
 
 #include "../Utils/Game.h"
 #include "../Utils/Utils.h"
+#include "../Modules/Modules/Debug.h"
+#include "../Modules/Modules/Render.h"
 #include "../Modules/ModuleManager.h"
+
 
 #include <io.h>
 
-//#pragma warning (disable: 4244)
+#pragma warning (disable: 4244)
 //#pragma warning (disable: 4267)
 //#pragma warning (disable: 6216)
-#pragma warning (disable: 6278)
-#pragma warning (disable: 26495)
+//#pragma warning (disable: 6278)
+//#pragma warning (disable: 26495)
 
 auto GetDllMod(void) -> HMODULE {
 	MEMORY_BASIC_INFORMATION info;
@@ -51,7 +54,7 @@ struct FrameContext {
 	ID3D12Resource* main_render_target_resource = nullptr;
 	D3D12_CPU_DESCRIPTOR_HANDLE main_render_target_descriptor;
 };
-unsigned int buffersCounts = -1;
+uint64_t buffersCounts = -1;
 FrameContext* frameContext = nullptr;
 ID3D12DescriptorHeap* d3d12DescriptorHeapImGuiRender = nullptr;
 ID3D12DescriptorHeap* d3d12DescriptorHeapBackBuffers = nullptr;
@@ -62,9 +65,17 @@ ID3D12CommandQueue* d3d12CommandQueue = nullptr;
 bool initContext = false;
 HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags) {
 	auto deviceType = ID3D_Device_Type::INVALID_DEVICE_TYPE;
-	//auto window = (HWND)FindWindowA(nullptr, (LPCSTR)"Minecraft");
 	static auto window = (HWND)FindWindowA(nullptr, (LPCSTR)"Minecraft");
 	static auto childwindow = (HWND)FindWindowExA(window, NULL, NULL, (LPCSTR)"Minecraft");
+
+	static auto debugModule = Game::GetModuleManager()->GetModule<Debug*>();
+	static auto render = Game::GetModuleManager()->GetModule<Render*>();
+
+	if (debugModule && debugModule->isEnabled() && debugModule->SynchronousD3D12Render_ImGui) {
+		if (render && !render->isEnabled()) {
+			goto out;
+		}
+	}
 
 	if (window == NULL) {
 		goto out;
@@ -88,9 +99,6 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		ID3D11RenderTargetView* mainRenderTargetView;
 		d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
 		pBackBuffer->Release();
-		//POINT mouse;
-		//RECT rc = { 0 };
-		//md::FadeInOut fade;
 		ImGui_ImplWin32_Init(window);
 		ImGui_ImplDX11_Init(d3d11Device, ppContext);
 		if (!initContext) {
@@ -112,7 +120,8 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
-		
+
+		Game::GetModuleManager()->onImGUIRender();
 		{
 			ImGuiStyle* style = &ImGui::GetStyle();
 			style->WindowPadding = ImVec2(15, 15);
@@ -129,7 +138,6 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			style->WindowTitleAlign = ImVec2(0.5, 0.5);
 		}
 
-		Game::GetModuleManager()->onImGUIRender();
 		
 		ImGui::Render();
 		ppContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
@@ -152,23 +160,31 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		descriptorImGuiRender.NumDescriptors = buffersCounts;
 		descriptorImGuiRender.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		if (d3d12DescriptorHeapImGuiRender == nullptr)
-			if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorImGuiRender, IID_PPV_ARGS(&d3d12DescriptorHeapImGuiRender))))
+			if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorImGuiRender, IID_PPV_ARGS(&d3d12DescriptorHeapImGuiRender)))) {
+				delete[] frameContext;
 				goto out;
-		if (d3d12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator)) != S_OK)
+			}
+		if (d3d12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator)) != S_OK) {
+			delete[] frameContext;
 			return NULL;
+		}
 		for (size_t i = 0; i < buffersCounts; i++) {
 			frameContext[i].commandAllocator = allocator;
 		};
 		if (d3d12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocator, NULL, IID_PPV_ARGS(&d3d12CommandList)) != S_OK ||
-			d3d12CommandList->Close() != S_OK)
+			d3d12CommandList->Close() != S_OK) {
+			delete[] frameContext;
 			return NULL;
+		}
 		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers{};
 		descriptorBackBuffers.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		descriptorBackBuffers.NumDescriptors = buffersCounts;
 		descriptorBackBuffers.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		descriptorBackBuffers.NodeMask = 1;
-		if (d3d12Device->CreateDescriptorHeap(&descriptorBackBuffers, IID_PPV_ARGS(&d3d12DescriptorHeapBackBuffers)) != S_OK)
+		if (d3d12Device->CreateDescriptorHeap(&descriptorBackBuffers, IID_PPV_ARGS(&d3d12DescriptorHeapBackBuffers)) != S_OK) {
+			delete[] frameContext;
 			return NULL;
+		}
 		const auto rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
 		for (unsigned int i = 0; i < buffersCounts; i++) {
@@ -204,12 +220,16 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 
 			initContext = true;
 		};
-		if (d3d12CommandQueue == nullptr)
+		if (d3d12CommandQueue == nullptr) {
+			delete[] frameContext;
 			goto out;
+		}
 		ImGui_ImplDX12_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
-		
+
+
+		Game::GetModuleManager()->onImGUIRender();
 		{
 			ImGuiStyle* style = &ImGui::GetStyle();
 
@@ -226,8 +246,6 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 			style->GrabRounding = 3.0f;
 			style->WindowTitleAlign = ImVec2(0.5, 0.5);
 		}
-
-		Game::GetModuleManager()->onImGUIRender();
 
 
 		FrameContext& currentFrameContext = frameContext[ppSwapChain->GetCurrentBackBufferIndex()];
@@ -256,7 +274,7 @@ HRESULT hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT f
 		allocator->Release();
 		currentFrameContext.main_render_target_resource->Release();
 		currentFrameContext.commandAllocator->Release();
-		if(d3d12Device) d3d12Device->Release();
+		d3d12Device->Release();
 		delete[] frameContext;
 	};
 	goto out;

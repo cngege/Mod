@@ -1,4 +1,4 @@
-#include "imgui_toggle_renderer.h"
+﻿#include "imgui_toggle_renderer.h"
 #include "imgui_toggle_palette.h"
 #include "imgui_toggle_math.h"
 
@@ -10,7 +10,8 @@ namespace
     // a small helper to quickly check the mixed value flag.
     inline bool IsItemMixedValue()
     {
-        return (GImGui->LastItemData.InFlags & ImGuiItemFlags_MixedValue) != 0;
+        return (GImGui->LastItemData.InFlags & ImGuiItemFlags_MixedValue) != 0; // 最新IMGUI
+        //return (GImGui->CurrentItemFlags & ImGuiItemFlags_MixedValue) != 0;       // 旧版IMGUI
     }
 } // namespace
 

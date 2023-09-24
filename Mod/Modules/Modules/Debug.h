@@ -7,6 +7,9 @@ public:
 private:
 
 public:
+	bool SynchronousD3D12Render_ImGui = false;
+
+public:
 	virtual auto onImGUIRender() -> void override;
 	virtual auto onKeyUpdate(int, bool) -> void override;
 	virtual auto onInternalImGUIRender() -> void override;

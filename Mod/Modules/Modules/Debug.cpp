@@ -32,8 +32,6 @@ bool ShowFontSelectForm = false;
 bool renderW2SDebugBox = false;
 bool ShowPtrList = false;
 
-bool Hundred_Times = false;
-bool Hundred_Times_isHook = false;
 
 bool KeyUseItem = false;
 
@@ -50,12 +48,12 @@ uintptr_t* Hundred_TimesHookCall = nullptr;
 
 Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	toggerConfig_Debug = ImGuiTogglePresets::RectangleStyle();
-
+	
+	AddBoolUIValue("D3D渲染同步此UI", &SynchronousD3D12Render_ImGui);
 	AddBoolUIValue("显示Demo窗口", &ShowDemoForm);
 	AddBoolUIValue("显示字体选择", &ShowFontSelectForm);
 	AddBoolUIValue("尝试方框透视", &renderW2SDebugBox);
 	AddBoolUIValue("显示常用指针", &ShowPtrList);
-	AddBoolUIValue("百倍掉落物(重复破坏同一个位置无效)", &Hundred_Times);
 	AddBoolUIValue("G健使用手中物品", &KeyUseItem);
 
 	AddFloatUIValue("FovX", &outFov.x, 0, 10);
@@ -75,27 +73,6 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 			logF("BlockLegacy::playerDestroy for BlockLegacy: %llX", Utils::GetVTFPtr(*(uintptr_t*)block->getBlockLegacy(), 184));
 		}
 		});
-	
-	AddButtonUIEvent("百倍掉落物Hook", false, [&]() {
-		if (!Hundred_Times_isHook) {
-			MH_CreateHookEx((LPVOID)GameMode::GetVFtableFun(2), (LPVOID)&(Hundred_TimesHook), &Hundred_TimesHookCall);
-			MH_EnableHook((LPVOID)GameMode::GetVFtableFun(2));
-			Hundred_Times_isHook = true;
-		}
-		});
-}
-
-// Block::playerDestroy
-bool Hundred_TimesHook(GameMode* gm, vec3_ti* pos, unsigned char f) {
-	static Debug* deg = Game::GetModuleManager()->GetModule<Debug*>();
-	if (Hundred_Times && !gm->GetLocalPlayer()->isLocalPlayer()) {
-		if (deg && deg->isEnabled()) {
-			for (int i = 0; i < 100; i++) {
-				((Hundred_TimesHookFn)Hundred_TimesHookCall)(gm, pos, f);
-			}
-		}
-	}
-	return ((Hundred_TimesHookFn)Hundred_TimesHookCall)(gm, pos, f);
 }
 
 void RenderDebugBox() {
