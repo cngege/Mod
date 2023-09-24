@@ -477,7 +477,7 @@ auto Hook::init() -> void
 			//虚表Hook
 			//Actor::setVelocity
 			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(41), &Hook::SetVelocity, &Actor::setVelocityCallptr);
-			Actor::SpeedOffset = *reinterpret_cast<int*>((uintptr_t)Actor::GetVFtableFun(41) + 7);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(52), &Hook::Actor_isInvisible, &Actor::isInvisibleCallptr);
 			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(64), &Hook::Actor_isInWater, &Actor::isInWaterCallptr);
 			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(68), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
 		}
@@ -505,35 +505,35 @@ auto Hook::init() -> void
 			logF_Debug("[Actor::LevelOffset] [Success] 偏移地址= %i , sigoffset= %llX , memcode=%s", Actor::LevelOffset, ActorGetLevel_sigOffset, memcode);
 		}
 
-		// DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
-		// DirectPlayerMovementProxy::`vftable'{for `IBoatMovementProxy'}
-		if (ActorGetLevel_sigOffset != 0x00) {
-			// 获取一个函数，这个函数内部有 const DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
-			//E8 ? ? ? ? 90 48
-			uintptr_t call_sigoffset = Utils::FindSignatureRelay(ActorGetLevel_sigOffset, "E8 ? ? ? ? 90 48", 2000);
-			if (call_sigoffset != 0x00) {
-				// 进入这个函数内部
-				uintptr_t thiscall = Utils::FuncFromSigOffset(call_sigoffset, 1);
-				// 然后在这个call中定位到赋值虚表处
-				//48 8D 05 ? ? ? ? 48 89 43 10 48 8D 05
-				uintptr_t MovementProxy_sigoffset = Utils::FindSignatureRelay(thiscall, "48 8D 05 ? ? ? ? 48 89 43 10 48 8D 05", 300);
-				if (MovementProxy_sigoffset != 0x00) {
-					auto AMovementProxyVT = Utils::FuncFromSigOffset<uintptr_t**>(MovementProxy_sigoffset, 3);
-					auto PMovementProxyVT = Utils::FuncFromSigOffset<uintptr_t**>(MovementProxy_sigoffset, 14);
+		//// DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
+		//// DirectPlayerMovementProxy::`vftable'{for `IBoatMovementProxy'}
+		//if (ActorGetLevel_sigOffset != 0x00) {
+		//	// 获取一个函数，这个函数内部有 const DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
+		//	//E8 ? ? ? ? 90 48
+		//	uintptr_t call_sigoffset = Utils::FindSignatureRelay(ActorGetLevel_sigOffset, "E8 ? ? ? ? 90 48", 2000);
+		//	if (call_sigoffset != 0x00) {
+		//		// 进入这个函数内部
+		//		uintptr_t thiscall = Utils::FuncFromSigOffset(call_sigoffset, 1);
+		//		// 然后在这个call中定位到赋值虚表处
+		//		//48 8D 05 ? ? ? ? 48 89 43 10 48 8D 05
+		//		uintptr_t MovementProxy_sigoffset = Utils::FindSignatureRelay(thiscall, "48 8D 05 ? ? ? ? 48 89 43 10 48 8D 05", 300);
+		//		if (MovementProxy_sigoffset != 0x00) {
+		//			auto AMovementProxyVT = Utils::FuncFromSigOffset<uintptr_t**>(MovementProxy_sigoffset, 3);
+		//			auto PMovementProxyVT = Utils::FuncFromSigOffset<uintptr_t**>(MovementProxy_sigoffset, 14);
 
-					logF_Debug("[ActorMovementProxy::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX", AMovementProxyVT, MovementProxy_sigoffset);
-					logF_Debug("[PlayerMovementProxy::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX", PMovementProxyVT, MovementProxy_sigoffset);
-					ActorMovementProxy::SetVFtables(AMovementProxyVT);
-					PlayerMovementProxy::SetVFtables(PMovementProxyVT);
-				}
-				else {
-					logF("[Hook::FindSignature] [%s] [Error] 从Actor构造函数中的未知函数中定位移动代理虚表位置未找到", "MovementProxy::`vftable");
-				}
-			}
-			else {
-				logF("[Hook::FindSignature] [%s] [Error] 从Actor构造函数中定位包含Actor移动代理的函数未找到", "MovementProxy::FUN");
-			}
-		}
+		//			logF_Debug("[ActorMovementProxy::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX", AMovementProxyVT, MovementProxy_sigoffset);
+		//			logF_Debug("[PlayerMovementProxy::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX", PMovementProxyVT, MovementProxy_sigoffset);
+		//			ActorMovementProxy::SetVFtables(AMovementProxyVT);
+		//			PlayerMovementProxy::SetVFtables(PMovementProxyVT);
+		//		}
+		//		else {
+		//			logF("[Hook::FindSignature] [%s] [Error] 从Actor构造函数中的未知函数中定位移动代理虚表位置未找到", "MovementProxy::`vftable");
+		//		}
+		//	}
+		//	else {
+		//		logF("[Hook::FindSignature] [%s] [Error] 从Actor构造函数中定位包含Actor移动代理的函数未找到", "MovementProxy::FUN");
+		//	}
+		//}
 	}
 
 	//FishingHook 虚表
@@ -725,12 +725,12 @@ auto Hook::LockControlInputCallBack(void* thi, void* a2, void* a3, void* a4, voi
 }
 
 //无击退效果
-auto Hook::SetVelocity(Player* player,vec3_t* kb)->void*
+auto Hook::SetVelocity(Actor* actor,vec3_t* kb)->void*
 {
-	if (!Game::GetModuleManager()->onKnockback((LocalPlayer*)player, kb)) {
+	if (actor->isLocalPlayer() && !Game::GetModuleManager()->onKnockback((LocalPlayer*)actor, kb)) {
 		return nullptr;
 	}
-	return player->setVelocity(kb);
+	return actor->setVelocity(kb);
 }
 
 auto Hook::Actor_isInWater(Actor* actor) -> bool
@@ -745,6 +745,18 @@ auto Hook::Actor_isInWater(Actor* actor) -> bool
 	}
 
 	return actor->isInWater();
+}
+
+auto Hook::Actor_isInvisible(Actor* _this) -> bool
+{
+	static FastViewPerspective* idy = Game::GetModuleManager()->GetModule<FastViewPerspective*>();
+	if (_this->isLocalPlayer()) {
+		if (idy && idy->isEnabled() && idy->isToggle())
+		{
+			return true;
+		}
+	}
+	return _this->isInvisible();
 }
 
 auto Hook::Actor_getShadowRadius(Actor* actor)->float {
@@ -794,10 +806,10 @@ auto Hook::Is_ShowCoordinates_Tick(void* _this)->bool
 //	return noFallDamage_Tickcall(_this, a1);
 //}
 
-auto Hook::Level_Tick(Level* level)->void
+auto Hook::Level_Tick(Level* level)->void*
 {
 	Game::GetModuleManager()->onLevelTick(level);
-	level->Tick();
+	return level->Tick();
 }
 
 //在非本地房间 只有本地玩家才会触发Tick

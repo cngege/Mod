@@ -32,13 +32,12 @@ auto FastViewPerspective::onInternalImGUIRender() -> void
 
 
 auto FastViewPerspective::isToggle()->bool {
-	return Game::IsMouseDown(VK_XBUTTON1);
-	//return Game::IsKeyDown('R');
+	return Game::IsMouseDown(VK_XBUTTON1) && !Utils::isCursorVisible();
 }
 
 auto FastViewPerspective::getViewPerspective(int source) -> int
 {
-	if (isToggle() && !Utils::isCursorVisible()) {
+	if (isToggle()) {
 		return ViewPerspective;
 	}
 	return source;
