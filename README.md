@@ -22,6 +22,7 @@
   - FastViewPerspective 长按快捷键显示第二人称视野,松开恢复 （**（鼠标侧键）F9**）
   - 攻击距离 = 7 （**SHIFT+F10**）
   - 点击显示实体名称和血量（**CTRL+F10**）
+  - 多倍的物品掉落(仅本地房间,对多人有效) 
 - **已经实现的其他功能**
   - ImGui面板UI用中文
   - ImGUi配置等选项信息能够保存本地
@@ -61,6 +62,3 @@
 
 - **Dear ImGui**
   - https://github.com/ocornut/imgui
-
-- **fmt**
-  - https://github.com/fmtlib/fmt.git
