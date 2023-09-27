@@ -1,9 +1,9 @@
 ﻿# Minecraft  C++ Mod
-### **开发**
+### **🍁开发**
 关于游戏更新时特征码的查找以及 偏移的查找等
 已将相关方案记录在[Wiki](https://github.com/cngege/Mod/wiki)中, 开发者以及合作开发者请阅读
 
-### **功能更新**
+### **🚀功能更新**
 
 - **当前已实现功能**
   - 下落无伤害（目前仅本地房间）
@@ -34,23 +34,23 @@
 - **可能更新的功能**
   - 发送消息翻译成指定的语言(**缺少可翻译api**)
   - 命令系统（**等先实现在本地客户端上显示聊天消息的功能**）
-### **已经解决的和未解决的BUG**
+### **👍已经解决的和未解决的BUG**
 - **已解决**
   - 日志乱码
   - 被断开连接时如果开启了`RenderHealth`模块,且正在显示玩家信息则会崩溃
 - **未解决**
   - 玩家雷达功能可能由于不正常的退出存档、房间导致不再显示
-### **项目开发**
+### **🐞项目开发**
 - **工具**
   - Visual Studia 2022
 
-### **技术参考（学习）**
+### **🎀技术参考（学习）**
 - **Horion-Open-SRC**
   - https://github.com/NRGJobro/Horion-Open-SRC/
 - **YT Coding Internal Client**
   - https://www.youtube.com/playlist?list=PL9mZGNEJquY77cTy1eNOLs12BsVK5zA-P
 
-### **外部库**
+### **🌿外部库**
 - **nlohmann::json**
   - https://github.com/nlohmann/json
 
