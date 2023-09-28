@@ -112,7 +112,6 @@ HRESULT __fastcall hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInter
 
 	static uintptr_t* a1 = nullptr;
 	if ((uintptr_t*)ppSwapChain != a1) {
-		logF("new ptr: %llX", ppSwapChain);
 		a1 = (uintptr_t*)ppSwapChain;
 	}
 
