@@ -167,9 +167,11 @@ auto Module::onDisable()->void {
 
 }
 
-auto Module::onAttack(Actor* actor)->bool {
+auto Module::onAttackBefore(class GameMode* gm,Actor* actor)->bool {
 	return true;
 }
+
+auto Module::onAttackAfter(class GameMode* gm,Actor* actor)->void {}
 
 auto Module::useItem(GameMode* gm, class ItemStack* item)->bool {
 	return true;

@@ -35,7 +35,7 @@ auto NoAttackFriend::IsFriend(Player* p)->bool {
 }
 
 //#include "../../Utils/Logger.h"
-auto NoAttackFriend::onAttack(Actor* actor)->bool {
+auto NoAttackFriend::onAttackBefore(class GameMode* gm, Actor* actor)->bool {
 	if (!isEnabled()) {
 		return true;
 	}

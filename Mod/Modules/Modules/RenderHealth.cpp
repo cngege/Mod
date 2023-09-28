@@ -10,7 +10,7 @@ RenderHealth::RenderHealth() : Module(VK_F10, "RenderHealth", "显示被攻击�
 }
 
 
-auto RenderHealth::onAttack(Actor* actor)->bool {
+auto RenderHealth::onAttackAfter(class GameMode* gm,Actor* actor)->void {
 	if (isEnabled()) {
 		currentPlayerHealth = (int)actor->getHealth();
 		std::string sname = std::string(actor->getNameTag()->getText());
@@ -25,7 +25,7 @@ auto RenderHealth::onAttack(Actor* actor)->bool {
 		tick = 400.f;
 		show = true;
 	}
-	return true;
+	return;
 }
 
 
@@ -51,12 +51,15 @@ auto RenderHealth::onImGUIRender() -> void
 
 			drawList->AddRectFilled(LTop, { LTop.x + bgWidth,LTop.y + bgHeight }, ImColor(0, 0, 0, 100));
 			
+			
 			std::string drawName("Name: ");
 			drawName += currentPlayerName;
 			std::string drawHealth("Health: ");
 			drawHealth += std::to_string(currentPlayerHealth);
 			
-			drawList->AddText({ LTop.x + 5.f, LTop.y + 5.f }, ImColor(255, 255, 255, 255), drawName.c_str());
+			if (!currentPlayerName.empty()) {
+				drawList->AddText({ LTop.x + 5.f, LTop.y + 5.f }, ImColor(255, 255, 255, 255), drawName.c_str());
+			}
 			drawList->AddText({ LTop.x + 5.f, LTop.y + 20.f }, ImColor(255, 255, 255, 255), drawHealth.c_str());
 
 		}

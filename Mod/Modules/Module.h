@@ -94,7 +94,8 @@ public:
 	virtual void onTrigger();
 	virtual void onEnable();
 	virtual void onDisable();
-	virtual bool onAttack(class Actor*);				// 返回值可以拦截该事件
+	virtual bool onAttackBefore(class GameMode* ,class Actor*);				// 返回值可以拦截该事件
+	virtual void onAttackAfter(class GameMode* ,class Actor*);
 	virtual bool useItem(class GameMode*,class ItemStack*);
 	virtual bool useItemOn(class GameMode*, class ItemStack*, class ItemInstance*, vec3_ti* , uint8_t*, vec3_t* , class Block*);
 	virtual bool onKnockback(class LocalPlayer*, vec3_t*);

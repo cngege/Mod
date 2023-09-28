@@ -15,7 +15,7 @@ private:
 	int currentPlayerHealth = 0;
 
 public:
-	virtual auto onAttack(class Actor*)->bool override;
+	virtual auto onAttackAfter(class GameMode* gm,class Actor*)->void override;
 	virtual auto onImGUIRender() -> void override;
 	virtual auto onloadConfigFile(json& data)->void override;
 	virtual auto onsaveConfigFile(json& data)->void override;

@@ -154,15 +154,23 @@ auto ModuleManager::onTick(GameMode* gm)->void {
 	}
 }
 
-auto ModuleManager::onAttack(Actor* actor)->bool {
+auto ModuleManager::onAttackBefore(class GameMode* gm ,Actor* actor)->bool {
 	bool RunOriginalFun = true;
 	if (!IsInitialized())
 		return RunOriginalFun;
 	for (auto pMod : moduleList) {
-		if (!pMod->onAttack(actor))
+		if (!pMod->onAttackBefore(gm, actor))
 			RunOriginalFun = false;
 	}
 	return RunOriginalFun;
+}
+
+auto ModuleManager::onAttackAfter(class GameMode* gm ,Actor* actor)->void {
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onAttackAfter(gm, actor);
+	}
 }
 
 auto ModuleManager::useItem(GameMode* gm, class ItemStack* item)->bool {

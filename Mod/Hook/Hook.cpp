@@ -948,11 +948,12 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 		}
 	}
 
-
-	if (!Game::GetModuleManager()->onAttack(actor)) {
-		return false;
+	bool ret = false;
+	if (Game::GetModuleManager()->onAttackBefore(_this, actor)) {
+		ret = _this->attack(actor);
 	}
-	return _this->attack(actor);
+	Game::GetModuleManager()->onAttackAfter(_this, actor);
+	return ret;
 }
 
 auto Hook::LocalPlayer_TickWorld(LocalPlayer* _this, void* tick) -> void*
