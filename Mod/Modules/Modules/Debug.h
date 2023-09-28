@@ -8,6 +8,8 @@ private:
 
 public:
 	bool SynchronousD3D12Render_ImGui = false;
+	bool GameMode_attack_Print = false;
+	bool GameMode_attack_UseItem = false;
 
 public:
 	virtual auto onImGUIRender() -> void override;

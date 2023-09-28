@@ -1,9 +1,31 @@
 ﻿#include "Level.h"
 #include "Utils.h"
 
+uintptr_t** Level::vfTables = nullptr;
+
+
+
 uintptr_t* Level::startLeaveGameCall = nullptr;
 //uintptr_t* Level::forEachPlayerCall = nullptr;
 uintptr_t* Level::tickCall = nullptr;
+
+
+template <typename TRet, typename... TArgs>
+auto Level::GetVFtableFun(int a)->auto* {
+	return reinterpret_cast<TRet(__fastcall*)(TArgs...)>(vfTables[a]);
+}
+
+auto Level::GetVFtableFun(int a)->uintptr_t* {
+	return vfTables[a];
+}
+
+auto Level::GetVFtables()->uintptr_t** {
+	return vfTables;
+}
+
+auto Level::SetVFtables(uintptr_t** vfTable)->void {
+	vfTables = vfTable;
+}
 
 
 auto Level::getAllPlayer()->std::vector<Player*> {

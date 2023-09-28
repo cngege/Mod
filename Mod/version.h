@@ -2,7 +2,7 @@
 
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 6
-#define VERSION_REVISION 1
+#define VERSION_REVISION 4
 #define VERSION_BUILD 0
 
 #define PLUGIN_NAME "Mod"

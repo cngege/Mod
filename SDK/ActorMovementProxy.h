@@ -13,7 +13,10 @@ public:
 	static auto SetVFtables(uintptr_t** vTables) -> void;
 
 public:
+	/**/
+	auto getActor() -> class Actor*;
 
+	/*虚表函数*/
 	auto isOnGround() -> bool;								/*39*/	//1.20.15
 	auto setOnGround(bool) -> void;							/*40*/	//1.20.15
 

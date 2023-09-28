@@ -101,7 +101,7 @@ public:
 
 public:
 	//auto onMoveBBs(vec3_t)->void;
-	auto isLocalPlayer()->bool;
+	auto isLocalPlayerEx()->bool;
 	auto getHealth()->float;
 	auto isSneaking()->bool;
 	auto isRemovedEx()->bool;
@@ -112,8 +112,8 @@ public:
 	auto getDimensionConst()->class Dimension*;
 	auto setPos(vec3_t*) -> void*;
 	auto setPosPrev(vec3_t*) -> void*;
-	//E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2
 	auto getMovementProxy() -> class ActorMovementProxy*;
+	auto getOrCreateUniqueID() -> int*;
 public:
 	// Hook的函数
 	auto setVelocity(vec3_t*)->void*;												/*46*/
@@ -125,9 +125,6 @@ public:
 	auto isInWater()->bool;															/*73*/
 	auto getShadowRadius()->float;													/*79*/
 public:
-
-
-
 
 	//原生虚表函数
 	auto getStatusFlag(ActorFlags) -> bool;											/*0*/
@@ -146,8 +143,9 @@ public:
 	//获取玩家的移动方向 该函数在1.19.50.02 版本开始没有了
 	//auto getRotation()->vec2_t*;													/*81*/
 	auto setSneaking(bool)->void;													/*87*/	// 1.20.15
-	auto isOnFire(void) -> bool;													/*91*/
-	auto isRemotePlayer() -> bool;													/*97*/	// 1.20.15
+	auto isOnFire() -> bool;														/*91*/
+	auto isLocalPlayer() -> bool;													/*95*/	// 1.20.30
+	auto isRemotePlayer() -> bool;													/*96*/	// 1.20.30
 	auto getEntityTypeId() -> int;													/*153*/	// 1.20.15 可能是 Player::getEntityTypeId()
 	// 需要serverActor权限
 	auto changeDimension(AutomaticID<class Dimension, int>)->void;					/*165*/ // 1.20.15

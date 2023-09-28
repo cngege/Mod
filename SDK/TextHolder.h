@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 
 class TextHolder {
@@ -67,6 +67,17 @@ public:
 			}
 		}
 		return *this;
+	}
+
+	bool operator==(TextHolder const& copy) {
+		if (alignedTextLength != copy.alignedTextLength)
+			return false;
+		if (alignedTextLength < 16) {
+			return std::string(this->getText()) == std::string(copy.inlineText);
+		}
+		else {
+			return std::string(this->getText()) == std::string(copy.pText);
+		}
 	}
 
 	TextHolder(std::string str) {

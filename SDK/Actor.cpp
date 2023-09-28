@@ -138,7 +138,7 @@ auto Actor::getDimensionBlockSource() -> class BlockSource*
 //
 //}
 
-auto Actor::isLocalPlayer()->bool {
+auto Actor::isLocalPlayerEx()->bool {
 	return (*(__int64*)this == (__int64)LocalPlayer::GetVFtables());
 }
 
@@ -191,22 +191,21 @@ auto Actor::setPosPrev(vec3_t* pos)->void* {
 	//return GetVFtableFun<void*, Actor*, vec3_t*>(21)(this,pos);
 }
 
-
+// （函数）特征码的寻找方法见wiki
 auto Actor::getMovementProxy() -> class ActorMovementProxy*
 {
-	static uintptr_t sig = 0;
-	if (!sig) {
-		uintptr_t sigcall = FindSignature("E8 ? ? ? ? 4C 8B C0 33 FF 8B DF 48 8B 50 ? 48 85 D2");	// 来自 Actor::getHeadLookVector 的第一个call (未测试, 需要在ida中对比/ 调用就会崩溃)
-		if (!sigcall) {
-			throw "Actor::getMovementProxy() Error, sig no fond";
-		}
-		sig = Utils::FuncFromSigOffset(sigcall, 1);
-	}
-	uintptr_t* unknow1 = **(uintptr_t***)((uintptr_t)this + 8);
-	DWORD* unknow2 = (DWORD*)((uintptr_t)this + 16);
-	using Fn = ActorMovementProxy * (__fastcall*)(uintptr_t*, DWORD*);
-	uintptr_t* ActorMovementProxyComponent = (uintptr_t*)reinterpret_cast<Fn>(sig)(unknow1, unknow2);
-	return *(ActorMovementProxy**)ActorMovementProxyComponent;
+	static auto offset_fn = FindSignature("48 89 5C 24 ? 57 48 83 EC ? 48 8B dA 33 FF 48 89 5C 24 ? 48 8B D1 48 8B 41 ? 48 8B");
+	using Fn = ActorMovementProxy * (__fastcall*)(Actor*);
+	return *(ActorMovementProxy**)reinterpret_cast<Fn>(offset_fn)(this);
+}
+
+auto Actor::getOrCreateUniqueID() -> int*
+{
+	const char* memcode_fn = "40 53 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B 41 ? 48 8D";
+	const char* memcode_call = "E8 ? ? ? ? 48 8B D0 48 8B 0B E8";
+	static auto offset_fn = Utils::getFunFromSigAndCall(memcode_fn, memcode_call, 1);
+	using Fn = int* (__fastcall*)(Actor*);
+	return reinterpret_cast<Fn>(offset_fn)(this);
 }
 
 
@@ -308,13 +307,19 @@ auto Actor::setSneaking(bool b)->void {
 }
 
 // 是否着火
-auto Actor::isOnFire(void) -> bool
+auto Actor::isOnFire() -> bool
 {
 	return GetVFtableFun<bool, Actor*>(90)(this);				  //更新自 1.20.30
 }
 
+// isLocalPlayer 在 isRemotePlayer上面一个,不确定可以通过DirectPlayerMovementProxy::isLocalPlayer内容确定,其中(_QWORD **)this + 2)就是Actor
+auto Actor::isLocalPlayer() -> bool
+{
+	return Utils::CallVFunc<95, bool>(this);				  //更新自 1.20.30
+}
+
 auto Actor::isRemotePlayer()->bool {
-	return GetVFtableFun<bool, Actor*>(96)(this);				  //更新自 1.20.30
+	return Utils::CallVFunc<96, bool>(this);				  //更新自 1.20.30
 }
 
 auto Actor::getEntityTypeId()->int {

@@ -44,6 +44,11 @@ auto PlayerMovementProxy::SetVFtables(uintptr_t** vfTable)->void {
 }
 
 
+auto ActorMovementProxy::getActor() -> class Actor*
+{
+	return *reinterpret_cast<class Actor**>((uintptr_t)this + 16);	//offset 16byte
+}
+
 auto ActorMovementProxy::isOnGround() -> bool
 {
 	return Utils::CallVFunc<39, bool>(this);

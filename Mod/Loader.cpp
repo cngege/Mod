@@ -107,9 +107,11 @@ void Loader::exit(void* hmodule)
 			logF("[Loader::exit] Hook解除状态: %s", MH_StatusToString(MH_Uninitialize()));
 			hookret = MH_STATUS::MH_UNKNOWN;
 		}
+		logF("[Loader::exit] 正在关闭D3D12渲染");
+		ImguiHooks::CloseImGui();
 		logF("[Loader::exit] 正在退出Game模块");
 		Game::exit();
-		logF("Removing logger");
+		logF("[Loader::exit] Removing logger");
 		Logger::Disable();
 		//关闭被注入程序的时候会调用
 	}

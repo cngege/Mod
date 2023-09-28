@@ -1,5 +1,8 @@
 ﻿#include "Player.h"
+#include "TextHolder.h"
+
 #include "../Mod/Utils/Utils.h"
+
 
 int Player::RotPtrOffset = 0;
 //int Player::Rot2 = 0;
@@ -65,6 +68,17 @@ auto Player::getSpeed() -> float
 auto Player::setSpeed(float s) -> void
 {
 	return GetVFtableFun<void, Player*, float>(255)(this, s);
+}
+
+auto Player::setPlayerGameType(int GameType) -> void
+{
+	GetVFtableFun<void, Player*, int>(368)(this, GameType);
+}
+
+auto Player::getXuid() ->TextHolder
+{
+	TextHolder* ret = GetVFtableFun<TextHolder*, Player*>(396)(this);
+	return *ret;
 }
 
 auto Player::getShadowRadius() -> float

@@ -20,9 +20,6 @@
 #include "ItemStack.h"
 #include "Block.h"
 
-
-
-
 #include "../Modules/ModuleManager.h"
 #include "../Modules/Modules/AirWater.h"
 #include "../Modules/Modules/NoWaterResistence.h"
@@ -100,17 +97,28 @@ uintptr_t sendChatMessage;
 using GetViewPerspective = int(__fastcall*)(void*);
 GetViewPerspective getLocalPlayerViewPerspectivecall;
 
-using LPLP = void* (__fastcall*)(void*, void*, void*, void*, int, void*, char, void*, void*, void*, void*, void*);
-LPLP lplpcall;
+//using LPLP = void* (__fastcall*)(void*, void*, void*, void*, int, void*, char, void*, void*, void*, void*, void*);
+//LPLP lplpcall;
 
 using BlockPlayerDestroy = char*(__fastcall*)(Block* block, Player* player, vec3_ti pos);
 BlockPlayerDestroy blockPlayerDestroyCall;
 
 char* Block_playerDestroy(Block* block, Player* player, vec3_ti pos) {
 	static HundredTimesMoreDrops* HTMD = Game::GetModuleManager()->GetModule<HundredTimesMoreDrops*>();
-	if (HTMD->isEnabled()) {
-		for (int i = 0; i < HTMD->multiple; i++) {
-			blockPlayerDestroyCall(block, player, pos);
+	if (HTMD->isEnabled() && !player->isLocalPlayer()) {
+		
+		if (HTMD->onlyLocalPlayer) {
+			LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+			if (lp && (*player->getOrCreateUniqueID() == *lp->getOrCreateUniqueID())) {
+				for (int i = 0; i < HTMD->multiple; i++) {
+					blockPlayerDestroyCall(block, player, pos);
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < HTMD->multiple; i++) {
+				blockPlayerDestroyCall(block, player, pos);
+			}
 		}
 	}
 
@@ -175,7 +183,7 @@ auto Hook::init() -> void
 
 	//clientInstance::Tick // 1.20 虚表 - 19号
 	{
-		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B DA 48 8B F9 0F 57 C0 0F 11 44 24 ? 0F 11 44 24";
+		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B DA 48 8B F9 0F 57 C0 0F 11 44 24 ? 0F";
 		clientInstanceTick = FindSignature(memcode);
 		if (clientInstanceTick != 0x00) {
 			MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
@@ -209,63 +217,6 @@ auto Hook::init() -> void
 		}
 	}
 
-	//获取饥饿值的地址的函数  实际上被用来做修改玩家速度
-	//没有作用，准备删除
-	//{
-	//	const char* memcode = "4C 8B D1 44 0F B6 CA 49 BB ? ? ? ? ? ? ? ? 48 B8 ? ? ? ? ? ? ? ? 4C 33 C8 8B C2 4D 0F AF CB C1 E8 08 44 0F B6 C0 8B C2 4D 33 C8 C1 E8 10 4D 8B 42 08 4D 0F AF CB 0F B6 C8 4C 33 C9 8B C2 49 8B 4A 30 4D 0F AF CB 48 C1 E8 18 4C 33 C8 4D 0F AF CB 49 23 C9 48 C1 E1 04 49 03 4A 18 48 8B 41 08 49 3B C0 74 27 48 8B 09 3B 50 10 74 0E 48 3B C1 74 1A 48 8B 40 08 3B 50 10 75 F2 48 85 C0 49 0F 44 C0 49 3B C0 74 05 ? ? ? ? C3 48 8D 05 ? ? ? ? C3";
-	//	getHungerValAddressTick = FindSignature(memcode);
-	//	if (getHungerValAddressTick != 0x00) {
-	//		MH_CreateHookEx((LPVOID)getHungerValAddressTick, &Hook::GetHungerValAddress_Tick, &getHungerValAddress_Tickcall);
-	//		logBF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", getHungerValAddressTick, memcode);
-	//	}
-	//	else {
-	//		logF("[Hook error] [%s] is no found Hook point", "getHungerValAddressTick");
-	//	}
-	//}
-
-	// https://github.com/cngege/Mod/wiki/%E5%85%B3%E4%BA%8EHook%E5%87%BD%E6%95%B0%E6%88%96%E5%81%8F%E7%A7%BB%E7%9A%84%E6%9F%A5%E6%89%BE%E4%BB%A5%E5%8F%8A%E6%9D%82%E9%A1%B9#%E4%B8%8B%E8%90%BD%E6%97%A0%E4%BC%A4%E5%AE%B32
-	//掉落无伤 仅本地有效 // 暂时不修复
-	//{
-	//	const char* memcode = "48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01";
-	//	noFallDamage_tick = FindSignature(memcode);
-	//	if (noFallDamage_tick != 0x00) {
-	//		MH_CreateHookEx((LPVOID)noFallDamage_tick, &Hook::NoFallDamage_Tick, &noFallDamage_Tickcall);
-	//		logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", noFallDamage_tick, memcode);
-	//	}
-	//	else {
-	//		logF("[Hook error] [%s] is no found Hook point", "noFallDamage_tick");
-	//	}
-	//}
-
-	//Level::Tick 无直接调用者
-	{
-		const char* memcode = "48 89 5C 24 ? 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 48 8B D9 48 8B 01 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48";
-		auto level_tick = FindSignature(memcode);
-		if (level_tick != 0x00) {
-			MH_CreateHookEx((LPVOID)level_tick, &Hook::Level_Tick, &Level::tickCall);
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", level_tick, memcode);
-		}
-		else {
-			logF("[Hook error] [%s] is no found Hook point", "level_tick");
-		}
-	}
-	
-	// 本地玩家 Tick  改为获取虚表后Hook
-	//{
-	// //48 83 EC ? 80 BA ? ? ? ? 00 74 ? 48 8B 02 48 8B CA 48 8B 80 ? ? ? ? FF
-	// // char __fastcall sub_143053BE0(__int64 a1, _BYTE *a2) 1.20.15 // 要验证本地世界多玩家是否还是 rdx只有本地玩家
-	// // 后续：在本地房间 本地玩家+所有服务玩家会触发
-	// 
-	//	const char* memcode = "48 83 EC 28 48 8B 91 ? ? ? ? 45 33 C0 48 8B 81 ? ? ? ? 48 2B C2 48 C1 F8 03 66 44 3B C0 73 ? 48 8B 02";
-	//	localplayer_getCameraOffset = FindSignature(memcode);
-	//	if (localplayer_getCameraOffset != 0x00) {
-	//		MH_CreateHookEx((LPVOID)localplayer_getCameraOffset, &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall);
-	//		logF("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", localplayer_getCameraOffset, memcode);
-	//	}
-	//	else {
-	//		logF("[Hook error] [%s] is no found Hook point", "player_getCameraOffset");
-	//	}
-	//}
 
 	// https://github.com/cngege/Mod/wiki/%E5%85%B3%E4%BA%8EHook%E5%87%BD%E6%95%B0%E6%88%96%E5%81%8F%E7%A7%BB%E7%9A%84%E6%9F%A5%E6%89%BE%E4%BB%A5%E5%8F%8A%E6%9D%82%E9%A1%B9#%E6%89%80%E6%9C%89%E7%8E%A9%E5%AE%B6tick
 	//所有玩家TICK ,所有生物TICK,对玩家来说应该是渲染相关得函数,只有看向 那个玩家，那个玩家才会触发这个函数，其中出现的玩家指针是Player 不是ServerPlayer
@@ -379,20 +330,6 @@ auto Hook::init() -> void
 		}
 	}
 
-	// 检查版本 1.20.30
-	//Level::startLeaveGame Hook
-	// 40 53 48 83 EC ? 48 8D 05 ? ? ? ? C6 81 ? ? ? ? 01 48 89
-	{
-		const char* memcode = "40 53 48 83 EC ? 48 8B D9 48 81 C1 ? ? ? ? E8 ? ? ? ? 48 8D 8B ? ? ? ? E8 ? ? ? ? 48 8D 8B ? ? ? ?  E8 ? ? ? ? 48 8B ? 48";
-		auto findptr = FindSignature(memcode);
-		if (findptr != 0x00) {
-			MH_CreateHookEx((LPVOID)findptr, &Hook::level_startLeaveGame, &Level::startLeaveGameCall);
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", findptr, memcode);
-		}
-		else {
-			logF("[Hook error] [%s] is no found Hook point", "Level::startLeaveGame");
-		}
-	}
 
 	//ItemStack虚表 来自Player::completeUsingItem
 	{
@@ -505,35 +442,6 @@ auto Hook::init() -> void
 			logF_Debug("[Actor::LevelOffset] [Success] 偏移地址= %i , sigoffset= %llX , memcode=%s", Actor::LevelOffset, ActorGetLevel_sigOffset, memcode);
 		}
 
-		//// DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
-		//// DirectPlayerMovementProxy::`vftable'{for `IBoatMovementProxy'}
-		//if (ActorGetLevel_sigOffset != 0x00) {
-		//	// 获取一个函数，这个函数内部有 const DirectActorMovementProxy::`vftable'{for `IActorMovementProxy'}
-		//	//E8 ? ? ? ? 90 48
-		//	uintptr_t call_sigoffset = Utils::FindSignatureRelay(ActorGetLevel_sigOffset, "E8 ? ? ? ? 90 48", 2000);
-		//	if (call_sigoffset != 0x00) {
-		//		// 进入这个函数内部
-		//		uintptr_t thiscall = Utils::FuncFromSigOffset(call_sigoffset, 1);
-		//		// 然后在这个call中定位到赋值虚表处
-		//		//48 8D 05 ? ? ? ? 48 89 43 10 48 8D 05
-		//		uintptr_t MovementProxy_sigoffset = Utils::FindSignatureRelay(thiscall, "48 8D 05 ? ? ? ? 48 89 43 10 48 8D 05", 300);
-		//		if (MovementProxy_sigoffset != 0x00) {
-		//			auto AMovementProxyVT = Utils::FuncFromSigOffset<uintptr_t**>(MovementProxy_sigoffset, 3);
-		//			auto PMovementProxyVT = Utils::FuncFromSigOffset<uintptr_t**>(MovementProxy_sigoffset, 14);
-
-		//			logF_Debug("[ActorMovementProxy::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX", AMovementProxyVT, MovementProxy_sigoffset);
-		//			logF_Debug("[PlayerMovementProxy::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX", PMovementProxyVT, MovementProxy_sigoffset);
-		//			ActorMovementProxy::SetVFtables(AMovementProxyVT);
-		//			PlayerMovementProxy::SetVFtables(PMovementProxyVT);
-		//		}
-		//		else {
-		//			logF("[Hook::FindSignature] [%s] [Error] 从Actor构造函数中的未知函数中定位移动代理虚表位置未找到", "MovementProxy::`vftable");
-		//		}
-		//	}
-		//	else {
-		//		logF("[Hook::FindSignature] [%s] [Error] 从Actor构造函数中定位包含Actor移动代理的函数未找到", "MovementProxy::FUN");
-		//	}
-		//}
 	}
 
 	//FishingHook 虚表
@@ -598,7 +506,7 @@ auto Hook::init() -> void
 				auto offset = Utils::FindSignatureRelay(Mob_Constructor, "48 8D 05", 200);	// offset 值大概是 35
 				if (offset != 0x00) {
 					auto MobVTable = Utils::FuncFromSigOffset<uintptr_t**>(offset, 3);
-					logF_Debug("[Mob::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode= from PlayerVTable", MobVTable, Mob_Constructor);
+					logF_Debug("[Mob::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX ,from PlayerVTable", MobVTable, Mob_Constructor);
 					Mob::SetVFtables(MobVTable);
 				}
 				else {
@@ -681,12 +589,35 @@ auto Hook::init() -> void
 			}
 			//虚表Hook
 			MH_CreateHookEx((LPVOID)LocalPlayer::GetVFtableFun(325), &Hook::LocalPlayer_TickWorld, &LocalPlayer::tickWorldCall);
-			//MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(374), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall);
 
 		}
 	}
 // FishingHook 虚表地址特征码：48 8D 05 ? ? ? ? 48 89 03 C7 83 ? ? ? ? ? ? ? ? C7 83 ? ? ? ? ? ? ? ? 48 C7 83
 
+	// 关于虚表怎么找 看:https://github.com/cngege/Mod/wiki/%E9%87%8D%E5%A4%A7%E5%8F%91%E7%8E%B0_%E7%90%86%E8%AE%BA%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E7%B1%BB%E7%9A%84%E8%99%9A%E8%A1%A8
+	// Level VFT
+	{
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 8D 05 ? ? ? ? 48 89 41 ? 48 8D 05 ? ? ? ? 48 89 41 ? 48 81 C1 ? ? ? ? E8";
+		const char* memcode2 = "48 8D 05 ? ? ? ? 48 89 07 48 8D 05 ? ? ? ? 48 89 47 ? 48 8D  05 ? ? ? ? 48 89 47 ? 33";
+		auto levelVF_sigOffset = FindSignature(memcode);
+		if (levelVF_sigOffset == 0x00) {
+			logF_Debug("[Level::SetVFtables] [Watn] 第一个特征码失效");
+			levelVF_sigOffset = FindSignature(memcode2);
+		}
+
+		if (levelVF_sigOffset == 0x00) {
+			logF("[Level::SetVFtables] [Error] Level获取虚表错误,所有特征码失效");
+		}
+		else {
+			auto LevelVT = Utils::FuncFromSigOffset<uintptr_t**>(levelVF_sigOffset, 3);
+			Level::SetVFtables(LevelVT);
+			logF_Debug("[Level::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", LevelVT, levelVF_sigOffset, memcode);
+
+			MH_CreateHookEx((LPVOID)Level::GetVFtableFun(2), &Hook::level_startLeaveGame, &Level::startLeaveGameCall);
+			MH_CreateHookEx((LPVOID)Level::GetVFtableFun(98), &Hook::Level_Tick, &Level::tickCall);
+
+		}
+	}
 }
 
 auto Hook::exit() -> void {
@@ -785,27 +716,7 @@ auto Hook::Is_ShowCoordinates_Tick(void* _this)->bool
 }
 
 
-// 实际很多变量都调用这个函数，速度 血量，饥饿，附加血量等
-//auto Hook::GetHungerValAddress_Tick(void* _this, const char* a1, void* a2)->void*
-//{
-//	auto ret = getHungerValAddress_Tickcall(_this, a1, a2);	// +0x84 = 132
-//	/*auto hunger = reinterpret_cast<float*>(reinterpret_cast<INT64>(ret) + 0x84);
-//	//速度
-//	if (*hunger == 0.1299999952f) {
-//		*hunger = 0.133f;
-//	}*/
-//	return ret;
-//}
-
-
-//仅仅在本地房间时有效 _this 应该是serverplayer
-//auto Hook::NoFallDamage_Tick(Player* _this, float* a1)->void*
-//{
-//	//this + 1D4
-//	//*reinterpret_cast<float*>(reinterpret_cast<INT64>(_this) + 0x1D4) = 0.0f;
-//	return noFallDamage_Tickcall(_this, a1);
-//}
-
+// 定位这个函数的特征码 48 89 5C 24 ? 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 48 8B D9 48 8B 01 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48
 auto Hook::Level_Tick(Level* level)->void*
 {
 	Game::GetModuleManager()->onLevelTick(level);
@@ -935,7 +846,7 @@ auto Hook::RenderDetour(void* _this, MinecraftUIRenderContext* ctx)->void {
 	frame++;
 }
 */
-
+/*
 auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleArea const& a2, TextHolder* a3, UIColor const& a4, float a5, float a6, TextMeasureData* a7, CaretMeasureData* a8)->void {
 	if (Game::mcfont != a1) {
 		if (Game::mcfont == nullptr) {
@@ -944,6 +855,7 @@ auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleA
 	}
 	reinterpret_cast<MUICDrawText>(MinecraftUIRenderContext::drawtextCall)(_this, a1, a2, a3, a4, a5, a6, a7, a8);
 }
+*/
 
 
 auto Hook::sendMessage(void* a1, TextHolder* a2)->__int64 {
@@ -968,6 +880,7 @@ auto Hook::getLocalPlayerViewPerspective(void* thi)->int {
 	return _sourceViewPerspective;
 }
 
+//此特征码可直接定位该函数 "40 53 48 83 EC ? 48 8B D9 48 81 C1 ? ? ? ? E8 ? ? ? ? 48 8D 8B ? ? ? ? E8 ? ? ? ? 48 8D 8B ? ? ? ?  E8 ? ? ? ? 48 8B ? 48"
 auto Hook::level_startLeaveGame(Level* level) -> void
 {
 	Game::localplayer = nullptr;
@@ -1011,23 +924,30 @@ auto Hook::GameMode_tick(GameMode* _this)->void* {
 
 auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 // 本地房间攻击的时候 会调用两次, 先调用的是本地玩家,后调用的可能是服务玩家，在他人房间只会调用一次 就是本地玩家
-	if (_this->GetLocalPlayer()->isLocalPlayer()) {
-		//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f, isplayer=%i, islocalplayer=%i", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y,actor->isPlayer(),actor->isLocalPlayer());
-		//_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());	//必须是服务玩家才能有效， 否则可能崩溃
-		//_this->useItem(_this->GetLocalPlayer()->getSelectedItem());
-	}
-	
-	if (Game::GetModuleManager()->GetModule<Debug*>()->isEnabled()) {
-		logF_Debug("LocalPlayer: %llX, CI: %llX", (uintptr_t)_this->GetLocalPlayer(), (uintptr_t)_this->GetLocalPlayer()->getClientInstance());
+	static auto debug = Game::GetModuleManager()->GetModule<Debug*>();
+	if (debug) {
+		if (_this->GetLocalPlayer()->isLocalPlayer()) {
+			//logF("attack Actor ptr= %llX, ActorType = %i, sizex = %f, sizey = %f, isplayer=%i, islocalplayer=%i", actor, actor->getEntityTypeId(),actor->getHitBox().x, actor->getHitBox().y,actor->isPlayer(),actor->isLocalPlayer());
+			//_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());	//必须是服务玩家才能有效， 否则可能崩溃
+			//_this->useItem(_this->GetLocalPlayer()->getSelectedItem());
+		}
 
-
-		// TODO: use这个函数坏了, 没修, 后面再考虑
-		if (!_this->GetLocalPlayer()->isClientSide()) {
-			//	_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());
-			_this->useItem(_this->GetLocalPlayer()->getSelectedItem());
-			// 更新背包
+		if (debug->isEnabled()) {
+			if (debug->GameMode_attack_Print) {
+				logF_Debug("LocalPlayer: %llX, CI: %llX", (uintptr_t)_this->GetLocalPlayer(), (uintptr_t)_this->GetLocalPlayer()->getClientInstance());
+			}
+			
+			if (debug->GameMode_attack_UseItem) {
+				// TODO: use这个函数坏了, 没修, 后面再考虑
+				if (!_this->GetLocalPlayer()->isClientSide()) {
+					//	_this->GetLocalPlayer()->getSelectedItem()->use(_this->GetLocalPlayer());
+					_this->useItem(_this->GetLocalPlayer()->getSelectedItem());
+					// 更新背包
+				}
+			}
 		}
 	}
+
 
 	if (!Game::GetModuleManager()->onAttack(actor)) {
 		return false;

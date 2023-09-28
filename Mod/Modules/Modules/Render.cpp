@@ -10,11 +10,28 @@
 #include "../../imgui/toggle/imgui_toggle_presets.h"
 
 ImGuiToggleConfig toggerConfig;
-
+bool isCursorVisible = true;
+bool cursorSwitch = false;
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
 	toggerConfig = ImGuiTogglePresets::RectangleStyle();
+	AddBoolUIValue("是否在开关时控制鼠标指针", &cursorSwitch);
+}
+
+auto Render::onEnable() -> void
+{
+	isCursorVisible = Utils::isCursorVisible();
+	if (!isCursorVisible) {
+		Game::Cinstance->releaseMouse();
+	}
+}
+
+auto Render::onDisable() -> void
+{
+	if (!isCursorVisible && Utils::isCursorVisible()) {	// 如果在打开时 是隐藏的
+		Game::Cinstance->grabMouse();
+	}
 }
 
 auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
@@ -179,8 +196,10 @@ auto Render::onImGUIRender()->void {
 
 auto Render::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+	cursorSwitch = config::readDataFromJson<bool>(data, "cursorSwitch", true);
 }
 
 auto Render::onsaveConfigFile(json& data)->void {
 	data["enable"] = isEnabled();
+	data["cursorSwitch"] = cursorSwitch;
 }

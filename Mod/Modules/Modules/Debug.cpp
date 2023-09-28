@@ -50,6 +50,8 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	toggerConfig_Debug = ImGuiTogglePresets::RectangleStyle();
 	
 	AddBoolUIValue("D3D渲染同步此UI", &SynchronousD3D12Render_ImGui);
+	AddBoolUIValue("GameModeAttack中打印信息", &GameMode_attack_Print);
+	AddBoolUIValue("GameModeAttack时使用物品", &GameMode_attack_UseItem);
 	AddBoolUIValue("显示Demo窗口", &ShowDemoForm);
 	AddBoolUIValue("显示字体选择", &ShowFontSelectForm);
 	AddBoolUIValue("尝试方框透视", &renderW2SDebugBox);
@@ -64,13 +66,34 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		if (lp != nullptr) {
 			//logF("玩家 %s 飞", lp->getStatusFlag(ActorFlags::canFly) ? "可以" : "不可以");
 			//logF("NameTag: %s", lp->getFormattedNameTag().getText());
-			Block* block = lp->getMovementProxy()->getDimensionBlockSource()->getBlock(0, -61, 0);
-			logF("Block: %llX", block);
-			logF("BlockLegacy: %llX", block->getBlockLegacy());
+			//Block* block = lp->getMovementProxy()->getDimensionBlockSource()->getBlock(0, -61, 0);
+			
+			logF("UniqueID: %d", lp->getOrCreateUniqueID());
+		}
+		});
 
-
-			logF("BlockLegacy::playerDestroy for Block: %llX", Utils::GetVTFPtr(*(uintptr_t*)block, 186));
-			logF("BlockLegacy::playerDestroy for BlockLegacy: %llX", Utils::GetVTFPtr(*(uintptr_t*)block->getBlockLegacy(), 184));
+	AddButtonUIEvent("生存", false, [&]() {
+		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+		if (lp) {
+			lp->setPlayerGameType(0);
+		}
+		});
+	AddButtonUIEvent("创造", true, [&]() {
+		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+		if (lp) {
+			lp->setPlayerGameType(1);
+		}
+		});
+	AddButtonUIEvent("冒险", true, [&]() {
+		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+		if (lp) {
+			lp->setPlayerGameType(2);
+		}
+		});
+	AddButtonUIEvent("旁观", true, [&]() {
+		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+		if (lp) {
+			lp->setPlayerGameType(6);
 		}
 		});
 }
@@ -93,7 +116,7 @@ void RenderDebugBox() {
 		vec2_t fov = Game::Cinstance->getFov();
 		refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
 
-		vec3_t blockpos = { 5.f,-60.f,-1.f };
+		vec3_t blockpos = { 0.f,-61.f,0.f };
 
 		if (refdef->OWorldToScreen(lpPos, { blockpos.x + 0.5f, blockpos.y + 1.f, blockpos.z + 0.5f }, out, fov, { rectwidth,rectheight })) {
 			auto drawList = ImGui::GetForegroundDrawList();
@@ -317,7 +340,7 @@ auto Debug::onInternalImGUIRender()->void {
 
 	if (ImGui::Button("PrintFov")) {
 		if(Game::Cinstance)
-			logF(std::format("X: {},Y: {}", *(float*)((uintptr_t)Game::Cinstance + 0x6D0), *(float*)((uintptr_t)Game::Cinstance + 0x6E4)).c_str());
+			logF(std::format("X: {},Y: {}", Game::Cinstance->getFov().x, Game::Cinstance->getFov().y).c_str());
 	}
 }
 

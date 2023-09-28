@@ -11,7 +11,7 @@
 //From	https://github.com/NRGJobro/Horion-Open-SRC/blob/master/SDK/CClientInstance.h
 class ClientInstance {
 public:
-	
+/*
 private:
 	virtual __int64 destructorClientInstance();
 	// Duplicate destructor
@@ -565,7 +565,7 @@ private:
 	virtual __int64 onGameSessionReset(void);
 	virtual __int64 onLevelExit(void);
 	virtual __int64 updateScreens(void);
-
+*/
 public:
 
 	// 这里的 0x330 有点特殊 Wiki 待补充
@@ -574,6 +574,8 @@ public:
 	}
 
 	class LocalPlayer* getCILocalPlayer() {
+		//这个特征码用于定位虚表偏移+3->int
+		//48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48 8B F8 48 85 ? 0F 84 ? ? ? ? 8B
 		return Utils::CallVFunc<27, class LocalPlayer*>(this);
 	}
 
@@ -587,13 +589,13 @@ public:
 		//48 8B 80 ? ? ? ? FF 15 ? ? ? ? 4C 8B C8 48 8D 8E
 		static int offset = 0;
 		if (!offset) {
-			auto memcodePos = FindSignature("48 8B 80 ? ? ? ? FF 15 ? ? ? ? 4C 8B C8 48 8D 8E");
+			auto memcodePos = FindSignature("48 8B 80 ? ? ? ? FF 15 ? ? ? ? 4C 8B C8 48 8B 8F");
 			if (memcodePos) {
-				offset = *reinterpret_cast<int*>(memcodePos + 3);
+				offset = *reinterpret_cast<int*>(memcodePos + 3);//BC0
 			}
 			else {
 				logF("[%s::%s] 特征码查找失败", "ClientInstance", "getFovSubStructure");
-				throw "ClientInstance::getFovSubStructure 特征码查找失败";
+				throw "ClientInstance::getFovSubStructure 特征码查找失败1";
 			}
 		}
 		using Fn = void*(__thiscall*)(ClientInstance*);
@@ -614,13 +616,13 @@ public:
 		//4C 8D 80 ? ? ? ? 49 8B D0 48 8D 85 ? ? ? ? 48 2B D0 0F 1F
 		static int offset = 0;
 		if (!offset) {
-			auto memcodePos = FindSignature("4C 8D 80 ? ? ? ? 49 8B D0 48 8D 85 ? ? ? ? 48 2B D0 0F 1F");
+			auto memcodePos = FindSignature("89 88 ? ? ? ? 41 8B 40 04 41 89 81 ? ? ? ? 41 8B 40 08 41");	//1.20.31
 			if (memcodePos) {
-				offset = *reinterpret_cast<int*>(memcodePos + 3);
+				offset = *reinterpret_cast<int*>(memcodePos + 2);
 			}
 			else {
-				logF("[%s::%s] 特征码查找失败", "ClientInstance", "getFovSubStructure");
-				throw "ClientInstance::getFovSubStructure 特征码查找失败";
+				logF("[%s::%s] 特征码查找失败", "ClientInstance", "getFov");
+				throw "ClientInstance::getFovSubStructure 特征码查找失败2";
 			}
 		}
 		uintptr_t fovstruct = (uintptr_t)getFovSubStructure();
@@ -647,20 +649,23 @@ public:
 	}
 
 	auto setSuspendInput(bool v) -> void* {
-		return Utils::CallVFunc<304, void*, bool>(this, v);
+		return Utils::CallVFunc<320, void*, bool>(this, v);
 	}
 
 	auto setDisableInput(bool v) -> void* {
-		return Utils::CallVFunc<305, void*,bool>(this, v);
+		return Utils::CallVFunc<321, void*,bool>(this, v);
 	}
 
 	auto grabMouse(void) -> void {
-		Utils::CallVFunc<306, void>(this);
+		// 特征码定位虚表偏移 +3 int
+		//48 8B 80 ? ? ? ? FF 15 ? ? ? ? 90 48 85 ? 74 ? 48 8B ? E8 ? ? ? ? 48 8B 8F
+		Utils::CallVFunc<322, void>(this);	/*1.20.31*/
 	};
 	auto releaseMouse(void) -> void {
-		Utils::CallVFunc<307, void>(this);
+		//48 8B 80 ? ? ? ? 48 8B CE FF 15 ? ? ? ? 84
+		Utils::CallVFunc<323, void>(this);	/*1.20.31*/
 	};
 	auto refocusMouse(void) -> void {
-		Utils::CallVFunc<308, void>(this);
+		Utils::CallVFunc<324, void>(this);	/*1.20.31*/
 	};
 };

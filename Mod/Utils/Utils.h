@@ -627,19 +627,14 @@ public:
 	typedef int ImGuiTreeNodeFlags;
 	static bool HelpCollapsingHeader(const char* label, const char* helpText, ImGuiTreeNodeFlags flag = 0);
 
-	uintptr_t getFunFromSigAndCall(const char* funSig, const char* callSig, int callSigOffset = 1) {
+	// 从函数特征码查找该函数，失败则从调用则处查找该函数
+	static uintptr_t getFunFromSigAndCall(const char* funSig, const char* callSig, int callSigOffset = 1) {
 		auto sig = FindSignature(funSig);
-		if (sig == 0x00) {
-			sig = FindSignature(callSig);
-			if (sig == 0x00) {
-				return 0;
-			}
-			else {
-				Utils::FuncFromSigOffset<uintptr_t*>(sig, callSigOffset);
-			}
-		}
-		else {
+		if(sig)
 			return sig;
-		}
+		sig = FindSignature(callSig);
+		if(sig)
+			return Utils::FuncFromSigOffset(sig, callSigOffset);
+		return 0;
 	}
 };

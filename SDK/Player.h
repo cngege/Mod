@@ -3,6 +3,8 @@
 #include "Actor.h"
 #include "Mob.h"
 
+class TextHolder;
+
 class Player : public Mob
 {
 protected:
@@ -39,9 +41,12 @@ public:
 
 	auto getSpeed() -> float;																/*254*/
 	auto setSpeed(float s) -> void;															/*255*/
+	auto setPlayerGameType(int GameType) -> void;											/*368*/
+	auto getXuid() ->TextHolder;														/*396*/
 
 	//Hook虚表函数
 	auto getShadowRadius()->float;															/*79*/
 	auto startSwimming()->void;																/*202*/
+	
 	auto tickWorld(class Tick*) -> void;													/*371*/
 };

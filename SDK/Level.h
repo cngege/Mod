@@ -4,6 +4,15 @@
 
 //LevelForILevel 已确定
 class Level {
+protected:
+	static uintptr_t** vfTables;
+public:
+	template <typename TRet, typename... TArgs>
+	static auto GetVFtableFun(int) -> auto*;
+	static auto GetVFtableFun(int) -> uintptr_t*;
+	static auto GetVFtables() -> uintptr_t**;
+	static auto SetVFtables(uintptr_t** vTables) -> void;
+
 public:
 	static uintptr_t* startLeaveGameCall;
 	//static uintptr_t* forEachPlayerCall;
