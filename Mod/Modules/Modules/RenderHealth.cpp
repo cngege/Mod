@@ -1,6 +1,7 @@
 ﻿#include "RenderHealth.h"
 #include "Actor.h"
 #include "MinecraftUIRenderContext.h"
+#include "mcstring.h"
 #include "imgui.h"
 #include <string.h>
 
@@ -13,13 +14,17 @@ RenderHealth::RenderHealth() : Module(VK_F10, "RenderHealth", "显示被攻击�
 auto RenderHealth::onAttackAfter(class GameMode* gm,Actor* actor)->void {
 	if (isEnabled()) {
 		currentPlayerHealth = (int)actor->getHealth();
-		std::string sname = std::string(actor->getNameTag()->getText());
+		std::string sname = std::string(actor->getNameTag()->c_str());
 		auto find = sname.find("\n");
 		if (find == -1) {
-			currentPlayerName = std::string(actor->getNameTag()->getText());
+			currentPlayerName = std::string(actor->getNameTag()->c_str());
 		}
 		else {
 			currentPlayerName = sname.substr(0, find);
+		}
+
+		if (currentPlayerName.empty()) {
+			currentPlayerTypeName = actor->getTypeName()->c_str();
 		}
 
 		tick = 400.f;
@@ -51,15 +56,20 @@ auto RenderHealth::onImGUIRender() -> void
 
 			drawList->AddRectFilled(LTop, { LTop.x + bgWidth,LTop.y + bgHeight }, ImColor(0, 0, 0, 100));
 			
-			
-			std::string drawName("Name: ");
-			drawName += currentPlayerName;
+			std::string drawName;
+			if (currentPlayerName.empty()) {
+				drawName += "type: ";
+				drawName += currentPlayerTypeName;
+			}
+			else {
+				drawName += "Name: ";
+				drawName += currentPlayerName;
+			}
+
 			std::string drawHealth("Health: ");
 			drawHealth += std::to_string(currentPlayerHealth);
 			
-			if (!currentPlayerName.empty()) {
-				drawList->AddText({ LTop.x + 5.f, LTop.y + 5.f }, ImColor(255, 255, 255, 255), drawName.c_str());
-			}
+			drawList->AddText({ LTop.x + 5.f, LTop.y + 5.f }, ImColor(255, 255, 255, 255), drawName.c_str());
 			drawList->AddText({ LTop.x + 5.f, LTop.y + 20.f }, ImColor(255, 255, 255, 255), drawHealth.c_str());
 
 		}

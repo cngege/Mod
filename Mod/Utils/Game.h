@@ -6,6 +6,7 @@ class Game
 {
 public:
 	static bool ModState;
+	static class ServerPlayer* localServerPlayer;
 	static class LocalPlayer* localplayer;
 	static class BitmapFont* mcfont;
 	static class ClientInstance* Cinstance;
@@ -24,5 +25,7 @@ public:
 	static auto IsKeyDown(int key)->bool;
 	static auto IsKeyPressed(int key)->bool;
 	static auto IsMouseDown(int key) -> bool;
+
+	static auto GetLocalServerPlayer() -> class ServerPlayer*;
 
 };

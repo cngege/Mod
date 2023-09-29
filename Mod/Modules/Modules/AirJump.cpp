@@ -1,8 +1,10 @@
 ﻿#include "AirJump.h"
 #include "LocalPlayer.h"
+#include "ServerPlayer.h"
 #include "GameMode.h"
 #include "ActorCollision.h"
 
+#include "Game.h"
 #include "Logger.h"
 
 AirJump::AirJump() : Module(0, "AirJump", "空气跳") {
@@ -25,6 +27,10 @@ auto AirJump::onLocalPlayerTick(LocalPlayer* lp)->void
 	if (isEnabled()) {
 		//lp->getMovementProxy()->setOnGround(true);
 		lp->getActorCollision()->setOnGround(true);
+		auto lsp = Game::GetLocalServerPlayer();
+		if (lsp) {
+			lsp->getActorCollision()->setOnGround(true);
+		}
 	}
 }
 

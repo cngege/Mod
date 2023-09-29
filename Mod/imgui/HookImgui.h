@@ -381,9 +381,7 @@ HRESULT __fastcall hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInter
 				d3d12DescriptorHeapImGuiRender,
 				d3d12DescriptorHeapImGuiRender->GetCPUDescriptorHandleForHeapStart(),
 				d3d12DescriptorHeapImGuiRender->GetGPUDescriptorHandleForHeapStart());
-			//ImGui_ImplDX12_CreateDeviceObjects();
-			//ImGui::GetIO().ImeWindowHandle = window;
-
+			
 			ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 			if (!initImGuiFont) {

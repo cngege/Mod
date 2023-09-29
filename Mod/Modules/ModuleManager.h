@@ -2,6 +2,7 @@
 #include <vector>
 #include "Module.h"
 #include <functional>
+#include "mcstring.h"
 
 class ModuleManager {
 private:
@@ -38,7 +39,7 @@ public:
 	auto onstartLeaveGame(class Level*) -> void;
 	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
 	auto onImGUIRender()->void;
-	auto onSendMessage(class TextHolder*)->bool;
+	auto onSendMessage(std::mcstring*)->bool;
 	auto onloadConfigFile(json& data)->void;
 	auto onsaveConfigFile(json& data)->void;
 };

@@ -12,6 +12,7 @@ private:
 	bool show = false;
 
 	std::string currentPlayerName;
+	std::string currentPlayerTypeName;
 	int currentPlayerHealth = 0;
 
 public:

@@ -75,9 +75,9 @@ auto Player::setPlayerGameType(int GameType) -> void
 	GetVFtableFun<void, Player*, int>(368)(this, GameType);
 }
 
-auto Player::getXuid() ->TextHolder
+auto Player::getXuid() ->std::mcstring
 {
-	TextHolder* ret = GetVFtableFun<TextHolder*, Player*>(396)(this);
+	std::mcstring* ret = GetVFtableFun<std::mcstring*, Player*>(396)(this);
 	return *ret;
 }
 

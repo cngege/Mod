@@ -15,7 +15,6 @@
 #include "LocalPlayer.h"
 #include "ServerPlayer.h"
 #include "RemotePlayer.h"
-#include "TextHolder.h"
 #include "GameMode.h"
 #include "ItemStack.h"
 
@@ -65,10 +64,10 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 		if (lp != nullptr) {
 			//logF("玩家 %s 飞", lp->getStatusFlag(ActorFlags::canFly) ? "可以" : "不可以");
-			//logF("NameTag: %s", lp->getFormattedNameTag().getText());
+			logF("NameTag: %s", lp->getFormattedNameTag()->c_str());
 			//Block* block = lp->getMovementProxy()->getDimensionBlockSource()->getBlock(0, -61, 0);
 			
-			logF("UniqueID: %d", lp->getOrCreateUniqueID());
+			logF("TypeName: %s", lp->getTypeName()->c_str());
 		}
 		});
 

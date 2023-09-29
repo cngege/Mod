@@ -6,15 +6,17 @@
 #include "Actor.h"
 #include "AttributeInstance.h"
 #include "GameMode.h"
+#include "ClientInstance.h"
+#include "ServerPlayer.h"
 #include "LocalPlayer.h"
 #include "Item.h"
 #include "ItemStack.h"
 
 #include "../Modules/ModuleManager.h"
 
-
 bool			Game::ModState = false;
 ModuleManager*  Game::modmag = nullptr;
+ServerPlayer*	Game::localServerPlayer = nullptr;
 LocalPlayer*	Game::localplayer = nullptr;
 BitmapFont*		Game::mcfont = nullptr;
 ClientInstance* Game::Cinstance = nullptr;
@@ -205,4 +207,12 @@ auto Game::IsKeyPressed(int key)->bool {
 auto Game::IsMouseDown(int key) -> bool
 {
 	return MouseKeyDown[key];
+}
+
+auto Game::GetLocalServerPlayer() -> class ServerPlayer*
+{
+	if (Cinstance && Cinstance->getCILocalPlayer()) {
+		return localServerPlayer;
+	}
+	return nullptr;
 }

@@ -3,7 +3,6 @@
 #include "Actor.h"
 #include "Mob.h"
 
-class TextHolder;
 
 class Player : public Mob
 {
@@ -36,13 +35,13 @@ public:
 	//虚表函数
 	//44
 	auto teleportTo(vec3_t*, bool, unsigned int, unsigned int)->void;
-	auto displayChatMessage(class TextHolder*, class TextHolder*)->__int64;
+	auto displayChatMessage(std::mcstring*, std::mcstring*)->__int64;
 	auto getSelectedItem() -> class ItemStack*;												/*164*/
 
 	auto getSpeed() -> float;																/*254*/
 	auto setSpeed(float s) -> void;															/*255*/
 	auto setPlayerGameType(int GameType) -> void;											/*368*/
-	auto getXuid() ->TextHolder;														/*396*/
+	auto getXuid() -> std::mcstring;														/*396*/
 
 	//Hook虚表函数
 	auto getShadowRadius()->float;															/*79*/

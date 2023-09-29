@@ -1,7 +1,6 @@
 ﻿#include "Actor.h"
 #include "LocalPlayer.h"
 #include "ServerPlayer.h"
-#include "TextHolder.h"
 #include "AttributeInstance.h"
 #include "ActorCollision.h"
 #include "AABB.h"
@@ -134,6 +133,20 @@ auto Actor::getDimensionBlockSource() -> class BlockSource*
 	return Utils::FuncFromSigOffset<getDimensionBlockSourceFn>(offset, 1)(this);
 }
 
+// 特征码的获取：
+auto Actor::getTypeName() -> std::mcstring*
+{
+	//sub_142E82E70
+	using Fn = void*(__fastcall*)(Actor*);
+	//uintptr_t FnPtr = Utils::getBase() + 0x2E82E70;		//Actor::getActorIdentifier
+	//return (std::mcstring*)(((Fn)FnPtr)(this) + 17);			//+17(*8) => ActorDefinitionIdentifier::getCanonicalName
+	static auto call = FindSignature("E8 ? ? ? ? 48 05 ? ? ? ? 48 83 78");		// 这个特征码要获取两个东西,一个是+1函数call, 另一个是+7的偏移
+	if (!call) throw "Actor::getTypeName() 特征码失效";
+	int offset = *reinterpret_cast<int*>(call + 7);
+	uintptr_t ActorDefinitionIdentifier = (uintptr_t)((Fn)Utils::FuncFromSigOffset(call, 1))(this);
+	return (std::mcstring*)(ActorDefinitionIdentifier + offset);
+}
+
 //auto Actor::onMoveBBs(vec3_t p)->void {
 //
 //}
@@ -263,8 +276,8 @@ auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->
 	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(38)(this, pos, a1, a2, a3);	//更新自 1.20.30
 }
 
-auto Actor::getNameTag()->TextHolder* {
-	return GetVFtableFun<TextHolder*, Actor*>(56)(this);			//更新自 1.20.30
+auto Actor::getNameTag()->std::mcstring* {
+	return GetVFtableFun<std::mcstring*, Actor*>(56)(this);			//更新自 1.20.30
 }
 
 // 第19号虚表调用的都是 Player::isPlayer 所以一定返回true > 20 35 62ok 71 77 81 82 84 86ok
@@ -290,11 +303,13 @@ _QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
 }
 */
 //这个函数暂存，因为会崩溃
-auto Actor::getFormattedNameTag()->TextHolder {
+auto Actor::getFormattedNameTag()->std::mcstring* {
 	//void* ret = malloc(8 * 4);
-	TextHolder ret;
-	GetVFtableFun<TextHolder, Actor*, TextHolder>(58)(this,ret);//更新自 1.20.30
-	return ret;
+	//TextHolder ret;
+	//GetVFtableFun<TextHolder, Actor*, TextHolder>(58)(this,ret);//更新自 1.20.30
+	//return ret;
+	//return GetVFtableFun<std::mcstring*, Actor*>(58)(this);
+	return reinterpret_cast<std::mcstring * (__fastcall*)(Actor*)>((*(uintptr_t**)this)[58])(this);
 }
 
 //新版本中虚表不存在该函数

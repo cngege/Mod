@@ -300,12 +300,12 @@
     <ClInclude Include="..\SDK\ItemStackBase.h" />
     <ClInclude Include="..\SDK\Level.h" />
     <ClInclude Include="..\SDK\LocalPlayer.h" />
+    <ClInclude Include="..\SDK\mcstring.h" />
     <ClInclude Include="..\SDK\MinecraftUIRenderContext.h" />
     <ClInclude Include="..\SDK\Mob.h" />
     <ClInclude Include="..\SDK\Player.h" />
     <ClInclude Include="..\SDK\RemotePlayer.h" />
     <ClInclude Include="..\SDK\ServerPlayer.h" />
-    <ClInclude Include="..\SDK\TextHolder.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Hook\Hook.h" />
     <ClInclude Include="Hook\HookFunction.h" />

@@ -4,6 +4,7 @@
 #include "../Utils/Utils.h"
 #include "../Utils/config.h"
 #include "HMath.h"
+#include "mcstring.h"
 
 enum KeyMode {
 	Trigger = 0,						//按下 触发 onTrigger();
@@ -111,7 +112,7 @@ public:
 	virtual void onRenderDetour(class MinecraftUIRenderContext*);
 	virtual void onImGUIRender();
 	virtual void onInternalImGUIRender();
-	virtual bool onSendMessage(class TextHolder*);
+	virtual bool onSendMessage(std::mcstring*);
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual void onloadConfigFile(json& data);			// 要求模块加载配置文件的时候将调用此方法 , 此时模块将data中的数据读取出来，应用到模块中

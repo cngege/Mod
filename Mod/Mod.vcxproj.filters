@@ -114,9 +114,6 @@
     <ClInclude Include="Modules\Modules\Render.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\SDK\TextHolder.h">
-      <Filter>SDK\头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\SDK\ClientInstance.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
@@ -269,6 +266,9 @@
     </ClInclude>
     <ClInclude Include="Hook\HookFunction.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\mcstring.h">
+      <Filter>SDK\头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

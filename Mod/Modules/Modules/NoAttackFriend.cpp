@@ -1,7 +1,7 @@
 ﻿#include "NoAttackFriend.h"
 #include "Actor.h"
 #include "LocalPlayer.h"
-#include "TextHolder.h"
+#include "ClientInstance.h"
 #include "../../Utils/Game.h"
 #include "../../Utils/Utils.h"
 
@@ -11,12 +11,16 @@ NoAttackFriend::NoAttackFriend() : Module(VK_F4, "NoAttackFriend", "根据玩家
 }
 
 auto NoAttackFriend::IsFriend(Player* p)->bool {
-	if (Game::localplayer == nullptr) {
+	if (!Game::Cinstance) {
 		return false;
 	}
-	
-	auto name = std::string(p->getNameTag()->getText());
-	auto myname = std::string(Game::localplayer->getNameTag()->getText());	//暂时还不能百分百准确获取自己的名字
+	auto lp = Game::Cinstance->getCILocalPlayer();
+	if (!lp) {
+		return false;
+	}
+
+	auto name = std::string(p->getNameTag()->c_str());
+	auto myname = std::string(lp->getNameTag()->c_str());
 	
 	auto name_first = name.substr(0, 2);
 	auto myname_first = myname.substr(0, 2);

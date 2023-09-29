@@ -7,7 +7,6 @@
 #include "ClientInstance.h"
 #include "RemotePlayer.h"
 #include "Level.h"
-#include "TextHolder.h"
 
 BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显示屏上看到玩家和其他生物位置信息") {
 	setcontrolkeysbind({ VK_SHIFT });
@@ -156,7 +155,7 @@ auto BioRadar::onRemotePlayerTick(RemotePlayer* remotePlayer)->void
 		PlayerMapInfo pmi;
 		pmi.x = x; pmi.z = z;
 
-		auto name = std::string(remotePlayer->getNameTag()->getText()).substr(0,3);  //章节号占两字节
+		auto name = remotePlayer->getNameTag()->to_string().substr(0, 3);  //章节号占两字节
 		pmi.color = GetColorbyChar(name);
 		pmi.top = xdpos.y > 0;
 		//pmi.updatetick = 0;

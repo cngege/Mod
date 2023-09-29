@@ -301,7 +301,7 @@ auto ModuleManager::onImGUIRender()->void {
 	}
 }
 
-auto ModuleManager::onSendMessage(TextHolder* TH)->bool {
+auto ModuleManager::onSendMessage(std::mcstring* TH)->bool {
 	bool RunOriginalFun = true;
 	if (!IsInitialized())
 		return RunOriginalFun;

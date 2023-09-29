@@ -3,7 +3,6 @@
 #include "..\Mod\Utils\HMath.h"
 #include "..\Mod\Utils\Game.h"
 #include "ClientInstance.h"
-#include "TextHolder.h"
 
 
 /* 如何虚函数出错,就是去ida跑安卓的MC去对新的虚函数 */
@@ -51,7 +50,7 @@ public:
 	};
 };
 
-using MUICDrawText = void(__fastcall*)(class MinecraftUIRenderContext*, BitmapFont*, RectangleArea const&, TextHolder* , UIColor const&, float, float, TextMeasureData*, CaretMeasureData*);
+using MUICDrawText = void(__fastcall*)(class MinecraftUIRenderContext*, BitmapFont*, RectangleArea const&, std::mcstring* , UIColor const&, float, float, TextMeasureData*, CaretMeasureData*);
 //MUICDrawText drawtextCall;
 
 class MinecraftUIRenderContext {
@@ -107,7 +106,7 @@ public:
 		{
 			return;
 		}
-		TextHolder text(*textStr);
+		std::mcstring text(*textStr);
 		RectangleArea rect(pos.x, pos.x + 1000, pos.y - 1, pos.y + 1000);
 
 		TextMeasureData textMeasure{};

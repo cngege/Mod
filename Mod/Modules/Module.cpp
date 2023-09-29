@@ -209,7 +209,7 @@ auto Module::onImGUIRender()->void {}
 
 auto Module::onInternalImGUIRender()->void {}
 
-auto Module::onSendMessage(TextHolder*)->bool {
+auto Module::onSendMessage(std::mcstring*)->bool {
 	return true;
 }
 

@@ -90,7 +90,7 @@ uintptr_t mouseupdate;
 //RenderDetour renderDetourcall;
 //uintptr_t renderDetour;
 
-using SendChatMessage = uint8_t(__fastcall*)(void*, TextHolder*);
+using SendChatMessage = uint8_t(__fastcall*)(void*, std::mcstring*);
 SendChatMessage sendChatMessagecall;
 uintptr_t sendChatMessage;
 
@@ -537,6 +537,7 @@ auto Hook::init() -> void
 
 
 			//虚表Hook
+			// 为什么不调用
 			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(325), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall); // （记得同步修改RemotePlayer）检查版本 1.20
 
 		}
@@ -858,7 +859,7 @@ auto Hook::Draw_Text(MinecraftUIRenderContext* _this, BitmapFont* a1, RectangleA
 */
 
 
-auto Hook::sendMessage(void* a1, TextHolder* a2)->__int64 {
+auto Hook::sendMessage(void* a1, std::mcstring* a2)->__int64 {
 	//if (strcmp(a2->getText(), "1") == 0)
 	auto ret = Game::GetModuleManager()->onSendMessage(a2);
 	if (!ret) {
@@ -977,6 +978,17 @@ auto Hook::LocalPlayer_TickWorld(LocalPlayer* _this, void* tick) -> void*
 auto Hook::ServerPlayer_TickWorld(ServerPlayer* _this, void* tick)->void* {
 	Game::GetModuleManager()->onServerPlayerTick(_this);
 	//_this->onAllPlayerTick();				//这里应该是 所有serverplayer tick
+	if (!Game::Cinstance) {
+		Game::localServerPlayer = nullptr;
+	}
+	auto lp = Game::Cinstance->getCILocalPlayer();
+	if (!lp) {
+		Game::localServerPlayer = nullptr;
+	}
+	if (*_this->getOrCreateUniqueID() == *lp->getOrCreateUniqueID()) {
+		Game::localServerPlayer = _this;
+	}
+
 	return _this->tickWorld(tick);
 }
 
