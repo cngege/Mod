@@ -142,7 +142,9 @@ HRESULT __fastcall hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInter
 			if (_access(font_JNMYT.c_str(), 0 /*F_OK*/) != -1) {
 				io.Fonts->AddFontFromFileTTF(font_JNMYT.c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			}
-			io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+			if (_access("C:\\Windows\\Fonts\\msyh.ttc", 0) != -1) {
+				io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 16.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+			}
 			std::wstring mcfolderPath = Utils::getMCFolderPath();
 			io.Fonts->AddFontFromFileTTF((Utils::WStringToString(mcfolderPath) + std::string("\\data\\fonts\\Mojangles.ttf")).c_str(), 15.f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 			// 这里注意值如果不是常亮就要当心其被释放掉
