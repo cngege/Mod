@@ -7,7 +7,7 @@ public:
 	~TPPoint();
 
 private:
-	vec3_t* point;
+	std::optional<vec3_t> point;
 
 public:
 	virtual auto onTrigger()->void override;

@@ -2,17 +2,16 @@
 #include "../../Utils/Game.h"
 #include "LocalPlayer.h"
 #include "ClientInstance.h"
-#include "TextHolder.h"
 
 #include "imgui.h"
 
 TPPoint::TPPoint() : Module(VK_F3, "TPPoint", "传送坐标点") {
 	SetKeyMode(KeyMode::Trigger);
-	point = new vec3_t();
+	//point = new vec3_t();
 }
 
 TPPoint::~TPPoint() {
-	delete point;
+	//delete point;
 }
 
 
@@ -30,14 +29,15 @@ auto TPPoint::onTrigger()->void {
 
 	//记录传送点
 	if (Game::IsKeyDown(VK_CONTROL)) {
-		*point = *lp->getPosition();
+		point = *lp->getPosition();
 		return;
 	}
 
 	//读取并传送过去
-	if (Game::IsKeyDown(VK_SHIFT) && point && (point->x || point->y || point->z)) {
+	if (Game::IsKeyDown(VK_SHIFT) && point.has_value()) {
 		//Game::localplayer->setPos(point);
-		lp->teleportTo(point,true,0,1);
+		vec3_t tpPos = *point;
+		lp->teleportTo(&tpPos,true,0,1);
 	}
 }
 
@@ -53,7 +53,12 @@ auto TPPoint::getBindKeyName()->std::string {
 
 auto TPPoint::onInternalImGUIRender() -> void
 {
-	ImGui::Text("传送点: x:%.3f, y:%.3f, z:%.3f", point->x, point->y, point->z);
+	if (point.has_value()) {
+		ImGui::Text("传送点: x:%.3f, y:%.3f, z:%.3f", point->x, point->y, point->z);
+	}
+	else {
+		ImGui::Text("未记录传送点");
+	}
 }
 
 auto TPPoint::onloadConfigFile(json& data)->void {

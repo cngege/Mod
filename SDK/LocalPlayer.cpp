@@ -1,6 +1,5 @@
 ﻿#include "LocalPlayer.h"
 #include "ClientInstance.h"
-#include "TextHolder.h"
 
 uintptr_t** LocalPlayer::vfTables = nullptr;
 int LocalPlayer::toCIoffset = 0;
@@ -30,6 +29,7 @@ auto LocalPlayer::getClientInstance()->ClientInstance* {
 	return *((ClientInstance**)((uintptr_t)this + toCIoffset));			//这个偏移是偏移字节
 }
 
+// 废弃
 auto LocalPlayer::isOnGround()->bool* {
 	return (bool*)((uintptr_t)this + onGroundoffset);
 }
@@ -46,11 +46,11 @@ auto LocalPlayer::isOnGround()->bool* {
 //}
 
 //无法验证虚表
-auto LocalPlayer::jumpFromGround()->UINT64 {
-	return GetVFtableFun<UINT64, LocalPlayer*>(346)(this);
+auto LocalPlayer::jumpFromGround()->void* {
+	return GetVFtableFun<void*, LocalPlayer*>(346)(this);
 }
 
 //无法验证虚表
-auto LocalPlayer::displayClientMessage(TextHolder* text)->UINT64 {
-	return GetVFtableFun<UINT64, LocalPlayer*, TextHolder*>(389)(this, text);
+auto LocalPlayer::displayClientMessage(std::mcstring* text)->void* {
+	return GetVFtableFun<void*, LocalPlayer*, std::mcstring*>(389)(this, text);
 }

@@ -1,5 +1,4 @@
 ﻿#include "Player.h"
-#include "TextHolder.h"
 
 #include "../Mod/Utils/Utils.h"
 
@@ -49,8 +48,8 @@ auto Player::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)-
 
 /*
 // 检查版本 1.20 找不到
-auto Player::displayChatMessage(TextHolder* a1, TextHolder* a2)->__int64{
-	return GetVFtableFun<__int64, Player*, TextHolder*, TextHolder*>(78)(this, a1, a2);
+auto Player::displayChatMessage(TextHolder* a1)->__int64{
+	return GetVFtableFun<__int64, Player*, TextHolder*, TextHolder*>(77)(this, a1, a2);
 }
 */
 

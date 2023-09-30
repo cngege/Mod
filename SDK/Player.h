@@ -35,7 +35,7 @@ public:
 	//虚表函数
 	//44
 	auto teleportTo(vec3_t*, bool, unsigned int, unsigned int)->void;
-	auto displayChatMessage(std::mcstring*, std::mcstring*)->__int64;
+	auto displayChatMessage(std::mcstring*)->__int64;
 	auto getSelectedItem() -> class ItemStack*;												/*164*/
 
 	auto getSpeed() -> float;																/*254*/

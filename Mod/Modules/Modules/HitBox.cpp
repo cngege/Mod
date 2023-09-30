@@ -19,6 +19,9 @@ auto HitBox::getBindKeyName()->std::string {
 }
 
 auto HitBox::onPlayerSightTick(Player* player)->void {
+	if (!player->isPlayer()) {
+		return;
+	}
 	//if (actor->isLocalPlayer()) {
 	//	return;
 	//}
