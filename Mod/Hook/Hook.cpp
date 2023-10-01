@@ -41,7 +41,7 @@ ClientInstance_Tick clientInstance_Tickcall;
 uintptr_t clientInstanceTick;
 
 // 获取一个值 是否在屏幕上显示位置
-using Is_ShowCoordinates_Tick = bool(__fastcall*)(void* _this);
+using Is_ShowCoordinates_Tick = bool(__fastcall*)(void* _this, void* a2, void* a3);
 Is_ShowCoordinates_Tick is_ShowCoordinates_Tickcall;
 uintptr_t is_ShowCoordinatesTick;
 
@@ -198,22 +198,23 @@ auto Hook::init() -> void
 
 	//是否显示坐标 Tick
 	{
-		const char* memcode1 = "48 89 5C 24 10 57 48 83 EC ? 48 8B 41 30";
-		const char* memcode2 = "E8 ? ? ? ? E9 ? ? ? ? 41 81 F8 82 FB 70 6D 75 ? E8";
+		// 均调用者(1.20.31原函数定位太长了)48 89 5C 24 10 57 48 83 EC ? 48 8B D1 48 8B 41 30 48 85 C0 0F 84 ? ? ? ? 48 83 38 00 0F 84 ? ? ? ? 48 8B 41 ? 48 85 ? 74 ? F0 FF 40 ? 48 8B 49 ? 48 89 4C 24 ? 48 8B 5A ? 48 89 5C 24 ? 48 8B 09 48 8B 01 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48 8B F8 48 85
+		const char* memcode1 = "E8 ? ? ? ? 84 C0 0F 84 ? ? ? ? F2";		//+5EE1A1
+		const char* memcode2 = "E8 ? ? ? ? E9 ? ? ? ? 41 81 F8 82 FB 70 6D 75 ? E8"; //+5EE052
+		const char* memcode3 = "E8 ? ? ? ? 84 C0 74 ? 48 8B 4B ? E8 ? ? ? ? 3C"; //+789DC4
 		is_ShowCoordinatesTick = FindSignature(memcode1);
 		if (is_ShowCoordinatesTick == 0x00) {
 			is_ShowCoordinatesTick = FindSignature(memcode2);
-			if (is_ShowCoordinatesTick != 0x00) {
-				MH_CreateHookEx((LPVOID)Utils::FuncFromSigOffset<uintptr_t*>(is_ShowCoordinatesTick, 1), &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
-				logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, memcode2);
-			}
-			else {
-				logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
-			}
+		}
+		if (is_ShowCoordinatesTick == 0x00) {
+			is_ShowCoordinatesTick = FindSignature(memcode3);
+		}
+		if (is_ShowCoordinatesTick == 0x00) {
+			logF("[Hook error] [%s] is no found Hook point", "is_ShowCoordinatesTick");
 		}
 		else {
-			MH_CreateHookEx((LPVOID)is_ShowCoordinatesTick, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, memcode1);
+			MH_CreateHookEx((LPVOID)Utils::FuncFromSigOffset<uintptr_t*>(is_ShowCoordinatesTick, 1), &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", is_ShowCoordinatesTick, "...");
 		}
 	}
 
@@ -706,10 +707,10 @@ auto Hook::ClientInstance_Tick(ClientInstance* _this, void* a1) -> uintptr_t
 }
 
 
-auto Hook::Is_ShowCoordinates_Tick(void* _this)->bool
+auto Hook::Is_ShowCoordinates_Tick(void* _this, void* a2, void* a3)->bool
 {
 	static ShowCoordinates* sc = Game::GetModuleManager()->GetModule<ShowCoordinates*>();
-	bool ret = is_ShowCoordinates_Tickcall(_this);
+	bool ret = is_ShowCoordinates_Tickcall(_this, a2, a3);
 	if (sc && sc->isEnabled()) {
 		ret = true;
 	}

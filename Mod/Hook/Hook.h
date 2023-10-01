@@ -22,7 +22,7 @@ public:
 	static auto Actor_isInvisible(class Actor*) -> bool;
 	static auto Actor_getShadowRadius(class Actor*)->float;										//执行对象是所有生物 但不包括玩家
 	static auto ClientInstance_Tick(ClientInstance*, void*)-> uintptr_t;
-	static auto Is_ShowCoordinates_Tick(void*)->bool;
+	static auto Is_ShowCoordinates_Tick(void*, void*, void*)->bool;
 	//static auto NoFallDamage_Tick(class Player*,float*)->void*;
 	static auto Level_Tick(class Level*) -> void*;
 	//Player 虚表Hook
