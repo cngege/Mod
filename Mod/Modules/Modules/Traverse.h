@@ -1,9 +1,12 @@
-#pragma once
+﻿#pragma once
 #include "../Module.h"
 
 class Traverse : public Module {
 public:
 	Traverse();
+
+public:
+	bool needCtrl = true;
 
 public:
 	virtual auto getBindKeyName()->std::string override;

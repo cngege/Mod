@@ -7,6 +7,7 @@
 Traverse::Traverse() : Module(VK_F2, "Traverse", "向所视方向前进一格") {
 	//SetKeyMode(KeyMode::Trigger);
 	//setEnabled(true);
+	AddBoolUIValue("需要按下Ctrl键", &needCtrl);
 }
 
 
@@ -47,6 +48,11 @@ auto Traverse::onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __in
 			if (lp == nullptr || !lp->isValid()) {
 				return;
 			}
+			if (needCtrl) {
+				if (!Game::IsKeyDown(VK_CONTROL)) {
+					return;
+				}
+			}
 
 			vec2_t rot = *lp->getRotEx1();
 			vec3_t pos = *lp->getPosition();
@@ -67,7 +73,9 @@ auto Traverse::onMouseUpdate(char mousebutton, char isdown, __int16 mouseX, __in
 
 auto Traverse::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+	needCtrl = config::readDataFromJson<bool>(data, "needCtrl", true);
 }
 auto Traverse::onsaveConfigFile(json& data)->void {
 	data["enable"] = isEnabled();
+	data["needCtrl"] = needCtrl;
 }
