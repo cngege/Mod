@@ -1,34 +1,36 @@
 ﻿#include "RenderHealth.h"
 #include "Actor.h"
-#include "MinecraftUIRenderContext.h"
-#include "mcstring.h"
+//#include "MinecraftUIRenderContext.h"
+//#include "mcstring.h"
 #include "imgui.h"
+#include "Game.h"
+
 #include <string.h>
 
 RenderHealth::RenderHealth() : Module(VK_F10, "RenderHealth", "显示被攻击生物的血量和名字") {
 	setcontrolkeysbind({ VK_CONTROL });
 	//setEnabled(true);
+	AddFloatUIValue("UI显示时长", &actorTime, 1.f, 15.f, true, 0.1f);
 }
 
 
 auto RenderHealth::onAttackAfter(class GameMode* gm,Actor* actor)->void {
 	if (isEnabled()) {
-		currentPlayerHealth = (int)actor->getHealth();
-		std::string sname = std::string(actor->getNameTag()->c_str());
+		currentPlayerHealth = actor->getHealth();
+		std::string sname = actor->getNameTag()->to_string();
 		auto find = sname.find("\n");
 		if (find == -1) {
-			currentPlayerName = std::string(actor->getNameTag()->c_str());
+			currentPlayerName = sname;
 		}
 		else {
 			currentPlayerName = sname.substr(0, find);
 		}
-
 		if (currentPlayerName.empty()) {
 			currentPlayerTypeName = actor->getTypeName()->c_str();
 		}
-
-		tick = 400.f;
-		show = true;
+		showtime = Utils::GetCuttentMillisecond() + actorTime * 1000;
+		//tick = 400.f;
+		//show = true;
 	}
 	return;
 }
@@ -36,12 +38,14 @@ auto RenderHealth::onAttackAfter(class GameMode* gm,Actor* actor)->void {
 
 auto RenderHealth::onImGUIRender() -> void
 {
-	if (show && isEnabled()) {
-		tick--;
-		if (tick <= 0) {
-			show = false;
+	if (isEnabled() && showtime) {
+		
+		float endTime = static_cast<float>(*showtime - Utils::GetCuttentMillisecond());
+		if (endTime < 0.f) {
+			showtime.reset();
 			return;
 		}
+		
 		RECT rect{};
 		if (::GetWindowRect((HWND)Game::WindowsHandle, (LPRECT)&rect))
 		{
@@ -49,26 +53,36 @@ auto RenderHealth::onImGUIRender() -> void
 			float rectwidth = (float)(rect.right - rect.left);
 			float rectheight = (float)(rect.bottom - rect.top);
 
-			float bgWidth = 150;
+
+			
+			std::string drawName;
+			if (currentPlayerName.empty()) {
+				drawName += "生物类型: ";
+				drawName += currentPlayerTypeName;
+			}
+			else {
+				drawName += "生物名字: ";
+				drawName += currentPlayerName;
+			}
+
+			std::string drawHealth("生物血量: ");
+			drawHealth += std::to_string(currentPlayerHealth);
+			//ImGui::CalcTextSize()
+			
+			
+			// 计算宽高
+			float bgWidth = max(ImGui::CalcTextSize(drawName.c_str()).x, ImGui::CalcTextSize(drawHealth.c_str()).x) + 10.f;	//150
 			float bgHeight = 40;
 
 			ImVec2 LTop = { rectwidth * 0.5f - bgWidth * 0.5f, rectheight * 0.75f };
 
+			// 绘制
 			drawList->AddRectFilled(LTop, { LTop.x + bgWidth,LTop.y + bgHeight }, ImColor(0, 0, 0, 100));
-			
-			std::string drawName;
-			if (currentPlayerName.empty()) {
-				drawName += "type: ";
-				drawName += currentPlayerTypeName;
-			}
-			else {
-				drawName += "Name: ";
-				drawName += currentPlayerName;
-			}
 
-			std::string drawHealth("Health: ");
-			drawHealth += std::to_string(currentPlayerHealth);
-			
+			// 计算UI剩余显示百分比
+			float uiTimeLengthWidth = endTime / (actorTime * 1000) * bgWidth;
+			drawList->AddRectFilled({ LTop.x, LTop.y - 2.f }, { LTop.x + uiTimeLengthWidth, LTop.y}, ImColor(194, 31, 48, 255));
+
 			drawList->AddText({ LTop.x + 5.f, LTop.y + 5.f }, ImColor(255, 255, 255, 255), drawName.c_str());
 			drawList->AddText({ LTop.x + 5.f, LTop.y + 20.f }, ImColor(255, 255, 255, 255), drawHealth.c_str());
 
@@ -110,7 +124,9 @@ auto RenderHealth::onImGUIRender() -> void
 
 auto RenderHealth::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
+	actorTime = config::readDataFromJson<float>(data, "UIactorTime", 5.f);
 }
 auto RenderHealth::onsaveConfigFile(json& data)->void {
 	data["enable"] = isEnabled();
+	data["UIactorTime"] = actorTime;
 }

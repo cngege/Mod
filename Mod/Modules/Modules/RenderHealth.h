@@ -7,13 +7,15 @@ public:
 	RenderHealth();
 
 private:
+	// UI
+	float actorTime = 5.f;
+private:
 	vec2_t showpos = vec2_t(230.f, 250.f);
-	float tick = 0.f;
-	bool show = false;
+	std::optional<double> showtime;
 
 	std::string currentPlayerName;
 	std::string currentPlayerTypeName;
-	int currentPlayerHealth = 0;
+	float currentPlayerHealth = 0.f;
 
 public:
 	virtual auto onAttackAfter(class GameMode* gm,class Actor*)->void override;

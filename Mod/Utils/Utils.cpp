@@ -36,6 +36,11 @@ void Utils::GetCurrentSystemTime(tm& timeInfo) {
 	localtime_s(&timeInfo, &now_c);  // using localtime_s as std::localtime is not thread-safe.
 }
 
+double Utils::GetCuttentMillisecond()
+{
+	return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() / (double)(1000);
+}
+
 bool invalidChar(char c) {
 	return !(c >= 0 && *reinterpret_cast<unsigned char*>(&c) < 128);
 }

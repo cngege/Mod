@@ -577,6 +577,8 @@ public:
 
 	static void GetCurrentSystemTime(tm& timeInfo);
 
+	static double GetCuttentMillisecond();
+
 	static void ApplySystemTime(std::stringstream* ss);
 
 	/**
