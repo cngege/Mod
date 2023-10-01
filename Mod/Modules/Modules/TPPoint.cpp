@@ -7,13 +7,7 @@
 
 TPPoint::TPPoint() : Module(VK_F3, "TPPoint", "传送坐标点") {
 	SetKeyMode(KeyMode::Trigger);
-	//point = new vec3_t();
 }
-
-TPPoint::~TPPoint() {
-	//delete point;
-}
-
 
 auto TPPoint::onTrigger()->void {
 	if (!Game::Cinstance) {
@@ -54,10 +48,37 @@ auto TPPoint::getBindKeyName()->std::string {
 auto TPPoint::onInternalImGUIRender() -> void
 {
 	if (point.has_value()) {
-		ImGui::Text("传送点: x:%.3f, y:%.3f, z:%.3f", point->x, point->y, point->z);
+		ImGui::Text("快捷键传送点: x:%.3f, y:%.3f, z:%.3f", point->x, point->y, point->z);
 	}
 	else {
 		ImGui::Text("未记录传送点");
+	}
+
+	ImGui::DragFloat3("手动按钮传送点", btnTpPoint, 0.1f);
+	if (ImGui::Button("读取")) {
+		if (!Game::Cinstance) {
+			return;
+		}
+		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+		if (!lp) {
+			return;
+		}
+		vec3_t pos = *lp->getPosition();
+		btnTpPoint[0] = pos.x;
+		btnTpPoint[1] = pos.y;
+		btnTpPoint[2] = pos.z;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("传送")) {
+		if (!Game::Cinstance) {
+			return;
+		}
+		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+		if (!lp) {
+			return;
+		}
+		vec3_t pos(btnTpPoint[0], btnTpPoint[1], btnTpPoint[2]);
+		lp->teleportTo(&pos, true, 0, 1);
 	}
 }
 

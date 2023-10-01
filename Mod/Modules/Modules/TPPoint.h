@@ -4,10 +4,11 @@
 class TPPoint : public Module {
 public:
 	TPPoint();
-	~TPPoint();
 
 private:
 	std::optional<vec3_t> point;
+
+	float btnTpPoint[3] = {0};
 
 public:
 	virtual auto onTrigger()->void override;
