@@ -648,6 +648,15 @@ public:
 		return (vec2_t*)(((uintptr_t)this) + offset);
 	}
 
+	auto getTopScreenName() -> std::mcstring {
+		INT64 str[4]{};
+		std::mcstring* out = (std::mcstring*) & str;
+		using GetTopScreenName = void(__thiscall*)(ClientInstance*, std::mcstring*);
+		auto _GetTopScreenName = (GetTopScreenName)((*(uintptr_t**)Game::Cinstance)[vtNum] /*->VTable[141]*/);
+		_GetTopScreenName(Game::Cinstance, out);
+		return *out;
+	}
+
 	auto setSuspendInput(bool v) -> void* {
 		return Utils::CallVFunc<320, void*, bool>(this, v);
 	}
