@@ -6,8 +6,6 @@
 #include "Game.h"
 #include "HMath.h"
 
-//#define FMT_HEADER_ONLY
-//#include "fmt/core.h"
 #include <format>
 
 #include "ClientInstance.h"
@@ -22,6 +20,7 @@
 #include "Logger.h"
 #include "../Hook/Hook.h"
 #include "../Modules/ModuleManager.h"
+#include "Render.h"
 
 ImGuiToggleConfig toggerConfig_Debug;
 std::shared_ptr<glmatrixf> refdef;
@@ -34,12 +33,13 @@ bool ShowPtrList = false;
 
 bool KeyUseItem = false;
 
+// 视频矩阵相机位置高度偏移
+float y_offset = 0.f;
+
 vec2_t outFov;
 
+int vtNum = 141;
 
-bool Hundred_TimesHook(GameMode* gm, vec3_ti* pos, unsigned char f);
-using Hundred_TimesHookFn = bool(__fastcall*)(GameMode*, vec3_ti*, unsigned char);
-uintptr_t* Hundred_TimesHookCall = nullptr;
 
 #include "ActorMovementProxy.h"
 #include "BlockSource.h"
@@ -57,43 +57,43 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	AddBoolUIValue("显示常用指针", &ShowPtrList);
 	AddBoolUIValue("G健使用手中物品", &KeyUseItem);
 
+	AddFloatUIValue("坐标转换相机高度偏移", &y_offset, -10.f, 10.f);
 	AddFloatUIValue("FovX", &outFov.x, 0, 10);
 	AddFloatUIValue("FovY", &outFov.y, 0, 10);
+
+	AddIntUIValue("调用虚表数", &vtNum, 0, 500);
 
 	AddButtonUIEvent("DebugBtn", false, [&]() {
 		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 		if (lp != nullptr) {
-			//logF("玩家 %s 飞", lp->getStatusFlag(ActorFlags::canFly) ? "可以" : "不可以");
-			logF("NameTag: %s", lp->getFormattedNameTag()->c_str());
-			//Block* block = lp->getMovementProxy()->getDimensionBlockSource()->getBlock(0, -61, 0);
 			
-			logF("TypeName: %s", lp->getTypeName()->c_str());
-		}
-		});
 
-	AddButtonUIEvent("生存", false, [&]() {
-		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
-		if (lp) {
-			lp->setPlayerGameType(0);
 		}
+
+		// 函数定位码
+		// 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC 80 00 00 00 0F 29 74 24 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48
+		//std::mcstring out;
+		//using GetTopScreenName = void(__thiscall*)(ClientInstance*, std::mcstring*);
+		//auto _GetTopScreenName = (GetTopScreenName)((*(uintptr_t**)Game::Cinstance)[vtNum] /*->VTable[141]*/);
+		//_GetTopScreenName(Game::Cinstance, &out);
+		//logF("_GetTopScreenName:%s ,%llX", out.c_str(), (*(uintptr_t**)Game::Cinstance)[vtNum]);
+		logF("_GetTopScreenName:%s", Game::Cinstance->getTopScreenName().c_str());
 		});
-	AddButtonUIEvent("创造", true, [&]() {
-		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
-		if (lp) {
-			lp->setPlayerGameType(1);
-		}
+	AddButtonUIEvent("GetTopScreenName", true, [&]() {
+		std::mcstring out;
+		using GetTopScreenName = void(__thiscall*)(ClientInstance*, std::mcstring*);
+		auto _GetTopScreenName = (GetTopScreenName)((*(uintptr_t**)Game::Cinstance)[vtNum] /*->VTable[141]*/);
+		_GetTopScreenName(Game::Cinstance, &out);
+		logF("GetTopScreenName:%s ,%llX", out.c_str(), (*(uintptr_t**)Game::Cinstance)[vtNum]);
 		});
-	AddButtonUIEvent("冒险", true, [&]() {
-		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
-		if (lp) {
-			lp->setPlayerGameType(2);
+	AddButtonUIEvent("DebugString", true, [&]() {
+		std::string tmp = "AB";
+		uintptr_t* intval = (uintptr_t*)&tmp;
+		if (intval == (uintptr_t*)tmp.data()) {
+			Game::GetModuleManager()->GetModule<Render*>()->setEnabled(false);
 		}
-		});
-	AddButtonUIEvent("旁观", true, [&]() {
-		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
-		if (lp) {
-			lp->setPlayerGameType(6);
-		}
+		logF("DebugStringA:%s", tmp.c_str());
+
 		});
 }
 
@@ -103,10 +103,11 @@ void RenderDebugBox() {
 	if (lp) {
 
 		vec3_t lpPos = *lp->getPosition();
+		lpPos.y += y_offset;
 
 		// 获取屏幕宽高
 		RECT rect{};
-		::GetWindowRect((HWND)Game::WindowsHandle, (LPRECT)&rect);
+		::GetWindowRect((HWND)Game::ChildWindowsHandle, (LPRECT)&rect);
 		float rectwidth = (float)(rect.right - rect.left);
 		float rectheight = (float)(rect.bottom - rect.top);
 
@@ -208,9 +209,70 @@ void RenderDebugBox() {
 }
 
 void AddOffsetAndPrint(void* baseptr, int* offset, const char* tip) {
-	if (ImGui::Button((std::string("计算(X16)###") + std::to_string((uintptr_t)baseptr)).c_str())) {
-		logF(tip, *reinterpret_cast<uintptr_t*>((uintptr_t)baseptr + *offset));
+	if (ImGui::Button((std::string("计算(X16)##") + std::to_string((uintptr_t)baseptr)).c_str())) {
+		ImGui::OpenPopup("Select");
 	}
+	if (ImGui::BeginPopup("Select"))
+	{
+		uintptr_t val = *reinterpret_cast<uintptr_t*>((uintptr_t)baseptr + *offset);
+		uintptr_t vfFunval = *reinterpret_cast<uintptr_t*>(*(uintptr_t*)baseptr + *offset);
+
+		if (ImGui::Button((std::string("打印(X16)##") + std::to_string(val)).c_str())) {
+			logF(tip, val);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button((std::string("复制(X16)##") + std::to_string(val)).c_str())) {
+			std::string copy = std::format("{:X}", val);
+			ImGui::SetClipboardText(copy.c_str());
+		}
+		ImGui::SameLine();
+		ImGui::Text("thisoffset: 0x%llX", val);
+
+		if (ImGui::Button((std::string("打印(X16)##") + std::to_string((uintptr_t)vfFunval)).c_str())) {
+			logF(tip, vfFunval);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button((std::string("复制(X16)##") + std::to_string((uintptr_t)vfFunval)).c_str())) {
+			std::string copy = std::format("{:X}", vfFunval);
+			ImGui::SetClipboardText(copy.c_str());
+		}
+		ImGui::SameLine();
+		ImGui::Text("vtoffset: 0x%llX", vfFunval);
+
+		const char* rets[] = { "void", "void*", "std::mcstring*", "int", "float" };
+		static int selectval = 0;
+		if (ImGui::Button((std::string("单参调用/打印返回值###") + std::to_string((uintptr_t)baseptr)).c_str())) {
+			if (selectval == 0) {
+				using Fn_0 = void(__thiscall*)(void*);
+				reinterpret_cast<Fn_0>(vfFunval)(baseptr);
+			}
+			else if (selectval == 1) {
+				using Fn_1 = void* (__thiscall*)(void*);
+				auto ret = reinterpret_cast<Fn_1>(vfFunval)(baseptr);
+				logF("Ptr:%llX, offset: %d, Ret: %llX", vfFunval, *offset, ret);
+			}
+			else if (selectval == 2) {
+				using Fn_2 = std::mcstring* (__thiscall*)(void*);
+				auto ret = *reinterpret_cast<Fn_2>(vfFunval)(baseptr);
+				logF("Ptr:%llX, offset: %d, Ret: %s", vfFunval, *offset, ret.c_str());
+			}
+			else if (selectval == 3) {
+				using Fn_3 = int(__thiscall*)(void*);
+				auto ret = reinterpret_cast<Fn_3>(vfFunval)(baseptr);
+				logF("Ptr:%llX, offset: %d, Ret: %d", vfFunval, *offset, ret);
+			}
+			else if (selectval == 4) {
+				using Fn_4 = float(__thiscall*)(void*);
+				auto ret = reinterpret_cast<Fn_4>(vfFunval)(baseptr);
+				logF("Ptr:%llX, offset: %d, Ret: %f", vfFunval, *offset, ret);
+			}
+		}
+		ImGui::SameLine();
+		ImGui::Combo("选择返回值类型", &selectval, rets, IM_ARRAYSIZE(rets));
+
+		ImGui::EndPopup();
+	}
+
 	ImGui::SameLine();
 	ImGui::InputInt((std::string("###InputInt") + std::to_string((uintptr_t)baseptr)).c_str(), offset, 1, 100, ImGuiInputTextFlags_CharsHexadecimal);
 }
