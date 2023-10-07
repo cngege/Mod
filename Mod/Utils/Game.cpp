@@ -21,6 +21,7 @@ LocalPlayer*	Game::localplayer = nullptr;
 BitmapFont*		Game::mcfont = nullptr;
 ClientInstance* Game::Cinstance = nullptr;
 void*			Game::WindowsHandle = nullptr;
+void*			Game::ChildWindowsHandle = nullptr;
 
 uintptr_t		Game::KeyMap = 0x00;
 bool			Game::MouseKeyDown[10] = { false };
@@ -34,6 +35,7 @@ auto Game::init() -> void
 	Game::modmag->Init();
 	ImConfigIni = Utils::WStringToString(Utils::GetRoamingFolderPath()) + "\\Mod\\Config\\imgui.ini";
 	Game::WindowsHandle = FindWindowA(nullptr, (LPCSTR)"Minecraft");
+	Game::ChildWindowsHandle = FindWindowExA((HWND)WindowsHandle, NULL, NULL, (LPCSTR)"Minecraft");
 	//获取生物位置指针的偏移
 	/*
 	{

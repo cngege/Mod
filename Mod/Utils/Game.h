@@ -11,6 +11,7 @@ public:
 	static class BitmapFont* mcfont;
 	static class ClientInstance* Cinstance;
 	static void* WindowsHandle;
+	static void* ChildWindowsHandle;
 	static uintptr_t KeyMap;
 	static bool MouseKeyDown[];
 	static std::string ImConfigIni;
