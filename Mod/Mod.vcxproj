@@ -333,6 +333,7 @@
     <ClInclude Include="Modules\Modules\AirWater.h" />
     <ClInclude Include="Modules\Modules\ArmsLength.h" />
     <ClInclude Include="Modules\Modules\BioRadar.h" />
+    <ClInclude Include="Modules\Modules\ChangeGameMode.h" />
     <ClInclude Include="Modules\Modules\Debug.h" />
     <ClInclude Include="Modules\Modules\FastViewPerspective.h" />
     <ClInclude Include="Modules\Modules\GameTimeLock.h" />
@@ -404,6 +405,7 @@
     <ClCompile Include="Modules\Modules\AirWater.cpp" />
     <ClCompile Include="Modules\Modules\ArmsLength.cpp" />
     <ClCompile Include="Modules\Modules\BioRadar.cpp" />
+    <ClCompile Include="Modules\Modules\ChangeGameMode.cpp" />
     <ClCompile Include="Modules\Modules\Debug.cpp" />
     <ClCompile Include="Modules\Modules\FastViewPerspective.cpp" />
     <ClCompile Include="Modules\Modules\GameTimeLock.cpp" />

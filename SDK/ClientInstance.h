@@ -652,8 +652,8 @@ public:
 		INT64 str[4]{};
 		std::mcstring* out = (std::mcstring*) & str;
 		using GetTopScreenName = void(__thiscall*)(ClientInstance*, std::mcstring*);
-		auto _GetTopScreenName = (GetTopScreenName)((*(uintptr_t**)Game::Cinstance)[vtNum] /*->VTable[141]*/);
-		_GetTopScreenName(Game::Cinstance, out);
+		auto _GetTopScreenName = (GetTopScreenName)((*(uintptr_t**)this)[141] /*->VTable[141]*/);
+		_GetTopScreenName(this, out);
 		return *out;
 	}
 
