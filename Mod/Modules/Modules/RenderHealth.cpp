@@ -11,6 +11,7 @@ RenderHealth::RenderHealth() : Module(VK_F10, "RenderHealth", "显示被攻击�
 	setcontrolkeysbind({ VK_CONTROL });
 	//setEnabled(true);
 	AddFloatUIValue("UI显示时长", &actorTime, 1.f, 15.f, true, 0.1f);
+	AddBoolUIValue("玩家名字渲染颜色(暂不可用)", &renderColor);
 }
 
 
@@ -54,7 +55,6 @@ auto RenderHealth::onImGUIRender() -> void
 			float rectheight = (float)(rect.bottom - rect.top);
 
 
-			
 			std::string drawName;
 			if (currentPlayerName.empty()) {
 				drawName += "生物类型: ";
@@ -125,8 +125,10 @@ auto RenderHealth::onImGUIRender() -> void
 auto RenderHealth::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
 	actorTime = config::readDataFromJson<float>(data, "UIactorTime", 5.f);
+	renderColor = config::readDataFromJson<bool>(data, "renderColor", true);
 }
 auto RenderHealth::onsaveConfigFile(json& data)->void {
 	data["enable"] = isEnabled();
 	data["UIactorTime"] = actorTime;
+	data["renderColor"] = renderColor;
 }

@@ -9,6 +9,7 @@ public:
 private:
 	// UI
 	float actorTime = 5.f;
+	bool renderColor = true;
 private:
 	vec2_t showpos = vec2_t(230.f, 250.f);
 	std::optional<double> showtime;
