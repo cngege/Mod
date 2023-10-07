@@ -23,14 +23,18 @@ auto Render::onEnable() -> void
 {
 	isCursorVisible = Utils::isCursorVisible();
 	if (!isCursorVisible) {
-		Game::Cinstance->releaseMouse();
+		if(Game::Cinstance)
+			Game::Cinstance->releaseMouse();
 	}
 }
 
 auto Render::onDisable() -> void
 {
-	if (!isCursorVisible && Utils::isCursorVisible()) {	// 如果在打开时 是隐藏的
-		Game::Cinstance->grabMouse();
+	if (!isCursorVisible && Utils::isCursorVisible() && Game::Cinstance) {	// 如果在打开时 是隐藏的
+		auto screen = Game::Cinstance->getTopScreenName().to_string();
+		if (screen.rfind("hud_screen") != std::string::npos) {
+			Game::Cinstance->grabMouse();
+		}
 	}
 }
 
