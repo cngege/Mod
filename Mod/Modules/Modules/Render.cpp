@@ -95,18 +95,15 @@ auto Render::onImGUIRender()->void {
 			std::string showText = mod->getModuleName();		//加上Module本来的名称
 			bool enable = mod->isEnabled();
 			ImGui::PushID(mod->getModuleName().c_str());
-
-			ImGui::Checkbox("##CheckBox", &enable);
+			if (ImGui::Checkbox("##CheckBox", &enable)) {
+				mod->setEnabled(enable);
+			}
 			ImGui::SameLine();
 			if (mod->getBindKeyName() != "") {
 				showText += " [" + mod->getBindKeyName() + "]";
 			}
 			if (Utils::HelpCollapsingHeader(showText.c_str(), mod->getModuleInfo().c_str())) {
 				ImGui::TextColored(ImVec4(0.98f, 0.63f, 0.01f, 1.f), mod->getModuleInfo().c_str());
-				bool modIsEnable = mod->isEnabled();
-				if (ImGui::Button(modIsEnable ? "点击关闭" : "点击开启")) {
-					mod->setEnabled(!modIsEnable);
-				}
 				//IntUIValue
 				for (auto &intval : mod->GetIntUIValue()) {
 					if (intval.slider) {
