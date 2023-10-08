@@ -120,6 +120,7 @@ auto TPPoint::onInternalImGUIRender() -> void
 					i = tpPoints.erase(i);
 					if (i == tpPoints.end())
 					{
+						ImGui::PopStyleColor(3);
 						ImGui::PopID();
 						break;
 					}
