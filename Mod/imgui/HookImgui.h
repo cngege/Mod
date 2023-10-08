@@ -123,7 +123,7 @@ HRESULT __fastcall hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInter
 		ID3D11RenderTargetView* mainRenderTargetView;
 		d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
 		pBackBuffer->Release();
-		ImGui_ImplWin32_Init(window);
+		ImGui_ImplWin32_Init(childwindow);
 		ImGui_ImplDX11_Init(d3d11Device, ppContext);
 		if (!initContext) {
 			ImGuiIO& io = ImGui::GetIO();
@@ -234,7 +234,8 @@ HRESULT __fastcall hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInter
 				rtvHandle.ptr += rtvDescriptorSize;
 				pBackBuffer->Release();
 			};
-			ImGui_ImplWin32_Init(window);
+			//ImGui_ImplWin32_Init(window);
+			ImGui_ImplWin32_Init(childwindow);
 			ImGui_ImplDX12_Init(d3d12Device, buffersCounts,
 				DXGI_FORMAT_R8G8B8A8_UNORM,
 				d3d12DescriptorHeapImGuiRender,

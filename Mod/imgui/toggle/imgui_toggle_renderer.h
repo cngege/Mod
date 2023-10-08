@@ -1,12 +1,13 @@
-#pragma once
+﻿#pragma once
+
+#ifndef IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS
+#endif // IMGUI_DEFINE_MATH_OPERATORS
 
 #include "imgui.h"
 #include "imgui_toggle.h"
 #include "imgui_toggle_palette.h"
 
-#ifndef IMGUI_DEFINE_MATH_OPERATORS
-#define IMGUI_DEFINE_MATH_OPERATORS
-#endif // IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 
 class ImGuiToggleRenderer

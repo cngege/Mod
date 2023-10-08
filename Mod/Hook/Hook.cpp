@@ -45,16 +45,6 @@ using Is_ShowCoordinates_Tick = bool(__fastcall*)(void* _this, void* a2, void* a
 Is_ShowCoordinates_Tick is_ShowCoordinates_Tickcall;
 uintptr_t is_ShowCoordinatesTick;
 
-
-//using GetHungerValAddress_Tick = void* (__fastcall*)(void* _this, const char* a1,void* a2);
-//GetHungerValAddress_Tick getHungerValAddress_Tickcall;
-//uintptr_t getHungerValAddressTick;
-
-//48 89 5C 24 ? 57 48 83 EC 40 48 8B D9 48 8B FA 48 8B 89 ? ? ? ? 48 8B 01
-//using NoFallDamage_tick = void* (__fastcall*)(void* _this, float* a1);
-//NoFallDamage_tick noFallDamage_Tickcall;
-//uintptr_t noFallDamage_tick;
-
 //0.6 0.2 4
 //48 8B C4 48 89 58 ? 48 89 68 ? 56 57 41 56 48 83 EC 70 48 8B EA
 using Covers_HitBox_Parts = void* (__fastcall*)(void* _this, void* a1, void* a2);
@@ -125,10 +115,34 @@ char* Block_playerDestroy(Block* block, Player* player, vec3_ti pos) {
 	return blockPlayerDestroyCall(block, player, pos);
 }
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+using WndProcFn = LRESULT(WINAPI*)(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+WndProcFn WndProcCall;
+
+LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	//logF_Debug("msg: %02x", msg);
+	//if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
+	//	return 1;
+	//}
+	if (msg == WM_KEYDOWN) {
+		assert(true);
+	}
+	
+	return WndProcCall(hWnd, msg, wParam, lParam);
+	//return ::DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
 
 auto Hook::init() -> void
 {
+	//logF_Debug("WndProc2: %llX", (uintptr_t*)GetWindowLongPtr((HWND)Game::ChildWindowsHandle, -4));
+	//SetWindowLongPtr((HWND)Game::WindowsHandle, -4, (LONG_PTR)&WndProc);
 	logF("[Hook::init] 正在初始化");
+	MH_CreateHookEx((LPVOID)GetWindowLongPtr((HWND)Game::ChildWindowsHandle, -4), &WndProc, &WndProcCall);
+
 	//48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E8 4C 8B FA 48 8B F1
 	//Block::playerDestroy
 	{
@@ -771,16 +785,21 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 		Loader::Eject_Signal = true;
 		return 0;
 	}
+	
 	//IMGUI 按键信号传递
 	if (ImGui::GetCurrentContext() != nullptr) {
 		ImGuiIO& io = ImGui::GetIO();
-		io.KeysDown[(int)key] = isdown == 1;
-		
+		//io.KeysDown[(int)key] = isdown == 1;
+
 		io.KeyCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		io.KeyShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 		io.KeyAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
 		io.KeySuper = ((::GetKeyState(VK_LWIN) | ::GetKeyState(VK_RWIN)) & 0x8000) != 0;
 		if (io.WantTextInput) {
+			if (key == VK_BACK) {
+				io.AddKeyEvent(ImGuiKey_Backspace, isdown == 1);
+				return 0;
+			}
 			if (isdown == 1) {
 				//if (Game::Cinstance) Game::Cinstance->setSuspendInput(false);
 				BYTE kb[256];
@@ -799,6 +818,7 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 			return 0;
 		}
 	}
+	
 	return keyupdatecall(key, isdown);
 }
 
@@ -811,24 +831,29 @@ auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX
 	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
 	if (ImGui::GetCurrentContext() != nullptr) {
 		ImGuiIO& io = ImGui::GetIO();
-		io.MousePos = ImVec2(mouseX, mouseY);
+		//io.MousePos = ImVec2(mouseX, mouseY);
 		switch (mousebutton) {
 		case 1:
-			io.MouseDown[0] = isDown;
+			//io.MouseDown[0] = isDown;
+			io.AddMouseButtonEvent(0, isDown);
 			break;
 		case 2:
-			io.MouseDown[1] = isDown;
+			//io.MouseDown[1] = isDown;
+			io.AddMouseButtonEvent(1, isDown);
 			break;
 		case 3:
-			io.MouseDown[2] = isDown;
+			//io.MouseDown[2] = isDown;
+			io.AddMouseButtonEvent(2, isDown);
 			break;
 		case 4:
-			io.MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
+			//io.MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
+			io.AddMouseWheelEvent(0.f, isDown < 0 ? -1.f : 1.f);
 			break;
 		default:
+			io.AddMousePosEvent(mouseX, mouseY);
 			break;
 		}
-		if (!io.WantCaptureMouse)
+		if (/*!io.WantCaptureMouse && */!io.WantCaptureMouseUnlessPopupClose)
 			mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
 	}
 	else {
