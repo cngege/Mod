@@ -270,6 +270,9 @@
     <ClInclude Include="..\SDK\mcstring.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Modules\ChangeGameMode.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -464,8 +467,11 @@
     <ClCompile Include="Modules\Modules\HundredTimesMoreDrops.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Modules\Modules\ChangeGameMode.cpp">
+      <Filter>Modules\源文件</Filter>
+    </ClCompile>
     <ClCompile Include="..\SDK\ActorCollision.cpp">
-      <Filter>源文件</Filter>
+      <Filter>SDK\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

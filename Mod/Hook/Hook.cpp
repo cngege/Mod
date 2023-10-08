@@ -919,8 +919,6 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 		ImGuiKey imKey = ImGui_VirtualKeyToImGuiKey(key);
 		if (imKey != ImGuiKey_None) {
 			io.AddKeyEvent(imKey, isdown == 1);
-			io.SetKeyEventNativeData(imKey, key, -1);
-			io.KeysDown[imKey] = isdown == 1;
 		}
 		io.AddKeyEvent(ImGuiMod_Ctrl, KEY_DOWN(VK_CONTROL));
 		io.AddKeyEvent(ImGuiMod_Shift, KEY_DOWN(VK_SHIFT));
