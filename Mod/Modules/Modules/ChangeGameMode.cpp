@@ -8,7 +8,7 @@
 ChangeGameMode::ChangeGameMode() : Module(0, "ChangeGameMode", "切换游戏模式,开启后可使用快捷键(快捷键仅地图游戏界面有效)") {
 	//SetKeyMode(KeyMode::Trigger);
 
-	AddButtonUIEvent("生存[Z]", false, []() {
+	AddButtonUIEvent("生存[X]", false, []() {
 		if (Game::Cinstance) {
 			auto lp = Game::Cinstance->getCILocalPlayer();
 			if (lp) {
@@ -16,7 +16,7 @@ ChangeGameMode::ChangeGameMode() : Module(0, "ChangeGameMode", "切换游戏模�
 			}
 		}
 		});
-	AddButtonUIEvent("创造[X]", true, []() {
+	AddButtonUIEvent("创造[C]", true, []() {
 		if (Game::Cinstance) {
 			auto lp = Game::Cinstance->getCILocalPlayer();
 			if (lp) {
@@ -24,7 +24,7 @@ ChangeGameMode::ChangeGameMode() : Module(0, "ChangeGameMode", "切换游戏模�
 			}
 		}
 		});
-	AddButtonUIEvent("冒险[C]", true, []() {
+	AddButtonUIEvent("冒险[V]", true, []() {
 		if (Game::Cinstance) {
 			auto lp = Game::Cinstance->getCILocalPlayer();
 			if (lp) {
@@ -32,7 +32,7 @@ ChangeGameMode::ChangeGameMode() : Module(0, "ChangeGameMode", "切换游戏模�
 			}
 		}
 		});
-	AddButtonUIEvent("旁观[V]", true, []() {
+	AddButtonUIEvent("旁观[N]", true, []() {
 		if (Game::Cinstance) {
 			auto lp = Game::Cinstance->getCILocalPlayer();
 			if (lp) {
@@ -40,7 +40,7 @@ ChangeGameMode::ChangeGameMode() : Module(0, "ChangeGameMode", "切换游戏模�
 			}
 		}
 		});
-	AddButtonUIEvent("默认[B]", true, []() {
+	AddButtonUIEvent("默认[M]", true, []() {
 		if (Game::Cinstance) {
 			auto lp = Game::Cinstance->getCILocalPlayer();
 			if (lp) {
@@ -58,23 +58,23 @@ auto ChangeGameMode::onKeyUpdate(int key, bool isdown) -> void
 		if (screen.rfind("hud_screen") != std::string::npos) {
 			auto lp = Game::Cinstance->getCILocalPlayer();
 			if (lp) {
-				if (key == 'Z') {
+				if (key == 'X') {
 					// TUDO 生存
 					lp->setPlayerGameType(0);
 				}
-				else if (key == 'X') {
+				else if (key == 'C') {
 					// TUDO: 
 					lp->setPlayerGameType(1);
 				}
-				else if (key == 'C') {
+				else if (key == 'V') {
 					// TUDO: 
 					lp->setPlayerGameType(2);
 				}
-				else if (key == 'V') {
+				else if (key == 'N') {
 					// TUDO: 
 					lp->setPlayerGameType(6);
 				}
-				else if (key == 'B') {
+				else if (key == 'M') {
 					// TUDO: 
 					lp->setPlayerGameType(5);
 				}
