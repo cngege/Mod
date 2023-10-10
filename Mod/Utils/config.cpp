@@ -40,7 +40,7 @@ std::vector<std::string> config::findAllConfigFile() {
 
 json config::loadConfigonRootFromFile(const std::string& name) {
 	json ret = {};
-	std::ifstream f((getConfigFilePath() + name + ".json").c_str());
+	std::ifstream f((getConfigFilePath() + (Utils::utf8_check_is_valid(name) ? Utils::UTF8toANSI(name.c_str()) : name) + ".json").c_str());
 	if (f.good())								//表示配置文件存在
 	{
 		f >> ret;
@@ -69,7 +69,7 @@ json config::loadConfigFromDefaultFile(std::string key) {
 
 // 写入配置
 bool config::writeConfigonRootToFile(const std::string& name, json data) {
-	std::ofstream c((getConfigFilePath() + name + ".json").c_str());
+	std::ofstream c((getConfigFilePath() + (Utils::utf8_check_is_valid(name) ? Utils::UTF8toANSI(name.c_str()) : name) + ".json").c_str());
 	c << data.dump(2);
 	c.close();
 	return true;

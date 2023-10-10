@@ -128,7 +128,12 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	//	return 1;
 	//}
 	if (msg == WM_KEYDOWN) {
-		assert(true);
+		logF_Debug("msg == WM_KEYDOWN");
+		assert(false);
+	}
+	if (msg == WM_IME_KEYDOWN) {
+		logF_Debug("msg == WM_IME_KEYDOWN");
+		assert(false);
 	}
 	
 	return WndProcCall(hWnd, msg, wParam, lParam);
@@ -141,8 +146,11 @@ auto Hook::init() -> void
 	//logF_Debug("WndProc2: %llX", (uintptr_t*)GetWindowLongPtr((HWND)Game::ChildWindowsHandle, -4));
 	//SetWindowLongPtr((HWND)Game::WindowsHandle, -4, (LONG_PTR)&WndProc);
 	logF("[Hook::init] 正在初始化");
-	MH_CreateHookEx((LPVOID)GetWindowLongPtr((HWND)Game::ChildWindowsHandle, -4), &WndProc, &WndProcCall);
-
+	// WndProc Hook
+	{
+		MH_CreateHookEx((LPVOID)GetWindowLongPtr((HWND)Game::ChildWindowsHandle, -4), &WndProc, &WndProcCall);
+	}
+	
 	//48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E8 4C 8B FA 48 8B F1
 	//Block::playerDestroy
 	{
@@ -208,8 +216,6 @@ auto Hook::init() -> void
 		}
 	}
 	
-
-
 	//是否显示坐标 Tick
 	{
 		// 均调用者(1.20.31原函数定位太长了)48 89 5C 24 10 57 48 83 EC ? 48 8B D1 48 8B 41 30 48 85 C0 0F 84 ? ? ? ? 48 83 38 00 0F 84 ? ? ? ? 48 8B 41 ? 48 85 ? 74 ? F0 FF 40 ? 48 8B 49 ? 48 89 4C 24 ? 48 8B 5A ? 48 89 5C 24 ? 48 8B 09 48 8B 01 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48 8B F8 48 85
@@ -927,6 +933,7 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 		if (io.WantTextInput) {
 			if (isdown == 1) {
 				//if (Game::Cinstance) Game::Cinstance->setSuspendInput(false);
+				// 这里不负责粘贴部分的工作
 				BYTE kb[256];
 				if (GetKeyboardState(kb)) {
 					wchar_t ch[6] = {0};
