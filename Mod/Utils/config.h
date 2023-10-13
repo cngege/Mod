@@ -18,6 +18,7 @@ public:
 
 	static bool writeConfigonRootToFile(const std::string& name, json data);			// 将json写入到整个配置中
 	static bool writeConfigonRootFromDefaultFile(json data);							// 将json完全写到默认配置文件中
+	static bool removeConfigFile(std::string configName);								// 删除配置文件
 
 	template <class T>
 	static T readDataFromJson(json data, std::string key, T defdata);

@@ -24,7 +24,8 @@ std::vector<std::string> config::findAllConfigFile() {
 				if (strcmp(fileinfo.name, "config.json") != 0) {				// config.json 作为固定配置,和其他保存模块信息等配置不一样
 					auto fname = std::string(fileinfo.name);
 					auto find = fname.find(".json");
-					files.push_back(fname.substr(0, find));
+					auto findedname = fname.substr(0, find);
+					files.push_back(Utils::utf8_check_is_valid(findedname) ? findedname : Utils::ANSItoUTF8(findedname.c_str()));
 				}
 			}
 			else {
@@ -79,3 +80,16 @@ bool config::writeConfigonRootFromDefaultFile(json data) {
 	return writeConfigonRootToFile("Default", data);
 }
 
+bool config::removeConfigFile(std::string confignName) {
+	std::string targetFile = getConfigFilePath() + (Utils::utf8_check_is_valid(confignName) ? Utils::UTF8toANSI(confignName.c_str()) : confignName) + ".json";
+	if (!std::filesystem::exists(targetFile)) {
+		return true;
+	}
+	int out = std::remove(targetFile.c_str());
+	if (out == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
