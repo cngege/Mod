@@ -186,6 +186,50 @@ auto Render::onImGUIRender()->void {
 				//写入文件
 				config::writeConfigonRootToFile(config::currentSaveConfigFile, data);
 			}
+			ImGui::SameLine();
+			
+			static const char** configList = nullptr;			// 用于存储下拉框的列表
+			static int item_current = 0;
+			static std::vector<std::string> configFileList{};
+			if (ImGui::Button("选取已有配置"))
+			{
+				// 读取所有配置文件
+				configFileList = config::findAllConfigFile();
+				// 做判断，防止没有配置文件的情况
+				if (configFileList.size()) {
+					configList = new const char*[configFileList.size() + 1];
+					for (size_t i = 0; i < configFileList.size(); i++) {
+						configList[i] = configFileList[i].c_str();
+					}
+					ImGui::OpenPopup("ShowSelectMenu");
+				}
+			}
+			if (ImGui::BeginPopup("ShowSelectMenu")) {
+				if (configList) {
+					if (ImGui::Combo("选择配置文件", &item_current, configList, static_cast<int>(configFileList.size()))) {
+						strcpy_s(text, configList[item_current]);
+					}
+					if (ImGui::Button("选择")) {
+						strcpy_s(text, configList[item_current]);
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("删除")) {
+						if (config::removeConfigFile(configList[item_current])) {
+							if (item_current > 0) item_current--;
+							ImGui::CloseCurrentPopup();
+						}
+					}
+				}
+				ImGui::EndPopup();
+			}
+			else {
+				// 在悬浮窗口关闭时 释放申请的内存
+				if (configList) {
+					delete[] configList;
+					configList = nullptr;
+				}
+			}
+
 			ImGui::Toggle("启用快捷键(CTRL+L)卸载", &Loader::EnableEjectKey, toggerConfig);
 			if (ImGui::Button("卸载")) {
 				Loader::Eject_Signal = true;
