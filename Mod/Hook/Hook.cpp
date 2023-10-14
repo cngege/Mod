@@ -211,7 +211,7 @@ auto Hook::init() -> void
 	logF("[Hook::init] 正在初始化");
 	// WndProc Hook
 	{
-		MH_CreateHookEx((LPVOID)GetWindowLongPtr((HWND)Game::ChildWindowsHandle, -4), &WndProc, &WndProcCall);
+		MH_CreateHookEx((LPVOID)GetWindowLongPtr((HWND)Game::ChildWindowsHandle, GWLP_WNDPROC), &WndProc, &WndProcCall);
 	}
 	
 	//48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E8 4C 8B FA 48 8B F1
