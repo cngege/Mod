@@ -920,19 +920,16 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 		bool is_key_down = (isdown == 1);
 		auto scancode = MapVirtualKey(static_cast<UINT>(key), MAPVK_VK_TO_VSC);
 
+		io.AddKeyEvent(ImGuiMod_Ctrl, KEY_DOWN(VK_CONTROL));
+		io.AddKeyEvent(ImGuiMod_Shift, KEY_DOWN(VK_SHIFT));
+		io.AddKeyEvent(ImGuiMod_Alt, KEY_DOWN(VK_MENU));
+		io.AddKeyEvent(ImGuiMod_Super, KEY_DOWN(VK_APPS));
+
 		ImGuiKey imKey = ImGui_VirtualKeyToImGuiKey(key);
 		if (imKey != ImGuiKey_None) {
 			//io.AddKeyEvent(imKey, isdown == 1);
 			ImGui_ImplUWP_AddKeyEvent(imKey, is_key_down, static_cast<int>(key), scancode);
 		}
-		io.AddKeyEvent(ImGuiMod_Ctrl, KEY_DOWN(VK_CONTROL));
-		io.AddKeyEvent(ImGuiMod_Shift, KEY_DOWN(VK_SHIFT));
-		io.AddKeyEvent(ImGuiMod_Alt, KEY_DOWN(VK_MENU));
-		io.AddKeyEvent(ImGuiMod_Super, KEY_DOWN(VK_APPS));
-		//ImGui_ImplUWP_AddKeyEvent(ImGuiMod_Ctrl, KEY_DOWN(VK_CONTROL), VK_CONTROL, scancode);
-		//ImGui_ImplUWP_AddKeyEvent(ImGuiMod_Shift, KEY_DOWN(VK_SHIFT), VK_SHIFT, scancode);
-		//ImGui_ImplUWP_AddKeyEvent(ImGuiMod_Alt, KEY_DOWN(VK_MENU), VK_MENU, scancode);
-		//ImGui_ImplUWP_AddKeyEvent(ImGuiMod_Super, KEY_DOWN(VK_APPS), VK_APPS, scancode);
 
 		if (key == VK_SHIFT)
 		{
@@ -1118,7 +1115,7 @@ auto Hook::GameMode_attack(GameMode* _this, Actor* actor)->bool {
 
 		if (debug->isEnabled()) {
 			if (debug->GameMode_attack_Print) {
-				logF_Debug("LocalPlayer: %llX, CI: %llX", (uintptr_t)_this->GetLocalPlayer(), (uintptr_t)_this->GetLocalPlayer()->getClientInstance());
+				logF_Debug("LocalPlayer: %llX, CI: %llX, attackActor: %llX", (uintptr_t)_this->GetLocalPlayer(), (uintptr_t)_this->GetLocalPlayer()->getClientInstance(), (uintptr_t)actor);
 			}
 			
 			if (debug->GameMode_attack_UseItem) {
