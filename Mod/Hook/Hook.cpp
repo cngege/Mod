@@ -32,8 +32,7 @@
 
 #include "../Modules/Modules/Debug.h"
 
-//#define IMGUIINPUT_USE_WNDPROC
-
+#include "../imgui/imgui_uwp_wndProc.h"
 
 using LockControl = void*(__fastcall*)(void* thi, void* a2, void* a3, void* a4, void* a5, void* a6);
 LockControl LockControlInputcall;
@@ -118,7 +117,8 @@ char* Block_playerDestroy(Block* block, Player* player, vec3_ti pos) {
 	return blockPlayerDestroyCall(block, player, pos);
 }
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_UWP_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 using WndProcFn = LRESULT(WINAPI*)(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -127,77 +127,9 @@ WndProcFn WndProcCall;
 //https://learn.microsoft.com/zh-cn/windows/win32/inputmsg/messages
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-#ifdef IMGUIINPUT_USE_WNDPROC
-
-	//logF_Debug("msg: %02x", msg);
-	//if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
-	//	return 1;
-	//}
-
-	switch (msg)
-	{
-	case DM_POINTERHITTEST:
-		break;
-	case WM_NCPOINTERDOWN:				// 鼠标按下?
-	case WM_POINTERDOWN:
-		break;
-	case WM_NCPOINTERUP:
-	case WM_POINTERUP:
-		break;
-	case WM_NCPOINTERUPDATE:
-	case WM_POINTERUPDATE:	//ok
-		break;
-	case WM_PARENTNOTIFY:				// 创建销毁子窗口时的消息
-		break;
-	case WM_POINTERACTIVATE:			// 忽略
-		break;
-	case WM_POINTERCAPTURECHANGED:		// 可能是鼠标移开游戏窗口
-		break;
-	case WM_POINTERDEVICECHANGE:		// 忽略 当显示模式缩放时?
-	case WM_POINTERDEVICEINRANGE:
-	case WM_POINTERDEVICEOUTOFRANGE:
-		break;
-	case WM_POINTERENTER:				// 鼠标悬停或移动
-		break;
-	case WM_POINTERLEAVE:				// 移出窗口 ok
-		break;
-	case WM_POINTERROUTEDAWAY:			// 什么路由到下一进程
-	case WM_POINTERROUTEDRELEASED:		// 和跨进程相关
-	case WM_POINTERROUTEDTO:
-		break;
-	case WM_POINTERWHEEL:				// 鼠标滚轮
-		break;
-	case WM_POINTERHWHEEL:				// 横向滚轮
-		break;
-	case WM_TOUCHHITTESTING:
-		break;
-	// 以下是非官方链接中给出的消息
-	case WM_MOUSEMOVE:					//0x200
-		break;
-
-	case WM_SETCURSOR:	//0x20
-	case WM_MOUSEACTIVATE://0x21
-	case WM_NCHITTEST:	//0x84 命中测试
-	case WM_IME_SETCONTEXT://0x281
-	case WM_IME_NOTIFY://0x282
-	case WM_SETFOCUS://0x7
-	case WM_KILLFOCUS://0x8
-	case WM_INPUT://0xFF
-	case WM_SYSKEYDOWN://0x104
-	case WM_SYSKEYUP://0x105	直接按下F10之类的健
-	case WM_SYSCHAR://0x106		ALT+字符健
-	case WM_SYSCOMMAND://0x112
-
-		break;
-	case 0xC07D://可能是指切换窗口
-	case 0xC1D0:
-	case 0x349:
-		break;
-	default:
-		logF_Debug("defaultmsg: %02x", msg);
-		break;
+	if (ImGui_UWP_WndProcHandler(hWnd, msg, wParam, lParam)) {
+		return true;
 	}
-#endif // IMGUIINPUT_USE_WNDPROC
 
 	return WndProcCall(hWnd, msg, wParam, lParam);
 	//return ::DefWindowProc(hWnd, msg, wParam, lParam);
@@ -985,26 +917,51 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	//IMGUI 按键信号传递
 	if (ImGui::GetCurrentContext() != nullptr) {
 		ImGuiIO& io = ImGui::GetIO();
+		bool is_key_down = (isdown == 1);
+		auto scancode = MapVirtualKey(static_cast<UINT>(key), MAPVK_VK_TO_VSC);
 
 		ImGuiKey imKey = ImGui_VirtualKeyToImGuiKey(key);
 		if (imKey != ImGuiKey_None) {
-			io.AddKeyEvent(imKey, isdown == 1);
+			//io.AddKeyEvent(imKey, isdown == 1);
+			ImGui_ImplUWP_AddKeyEvent(imKey, is_key_down, static_cast<int>(key), scancode);
 		}
 		io.AddKeyEvent(ImGuiMod_Ctrl, KEY_DOWN(VK_CONTROL));
 		io.AddKeyEvent(ImGuiMod_Shift, KEY_DOWN(VK_SHIFT));
 		io.AddKeyEvent(ImGuiMod_Alt, KEY_DOWN(VK_MENU));
 		io.AddKeyEvent(ImGuiMod_Super, KEY_DOWN(VK_APPS));
+		//ImGui_ImplUWP_AddKeyEvent(ImGuiMod_Ctrl, KEY_DOWN(VK_CONTROL), VK_CONTROL, scancode);
+		//ImGui_ImplUWP_AddKeyEvent(ImGuiMod_Shift, KEY_DOWN(VK_SHIFT), VK_SHIFT, scancode);
+		//ImGui_ImplUWP_AddKeyEvent(ImGuiMod_Alt, KEY_DOWN(VK_MENU), VK_MENU, scancode);
+		//ImGui_ImplUWP_AddKeyEvent(ImGuiMod_Super, KEY_DOWN(VK_APPS), VK_APPS, scancode);
+
+		if (key == VK_SHIFT)
+		{
+			// Important: Shift keys tend to get stuck when pressed together, missing key-up events are corrected in ImGui_ImplWin32_ProcessKeyEventsWorkarounds()
+			if (KEY_DOWN(VK_LSHIFT) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftShift, is_key_down, VK_LSHIFT, scancode); }
+			if (KEY_DOWN(VK_RSHIFT) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightShift, is_key_down, VK_RSHIFT, scancode); }
+		}
+		else if (key == VK_CONTROL)
+		{
+			if (KEY_DOWN(VK_LCONTROL) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftCtrl, is_key_down, VK_LCONTROL, scancode); }
+			if (KEY_DOWN(VK_RCONTROL) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightCtrl, is_key_down, VK_RCONTROL, scancode); }
+		}
+		else if (key == VK_MENU)
+		{
+			if (KEY_DOWN(VK_LMENU) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftAlt, is_key_down, VK_LMENU, scancode); }
+			if (KEY_DOWN(VK_RMENU) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightAlt, is_key_down, VK_RMENU, scancode); }
+		}
+
+
 		if (io.WantTextInput) {
-			if (isdown == 1) {
+			if (is_key_down) {
 				//if (Game::Cinstance) Game::Cinstance->setSuspendInput(false);
 				// 这里不负责粘贴部分的工作
 				BYTE kb[256];
 				if (GetKeyboardState(kb)) {
 					wchar_t ch[6] = { 0 };
-					int ret = ToUnicode(static_cast<UINT>(key), MapVirtualKey(static_cast<UINT>(key), MAPVK_VK_TO_VSC), kb, (LPWSTR)ch, 5, 0);
+					int ret = ToUnicode(static_cast<UINT>(key), scancode, kb, (LPWSTR)ch, 5, 0);
 					if (ret > 0) {
 						io.AddInputCharacterUTF16(ch[0]);
-						return 0;
 					}
 
 				}
@@ -1029,8 +986,9 @@ auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX
 	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
 #ifndef IMGUIINPUT_USE_WNDPROC
 	if (ImGui::GetCurrentContext() != nullptr) {
+		ImGuiMouseSource mouse_source = GetMouseSourceFromMessageExtraInfo();
 		ImGuiIO& io = ImGui::GetIO();
-		//io.MousePos = ImVec2(mouseX, mouseY);
+		io.AddMouseSourceEvent(mouse_source);
 		switch (mousebutton) {
 		case 1:
 			//io.MouseDown[0] = isDown;

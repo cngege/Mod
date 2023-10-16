@@ -273,6 +273,9 @@
     <ClInclude Include="Modules\Modules\ChangeGameMode.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="imgui\imgui_uwp_wndProc.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -472,6 +475,9 @@
     </ClCompile>
     <ClCompile Include="..\SDK\ActorCollision.cpp">
       <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_uwp_wndProc.cpp">
+      <Filter>IMGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
