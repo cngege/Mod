@@ -82,3 +82,10 @@ auto ChangeGameMode::onKeyUpdate(int key, bool isdown) -> void
 		}
 	}
 }
+
+auto ChangeGameMode::onloadConfigFile(json& data)->void {
+	setEnabled(config::readDataFromJson<bool>(data, "enable", false));
+}
+auto ChangeGameMode::onsaveConfigFile(json& data)->void {
+	data["enable"] = isEnabled();
+}
