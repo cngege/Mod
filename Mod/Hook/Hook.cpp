@@ -982,34 +982,43 @@ auto Hook::MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX
 	Game::MouseKeyDown[mousebutton] = isDown;
 	Game::GetModuleManager()->onMouseUpdate(mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY);
 #ifndef IMGUIINPUT_USE_WNDPROC
-	if (ImGui::GetCurrentContext() != nullptr) {
-		ImGuiMouseSource mouse_source = GetMouseSourceFromMessageExtraInfo();
-		ImGuiIO& io = ImGui::GetIO();
-		io.AddMouseSourceEvent(mouse_source);
-		switch (mousebutton) {
-		case 1:
-			//io.MouseDown[0] = isDown;
-			io.AddMouseButtonEvent(0, isDown);
-			break;
-		case 2:
-			//io.MouseDown[1] = isDown;
-			io.AddMouseButtonEvent(1, isDown);
-			break;
-		case 3:
-			//io.MouseDown[2] = isDown;
-			io.AddMouseButtonEvent(2, isDown);
-			break;
-		case 4:
-			//io.MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
-			io.AddMouseWheelEvent(0.f, isDown < 0 ? -1.f : 1.f);
-			break;
-		default:
-			io.AddMousePosEvent(mouseX, mouseY);
-			break;
+	try
+	{
+		if (ImGui::GetCurrentContext() != nullptr) {
+			ImGuiMouseSource mouse_source = GetMouseSourceFromMessageExtraInfo();
+			ImGuiIO& io = ImGui::GetIO();
+			io.AddMouseSourceEvent(mouse_source);
+			switch (mousebutton) {
+			case 1:
+				//io.MouseDown[0] = isDown;
+				io.AddMouseButtonEvent(0, isDown);
+				break;
+			case 2:
+				//io.MouseDown[1] = isDown;
+				io.AddMouseButtonEvent(1, isDown);
+				break;
+			case 3:
+				//io.MouseDown[2] = isDown;
+				io.AddMouseButtonEvent(2, isDown);
+				break;
+			case 4:
+				//io.MouseWheel = isDown < 0 ? -0.5f : 0.5f; //For scrolling
+				io.AddMouseWheelEvent(0.f, isDown < 0 ? -1.f : 1.f);
+				break;
+			default:
+				io.AddMousePosEvent(mouseX, mouseY);
+				break;
+			}
+			if (/*io.WantCaptureMouse && */io.WantCaptureMouseUnlessPopupClose)
+				return;
 		}
-		if (/*io.WantCaptureMouse && */io.WantCaptureMouseUnlessPopupClose)
-			return;
 	}
+	catch (const std::exception& ex)
+	{
+		logF_Debug("MouseUpdate 异常");
+		logF_Debug("%s", ex.what());
+	}
+
 #endif // IMGUIINPUT_USE_WNDPROC == false
 
 	mouseupdatecall(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
