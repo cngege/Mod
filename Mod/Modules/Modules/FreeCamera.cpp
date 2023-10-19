@@ -61,23 +61,26 @@ void* FreeCamera::_setCameraPosTick(void* a1, void* a2, void* a3) {
 		if (lp && posinfo) {
 			posinfo->rot = *lp->getRotationEx(); // 必须执行一次 /camera CNGEGE set minecraft:free rot 50 50 设置方向的命令才有效 posinfo才不为0
 
-			if (Game::IsKeyDown(VK_UP)) {
-				posinfo->pos.x -= speed;
-			}
-			if (Game::IsKeyDown(VK_DOWN)) {
-				posinfo->pos.x += speed;
-			}
-			if (Game::IsKeyDown(VK_LEFT)) {
-				posinfo->pos.z += speed;
-			}
-			if (Game::IsKeyDown(VK_RIGHT)) {
-				posinfo->pos.z -= speed;
-			}
-			if (Game::IsKeyDown(VK_SPACE)) {
-				posinfo->pos.y += speed;
-			}
-			if (Game::IsKeyDown(VK_SHIFT)) {
-				posinfo->pos.y -= speed;
+			auto screen = Game::Cinstance->getTopScreenName().to_string();
+			if (screen.rfind("hud_screen") != std::string::npos) {
+				if (Game::IsKeyDown(VK_UP)) {
+					posinfo->pos.x -= speed;
+				}
+				if (Game::IsKeyDown(VK_DOWN)) {
+					posinfo->pos.x += speed;
+				}
+				if (Game::IsKeyDown(VK_LEFT)) {
+					posinfo->pos.z += speed;
+				}
+				if (Game::IsKeyDown(VK_RIGHT)) {
+					posinfo->pos.z -= speed;
+				}
+				if (Game::IsKeyDown(VK_SPACE)) {
+					posinfo->pos.y += speed;
+				}
+				if (Game::IsKeyDown(VK_SHIFT)) {
+					posinfo->pos.y -= speed;
+				}
 			}
 		}
 
