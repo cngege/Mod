@@ -548,7 +548,7 @@ auto Hook::init() -> void
 
 			//ServerPlayer::respawn 获取实现 Actor::getRotationEx 的关键偏移(342) +9
 			//logF("ServerPlayer::GetVFtableFun(342) %d", reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(342)));
-			//DebugBreak();
+			//DebugBreak(); //ServerPlayer::respawn?
 			Actor::GetRotationOffset = *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(335)) + 9);	// 检查版本 1.20
 
 

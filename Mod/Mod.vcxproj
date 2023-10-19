@@ -337,6 +337,7 @@
     <ClInclude Include="Modules\Modules\ChangeGameMode.h" />
     <ClInclude Include="Modules\Modules\Debug.h" />
     <ClInclude Include="Modules\Modules\FastViewPerspective.h" />
+    <ClInclude Include="Modules\Modules\FreeCamera.h" />
     <ClInclude Include="Modules\Modules\GameTimeLock.h" />
     <ClInclude Include="Modules\Modules\HitBox.h" />
     <ClInclude Include="Modules\Modules\HiveTreasurePos.h" />
@@ -410,6 +411,7 @@
     <ClCompile Include="Modules\Modules\ChangeGameMode.cpp" />
     <ClCompile Include="Modules\Modules\Debug.cpp" />
     <ClCompile Include="Modules\Modules\FastViewPerspective.cpp" />
+    <ClCompile Include="Modules\Modules\FreeCamera.cpp" />
     <ClCompile Include="Modules\Modules\GameTimeLock.cpp" />
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
     <ClCompile Include="Modules\Modules\HiveTreasurePos.cpp" />

@@ -22,6 +22,7 @@
 #include "Modules/FastViewPerspective.h"
 #include "Modules/LockControlInput.h"
 #include "Modules/ChangeGameMode.h"
+#include "Modules/FreeCamera.h"
 #include "Modules/HundredTimesMoreDrops.h"
 
 #ifdef _DEBUG
@@ -63,6 +64,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new RenderHealth()));					/*Ctrl+F10*/
 																				/*F11 = 全屏*/
 	moduleList.push_back((Module*)(new LockControlInput()));				/*Ctrl+F12*/
+	moduleList.push_back((Module*)(new FreeCamera()));
 	moduleList.push_back((Module*)(new ChangeGameMode()));
 	moduleList.push_back((Module*)(new HundredTimesMoreDrops()));
 #ifdef _DEBUG
