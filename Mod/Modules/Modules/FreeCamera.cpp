@@ -52,10 +52,7 @@ void* FreeCamera::_setCameraPosTick(void* a1, void* a2, void* a3) {
 	//setCameraPosTickcall
 	static auto fc = Game::GetModuleManager()->GetModule<FreeCamera*>();
 	if (fc && fc->isEnabled() && UnlockCamera) {
-		void* x1 = **(void***)a1;
-		DWORD* x2 = (DWORD*)((uintptr_t)a1 + 8);
-
-		auto posinfo = getCameraPos(x1, x2);
+		auto posinfo = getCameraPos(**(void***)a1, (DWORD*)((uintptr_t)a1 + 8));
 
 		static auto lp = Game::Cinstance->getCILocalPlayer();
 		if (lp && posinfo) {
