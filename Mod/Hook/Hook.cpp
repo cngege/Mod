@@ -914,61 +914,70 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 	}
 	
 #ifndef IMGUIINPUT_USE_WNDPROC
-	//IMGUI 按键信号传递
-	if (ImGui::GetCurrentContext() != nullptr) {
-		ImGuiIO& io = ImGui::GetIO();
-		bool is_key_down = (isdown == 1);
-		auto scancode = MapVirtualKey(static_cast<UINT>(key), MAPVK_VK_TO_VSC);
+	try
+	{
+		//IMGUI 按键信号传递
+		if (ImGui::GetCurrentContext() != nullptr) {
+			ImGuiIO& io = ImGui::GetIO();
+			bool is_key_down = (isdown == 1);
+			auto scancode = MapVirtualKey(static_cast<UINT>(key), MAPVK_VK_TO_VSC);
 
-		io.AddKeyEvent(ImGuiMod_Ctrl, KEY_DOWN(VK_CONTROL));
-		io.AddKeyEvent(ImGuiMod_Shift, KEY_DOWN(VK_SHIFT));
-		io.AddKeyEvent(ImGuiMod_Alt, KEY_DOWN(VK_MENU));
-		io.AddKeyEvent(ImGuiMod_Super, KEY_DOWN(VK_APPS));
+			io.AddKeyEvent(ImGuiMod_Ctrl, KEY_DOWN(VK_CONTROL));
+			io.AddKeyEvent(ImGuiMod_Shift, KEY_DOWN(VK_SHIFT));
+			io.AddKeyEvent(ImGuiMod_Alt, KEY_DOWN(VK_MENU));
+			io.AddKeyEvent(ImGuiMod_Super, KEY_DOWN(VK_APPS));
 
-		ImGuiKey imKey = ImGui_VirtualKeyToImGuiKey(key);
-		if (imKey != ImGuiKey_None) {
-			//io.AddKeyEvent(imKey, isdown == 1);
-			ImGui_ImplUWP_AddKeyEvent(imKey, is_key_down, static_cast<int>(key), scancode);
-		}
-
-		if (key == VK_SHIFT)
-		{
-			// Important: Shift keys tend to get stuck when pressed together, missing key-up events are corrected in ImGui_ImplWin32_ProcessKeyEventsWorkarounds()
-			if (KEY_DOWN(VK_LSHIFT) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftShift, is_key_down, VK_LSHIFT, scancode); }
-			if (KEY_DOWN(VK_RSHIFT) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightShift, is_key_down, VK_RSHIFT, scancode); }
-		}
-		else if (key == VK_CONTROL)
-		{
-			if (KEY_DOWN(VK_LCONTROL) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftCtrl, is_key_down, VK_LCONTROL, scancode); }
-			if (KEY_DOWN(VK_RCONTROL) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightCtrl, is_key_down, VK_RCONTROL, scancode); }
-		}
-		else if (key == VK_MENU)
-		{
-			if (KEY_DOWN(VK_LMENU) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftAlt, is_key_down, VK_LMENU, scancode); }
-			if (KEY_DOWN(VK_RMENU) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightAlt, is_key_down, VK_RMENU, scancode); }
-		}
-
-
-		if (io.WantTextInput) {
-			if (is_key_down) {
-				//if (Game::Cinstance) Game::Cinstance->setSuspendInput(false);
-				// 这里不负责粘贴部分的工作
-				BYTE kb[256];
-				if (GetKeyboardState(kb)) {
-					wchar_t ch[6] = { 0 };
-					int ret = ToUnicode(static_cast<UINT>(key), scancode, kb, (LPWSTR)ch, 5, 0);
-					if (ret > 0) {
-						io.AddInputCharacterUTF16(ch[0]);
-					}
-
-				}
+			ImGuiKey imKey = ImGui_VirtualKeyToImGuiKey(key);
+			if (imKey != ImGuiKey_None) {
+				//io.AddKeyEvent(imKey, isdown == 1);
+				ImGui_ImplUWP_AddKeyEvent(imKey, is_key_down, static_cast<int>(key), scancode);
 			}
-			return 0;
-		}
-		if (ImGui::GetIO().WantCaptureKeyboard) {	// 这里应该是指焦点在ImGui上, 可能不在输入框里
-			return 0;
+
+			if (key == VK_SHIFT)
+			{
+				// Important: Shift keys tend to get stuck when pressed together, missing key-up events are corrected in ImGui_ImplWin32_ProcessKeyEventsWorkarounds()
+				if (KEY_DOWN(VK_LSHIFT) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftShift, is_key_down, VK_LSHIFT, scancode); }
+				if (KEY_DOWN(VK_RSHIFT) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightShift, is_key_down, VK_RSHIFT, scancode); }
+			}
+			else if (key == VK_CONTROL)
+			{
+				if (KEY_DOWN(VK_LCONTROL) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftCtrl, is_key_down, VK_LCONTROL, scancode); }
+				if (KEY_DOWN(VK_RCONTROL) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightCtrl, is_key_down, VK_RCONTROL, scancode); }
+			}
+			else if (key == VK_MENU)
+			{
+				if (KEY_DOWN(VK_LMENU) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_LeftAlt, is_key_down, VK_LMENU, scancode); }
+				if (KEY_DOWN(VK_RMENU) == is_key_down) { ImGui_ImplUWP_AddKeyEvent(ImGuiKey_RightAlt, is_key_down, VK_RMENU, scancode); }
+			}
+
+
+			if (io.WantTextInput) {
+				if (is_key_down) {
+					//if (Game::Cinstance) Game::Cinstance->setSuspendInput(false);
+					// 这里不负责粘贴部分的工作
+					BYTE kb[256];
+					if (GetKeyboardState(kb)) {
+						wchar_t ch[6] = { 0 };
+						int ret = ToUnicode(static_cast<UINT>(key), scancode, kb, (LPWSTR)ch, 5, 0);
+						if (ret > 0) {
+							io.AddInputCharacterUTF16(ch[0]);
+						}
+
+					}
+				}
+				return 0;
+			}
+			if (ImGui::GetIO().WantCaptureKeyboard) {	// 这里应该是指焦点在ImGui上, 可能不在输入框里
+				return 0;
+			}
 		}
 	}
+	catch (const std::exception& ex)
+	{
+		logF_Debug("KeyUpdate 异常");
+		logF_Debug("%s", ex.what());
+	}
+
 #endif // IMGUIINPUT_USE_WNDPROC == false
 
 	return keyupdatecall(key, isdown);
