@@ -150,7 +150,7 @@ auto Hook::init() -> void
 	//Block::playerDestroy
 	{
 		// 这就是本函数
-		const char* memcode_call = "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E8 4C 8B FA 48 8B F1";
+		const char* memcode_call = "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E8 4C 8B FA 48 8B F1 0F";
 		// 这是函数的调用者
 		const char* memcode_offset = "E8 ? ? ? ? 48 8B 47 ? 48 8B 90 ? ? ? ? 80 BA ? ? ? ? ? 75 ? 48 8B 8A";
 		auto BlockplayerDestroyCall = FindSignature(memcode_call);
@@ -389,7 +389,7 @@ auto Hook::init() -> void
 		}
 	}
 
-	// 虚表函数核对时间 : 1.20.30
+	// 虚表函数核对时间 : 1.20.41.02
 	//GameMode虚表及相关Hook
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 48 89 51 ? 48 C7 41 ? ? ? ? ? C7 41 ? ? ? ? ? 44 88 61";
@@ -414,7 +414,7 @@ auto Hook::init() -> void
 		}
 	}
 
-	// 虚表函数核对时间 : 1.20.30
+	// 虚表函数核对时间 : 1.20.41.02
 	//Actor 虚表及相关Hook  构造函数特征码：48 89 5C 24 ? 55  56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 49 8B D8 48 8B FA 4C 8B F1
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 01 49 8B 00 48 89 41 ? 41 8B 40 ? 89 41";
@@ -429,10 +429,10 @@ auto Hook::init() -> void
 			Actor::SetVFtables(ActorVTable);
 			//虚表Hook
 			//Actor::setVelocity
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(41), &Hook::SetVelocity, &Actor::setVelocityCallptr);
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(52), &Hook::Actor_isInvisible, &Actor::isInvisibleCallptr);
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(64), &Hook::Actor_isInWater, &Actor::isInWaterCallptr);
-			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(68), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(27), &Hook::SetVelocity, &Actor::setVelocityCallptr);				
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(37), &Hook::Actor_isInvisible, &Actor::isInvisibleCallptr);
+			//MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(64), &Hook::Actor_isInWater, &Actor::isInWaterCallptr);
+			MH_CreateHookEx((LPVOID)Actor::GetVFtableFun(42), &Hook::Actor_getShadowRadius, &Actor::getShadowRadiusCallptr);
 		}
 	}
 
@@ -493,7 +493,7 @@ auto Hook::init() -> void
 		}
 	}
 	*/
-	// 虚表函数核对时间 : 1.20.30
+	// 虚表函数核对时间 : 1.20.41.02
 	//Player 虚表及相关Hook
 	{
 		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 33 C0 48 89 86 ? ? ? ? 48 89 86 ? ? ? ? 48 89 86";
@@ -508,11 +508,11 @@ auto Hook::init() -> void
 			//虚表Hook
 			//MH_CreateHookEx((LPVOID)Player::GetVFtableFun(80), &Hook::LocalPlayer_getCameraOffset, &localplayer_getCameraOffsetcall); // 没找到
 			//Player::getShadowRadius
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(68), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(42), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
 			//Player::startSwimming
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(178), &Hook::Player_startSwimming, &Player::startSwimmingCallptr);
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(121), &Hook::Player_startSwimming, &Player::startSwimmingCallptr);
 			//Player::tickWorld
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(325), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
+			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(221), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
 			// Mob 虚表及相关Hook
 			{
 				// 在 PlayerVTable_sigOffset 地址定位之前的汇编是 E8 X X X X 90 ....
@@ -532,7 +532,7 @@ auto Hook::init() -> void
 		}
 	}
 
-	// 虚表函数核对时间 : 1.20.30
+	// 虚表函数核对时间 : 1.20.41.02
 	//ServerPlayer 虚表及相关Hook
 	{
 		//48 8D 05 ? ? ? ? 48 89 06 4C 89 BE ? ? ? ? 48 8D 9E ? ? ? ? 48
@@ -554,7 +554,7 @@ auto Hook::init() -> void
 
 			//虚表Hook
 			// 为什么不调用
-			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(325), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall); // （记得同步修改RemotePlayer）检查版本 1.20
+			MH_CreateHookEx((LPVOID)ServerPlayer::GetVFtableFun(221), &Hook::ServerPlayer_TickWorld, &ServerPlayer::tickWorldCall); // （记得同步修改RemotePlayer）检查版本 1.20
 
 		}
 	}
@@ -572,7 +572,7 @@ auto Hook::init() -> void
 			logF_Debug("[RemotePlayer::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", RemotePlayerVT, RemotePlayerVTable_sigOffset, memcode);
 			RemotePlayer::SetVFtables(RemotePlayerVT);
 			//TickWorld 不能Hook这个函数,因为函数的内容为 ret 0000 (C2 00 00) 302 304 这里的虚表位置应该和ServerPlayer::tick 的虚表位置是一样的
-			MH_CreateHookEx((LPVOID)RemotePlayer::GetVFtableFun(325), &Hook::RemotePlayer_TickWorld, &RemotePlayer::tickWorldCallptr);
+			MH_CreateHookEx((LPVOID)RemotePlayer::GetVFtableFun(221), &Hook::RemotePlayer_TickWorld, &RemotePlayer::tickWorldCallptr);
 		}
 	}
 
@@ -605,7 +605,7 @@ auto Hook::init() -> void
 				logF("[LocalPlayer::SetVtables] [Error] 寻找 LocalPlayer To ClientInstance 偏移地址失败,LP_CIoffset:%llX", LP_CIoffset);
 			}
 			//虚表Hook
-			MH_CreateHookEx((LPVOID)LocalPlayer::GetVFtableFun(325), &Hook::LocalPlayer_TickWorld, &LocalPlayer::tickWorldCall);
+			MH_CreateHookEx((LPVOID)LocalPlayer::GetVFtableFun(221), &Hook::LocalPlayer_TickWorld, &LocalPlayer::tickWorldCall);
 
 		}
 	}
@@ -698,9 +698,9 @@ auto Hook::Actor_isInWater(Actor* actor) -> bool
 auto Hook::Actor_isInvisible(Actor* _this) -> bool
 {
 	static FastViewPerspective* idy = Game::GetModuleManager()->GetModule<FastViewPerspective*>();
-	if (_this->isLocalPlayer()) {
-		if (idy && idy->isEnabled() && idy->isToggle())
-		{
+	if (idy && idy->isEnabled() && idy->isToggle())
+	{
+		if (_this->isLocalPlayer()) {
 			return true;
 		}
 	}

@@ -29,11 +29,12 @@ static uintptr_t lockCameraTickoffset = 0;
 static uintptr_t setCameraPosTickoffset = 0;
 
 bool FreeCamera::UnlockCamera = false;
+bool DebugPrint = false;
 float speed = 0.1f;
 
 
 
-
+// a1 不变 a2 不变 ret 变
 void* FreeCamera::_LockCameraTick(void* a1, unsigned int a2) {
 	auto ret = LockCameraTickcall(a1, a2);
 
@@ -41,13 +42,15 @@ void* FreeCamera::_LockCameraTick(void* a1, unsigned int a2) {
 
 	if (fc && fc->isEnabled() && UnlockCamera) {
 		if (ret) {
+			*(bool*)ret = true;			// 相当于运行了 /camera CNGEGE set minecraft:free
 			*((bool*)ret + 4) = true;	// 必须运行一次命令 /camera CNGEGE set minecraft:free pos ~ ~ ~ 设置位置 才有效
 		}
-		
+		if(DebugPrint) logF_Debug("FreeCamera::_LockCameraTick a1:%llX, a2:%u, ret:%llX", a1, a2, ret);
 	}
 	return ret;
 }
 
+// a1 退出存档是不变的 a2 变, a3 不变
 void* FreeCamera::_setCameraPosTick(void* a1, void* a2, void* a3) {
 	//setCameraPosTickcall
 	static auto fc = Game::GetModuleManager()->GetModule<FreeCamera*>();
@@ -57,7 +60,7 @@ void* FreeCamera::_setCameraPosTick(void* a1, void* a2, void* a3) {
 		static auto lp = Game::Cinstance->getCILocalPlayer();
 		if (lp && posinfo) {
 			posinfo->rot = *lp->getRotationEx(); // 必须执行一次 /camera CNGEGE set minecraft:free rot 50 50 设置方向的命令才有效 posinfo才不为0
-
+			posinfo->customizePos = true;
 			auto screen = Game::Cinstance->getTopScreenName().to_string();
 			if (screen.rfind("hud_screen") != std::string::npos) {
 				if (Game::IsKeyDown(VK_UP)) {
@@ -81,7 +84,7 @@ void* FreeCamera::_setCameraPosTick(void* a1, void* a2, void* a3) {
 			}
 		}
 
-		
+		if(DebugPrint) logF_Debug("FreeCamera::_setCameraPosTick a1:%llX, a2:%llX, a3:%llX, **a1:%llX", a1, a2 ,a3, **(void***)a1);
 	}
 	return setCameraPosTickcall(a1, a2, a3);
 }
@@ -124,6 +127,7 @@ FreeCamera::FreeCamera() : Module(0, "FreeCamera", "自由相机控制")
 	
 
 	AddBoolUIValue("解绑相机(Debug)", &UnlockCamera);
+	AddBoolUIValue("输出Debug信息", &DebugPrint);
 	AddFloatUIValue("设置相机移动速度", &speed, 0.01f, 5.f);
 }
 

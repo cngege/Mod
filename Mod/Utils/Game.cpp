@@ -47,6 +47,19 @@ auto Game::init() -> void
 	}
 	*/
 
+
+	//KeyMap
+	{
+		auto sigOffset = FindSignature("4C 8D 05 ? ? ? ? 89 54 24 ? 88 4C 24");
+		if (sigOffset == 0x0) {
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "KeyMap");
+			return;
+		}
+		int offset = *reinterpret_cast<int*>((sigOffset + 3));      // Get Offset from code
+		KeyMap = sigOffset + offset + /*length of instruction*/ 7;  // Offset is relative
+		logF_Debug("KeyMap: %llX", KeyMap);
+	}
+
 	//Actor::isRemoved() 获取构成该函数的 this到结果的关键偏移
 	{
 		auto offset = FindSignature("53 48 83 EC ? 80 BA ? ? ? ? 0 48 8B D9 75 ? 48 8B 81 ? ? ? ? 48 85 C0");
@@ -118,17 +131,6 @@ auto Game::init() -> void
 	}
 	*/
 
-	//KeyMap
-	{
-		auto sigOffset = FindSignature("4C 8D 05 ? ? ? ? 89 54 24 ? 88 4C 24");
-		if (sigOffset == 0x0) {
-			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "KeyMap");
-			return;
-		}
-		int offset = *reinterpret_cast<int*>((sigOffset + 3));      // Get Offset from code
-		KeyMap = sigOffset + offset + /*length of instruction*/ 7;  // Offset is relative
-		logF_Debug("KeyMap: %llX", KeyMap);
-	}
 
 	//获取本地玩家OnGround函数的偏移		// 新版已经没有这个方案了
 	//{

@@ -260,11 +260,11 @@ auto Actor::setStatusFlag(ActorFlags af, bool flag)->void {
 
 //应该获取的是头部位置，Y值会往上偏两个单位
 auto Actor::getPosition()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(22)(this);	// 更新自 1.20.30
+	return GetVFtableFun<vec3_t*, Actor*>(22)(this);	// 1.20.40.01 不在虚表
 }
 
 auto Actor::getPosPrev()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(23)(this);	// 更新自 1.20.30
+	return GetVFtableFun<vec3_t*, Actor*>(23)(this);	// 1.20.40.01 不在虚表
 }
 
 // 新版本中虚表不存在此函数
@@ -273,18 +273,18 @@ auto Actor::getPosPrev()->vec3_t* {
 //}
 
 auto Actor::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)->void {
-	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(38)(this, pos, a1, a2, a3);	//更新自 1.20.30
+	GetVFtableFun<void, Actor*, vec3_t*, bool, unsigned int, unsigned int>(26)(this, pos, a1, a2, a3);	//更新自 1.20.30
 }
 
 auto Actor::getNameTag()->std::mcstring* {
-	return GetVFtableFun<std::mcstring*, Actor*>(56)(this);			//更新自 1.20.30
+	return GetVFtableFun<std::mcstring*, Actor*>(56)(this);			// 1.20.40.01 不在虚表
 }
 
 // 第19号虚表调用的都是 Player::isPlayer 所以一定返回true > 20 35 62ok 71 77 81 82 84 86ok
 // 第40号虚表调用的都是 Actor::isPlayer  所以一定返回false
 // 第67->70号虚表 Actor调用的是 Actor::isPlayer, Player调用的是Player::isPlayer,所以可用	//Actor::setNameTag -X- Actor::setScoreTag
 auto Actor::isPlayer()->bool {
-	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[61])(this);
+	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[63])(this);//更新自 1.20.41.02
 }
 
 auto Actor::getNameTagAsHash()->unsigned __int64 {
