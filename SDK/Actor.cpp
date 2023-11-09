@@ -298,54 +298,36 @@ auto Actor::isPlayer()->bool {
 	return reinterpret_cast<bool(__fastcall*)(Actor*)>((*(uintptr_t**)this)[63])(this);//更新自 1.20.41.02
 }
 
-auto Actor::getNameTagAsHash()->unsigned __int64 {
-	return GetVFtableFun<unsigned __int64, Actor*>(57)(this);	    //更新自 1.20.30
-}
-
-/*
-_QWORD *__fastcall sub_1419CC9C0(__int64 a1, _QWORD *a2)
-{
-  (*(void (__fastcall **)(__int64))(*(_QWORD *)a1 + 504i64))(a1);
-  *a2 = 0i64;
-  a2[2] = 0i64;
-  a2[3] = 0i64;
-  sub_1400A7970(a2, a1 + 1440);			//std::string::string
-  return a2;
-}
-*/
-//这个函数暂存，因为会崩溃
-auto Actor::getFormattedNameTag()->std::mcstring* {
-	//void* ret = malloc(8 * 4);
-	//TextHolder ret;
-	//GetVFtableFun<TextHolder, Actor*, TextHolder>(58)(this,ret);//更新自 1.20.30
-	//return ret;
-	//return GetVFtableFun<std::mcstring*, Actor*>(58)(this);
-	return reinterpret_cast<std::mcstring * (__fastcall*)(Actor*)>((*(uintptr_t**)this)[58])(this);
-}
-
 //新版本中虚表不存在该函数
 //auto Actor::getRotation()->vec2_t* {
 //	return GetVFtableFun<vec2_t*, Actor*>(81)(this);
 //}
 
 auto Actor::setSneaking(bool b)->void {
-	return GetVFtableFun<void, Actor*, bool>(86)(this, b);	  //更新自 1.20.30
+	return GetVFtableFun<void, Actor*, bool>(55)(this, b);	  //更新自 1.20.41
 }
 
 // 是否着火
 auto Actor::isOnFire() -> bool
 {
-	return GetVFtableFun<bool, Actor*>(90)(this);				  //更新自 1.20.30
+	return GetVFtableFun<bool, Actor*>(59)(this);				  //更新自 1.20.41（原90）
 }
 
 // isLocalPlayer 在 isRemotePlayer上面一个,不确定可以通过DirectPlayerMovementProxy::isLocalPlayer内容确定,其中(_QWORD **)this + 2)就是Actor
 auto Actor::isLocalPlayer() -> bool
 {
-	return Utils::CallVFunc<95, bool>(this);				  //更新自 1.20.30
+	return Utils::CallVFunc<62, bool>(this);				  //更新自 1.20.41
 }
 
+// 函数有个关键字：-1594224897 要满足函数仅一个参数，关键字在函数开头，整个函数只有这一个负数的关键字
 auto Actor::isRemotePlayer()->bool {
-	return Utils::CallVFunc<96, bool>(this);				  //更新自 1.20.30
+	//return Utils::CallVFunc<96, bool>(this);				  //更新自 1.20.30
+	// 1.20.41.02 ： sub_140A66A20  （this + 8byte）
+	const char* offset_fn = "40 53 48 83 EC ? 48 8B 01 48 8B D9 BA FF"; // 本函数
+	const char* offset_call = "E8 ? ? ? ? 84 C0 74 ? 88 9D"; // 它的调用处
+	static auto offset = Utils::getFunFromSigAndCall(offset_fn, offset_call, 1);
+	_ASSERT(offset);
+	return reinterpret_cast<bool(__fastcall*)(Actor*)>(offset)(this);
 }
 
 auto Actor::getEntityTypeId()->int {
