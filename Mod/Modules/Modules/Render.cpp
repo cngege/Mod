@@ -12,18 +12,20 @@
 ImGuiToggleConfig toggerConfig;
 bool isCursorVisible = true;
 bool cursorSwitch = false;
+bool TabPreWindow = true;
 
 Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
 	toggerConfig = ImGuiTogglePresets::RectangleStyle();
 	AddBoolUIValue("是否在开关时控制鼠标指针", &cursorSwitch);
+	AddBoolUIValue("按住TAB健打开UI,松开关闭", &TabPreWindow);
 }
 
 auto Render::onEnable() -> void
 {
 	isCursorVisible = Utils::isCursorVisible();
 	if (!isCursorVisible) {
-		if(Game::Cinstance)
+		if (Game::Cinstance)
 			Game::Cinstance->releaseMouse();
 	}
 }
@@ -34,6 +36,24 @@ auto Render::onDisable() -> void
 		auto screen = Game::Cinstance->getTopScreenName().to_string();
 		if (screen.rfind("hud_screen") != std::string::npos) {
 			Game::Cinstance->grabMouse();
+		}
+	}
+}
+
+auto Render::onKeyUpdate(int key, bool isDown) -> void
+{
+	if (TabPreWindow && Game::Cinstance) {
+		if (key == VK_TAB) {
+			auto screen = Game::Cinstance->getTopScreenName().to_string();
+			if (screen.rfind("hud_screen") != std::string::npos) {
+				if (isDown && !isEnabled()) {
+					setEnabled(true);
+				}
+				else if (!isDown && isEnabled()) {
+					setEnabled(false);
+				}
+			}
+			
 		}
 	}
 }

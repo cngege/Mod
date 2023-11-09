@@ -668,13 +668,13 @@ public:
 	auto grabMouse(void) -> void {
 		// 特征码定位虚表偏移 +3 int
 		//48 8B 80 ? ? ? ? FF 15 ? ? ? ? 90 48 85 ? 74 ? 48 8B ? E8 ? ? ? ? 48 8B 8F
-		Utils::CallVFunc<325, void>(this);	/*1.20.31*/
+		Utils::CallVFunc<325, void>(this);	/*1.20.41*/
 	};
 	auto releaseMouse(void) -> void {
 		//48 8B 80 ? ? ? ? 48 8B CE FF 15 ? ? ? ? 84
-		Utils::CallVFunc<326, void>(this);	/*1.20.31*/
+		Utils::CallVFunc<326, void>(this);	/*1.20.41*/
 	};
 	auto refocusMouse(void) -> void {
-		Utils::CallVFunc<327, void>(this);	/*1.20.31*/
+		Utils::CallVFunc<327, void>(this);	/*1.20.41*/
 	};
 };
