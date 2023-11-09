@@ -132,6 +132,7 @@ public:
 	auto setStatusFlag(ActorFlags,bool)->void;										/*1*/
 	
 	auto getPosition()->vec3_t*;													/*21*/
+	[[deprecated]]
 	auto getPosPrev()->vec3_t*;														/*22*/
 	//设置玩家移动的方向  这个函数在1.19.50.02 版本开始没有了
 	//auto setRot(vec2_t*)->void;													/*26*/
