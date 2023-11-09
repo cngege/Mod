@@ -327,7 +327,7 @@ auto Actor::isRemotePlayer()->bool {
 	const char* offset_call = "E8 ? ? ? ? 84 C0 74 ? 88 9D"; // 它的调用处
 	static auto offset = Utils::getFunFromSigAndCall(offset_fn, offset_call, 1);
 	_ASSERT(offset);
-	return reinterpret_cast<bool(__fastcall*)(Actor*)>(offset)(this);
+	return reinterpret_cast<bool(__fastcall*)(Actor*)>(offset)((Actor*)((uintptr_t)this + 8));
 }
 
 auto Actor::getEntityTypeId()->int {
