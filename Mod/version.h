@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #define VERSION_MAJOR 1
-#define VERSION_MINOR 7
-#define VERSION_REVISION 4
+#define VERSION_MINOR 8
+#define VERSION_REVISION 0
 #define VERSION_BUILD 0
 
 #define PLUGIN_NAME "Mod"
