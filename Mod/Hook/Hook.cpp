@@ -1209,7 +1209,6 @@ auto Hook::RemotePlayer_TickWorld(RemotePlayer* _this) -> void*
 	return _this->tickWorld();
 }
 
-#include "../Modules/Modules/Render.h"
 auto Hook::LoopbackPacketSender_SendServer(LoopbackPacketSender* _this, Packet* pack)-> void* {
 	
 	if (!Game::GetModuleManager()->onSendPacketToServer(_this, pack)) {
