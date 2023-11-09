@@ -61,14 +61,23 @@ auto Game::init() -> void
 	}
 
 	//Actor::isRemoved() 获取构成该函数的 this到结果的关键偏移
+	// 从虚表函数 Mob::baseTick 中找, 倒数这个753就是偏移
+	//if (!*((_BYTE*)a1 + 753))
+	//	sub_1430E01A0((__int64)a1);
+	//if ((**(unsigned __int8(__fastcall***)(_DWORD*, __int64))a1)(a1, 3i64) && !sub_142DF7230((__int64)(a1 + 2)))
+	//	sub_1430DAE20((__int64)a1);
+	//result = sub_143290B50((__int64)a1);
+	//if (result)
+	//	return sub_1430DB080((__int64)a1, v20, v21);
+	//return result;
 	{
-		auto offset = FindSignature("53 48 83 EC ? 80 BA ? ? ? ? 0 48 8B D9 75 ? 48 8B 81 ? ? ? ? 48 85 C0");
+		auto offset = FindSignature("80 BE ? ? ? ? 00 75 ? 48 8B CE E8 ? ? ? ? 48");
 		if (offset == 0x00) {
 			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "Actor::isRemoved");
 			return;
 		}
 		else {
-			Actor::IsRemovedOffset = *reinterpret_cast<int*>(offset + 7);
+			Actor::IsRemovedOffset = *reinterpret_cast<int*>(offset + 2);
 		}
 	}
 
