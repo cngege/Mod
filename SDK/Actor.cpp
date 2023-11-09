@@ -364,7 +364,15 @@ auto Actor::isClientSide() -> bool
 }
 
 auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
-	return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(184)(this, &attribute);			//更新自 1.20.30
+	//return GetVFtableFun<AttributeInstance*, Actor*, Attribute*>(184)(this, &attribute);			//更新自 1.20.41
+	//调用处可在 Mob::baseTick 中 < 0.0 那一行找到 当前特征码不在 Mob::baseTick 中
+	//sub_142FCC100
+	const char* offset_call = "E8 ? ? ? ? 0F 57 C0 0F 2F 80";//+1
+	static auto offset = FindSignature(offset_call);
+	_ASSERT(offset);
+	offset = Utils::FuncFromSigOffset(offset, 1);
+	return reinterpret_cast<AttributeInstance*(__fastcall*)(Actor*, Attribute)>(offset)(this, attribute);
+
 }
 
 auto Actor::setSize(float width, float height)->void {
