@@ -331,25 +331,36 @@ auto Actor::isRemotePlayer()->bool {
 }
 
 auto Actor::getEntityTypeId()->int {
-	return GetVFtableFun<unsigned int, Actor*>(151)(this);	  //更新自 1.20.30
+	return GetVFtableFun<unsigned int, Actor*>(100)(this);	  //更新自 1.20.41
 }
 
 auto Actor::changeDimension(AutomaticID<class Dimension, int> dim)->void {
-	return GetVFtableFun<void, Actor*, class AutomaticID<class Dimension, int>>(163)(this,dim);	//更新自 1.20.30
+	return GetVFtableFun<void, Actor*, class AutomaticID<class Dimension, int>>(110)(this,dim);	//更新自 1.20.41
 }
 
 // 造成跌落伤害 
 auto Actor::checkFallDamage(float a, bool b)->void* {
-	return GetVFtableFun<void*, Actor*, float, bool>(165)(this,a,b);								//更新自 1.20.30
+	return GetVFtableFun<void*, Actor*, float, bool>(112)(this,a,b);								//更新自 1.20.41
 }
 
-//auto Actor::causeFallDamage(float a, float b, ActorDamageSource* c)->void* {
-//	return GetVFtableFun<void*, Actor*, float, float, ActorDamageSource*>(168)(this,a,b,c);
-//}
-
+//sub_142F2D8B0 1.20.41.02
 auto Actor::isClientSide() -> bool
 {
-	return GetVFtableFun<bool, Actor*>(182)(this);			//更新自 1.20.30
+	//return GetVFtableFun<bool, Actor*>(182)(this);			//更新自 1.20.30
+	const char* offset_fn = "48 83 EC 28 48 8B 89 ? ? ? ? 48 85 C9 74 ? 48 8B ? 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 84 C0 75";
+	const char* offset_call = "E8 ? ? ? ? 49 8B 0F 84 ? 74 ? 49"; //+1
+	static auto offset = Utils::getFunFromSigAndCall(offset_fn, offset_call, 1);
+	_ASSERT(offset);
+	return reinterpret_cast<bool(__fastcall*)(Actor*)>(offset)(this);
+
+	// 搜索 "GameMode::useItemOn (client)" 能找到调用处， 往上找参数为 a1 + 8的即是
+	//v27 = sub_142F2D8B0(*(_QWORD*)(a1 + 8));
+	//v28 = *v26;
+	//if (v27)
+	//{
+	//	sub_141489A00(v28, a4);
+	//	sub_141489AC0(*v26);
+	//	*(_QWORD*)&v86 = "GameMode::useItemOn (client)";
 }
 
 auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
@@ -357,5 +368,5 @@ auto Actor::getAttribute(Attribute attribute)->AttributeInstance* {
 }
 
 auto Actor::setSize(float width, float height)->void {
-	return GetVFtableFun<void, Actor*, float,float >(208)(this, width, height);					//更新自 1.20.30
+	return GetVFtableFun<void, Actor*, float,float >(144)(this, width, height);					//更新自 1.20.41
 }
