@@ -315,6 +315,18 @@ auto ModuleManager::onSendMessage(std::mcstring* TH)->bool {
 	return RunOriginalFun;
 }
 
+auto ModuleManager::onSendPacketToServer(LoopbackPacketSender* sender, Packet* pack) -> bool
+{
+	bool RunOriginalFun = true;
+	if (!IsInitialized())
+		return RunOriginalFun;
+	for (auto pMod : moduleList) {
+		if (!pMod->onSendPackToServer(sender, pack))
+			RunOriginalFun = false;
+	}
+	return RunOriginalFun;
+}
+
 auto ModuleManager::onloadConfigFile(json& data)->void {
 	if (!IsInitialized())
 		return;

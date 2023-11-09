@@ -40,6 +40,7 @@ public:
 	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
 	auto onImGUIRender()->void;
 	auto onSendMessage(std::mcstring*)->bool;
+	auto onSendPacketToServer(class LoopbackPacketSender*, class Packet*) -> bool;
 	auto onloadConfigFile(json& data)->void;
 	auto onsaveConfigFile(json& data)->void;
 };

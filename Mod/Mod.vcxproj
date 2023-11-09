@@ -300,6 +300,7 @@
     <ClInclude Include="..\SDK\ItemStackBase.h" />
     <ClInclude Include="..\SDK\Level.h" />
     <ClInclude Include="..\SDK\LocalPlayer.h" />
+    <ClInclude Include="..\SDK\LoopbackPacketSender.h" />
     <ClInclude Include="..\SDK\mcstring.h" />
     <ClInclude Include="..\SDK\MinecraftUIRenderContext.h" />
     <ClInclude Include="..\SDK\Mob.h" />
@@ -380,6 +381,7 @@
     <ClCompile Include="..\SDK\ItemStackBase.cpp" />
     <ClCompile Include="..\SDK\Level.cpp" />
     <ClCompile Include="..\SDK\LocalPlayer.cpp" />
+    <ClCompile Include="..\SDK\LoopbackPacketSender.cpp" />
     <ClCompile Include="..\SDK\MinecraftUIRenderContext.cpp" />
     <ClCompile Include="..\SDK\Mob.cpp" />
     <ClCompile Include="..\SDK\Player.cpp" />

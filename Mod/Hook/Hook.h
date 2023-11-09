@@ -10,7 +10,7 @@ inline MH_STATUS MH_CreateHookEx(LPVOID pTarget, LPVOID pDetour, T** ppOriginal)
 {
 	return MH_CreateHook(pTarget, pDetour, reinterpret_cast<LPVOID*>(ppOriginal));
 }
-
+class Packet;
 class Hook
 {
 public:
@@ -51,4 +51,6 @@ public:
 	static auto LocalPlayer_TickWorld(class LocalPlayer* _this, void* tick) -> void*;
 	static auto ServerPlayer_TickWorld(class ServerPlayer* _this, void* tick)->void*;
 	static auto RemotePlayer_TickWorld(class RemotePlayer* _this) -> void*;						//由于该函数只是个空架子,所以只能接受一个参数
+
+	static auto LoopbackPacketSender_SendServer(class LoopbackPacketSender*, Packet*) -> void*;
 };

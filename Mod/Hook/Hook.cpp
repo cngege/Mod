@@ -19,6 +19,7 @@
 #include "ItemInstance.h"
 #include "ItemStack.h"
 #include "Block.h"
+#include "LoopbackPacketSender.h"
 
 #include "../Modules/ModuleManager.h"
 #include "../Modules/Modules/AirWater.h"
@@ -63,13 +64,6 @@ using AllActor_Tick = float* (__fastcall*)(Actor*, float*, float);
 AllActor_Tick allActor_Tickcall;
 uintptr_t allActor_Tick;
 
-
-//48 89 5C 24 ? 57 48 83 EC ? F3 0F 10 02 48 8B D9 F3 0F 58 81
-//这里第二个参数是三个float（三个四字节）
-//using Actor_moveBBs = void* (__fastcall*)(Actor*, vec3_t*);
-//Actor_moveBBs actor_moveBBscall;
-//uintptr_t actor_moveBBs;
-
 using KeyUpdate = void* (__fastcall*)(__int64 key, int isdown);
 KeyUpdate keyupdatecall;
 uintptr_t keyupdate;
@@ -77,10 +71,6 @@ uintptr_t keyupdate;
 using MouseUpdata = void(__fastcall*)(__int64, char, char, __int16, __int16, __int16, __int16, char);
 MouseUpdata mouseupdatecall;
 uintptr_t mouseupdate;
-
-//using RenderDetour = void(__fastcall*)(void*, MinecraftUIRenderContext*);
-//RenderDetour renderDetourcall;
-//uintptr_t renderDetour;
 
 using SendChatMessage = uint8_t(__fastcall*)(void*, std::mcstring*);
 SendChatMessage sendChatMessagecall;
@@ -91,6 +81,9 @@ GetViewPerspective getLocalPlayerViewPerspectivecall;
 
 //using LPLP = void* (__fastcall*)(void*, void*, void*, void*, int, void*, char, void*, void*, void*, void*, void*);
 //LPLP lplpcall;
+
+using LoopbackPacketSenderTOServer = void* (__fastcall*)(LoopbackPacketSender*, Packet*);
+LoopbackPacketSenderTOServer LoopbackPacketSenderToServerCall;
 
 using BlockPlayerDestroy = char*(__fastcall*)(Block* block, Player* player, vec3_ti pos);
 BlockPlayerDestroy blockPlayerDestroyCall;
@@ -633,6 +626,22 @@ auto Hook::init() -> void
 			MH_CreateHookEx((LPVOID)Level::GetVFtableFun(2), &Hook::level_startLeaveGame, &Level::startLeaveGameCall);
 			MH_CreateHookEx((LPVOID)Level::GetVFtableFun(98), &Hook::Level_Tick, &Level::tickCall);
 
+		}
+	}
+
+	//LoopbackPacketSender::LoopbackPacketSender
+	{
+		const char* memcode = "48 8D 05 ? ? ? ? 48 8B 5C 24 ? 48 89 06 33";
+		auto lppackVF_sigoffset = FindSignature(memcode);
+		if (lppackVF_sigoffset == 0x00) {
+			logF("[LoopbackPacketSender VF] LoopbackPacketSender虚表地址获取失败");
+		}
+		else {
+			auto LoopbackPacketSenderVT = Utils::FuncFromSigOffset<uintptr_t**>(lppackVF_sigoffset, 3);
+			LoopbackPacketSender::SetVFtables(LoopbackPacketSenderVT);
+			logF_Debug("[LoopbackPacketSender::SetVtables] [Success] 虚表地址= %llX , sigoffset= %llX , memcode=%s", LoopbackPacketSenderVT, lppackVF_sigoffset, memcode);
+			//LoopbackPacketSender::sendToServer
+			MH_CreateHookEx((LPVOID)LoopbackPacketSender::GetVFtableFun(2), &Hook::LoopbackPacketSender_SendServer, &LoopbackPacketSenderToServerCall);
 		}
 	}
 }
@@ -1198,4 +1207,13 @@ auto Hook::RemotePlayer_TickWorld(RemotePlayer* _this) -> void*
 		Game::GetModuleManager()->onRemotePlayerTick(_this);
 	}
 	return _this->tickWorld();
+}
+
+#include "../Modules/Modules/Render.h"
+auto Hook::LoopbackPacketSender_SendServer(LoopbackPacketSender* _this, Packet* pack)-> void* {
+	
+	if (!Game::GetModuleManager()->onSendPacketToServer(_this, pack)) {
+		return nullptr;
+	}
+	return LoopbackPacketSenderToServerCall(_this, pack);
 }

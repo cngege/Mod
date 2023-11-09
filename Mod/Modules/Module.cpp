@@ -125,6 +125,11 @@ auto Module::isEnabled()->bool {
 	return this->enabled;
 }
 
+bool Module::onSendPackToServer(LoopbackPacketSender* sender, Packet* pack)
+{
+	return true;
+}
+
 auto Module::setEnabled(bool enabled)->void {
 	if (this->enabled != enabled) {
 		this->enabled = enabled;
