@@ -652,29 +652,29 @@ public:
 		INT64 str[4]{};
 		std::mcstring* out = (std::mcstring*) & str;
 		using GetTopScreenName = void(__thiscall*)(ClientInstance*, std::mcstring*);
-		auto _GetTopScreenName = (GetTopScreenName)((*(uintptr_t**)this)[141] /*->VTable[141]*/);
+		auto _GetTopScreenName = (GetTopScreenName)((*(uintptr_t**)this)[142] /*->VTable[141]*/);
 		_GetTopScreenName(this, out);
 		return *out;
 	}
 
 	auto setSuspendInput(bool v) -> void* {
-		return Utils::CallVFunc<320, void*, bool>(this, v);
+		return Utils::CallVFunc<323, void*, bool>(this, v);
 	}
 
 	auto setDisableInput(bool v) -> void* {
-		return Utils::CallVFunc<321, void*,bool>(this, v);
+		return Utils::CallVFunc<324, void*,bool>(this, v);
 	}
 
 	auto grabMouse(void) -> void {
 		// 特征码定位虚表偏移 +3 int
 		//48 8B 80 ? ? ? ? FF 15 ? ? ? ? 90 48 85 ? 74 ? 48 8B ? E8 ? ? ? ? 48 8B 8F
-		Utils::CallVFunc<322, void>(this);	/*1.20.31*/
+		Utils::CallVFunc<325, void>(this);	/*1.20.31*/
 	};
 	auto releaseMouse(void) -> void {
 		//48 8B 80 ? ? ? ? 48 8B CE FF 15 ? ? ? ? 84
-		Utils::CallVFunc<323, void>(this);	/*1.20.31*/
+		Utils::CallVFunc<326, void>(this);	/*1.20.31*/
 	};
 	auto refocusMouse(void) -> void {
-		Utils::CallVFunc<324, void>(this);	/*1.20.31*/
+		Utils::CallVFunc<327, void>(this);	/*1.20.31*/
 	};
 };
