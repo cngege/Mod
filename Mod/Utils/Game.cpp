@@ -61,7 +61,7 @@ auto Game::init() -> void
 	}
 
 	//Actor::isRemoved() 获取构成该函数的 this到结果的关键偏移
-	// 从虚表函数 Mob::baseTick 中找, 倒数这个753就是偏移
+	// 从虚表函数 Mob::baseTick 中找, 倒数这个753就是偏移（Actor::Die 第一行好像也是）
 	//if (!*((_BYTE*)a1 + 753))
 	//	sub_1430E01A0((__int64)a1);
 	//if ((**(unsigned __int8(__fastcall***)(_DWORD*, __int64))a1)(a1, 3i64) && !sub_142DF7230((__int64)(a1 + 2)))

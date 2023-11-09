@@ -260,7 +260,14 @@ auto Actor::setStatusFlag(ActorFlags af, bool flag)->void {
 
 //应该获取的是头部位置，Y值会往上偏两个单位
 auto Actor::getPosition()->vec3_t* {
-	return GetVFtableFun<vec3_t*, Actor*>(22)(this);	// 1.20.40.01 不在虚表
+	//return GetVFtableFun<vec3_t*, Actor*>(22)(this);	// 1.20.40.01 不在虚表
+	// 手动特征码实现
+	static uintptr_t offset = FindSignature("E8 ? ? ? ? 48 C7 44 24 ? ? ? ? ? 4C 8B C8 4C 8D 05 ? ? ? ? 48 8B D7"); //+1
+	
+	_ASSERT(offset);
+
+	static auto offset_fn = Utils::FuncFromSigOffset<vec3_t*(__fastcall*)(Actor*)>(offset, 1);
+	return offset_fn(this);
 }
 
 auto Actor::getPosPrev()->vec3_t* {
