@@ -3,8 +3,6 @@
 //模块
 #include "Modules/HitBox.h"
 #include "Modules/AirJump.h"
-#include "Modules/AirWater.h"
-#include "Modules/NoWaterResistence.h"
 #include "Modules/GameTimeLock.h"
 #include "Modules/InstantDestroy.h"
 #include "Modules/NoKnockback.h"
@@ -45,8 +43,6 @@ auto ModuleManager::Init()->void {
 
 	moduleList.push_back((Module*)(new HitBox()));							/*Caps*/
 	moduleList.push_back((Module*)(new AirJump()));
-	moduleList.push_back((Module*)(new AirWater()));
-	moduleList.push_back((Module*)(new NoWaterResistence()));
 	moduleList.push_back((Module*)(new GameTimeLock()));
 	moduleList.push_back((Module*)(new InstantDestroy()));					/*Ctrl+Shift*/
 	moduleList.push_back((Module*)(new Traverse()));						/*F2*/

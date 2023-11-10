@@ -22,8 +22,6 @@
 #include "LoopbackPacketSender.h"
 
 #include "../Modules/ModuleManager.h"
-#include "../Modules/Modules/AirWater.h"
-#include "../Modules/Modules/NoWaterResistence.h"
 #include "../Modules/Modules/HitBox.h"
 #include "../Modules/Modules/InstantDestroy.h"
 #include "../Modules/Modules/ShowCoordinates.h"
@@ -503,7 +501,7 @@ auto Hook::init() -> void
 			//Player::getShadowRadius
 			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(42), &Hook::Player_getShadowRadius, &Player::getShadowRadiusCallptr);
 			//Player::startSwimming
-			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(121), &Hook::Player_startSwimming, &Player::startSwimmingCallptr);
+			//MH_CreateHookEx((LPVOID)Player::GetVFtableFun(121), &Hook::Player_startSwimming, &Player::startSwimmingCallptr);
 			//Player::tickWorld
 			MH_CreateHookEx((LPVOID)Player::GetVFtableFun(221), &Hook::Player_tickWorld, &Player::tickWorldCallptr);
 			// Mob 虚表及相关Hook
@@ -690,19 +688,6 @@ auto Hook::SetVelocity(Actor* actor,vec3_t* kb)->void*
 	return actor->setVelocity(kb);
 }
 
-auto Hook::Actor_isInWater(Actor* actor) -> bool
-{
-	static NoWaterResistence* nwr = Game::GetModuleManager()->GetModule<NoWaterResistence*>();
-	static AirWater* aw = Game::GetModuleManager()->GetModule<AirWater*>();
-	if (actor->isLocalPlayer() && nwr->isEnabled()) {
-		return false;
-	}
-	if (actor->isLocalPlayer() && aw->isEnabled()) {
-		return true;
-	}
-
-	return actor->isInWater();
-}
 
 auto Hook::Actor_isInvisible(Actor* _this) -> bool
 {
@@ -762,14 +747,14 @@ auto Hook::Player_getShadowRadius(Player* player) -> float
 	return player->getShadowRadius();
 }
 
-auto Hook::Player_startSwimming(Player* player) ->void
-{
-	static NoWaterResistence* nwr = Game::GetModuleManager()->GetModule<NoWaterResistence*>();
-	if (nwr->isEnabled()) {
-		return;
-	}
-	player->startSwimming();
-}
+//auto Hook::Player_startSwimming(Player* player) ->void
+//{
+//	static NoWaterResistence* nwr = Game::GetModuleManager()->GetModule<NoWaterResistence*>();
+//	if (nwr->isEnabled()) {
+//		return;
+//	}
+//	player->startSwimming();
+//}
 
 //一直调用 且每位玩家都调用 这个函数好像是Player::getShadowRadius 不确定
 auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {

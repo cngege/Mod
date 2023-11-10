@@ -35,10 +35,10 @@ enum ActorType {
 	Hive_Treasure = 256
 };
 
-enum ActorFlags {
+enum class ActorFlags : int64_t {
 	isSneaking = 1,
 	isSprinting = 3,
-	//canFly = 21					// 这就是直接从 bds里看来的 Actor::canFly内部( 未检验->不是21
+	canFly = 21					// 这就是直接从 bds里看来的 Actor::canFly内部( 未检验->不是21
 };
 
 class Actor

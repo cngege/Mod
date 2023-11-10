@@ -11,7 +11,7 @@ uintptr_t** Player::vfTables = nullptr;
 
 uintptr_t* Player::tickWorldCallptr = nullptr;
 uintptr_t* Player::getShadowRadiusCallptr = nullptr;
-uintptr_t* Player::startSwimmingCallptr = nullptr;
+//uintptr_t* Player::startSwimmingCallptr = nullptr;
 
 template <typename TRet, typename... TArgs>
 auto Player::GetVFtableFun(int a)->auto* {
@@ -37,6 +37,52 @@ auto Player::getRotEx1()->vec2_t* {
 
 auto Player::getRotEx2()->vec2_t* {
 	return *(vec2_t**)(this + RotPtrOffset) + 1;
+}
+
+// 函数的定位可以通过搜索关键字(a1, 218128893);找到
+auto Player::getAbilitiesComponent() -> void*
+{
+	// 首先获取：entt::basic_registry<EntityId,std::allocator<EntityId>>::try_get<AbilitiesComponent> 函数
+	const char* memcode_fn = "40 53 48 83 EC ? 48 8B DA BA FD 61";
+	const char* memcode_call = "E8 ? ? ? ? 48 85 ? 74 ? 48 8B 5C 24 ? 48 83 C4 ? 5F C3";
+	static uintptr_t call = Utils::getFunFromSigAndCall(memcode_fn, memcode_call, 1);
+	_ASSERT(call);
+	return reinterpret_cast<void*(__fastcall*)(uintptr_t, uintptr_t)>(call)(**(uintptr_t**)((uintptr_t)this + 8), (uintptr_t)this + 16);
+}
+
+auto Player::isFlying() -> bool
+{
+	const char* memcode_call = "E8 ? ? ? ? 84 C0 75 ? F3 0F 59 F7";
+	const char* memcode_fn = "48 83 EC ? 48 8B 41 ? 48 8B D1 48 8B 08 8B 42 ? 48 8D 54 24 ? 89 44 24 ? E8 ? ? ? ? 48 85 C0 74 ? 48 8D 88 ? ? ? ? 48 83 C0 ? 48 3B C8 74 ? 48 83";
+	static uintptr_t call = Utils::getFunFromSigAndCall(memcode_fn, memcode_call, 1);
+	_ASSERT(call);
+	return reinterpret_cast<bool(__fastcall*)(Player*)>(call)(this);
+}
+
+auto Player::setFlying(bool isfly) -> void
+{
+	uintptr_t comp = (uintptr_t)getAbilitiesComponent();
+	// 0xA canFly  9 flying
+	char* result = (char*)(comp + 4 * (3i64 * (char)9u + 58));
+	if (*result == 1)
+	{
+		*result = 2;
+		result[4] = 0;
+	}
+	result[4] = isfly;
+}
+
+auto Player::setCanFlyEx(bool canfly) -> void
+{
+	uintptr_t comp = (uintptr_t)getAbilitiesComponent();
+	// 0xA canFly  9 flying
+	char* result = (char*)(comp + 4 * (3i64 * (char)0xAu + 58));
+	if (*result == 1)
+	{
+		*result = 2;
+		result[4] = 0;
+	}
+	result[4] = canfly;
 }
 
 
@@ -86,11 +132,11 @@ auto Player::getShadowRadius() -> float
 	return reinterpret_cast<Fn>(getShadowRadiusCallptr)(this);
 }
 
-auto Player::startSwimming() -> void
-{
-	using Fn = void(__fastcall*)(Player*);
-	reinterpret_cast<Fn>(startSwimmingCallptr)(this);
-}
+//auto Player::startSwimming() -> void
+//{
+//	using Fn = void(__fastcall*)(Player*);
+//	reinterpret_cast<Fn>(startSwimmingCallptr)(this);
+//}
 
 auto Player::tickWorld(Tick* tick) -> void
 {

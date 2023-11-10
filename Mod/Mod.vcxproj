@@ -332,7 +332,6 @@
     <ClInclude Include="Modules\Module.h" />
     <ClInclude Include="Modules\ModuleManager.h" />
     <ClInclude Include="Modules\Modules\AirJump.h" />
-    <ClInclude Include="Modules\Modules\AirWater.h" />
     <ClInclude Include="Modules\Modules\ArmsLength.h" />
     <ClInclude Include="Modules\Modules\BioRadar.h" />
     <ClInclude Include="Modules\Modules\ChangeGameMode.h" />
@@ -347,7 +346,6 @@
     <ClInclude Include="Modules\Modules\LockControlInput.h" />
     <ClInclude Include="Modules\Modules\NoAttackFriend.h" />
     <ClInclude Include="Modules\Modules\NoKnockback.h" />
-    <ClInclude Include="Modules\Modules\NoWaterResistence.h" />
     <ClInclude Include="Modules\Modules\Render.h" />
     <ClInclude Include="Modules\Modules\RenderHealth.h" />
     <ClInclude Include="Modules\Modules\ShowCoordinates.h" />
@@ -407,7 +405,6 @@
     <ClCompile Include="Modules\Module.cpp" />
     <ClCompile Include="Modules\ModuleManager.cpp" />
     <ClCompile Include="Modules\Modules\AirJump.cpp" />
-    <ClCompile Include="Modules\Modules\AirWater.cpp" />
     <ClCompile Include="Modules\Modules\ArmsLength.cpp" />
     <ClCompile Include="Modules\Modules\BioRadar.cpp" />
     <ClCompile Include="Modules\Modules\ChangeGameMode.cpp" />
@@ -422,7 +419,6 @@
     <ClCompile Include="Modules\Modules\LockControlInput.cpp" />
     <ClCompile Include="Modules\Modules\NoAttackFriend.cpp" />
     <ClCompile Include="Modules\Modules\NoKnockback.cpp" />
-    <ClCompile Include="Modules\Modules\NoWaterResistence.cpp" />
     <ClCompile Include="Modules\Modules\Render.cpp" />
     <ClCompile Include="Modules\Modules\RenderHealth.cpp" />
     <ClCompile Include="Modules\Modules\ShowCoordinates.cpp" />

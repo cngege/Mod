@@ -237,12 +237,6 @@
     <ClInclude Include="..\SDK\Dimension.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Modules\NoWaterResistence.h">
-      <Filter>Modules\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\Modules\AirWater.h">
-      <Filter>Modules\头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Modules\Modules\LockControlInput.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
@@ -451,12 +445,6 @@
     </ClCompile>
     <ClCompile Include="..\SDK\Dimension.cpp">
       <Filter>SDK\源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Modules\Modules\NoWaterResistence.cpp">
-      <Filter>Modules\源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Modules\Modules\AirWater.cpp">
-      <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="Modules\Modules\LockControlInput.cpp">
       <Filter>Modules\源文件</Filter>

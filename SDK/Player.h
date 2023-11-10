@@ -12,7 +12,7 @@ protected:
 public:
 	static uintptr_t* tickWorldCallptr;
 	static uintptr_t* getShadowRadiusCallptr;
-	static uintptr_t* startSwimmingCallptr;
+	//static uintptr_t* startSwimmingCallptr;
 public:
 	template <typename TRet, typename... TArgs>
 	static auto GetVFtableFun(int)->auto*;
@@ -31,11 +31,16 @@ public:
 	//ret->x 表示竖直方向的值
 	auto getRotEx2()->vec2_t*;
 
+	auto getAbilitiesComponent() -> void*;
+	auto isFlying() -> bool;
+	auto setFlying(bool) -> void;
+	auto setCanFlyEx(bool) -> void;
+
 public:
 	//虚表函数
 	//44
 	auto teleportTo(vec3_t*, bool, unsigned int, unsigned int)->void;
-	auto displayChatMessage(std::mcstring*)->__int64;
+	//auto displayChatMessage(std::mcstring*)->__int64;
 	auto getSelectedItem() -> class ItemStack*;												/*164*/
 
 	auto getSpeed() -> float;																/*254*/
@@ -45,7 +50,7 @@ public:
 
 	//Hook虚表函数
 	auto getShadowRadius()->float;															/*79*/
-	auto startSwimming()->void;																/*202*/
+	//auto startSwimming()->void;																/*202*/
 	
 	auto tickWorld(class Tick*) -> void;													/*371*/
 };

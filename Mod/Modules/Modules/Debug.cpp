@@ -67,7 +67,11 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 		if (lp != nullptr) {
 			
+			logF("Run");
+			bool v = lp->isFlying();
+			logF(v ? "isfly" : "nofly");
 
+			lp->setCanFlyEx(true);
 		}
 
 		// 函数定位码
