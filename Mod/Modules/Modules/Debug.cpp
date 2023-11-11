@@ -32,6 +32,7 @@ bool ShowPtrList = false;
 
 
 bool KeyUseItem = false;
+bool CheckFlyStatus = false;
 
 // 视频矩阵相机位置高度偏移
 float y_offset = 0.f;
@@ -39,7 +40,7 @@ float y_offset = 0.f;
 vec2_t outFov;
 
 int vtNum = 141;
-
+int pack = 85;
 
 #include "ActorMovementProxy.h"
 #include "BlockSource.h"
@@ -55,13 +56,15 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	AddBoolUIValue("显示字体选择", &ShowFontSelectForm);
 	AddBoolUIValue("尝试方框透视", &renderW2SDebugBox);
 	AddBoolUIValue("显示常用指针", &ShowPtrList);
-	AddBoolUIValue("G健使用手中物品", &KeyUseItem);
+	AddBoolUIValue("G健切换飞行状态", &CheckFlyStatus);
+	AddBoolUIValue("H健使用手中物品", &KeyUseItem);
 
 	AddFloatUIValue("坐标转换相机高度偏移", &y_offset, -10.f, 10.f);
 	AddFloatUIValue("FovX", &outFov.x, 0, 10);
 	AddFloatUIValue("FovY", &outFov.y, 0, 10);
 
 	AddIntUIValue("调用虚表数", &vtNum, 0, 500);
+	AddIntUIValue("数据包拦截率", &pack, 0, 100);
 
 	AddButtonUIEvent("DebugBtn", false, [&]() {
 		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
@@ -383,14 +386,14 @@ auto Debug::onImGUIRender() -> void
 auto Debug::onKeyUpdate(int key, bool isdown) -> void
 {
 	if (isEnabled() && isdown) {
-		if (key == 'G' && KeyUseItem) {
+		if (key == 'G' && CheckFlyStatus) {
 			if (Game::Cinstance && Game::Cinstance->getCILocalPlayer()) {
-				//Game::Cinstance->getCILocalPlayer()->getSelectedItem()->use(Game::Cinstance->getCILocalPlayer());
-				Game::Cinstance->grabMouse();
+				Game::Cinstance->getCILocalPlayer()->setFlying(!Game::Cinstance->getCILocalPlayer()->isFlying());
+
 				logF("被调用G");
 			}
 		}
-		if (key == 'H') {
+		if (key == 'H' && KeyUseItem) {
 			if (Game::Cinstance && Game::Cinstance->getCILocalPlayer()) {
 				//Game::Cinstance->getCILocalPlayer()->getSelectedItem()->use(Game::Cinstance->getCILocalPlayer());
 
@@ -399,6 +402,30 @@ auto Debug::onKeyUpdate(int key, bool isdown) -> void
 			}
 		}
 	}
+}
+
+auto Debug::onSendPackToServer(LoopbackPacketSender*, Packet*) -> bool
+{
+	auto time = Utils::GetCuttentMillisecond();
+	
+	int64_t inttime = (int64_t)time;//没秒发送一次，每次发送50ms
+	if (CheckFlyStatus) {
+		if (Game::Cinstance) {
+			LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
+			if (lp) {
+				if (!lp->isFlying()) return true;
+
+				//static int64_t sendTime = inttime; // 该发送消息的起始时间
+				//每发送50ms后 拦截50ms
+				if (inttime % 100 < pack) {
+					return false;
+				}
+
+			}
+		}
+	}
+
+	return true;
 }
 
 auto Debug::onInternalImGUIRender()->void {

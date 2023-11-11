@@ -103,7 +103,7 @@ IMGUI_IMPL_API LRESULT ImGui_UWP_WndProcHandler(HWND hwnd, UINT msg, WPARAM wPar
 	case WM_KILLFOCUS://0x8
 		{
 			ImGuiIO& io = ImGui::GetIO();
-			io.AddFocusEvent(msg == WM_SETFOCUS);
+			//io.AddFocusEvent(msg == WM_SETFOCUS);
 		}
 	default:
 		break;

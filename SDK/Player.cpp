@@ -132,12 +132,6 @@ auto Player::getShadowRadius() -> float
 	return reinterpret_cast<Fn>(getShadowRadiusCallptr)(this);
 }
 
-//auto Player::startSwimming() -> void
-//{
-//	using Fn = void(__fastcall*)(Player*);
-//	reinterpret_cast<Fn>(startSwimmingCallptr)(this);
-//}
-
 auto Player::tickWorld(Tick* tick) -> void
 {
 	using Fn = void(__fastcall*)(Player*, class Tick*);

@@ -9,6 +9,8 @@
 #include <windows.storage.h>
 #include <wrl.h>
 
+#include "Logger.h"
+
 using namespace ABI::Windows::Storage;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
@@ -358,7 +360,69 @@ std::wstring Utils::GetRoamingFolderPath() {
 }
 
 
+SignCode::operator bool() const {
+	if (!success && _printfail) {
+		logF("[SignCode Error] [%s] 没能从特征码定位到地址", _printTitle);
+	}
+	return success;
+}
 
+uintptr_t SignCode::operator *() const {
+	return v;
+}
 
+void SignCode::operator <<(const char* sign) {
+	AddSign(sign);
+}
 
+void SignCode::operator <<(std::string sign) {
+	AddSign(sign.c_str());
+}
+
+uintptr_t SignCode::get() const {
+	return v;
+}
+
+const char* SignCode::ValidSign() const {
+	return validMemcode;
+}
+
+uintptr_t SignCode::ValidPtr() const {
+	return validPtr;
+}
+
+void SignCode::AddSign(const char* sign, std::function<uintptr_t(uintptr_t)> handle) {
+	findCount++;
+	if (success) return;
+	v = FindSignature(sign);
+	if (!v) {
+		logF("[SignCode Warn] [%s] 特征码查找失败(%d)", _printTitle, findCount);
+	}
+	else {
+		success = true;
+		validMemcode = sign;
+		validPtr = v;
+		if (handle != nullptr) {
+			v = handle(v);
+		}
+	}
+}
+
+void SignCode::AddSignCall(const char* sign, int offset, std::function<uintptr_t(uintptr_t)> handle) {
+	findCount++;
+	if (success) return;
+	auto _v = FindSignature(sign);
+	if (!_v) {
+		logF("[SignCode Warn] [%s] 特征码查找失败(%d)", _printTitle, findCount);
+	}
+	else {
+		success = true;
+		validMemcode = sign;
+		validPtr = v;
+		v = Utils::FuncFromSigOffset(_v, offset);
+		if (handle != nullptr) {
+			v = handle(v);
+		}
+	}
+}
 

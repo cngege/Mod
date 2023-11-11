@@ -14,6 +14,7 @@ public:
 public:
 	virtual auto onImGUIRender() -> void override;
 	virtual auto onKeyUpdate(int, bool) -> void override;
+	virtual auto onSendPackToServer(class LoopbackPacketSender*, class Packet*) -> bool;
 	virtual auto onInternalImGUIRender() -> void override;
 	virtual auto onloadConfigFile(json& data) -> void override;
 	virtual auto onsaveConfigFile(json& data) -> void override;

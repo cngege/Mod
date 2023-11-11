@@ -111,6 +111,20 @@ auto Game::init() -> void
 		//Player::Rot2 = offset + 8;
 	}
 
+	//获取 Actor AABB 偏移
+	{
+		const char* memcode = "48 83 EC 28 48 8B 81 ? ? ? ? 48 85 C0 74 ? F3";
+		auto actor_moveBBs = FindSignature(memcode);
+		if (actor_moveBBs != 0x00) {
+			Actor::AABBOffset = *reinterpret_cast<int*>(actor_moveBBs + 7);//这个结果应该是由Actor指向AABB类的偏移
+			//logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", actor_moveBBs, memcode);
+		}
+		else {
+			logF("[Game::init] [%s] [Warn] 尝试使用特征码查找地址,结果没有找到", "actor_moveBBs");
+			return;
+		}
+	}
+
 	/* 在 ActorCollision 中实现,没问题后删掉
 	//获取 获取玩家血量函数的相关偏移
 	{

@@ -24,7 +24,7 @@ Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 auto Render::onEnable() -> void
 {
 	isCursorVisible = Utils::isCursorVisible();
-	if (!isCursorVisible) {
+	if (!isCursorVisible && cursorSwitch) {
 		if (Game::Cinstance)
 			Game::Cinstance->releaseMouse();
 	}
@@ -32,7 +32,7 @@ auto Render::onEnable() -> void
 
 auto Render::onDisable() -> void
 {
-	if (!isCursorVisible && Utils::isCursorVisible() && Game::Cinstance) {	// 如果在打开时 是隐藏的
+	if (!isCursorVisible && Utils::isCursorVisible() && Game::Cinstance && cursorSwitch) {	// 如果在打开时 是隐藏的
 		auto screen = Game::Cinstance->getTopScreenName().to_string();
 		if (screen.rfind("hud_screen") != std::string::npos) {
 			Game::Cinstance->grabMouse();
@@ -171,7 +171,9 @@ auto Render::onImGUIRender()->void {
 			static char text[32] = { '\0' };
 			if (strlen(text) == 0) {
 				//memcpy(text, config::currentSaveConfigFile.c_str(), sizeof(config::currentSaveConfigFile.c_str()));
+#ifndef _REPAIR
 				snprintf(text, sizeof(text), config::currentSaveConfigFile.c_str());
+#endif
 			}
 			ImGui::InputText("配置文件名", text, IM_ARRAYSIZE(text));
 			if (ImGui::Button("加载使用配置")) {
