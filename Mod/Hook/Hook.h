@@ -32,6 +32,7 @@ public:
 	//static auto Player_startSwimming(class Player*) -> void;
 
 	static auto AllActor_Tick(class Actor*, float*, float)->float*;
+	static auto AllPlayer_Tick(void* a1, class Player*) -> char;
 	//static auto Actor_moveBBs(class Actor*, vec3_t*)->void*;
 	static auto KeyUpdate(__int64, int)->void*;
 	static auto MouseUpdate(__int64, char, char, __int16, __int16, __int16, __int16, char)->void;

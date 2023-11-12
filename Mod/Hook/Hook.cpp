@@ -62,6 +62,9 @@ using AllActor_Tick = float* (__fastcall*)(Actor*, float*, float);
 AllActor_Tick allActor_Tickcall;
 //uintptr_t allActor_Tick;
 
+using AllPlayer_Tick = char(__fastcall*)(void*, Player*);
+AllPlayer_Tick allPlayer_Tickcall;
+
 using KeyUpdate = void* (__fastcall*)(__int64 key, int isdown);
 KeyUpdate keyupdatecall;
 //uintptr_t keyupdate;
@@ -162,35 +165,58 @@ auto Hook::init() -> void
 		//首先找到这个函数, 从这个函数中找到基址到结构的偏移, 和确定基址是哪个参数(a2)
 		//怎么找这个函数,首先找到能够锁定控制键的结构,的开头(下蹲的控制地址)，找访问,定位到始终执行的反汇编项
 		const char* memcode_call = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 0F 10 42 ? 48 8B D9";
-		//const char* memcode_offset = "41 0F 10 47 ? 0F 11 45 00 41 0F 10 4F";	// 这个是找参数指针到控制结构指针的偏移 这个特征码在下面call特征码的内部 
-		//auto LockControlInputOffset = FindSignature(memcode_offset);
-		auto LockControlInputSign = FindSignature(memcode_call);
-		if (LockControlInputSign != 0x00) {
-			auto LockControlInputOffset = Utils::FindSignatureRelay(LockControlInputSign, "0F 10 42", 32);
+		//auto LockControlInputSign = FindSignature(memcode_call);
+		//if (LockControlInputSign != 0x00) {
+		//	auto LockControlInputOffset = Utils::FindSignatureRelay(LockControlInputSign, "0F 10 42", 32);
+		//	if (LockControlInputOffset != 0x00) {
+		//		LockControlInput_offset = (int)*reinterpret_cast<byte*>(LockControlInputOffset + 3);
+		//		MH_CreateHookEx((LPVOID)LockControlInputSign, &Hook::LockControlInputCallBack, &LockControlInputcall);
+		//		logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", LockControlInputSign, memcode_call);
+		//	}
+		//	else {
+		//		logF("[Hook::FindSignature] [Error] 控制键锁定 查找偏移未找到");
+		//	}
+		//}
+		//else {
+		//	logF("[Hook::FindSignature] [Error] 控制键锁定 函数未找到");
+		//}
+
+
+		SignCode sign("锁定疾跑");
+		sign << memcode_call;
+		if (sign) {
+			auto LockControlInputOffset = Utils::FindSignatureRelay(*sign, "0F 10 42", 32);
 			if (LockControlInputOffset != 0x00) {
 				LockControlInput_offset = (int)*reinterpret_cast<byte*>(LockControlInputOffset + 3);
-				MH_CreateHookEx((LPVOID)LockControlInputSign, &Hook::LockControlInputCallBack, &LockControlInputcall);
-				logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", LockControlInputSign, memcode_call);
+				MH_CreateHookEx((LPVOID)*sign, &Hook::LockControlInputCallBack, &LockControlInputcall);
+				logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", *sign, sign.ValidSign());
 			}
 			else {
 				logF("[Hook::FindSignature] [Error] 控制键锁定 查找偏移未找到");
 			}
 		}
-		else {
-			logF("[Hook::FindSignature] [Error] 控制键锁定 函数未找到");
-		}
+
+
 	}
 
 	//clientInstance::Tick // 1.20 虚表 - 19号
 	{
 		const char* memcode = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B DA 48 8B F9 0F 57 C0 0F 11 44 24 ? 0F";
-		clientInstanceTick = FindSignature(memcode);
-		if (clientInstanceTick != 0x00) {
-			MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", clientInstanceTick, memcode);
-		}
-		else {
-			logF("[Hook error] [%s] is no found Hook point", "clientInstanceTick");
+		//clientInstanceTick = FindSignature(memcode);
+		//if (clientInstanceTick != 0x00) {
+		//	MH_CreateHookEx((LPVOID)clientInstanceTick, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
+		//	logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", clientInstanceTick, memcode);
+		//}
+		//else {
+		//	logF("[Hook error] [%s] is no found Hook point", "clientInstanceTick");
+		//}
+
+		SignCode sign("clientInstance::Tick");
+		//sign.AddSign(memcode_call);
+		sign << memcode;
+		if (sign) {
+			MH_CreateHookEx((LPVOID)*sign, &Hook::ClientInstance_Tick, &clientInstance_Tickcall);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", *sign, sign.ValidSign());
 		}
 	}
 	
@@ -221,7 +247,7 @@ auto Hook::init() -> void
 		sign.AddSignCall(memcode3);
 		if (sign) {
 			MH_CreateHookEx((LPVOID)*sign, &Hook::Is_ShowCoordinates_Tick, &is_ShowCoordinates_Tickcall);
-			logF_Debug("[Hook::FindSignature] Find MemCode (call)result=%llX , MemCode=%s", *sign, sign.ValidSign());
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", sign.ValidPtr(), sign.ValidSign());
 		}
 	}
 
@@ -243,7 +269,17 @@ auto Hook::init() -> void
 		sign << memcode;
 		if (sign) {
 			MH_CreateHookEx((LPVOID)*sign, &Hook::AllActor_Tick, &allActor_Tickcall);
-			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", *sign, memcode);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", sign.ValidPtr(), sign.ValidSign());
+		}
+	}
+
+	// 所有玩家Tick（非服务玩家）
+	{
+		SignCode sign("所有玩家Tick");
+		sign << "48 83 EC ? 48 8B 02 4C 8B C2 4C 8B 88";	//没有直接调用者(应该是虚表函数)，只能通过函数本身特征码定位
+		if (sign) {
+			MH_CreateHookEx((LPVOID)*sign, &Hook::AllPlayer_Tick, &allPlayer_Tickcall);
+			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", sign.ValidPtr(), sign.ValidSign());
 		}
 	}
 
@@ -580,7 +616,7 @@ auto Hook::init() -> void
 			//ServerPlayer::respawn 获取实现 Actor::getRotationEx 的关键偏移(342) +9
 			//logF("ServerPlayer::GetVFtableFun(342) %d", reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(342)));
 			//DebugBreak(); //ServerPlayer::respawn?
-			Actor::GetRotationOffset = *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(335)) + 9);	// 检查版本 1.20
+			Actor::GetRotationOffset = *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ServerPlayer::GetVFtableFun(229)) + 9);	// 检查版本 1.20.41
 
 
 			//虚表Hook
@@ -784,9 +820,10 @@ auto Hook::Level_Tick(Level* level)->void*
 }
 
 //在非本地房间 只有本地玩家才会触发Tick
+// 为什么远程玩家不会触发这个tick，因为远程玩家重载了tick方法，且其中没有调用此tick
 auto Hook::Player_tickWorld(Player* player, Tick* tick)->void
 {
-	Game::GetModuleManager()->onPlayerTick(player);
+	//Game::GetModuleManager()->onPlayerTick(player);
 	player->tickWorld(tick);
 }
 
@@ -809,6 +846,13 @@ auto Hook::Player_getShadowRadius(Player* player) -> float
 auto Hook::AllActor_Tick(Actor* _this, float* a1, float a2)->float* {
 	Game::GetModuleManager()->onActorTick(_this);
 	return allActor_Tickcall(_this, a1, a2);
+}
+
+// 所有玩家Tick 这里当前是本地和远程玩家
+auto Hook::AllPlayer_Tick(void* a1, Player* player) -> char
+{
+	Game::GetModuleManager()->onPlayerTick(player);
+	return allPlayer_Tickcall(a1,player);
 }
 
 //就是把生物当前位置加上这个值 v3

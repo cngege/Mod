@@ -418,7 +418,7 @@ void SignCode::AddSignCall(const char* sign, int offset, std::function<uintptr_t
 	else {
 		success = true;
 		validMemcode = sign;
-		validPtr = v;
+		validPtr = _v;
 		v = Utils::FuncFromSigOffset(_v, offset);
 		if (handle != nullptr) {
 			v = handle(v);

@@ -43,16 +43,16 @@ auto BioRadar::onImGUIRender() -> void
 		return;
 	}
 
-	{
-		// 临时修补方案 ,远程玩家不再调用tick函数了
-		Level* lvl = lp->getLevel();
-		if (lvl) {
-			lvl->forEachPlayer([&](Player& player) {
-				onRemotePlayerTick((RemotePlayer*)&player);
-				return true;
-				});
-		}
-	}
+	//{
+	//	// 临时修补方案 ,远程玩家不再调用tick函数了
+	//	Level* lvl = lp->getLevel();
+	//	if (lvl) {
+	//		lvl->forEachPlayer([&](Player& player) {
+	//			onRemotePlayerTick((RemotePlayer*)&player);
+	//			return true;
+	//			});
+	//	}
+	//}
 
 	RECT rect{};
 	//::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)
@@ -121,7 +121,7 @@ auto BioRadar::onstartLeaveGame(Level* _) -> void
 	playerlist.clear();
 }
 
-auto BioRadar::onRemotePlayerTick(RemotePlayer* remotePlayer)->void
+auto BioRadar::onPlayerTick(Player* player)->void
 {
 	if (!isEnabled()) {
 		return;
@@ -129,14 +129,17 @@ auto BioRadar::onRemotePlayerTick(RemotePlayer* remotePlayer)->void
 	if (!Game::Cinstance) {
 		return;
 	}
+	if (player->isLocalPlayer()) {
+		return;
+	}
 	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 
-	if (lp && lp->isValid() && !remotePlayer->isLocalPlayer()) {
+	if (lp && lp->isValid() && !player->isLocalPlayer()) {
 		//获得本地玩家的位置视角相关信息
 		vec3_t* lpos = lp->getPosition();
 		vec2_t* lrot = lp->getRotationEx();
 		//获得 对方玩家对本地玩家的相对位置 即本地玩家对远程玩家的空间向量
-		vec3_t xdpos = remotePlayer->getPosition()->sub(*lpos);
+		vec3_t xdpos = player->getPosition()->sub(*lpos);
 		//获取向量长度 也就是斜边长度
 		float vecLength = xdpos.magnitudexz();
 		//获取与原版等同的夹角
@@ -155,12 +158,12 @@ auto BioRadar::onRemotePlayerTick(RemotePlayer* remotePlayer)->void
 		PlayerMapInfo pmi;
 		pmi.x = x; pmi.z = z;
 
-		auto name = remotePlayer->getNameTag()->to_string().substr(0, 3);  //章节号占两字节
+		auto name = player->getNameTag()->to_string().substr(0, 3);  //章节号占两字节
 		pmi.color = GetColorbyChar(name);
 		pmi.top = xdpos.y > 0;
 		//pmi.updatetick = 0;
 
-		playerlist[remotePlayer] = pmi;
+		playerlist[player] = pmi;
 	}
 }
 
