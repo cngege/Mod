@@ -5,4 +5,7 @@
 class Block {
 public:
 	class BlockLegacy* getBlockLegacy();
+
+	bool isAir();
+	bool isAirEx();
 };

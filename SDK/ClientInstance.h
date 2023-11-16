@@ -10,6 +10,14 @@
 
 //From	https://github.com/NRGJobro/Horion-Open-SRC/blob/master/SDK/CClientInstance.h
 class ClientInstance {
+protected:
+	static uintptr_t** vfTables;
+public:
+	template <typename TRet, typename... TArgs>
+	static auto GetVFtableFun(int) -> auto*;
+	static auto GetVFtableFun(int) -> uintptr_t*;
+	static auto GetVFtables() -> uintptr_t**;
+	static auto SetVFtables(uintptr_t** vTables) -> void;
 public:
 /*
 private:
@@ -566,7 +574,10 @@ private:
 	virtual __int64 onLevelExit(void);
 	virtual __int64 updateScreens(void);
 */
+
 public:
+
+	static int getMinecraftGameOffset;
 
 	// 这里的 0x330 有点特殊 Wiki 待补充
 	struct glmatrixf* getGlmatrixf() {
@@ -647,6 +658,21 @@ public:
 		}
 		return (vec2_t*)(((uintptr_t)this) + offset);
 	}
+
+	//MinecraftGame 是 Clientinstance::Clientinstance 的第二个参数 所以在构造函数里可以看到偏移 //在 1.20.41 中偏移是200byte
+	//或者在 Clientinstance::onDimensionChanged 函数中内部调用的函数就是MinecraftGame的虚表，在其中可以找到Clientinstance 到MinecraftGame 的偏移
+	//Minecraft.Windows.exe + 38CF90 - 48 8B 89 C8000000 - mov rcx, [rcx + 000000C8]
+	//Minecraft.Windows.exe + 38CF97 - 48 8B 01 - mov rax, [rcx]
+	//Minecraft.Windows.exe + 38CF9A - 48 8B 80 28030000 - mov rax, [rax + 00000328]
+	//Minecraft.Windows.exe + 38CFA1 - 48 FF 25 C05C3904 - jmp qword ptr[Minecraft.Windows.exe + 4722C68]
+	// 当前此偏移 有Hook 在HookonDimensionChanged 之前获取
+	class MinecraftGame* getMinecraftGame() {
+		return *(MinecraftGame**)((uintptr_t)this + getMinecraftGameOffset);
+	}
+
+
+
+
 
 	auto getTopScreenName() -> std::mcstring {
 		INT64 str[4]{};

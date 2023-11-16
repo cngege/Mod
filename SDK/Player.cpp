@@ -39,6 +39,18 @@ auto Player::getRotEx2()->vec2_t* {
 	return *(vec2_t**)(this + RotPtrOffset) + 1;
 }
 
+auto Player::getFootBlockPos() -> vec3_ti
+{
+	vec3_ti footBlockPos;
+	auto pos = getPosition();
+	if (pos->x < 0) footBlockPos.x = (int)(pos->x - 1.f); else footBlockPos.x = pos->x;
+	if (pos->y < 0) footBlockPos.y = (int)(pos->y - 1.f); else footBlockPos.y = pos->y;
+	if (pos->z < 0) footBlockPos.z = (int)(pos->z - 1.f); else footBlockPos.z = pos->z;
+
+	footBlockPos.y -= 2;
+	return footBlockPos;
+}
+
 // 函数的定位可以通过搜索关键字(a1, 218128893);找到
 auto Player::getAbilitiesComponent() -> void*
 {
