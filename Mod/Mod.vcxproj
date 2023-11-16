@@ -351,6 +351,7 @@
     <ClInclude Include="Modules\Modules\ShowCoordinates.h" />
     <ClInclude Include="Modules\Modules\TPPoint.h" />
     <ClInclude Include="Modules\Modules\Traverse.h" />
+    <ClInclude Include="Render\Render.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utils\config.h" />
     <ClInclude Include="Utils\Game.h" />
@@ -424,6 +425,7 @@
     <ClCompile Include="Modules\Modules\ShowCoordinates.cpp" />
     <ClCompile Include="Modules\Modules\TPPoint.cpp" />
     <ClCompile Include="Modules\Modules\Traverse.cpp" />
+    <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="Utils\config.cpp" />
     <ClCompile Include="Utils\Game.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />

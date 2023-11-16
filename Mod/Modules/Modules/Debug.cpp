@@ -87,12 +87,14 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 			//logF("0 1 0 " + v2 ? "is air" : "not air");
 			//logF("debug: block: %llX", bs->getBlock(0, 1, 0));
 			//logF("debug: BlockSource vt: %llX", *(uintptr_t*)bs);
-			auto pos = lp->getPosition();
-			if (pos->x < 0) renderBlockPos.x = (int)(pos->x - 1.f); else renderBlockPos.x = pos->x;
-			if (pos->y < 0) renderBlockPos.y = (int)(pos->y - 1.f); else renderBlockPos.y = pos->y;
-			if (pos->z < 0) renderBlockPos.z = (int)(pos->z - 1.f); else renderBlockPos.z = pos->z;
-
-			renderBlockPos.y -= 2;
+			auto pos = *lp->getPosition();
+			//if (pos->x < 0) renderBlockPos.x = (int)(pos->x - 1.f); else renderBlockPos.x = pos->x;
+			//if (pos->y < 0) renderBlockPos.y = (int)(pos->y - 1.f); else renderBlockPos.y = pos->y;
+			//if (pos->z < 0) renderBlockPos.z = (int)(pos->z - 1.f); else renderBlockPos.z = pos->z;
+			pos.y -= 2;
+			renderBlockPos = pos.toBlockPos();
+			//renderBlockPos.y -= 2;
+			
 
 			BlockSource* bs = lp->getDimensionConst()->getBlockSourceEx();
 			logF("debug: blockid: %u", bs->getBlock(&renderBlockPos)->getBlockLegacy()->getBlockItemIdEx());
@@ -128,6 +130,7 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		});
 }
 
+#include "../Render/Render.h"
 void RenderDebugBox() {
 	// 尝试世界到屏幕
 	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
@@ -154,9 +157,13 @@ void RenderDebugBox() {
 
 		if (refdef->OWorldToScreen(lpPos, { blockpos.x + 0.5f, blockpos.y + 1.f, blockpos.z + 0.5f }, out, fov, { rectwidth,rectheight })) {
 			auto drawList = ImGui::GetForegroundDrawList();
-			drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
+			//drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
 
-
+			auto centPos = Render::RenderBlockBox(blockpos, lpPos);
+			if (centPos) {
+				drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centPos->x,centPos->y }, green);
+			}
+			/*
 			std::vector<vec3_t> offset = {
 				{0,0,0},	//0
 				{0,1,0},	//1
@@ -237,7 +244,7 @@ void RenderDebugBox() {
 					drawList->AddLine({ point[6].x, point[6].y }, { point[7].x,point[7].y }, yellow, linesize);
 				}
 			}
-
+			*/
 		}
 	}
 }

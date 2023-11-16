@@ -231,6 +231,7 @@ struct vec3_t {
 		return sub(e).magnitude();
 	}
 
+	// 获取二维距离 忽视z
 	float Get2DDist(const vec3_t &e) const {
 		float dx = e.x - x, dy = e.y - y;
 		return sqrtf(dx * dx + dy * dy);
@@ -258,6 +259,17 @@ struct vec3_t {
 	//获取两个坐标之间的距离
 	float CoordinateDistance(vec3_t dst) {
 		return sqrtf((x - dst.x) * (x - dst.x) + (y - dst.y) * (y - dst.y) + (z - dst.z) * (z - dst.z));
+	}
+
+	/**
+	 * @brief 转为 MC 方块位置
+	*/
+	struct vec3_t toBlockPos() {
+		vec3_t pos;
+		if (x < 0) pos.x = (float)static_cast<int>(x - 1.f); else pos.x = (float)static_cast<int>(x);
+		if (y < 0) pos.y = (float)static_cast<int>(y - 1.f); else pos.y = (float)static_cast<int>(y);
+		if (z < 0) pos.z = (float)static_cast<int>(z - 1.f); else pos.z = (float)static_cast<int>(z);
+		return pos;
 	}
 };
 
@@ -339,7 +351,10 @@ struct vec3_ti {
 		vec.z = (float)z;
 		return vec;
 	}
+
 };
+
+
 struct vec4_t {
 	union {
 		struct {

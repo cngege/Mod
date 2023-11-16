@@ -18,9 +18,10 @@
 #include "../Utils/Game.h"
 #include "../Utils/Utils.h"
 #include "../Modules/Modules/Debug.h"
-#include "../Modules/Modules/Render.h"
+//#include "../Modules/Modules/RenderUI.h"
 #include "../Modules/ModuleManager.h"
 
+#include "../Render/Render.h"
 
 #include <io.h>
 
@@ -147,6 +148,7 @@ HRESULT __fastcall hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInter
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
+		Render::Updata();
 		Game::GetModuleManager()->onImGUIRender();
 		{
 			ImGuiStyle* style = &ImGui::GetStyle();
@@ -269,7 +271,7 @@ HRESULT __fastcall hookPresentD3D12(IDXGISwapChain3* ppSwapChain, UINT syncInter
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
-
+		Render::Updata();
 		Game::GetModuleManager()->onImGUIRender();
 		{
 			ImGuiStyle* style = &ImGui::GetStyle();

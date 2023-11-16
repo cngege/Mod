@@ -9,6 +9,7 @@ public:
 private:
 	struct PlayerMapInfo;
 	std::unordered_map<Player*, PlayerMapInfo> playerlist;
+	std::vector<PlayerMapInfo> removePlyaerList;
 
 	//雷达的地图的边长 像素
 	float radarSide = 200.f;

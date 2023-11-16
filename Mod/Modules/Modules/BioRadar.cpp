@@ -12,6 +12,8 @@
 #include "Block.h"
 #include "BlockLegacy.h"
 
+#include "../Render/Render.h"
+
 BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显示屏上看到玩家和其他生物位置信息") {
 	setcontrolkeysbind({ VK_SHIFT });
 	AddBoolUIValue("渲染移除的玩家", &renderRemovePlayer);
@@ -28,7 +30,7 @@ BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显�
 	AddButtonUIEvent("靠上", true, [this]() { this->sideDirectionTop = true; });
 	AddButtonUIEvent("靠下", true, [this]() { this->sideDirectionTop = false; });
 
-	AddButtonUIEvent("清除", false, [this]() { playerlist.clear(); });
+	AddButtonUIEvent("清除", false, [this]() { playerlist.clear(); removePlyaerList.clear(); });
 
 }
 
@@ -47,6 +49,10 @@ auto BioRadar::onImGUIRender() -> void
 	if (!isEnabled()) {
 		return;
 	}
+	if (!Game::Cinstance) {
+		return;
+	}
+
 	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 	if (!lp)
 	{
@@ -56,16 +62,8 @@ auto BioRadar::onImGUIRender() -> void
 		return;
 	}
 
-	//{
-	//	// 临时修补方案 ,远程玩家不再调用tick函数了
-	//	Level* lvl = lp->getLevel();
-	//	if (lvl) {
-	//		lvl->forEachPlayer([&](Player& player) {
-	//			onRemotePlayerTick((RemotePlayer*)&player);
-	//			return true;
-	//			});
-	//	}
-	//}
+	vec3_t* lpPos = lp->getPosition();
+	vec2_t* lpRot = lp->getRotationEx();
 
 	RECT rect{};
 	//::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)
@@ -104,7 +102,7 @@ auto BioRadar::onImGUIRender() -> void
 		for (auto& kv : playerlist) {
 			if (kv.first->isValid()) {
 				// debug 在此计算向量关系
-				auto mappos = getMapPosition(kv.second.pos.sub(*lp->getPosition()),*lp->getRotationEx());
+				auto mappos = getMapPosition(kv.second.pos.sub(*lpPos),*lpRot);
 				kv.second.x = mappos.x;
 				kv.second.z = mappos.y;
 
@@ -134,52 +132,20 @@ auto BioRadar::onImGUIRender() -> void
 						vec2_t fov = Game::Cinstance->getFov();
 
 						std::shared_ptr<glmatrixf> refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
-						if (refdef->OWorldToScreen(*lp->getPosition(), { kv.second.pos.x,kv.second.pos.y-1, kv.second.pos.z }, out, fov, {rectwidth,rectheight})) {
+						if (refdef->OWorldToScreen(*lpPos, { kv.second.pos.x,kv.second.pos.y-1, kv.second.pos.z }, out, fov, {rectwidth,rectheight})) {
 							drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
 							drawList->AddCircle({ out.x, out.y }, 20, kv.second.color,0,1.5f);
 						}
 					}
 				}
 				else {
+					// 玩家移除了 先存起来， 然后移除
 					if (renderRemovePlayer) {
-						//先判断下 玩家位置是不是有方框，如果没有方框就remove
-						BlockSource* bs = lp->getDimensionConst()->getBlockSourceEx();
-						if (!bs->getBlock((int)kv.second.footBlockPos.x, (int)kv.second.footBlockPos.y + 1, (int)kv.second.footBlockPos.z)->isAir()) {
-							//在远程玩家位置在本地玩家之上时显示空心
-							if (kv.second.top) {
-								drawList->AddRect({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
-									{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
-									kv.second.color);
-							}
-							else {
-								drawList->AddRectFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
-									{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
-									kv.second.color);
-							}
-						}
-						else {
-							playerlist.erase(kv.first);
-							break;
-						}
-
-						if (xRay) {
-							ImColor yellow = ImColor(241, 196, 15, 255);
-							ImColor green = ImColor(30, 132, 73, 255);
-							// 画线 屏幕到00 -60 00
-							vec2_t out;
-							vec2_t fov = Game::Cinstance->getFov();
-
-							std::shared_ptr<glmatrixf> refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
-							if (refdef->OWorldToScreen(*lp->getPosition(), { kv.second.pos.x,kv.second.pos.y - 1, kv.second.pos.z }, out, fov, { rectwidth,rectheight })) {
-								drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
-								drawList->AddRect({ out.x - 20, out.y - 20 },	{ out.x + 20, out.y + 20 },kv.second.color,0,0,1.5f);
-							}
-						}
+						removePlyaerList.push_back(kv.second);
 					}
-					else {
-						playerlist.erase(kv.first);
-						break;
-					}
+					playerlist.erase(kv.first);
+					break;
+
 				}
 			}
 			else {
@@ -187,12 +153,61 @@ auto BioRadar::onImGUIRender() -> void
 				break;
 			}
 		}
+
+		for (auto iter = removePlyaerList.begin(); iter != removePlyaerList.end(); iter++) {
+			//先判断下 玩家位置是不是有方框，如果没有方框就remove
+			BlockSource* bs = lp->getDimensionConst()->getBlockSourceEx();
+			auto playerBlock = (*iter).footBlockPos;
+			playerBlock.y += 1;
+
+			if (bs->getBlock(&playerBlock)->isAir()) {
+				removePlyaerList.erase(iter);
+				break;
+			}
+
+			// 否则就绘制
+
+			if (xRay) {
+				ImColor yellow = ImColor(241, 196, 15, 255);
+				ImColor green = ImColor(30, 132, 73, 255);
+				// 画线 屏幕到00 -60 00
+				std::optional<vec2_t> centerPos = Render::RenderBlockBox(playerBlock, *lpPos);
+				if (centerPos) {
+					drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, ImColor(255, 255, 255), 1.5f);
+				}
+			}
+
+			// debug 在此计算向量关系
+			auto mappos = getMapPosition((*iter).pos.sub(*lpPos), *lpRot);
+			(*iter).x = mappos.x;
+			(*iter).z = mappos.y;
+
+
+			//防止玩家点跑出地图外
+			float remoteside = radarSide / (2 * roomscale);
+			float X = (*iter).x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
+			float Z = (*iter).z; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
+
+			if ((*iter).top) {
+				drawList->AddRect({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
+					{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
+					(*iter).color);
+			}
+			else {
+				drawList->AddRectFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
+					{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
+					(*iter).color);
+			}
+
+		}
 	}
 }
 
 auto BioRadar::onstartLeaveGame(Level* _) -> void
 {
 	playerlist.clear();
+	removePlyaerList.clear();
+
 }
 
 
@@ -290,6 +305,7 @@ auto BioRadar::onPlayerTick(Player* player)->void
 auto BioRadar::onDimensionChanged(ClientInstance* ci) -> void
 {
 	playerlist.clear();
+	removePlyaerList.clear();
 }
 
 auto BioRadar::onloadConfigFile(json& data) -> void

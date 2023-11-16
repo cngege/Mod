@@ -290,6 +290,7 @@ auto ModuleManager::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	}
 }
 
+
 auto ModuleManager::onImGUIRender()->void {
 	if (!IsInitialized())
 		return;

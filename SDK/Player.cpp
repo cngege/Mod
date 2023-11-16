@@ -43,9 +43,9 @@ auto Player::getFootBlockPos() -> vec3_ti
 {
 	vec3_ti footBlockPos;
 	auto pos = getPosition();
-	if (pos->x < 0) footBlockPos.x = (int)(pos->x - 1.f); else footBlockPos.x = pos->x;
-	if (pos->y < 0) footBlockPos.y = (int)(pos->y - 1.f); else footBlockPos.y = pos->y;
-	if (pos->z < 0) footBlockPos.z = (int)(pos->z - 1.f); else footBlockPos.z = pos->z;
+	if (pos->x < 0) footBlockPos.x = static_cast<int>(pos->x - 1.f); else footBlockPos.x = static_cast<int>(pos->x);
+	if (pos->y < 0) footBlockPos.y = static_cast<int>(pos->y - 1.f); else footBlockPos.y = static_cast<int>(pos->y);
+	if (pos->z < 0) footBlockPos.z = static_cast<int>(pos->z - 1.f); else footBlockPos.z = static_cast<int>(pos->z);
 
 	footBlockPos.y -= 2;
 	return footBlockPos;
