@@ -83,7 +83,7 @@ auto Game::init() -> void
 
 	//Actor::getDimensionConst(this);
 	{
-		auto offset = FindSignature("48 83 EC ? 48 8B 91 ? ? ? ? 4C 8B C1 48 85 D2");				// 该函数的地址
+		auto offset = FindSignature("48 83 EC ? 48 8B 91 ? ? ? ? 4C 8B C1 48 85 D2 74 ? 8B 42 ? 85 ? 74 ? 66 0F 1F ? ? ? 8D 48 ? F0 0F B1 4A ? 74 ? 85 C0 75 ? 33");// 该函数的地址
 		if (offset == 0x00) {
 			offset = FindSignature("E8 ? ? ? ? 45 33 C9 4C 8D 44 24 ? 48 8B D3");							// 调用者调用处的地址 : Actor::onEffectAdded
 			if (offset == 0x00) {
