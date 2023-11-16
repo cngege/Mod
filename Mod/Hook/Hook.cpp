@@ -86,10 +86,14 @@ GetViewPerspective getLocalPlayerViewPerspectivecall;
 using LoopbackPacketSenderTOServer = void* (__fastcall*)(LoopbackPacketSender*, Packet*);
 LoopbackPacketSenderTOServer LoopbackPacketSenderToServerCall;
 
+using ClientInstanceOnDimensionChanged = void* (__fastcall*)(ClientInstance*);
+ClientInstanceOnDimensionChanged ClientInstanceOnDimensionChangedCall;
+
 using BlockPlayerDestroy = char*(__fastcall*)(Block* block, Player* player, vec3_ti pos);
 BlockPlayerDestroy blockPlayerDestroyCall;
 
 char* Block_playerDestroy(Block* block, Player* player, vec3_ti pos) {
+	//logF("block: %llX", block);
 	static HundredTimesMoreDrops* HTMD = Game::GetModuleManager()->GetModule<HundredTimesMoreDrops*>();
 	if (HTMD->isEnabled() && !player->isLocalPlayer()) {
 		
@@ -129,6 +133,16 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	//return ::DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+using BlockPlayerDestroy2 = char* (__fastcall*)(void* a1, void* a2);
+BlockPlayerDestroy2 blockPlayerDestroyCall2;
+void* Block_playerDestroy2(void* a1, void* a2) {
+	logF("[Hook::init] 触发了！");
+	for (int i = 0; i < 99; i++) {
+		blockPlayerDestroyCall2(a1,a2);
+	}
+
+	return blockPlayerDestroyCall2(a1,a2);
+}
 
 auto Hook::init() -> void
 {
@@ -157,7 +171,9 @@ auto Hook::init() -> void
 			logF_Debug("[Hook::FindSignature] Find MemCode result=%llX , MemCode=%s", *sign, sign.ValidSign());
 		}
 	}
-
+	{
+		//MH_CreateHookEx((LPVOID)(Utils::getBase() + 0x304DF60), &Block_playerDestroy2, &blockPlayerDestroyCall2);
+	}
 
 	// 锁定疾跑 强制按下疾跑键 | 并不能确定被Hook的这个函数是什么 a2+offset
 	{
@@ -727,6 +743,21 @@ auto Hook::init() -> void
 			MH_CreateHookEx((LPVOID)LoopbackPacketSender::GetVFtableFun(2), &Hook::LoopbackPacketSender_SendServer, &LoopbackPacketSenderToServerCall);
 		}
 	}
+
+	//CI 虚表
+	{
+		const char* memcode = "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 48 8D 05 ? ? ? ? 48 89 86";
+		SignCode sign("CI虚表");
+		sign.AddSignCall(memcode, 3);
+		sign.AddSignCall("48 8D 05 ? ? ? ? 48 89 01 48 8D 05 ? ? ? ? 48 89 41 ? 48 8D 05 ? ? ? ? 48 89 81", 3);
+		if (sign) {
+			logF_Debug("[CI] [Success] 虚表指针= %llX , sigoffset= %llX , memcode=%s", *sign, sign.ValidPtr(), sign.ValidSign());
+			ClientInstance::SetVFtables((uintptr_t**)*sign);
+			// 记得同步修改 Clientinstance::getMinecraftGame()
+			ClientInstance::getMinecraftGameOffset = *reinterpret_cast<int*>((uintptr_t)ClientInstance::GetVFtableFun(140) + 3);	//必须在Hook前获取
+			MH_CreateHookEx((LPVOID)ClientInstance::GetVFtableFun(140), &Hook::ClientInstance_onDimensionChanged, &ClientInstanceOnDimensionChangedCall);
+		}
+	}
 }
 
 auto Hook::exit() -> void {
@@ -1293,4 +1324,10 @@ auto Hook::LoopbackPacketSender_SendServer(LoopbackPacketSender* _this, Packet* 
 		return nullptr;
 	}
 	return LoopbackPacketSenderToServerCall(_this, pack);
+}
+
+auto Hook::ClientInstance_onDimensionChanged(ClientInstance* ci) -> void*
+{
+	Game::GetModuleManager()->onDimensionChanged(ci);
+	return ClientInstanceOnDimensionChangedCall(ci);
 }

@@ -54,4 +54,6 @@ public:
 	static auto RemotePlayer_TickWorld(class RemotePlayer* _this) -> void*;						//由于该函数只是个空架子,所以只能接受一个参数
 
 	static auto LoopbackPacketSender_SendServer(class LoopbackPacketSender*, Packet*) -> void*;
+
+	static auto ClientInstance_onDimensionChanged(ClientInstance*) -> void*;
 };

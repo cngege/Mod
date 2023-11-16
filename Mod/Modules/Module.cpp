@@ -130,6 +130,8 @@ bool Module::onSendPackToServer(LoopbackPacketSender* sender, Packet* pack)
 	return true;
 }
 
+void Module::onDimensionChanged(ClientInstance* ci){}
+
 auto Module::setEnabled(bool enabled)->void {
 	if (this->enabled != enabled) {
 		this->enabled = enabled;

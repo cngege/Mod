@@ -41,6 +41,7 @@ public:
 	auto onImGUIRender()->void;
 	auto onSendMessage(std::mcstring*)->bool;
 	auto onSendPacketToServer(class LoopbackPacketSender*, class Packet*) -> bool;
+	auto onDimensionChanged(class ClientInstance*) -> void;
 	auto onloadConfigFile(json& data)->void;
 	auto onsaveConfigFile(json& data)->void;
 };

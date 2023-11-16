@@ -321,6 +321,15 @@ auto ModuleManager::onSendPacketToServer(LoopbackPacketSender* sender, Packet* p
 	return RunOriginalFun;
 }
 
+auto ModuleManager::onDimensionChanged(ClientInstance* ci) -> void
+{
+	if (!IsInitialized())
+		return;
+	for (auto pMod : moduleList) {
+		pMod->onDimensionChanged(ci);
+	}
+}
+
 auto ModuleManager::onloadConfigFile(json& data)->void {
 	if (!IsInitialized())
 		return;

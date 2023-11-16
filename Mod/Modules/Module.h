@@ -119,4 +119,5 @@ public:
 	virtual void onsaveConfigFile(json& data);			// 要求保存配置文件时将调用此方法, 此时，模块将变量等要存储的信息保存到data中,全部结束后统一保存到文件
 	virtual bool isEnabled();
 	virtual bool onSendPackToServer(class LoopbackPacketSender*, class Packet*);
+	virtual void onDimensionChanged(class ClientInstance*);
 };
