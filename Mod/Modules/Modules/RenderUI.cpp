@@ -1,4 +1,4 @@
-﻿#include "Render.h"
+﻿#include "RenderUI.h"
 #include <string>
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"
@@ -14,14 +14,14 @@ bool isCursorVisible = true;
 bool cursorSwitch = false;
 bool TabPreWindow = true;
 
-Render::Render() : Module(VK_INSERT, "Render", "渲染UI管理器") {
+RenderUI::RenderUI() : Module(VK_INSERT, "Render", "渲染UI管理器") {
 	SetKeyMode(KeyMode::Switch);
 	toggerConfig = ImGuiTogglePresets::RectangleStyle();
 	AddBoolUIValue("是否在开关时控制鼠标指针", &cursorSwitch);
 	AddBoolUIValue("按住TAB健打开UI,松开关闭", &TabPreWindow);
 }
 
-auto Render::onEnable() -> void
+auto RenderUI::onEnable() -> void
 {
 	isCursorVisible = Utils::isCursorVisible();
 	if (!isCursorVisible && cursorSwitch) {
@@ -30,7 +30,7 @@ auto Render::onEnable() -> void
 	}
 }
 
-auto Render::onDisable() -> void
+auto RenderUI::onDisable() -> void
 {
 	if (!isCursorVisible && Utils::isCursorVisible() && Game::Cinstance && cursorSwitch) {	// 如果在打开时 是隐藏的
 		auto screen = Game::Cinstance->getTopScreenName().to_string();
@@ -40,7 +40,7 @@ auto Render::onDisable() -> void
 	}
 }
 
-auto Render::onKeyUpdate(int key, bool isDown) -> void
+auto RenderUI::onKeyUpdate(int key, bool isDown) -> void
 {
 	if (TabPreWindow && Game::Cinstance) {
 		if (key == VK_TAB) {
@@ -58,7 +58,7 @@ auto Render::onKeyUpdate(int key, bool isDown) -> void
 	}
 }
 
-auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
+auto RenderUI::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	//return;
 	//if (isEnabled()) {
 	//	//画面板 功能列表
@@ -110,7 +110,7 @@ auto Render::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
 	//}
 }
 
-auto Render::onImGUIRender()->void {
+auto RenderUI::onImGUIRender()->void {
 	if (!isEnabled()) {
 		return;
 	}
@@ -261,12 +261,12 @@ auto Render::onImGUIRender()->void {
 	ImGui::End();
 }
 
-auto Render::onloadConfigFile(json& data)->void {
+auto RenderUI::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
 	cursorSwitch = config::readDataFromJson<bool>(data, "cursorSwitch", true);
 }
 
-auto Render::onsaveConfigFile(json& data)->void {
+auto RenderUI::onsaveConfigFile(json& data)->void {
 	data["enable"] = isEnabled();
 	data["cursorSwitch"] = cursorSwitch;
 }

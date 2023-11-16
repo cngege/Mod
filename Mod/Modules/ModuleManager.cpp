@@ -9,7 +9,7 @@
 #include "Modules/Traverse.h"
 #include "Modules/ShowCoordinates.h"
 #include "Modules/TPPoint.h"
-#include "Modules/Render.h"
+#include "Modules/RenderUI.h"
 #include "Modules/NoAttackFriend.h"
 #include "Modules/ArmsLength.h"
 //#include "Modules/AutoWalking.h"
@@ -48,7 +48,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new Traverse()));						/*F2*/
 	moduleList.push_back((Module*)(new ShowCoordinates()));
 	moduleList.push_back((Module*)(new TPPoint()));							/*Ctrl/Shift+F3*/
-	moduleList.push_back((Module*)(new Render()));							/*INS*/
+	moduleList.push_back((Module*)(new RenderUI()));							/*INS*/
 	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl+F4*/
 	moduleList.push_back((Module*)(new NoAttackFriend()));					/*SHIFT+F4*/
 	moduleList.push_back((Module*)(new BioRadar()));						/*SHIFT+F6*/

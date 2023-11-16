@@ -111,7 +111,7 @@
     <ClInclude Include="..\SDK\MinecraftUIRenderContext.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Modules\Render.h">
+    <ClInclude Include="Modules\Modules\RenderUI.h">
       <Filter>Modules\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\SDK\ClientInstance.h">
@@ -338,7 +338,7 @@
     <ClCompile Include="Modules\Modules\TPPoint.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\Modules\Render.cpp">
+    <ClCompile Include="Modules\Modules\RenderUI.cpp">
       <Filter>Modules\源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SDK\MinecraftUIRenderContext.cpp">

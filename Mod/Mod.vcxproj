@@ -346,7 +346,7 @@
     <ClInclude Include="Modules\Modules\LockControlInput.h" />
     <ClInclude Include="Modules\Modules\NoAttackFriend.h" />
     <ClInclude Include="Modules\Modules\NoKnockback.h" />
-    <ClInclude Include="Modules\Modules\Render.h" />
+    <ClInclude Include="Modules\Modules\RenderUI.h" />
     <ClInclude Include="Modules\Modules\RenderHealth.h" />
     <ClInclude Include="Modules\Modules\ShowCoordinates.h" />
     <ClInclude Include="Modules\Modules\TPPoint.h" />
@@ -419,7 +419,7 @@
     <ClCompile Include="Modules\Modules\LockControlInput.cpp" />
     <ClCompile Include="Modules\Modules\NoAttackFriend.cpp" />
     <ClCompile Include="Modules\Modules\NoKnockback.cpp" />
-    <ClCompile Include="Modules\Modules\Render.cpp" />
+    <ClCompile Include="Modules\Modules\RenderUI.cpp" />
     <ClCompile Include="Modules\Modules\RenderHealth.cpp" />
     <ClCompile Include="Modules\Modules\ShowCoordinates.cpp" />
     <ClCompile Include="Modules\Modules\TPPoint.cpp" />

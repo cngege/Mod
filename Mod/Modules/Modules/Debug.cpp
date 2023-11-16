@@ -21,7 +21,7 @@
 #include "Logger.h"
 #include "../Hook/Hook.h"
 #include "../Modules/ModuleManager.h"
-#include "Render.h"
+#include "RenderUI.h"
 
 ImGuiToggleConfig toggerConfig_Debug;
 std::shared_ptr<glmatrixf> refdef;
@@ -121,7 +121,7 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		std::string tmp = "AB";
 		uintptr_t* intval = (uintptr_t*)&tmp;
 		if (intval == (uintptr_t*)tmp.data()) {
-			Game::GetModuleManager()->GetModule<Render*>()->setEnabled(false);
+			Game::GetModuleManager()->GetModule<RenderUI*>()->setEnabled(false);
 		}
 		logF("DebugStringA:%s", tmp.c_str());
 

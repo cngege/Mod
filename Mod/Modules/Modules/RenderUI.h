@@ -2,9 +2,9 @@
 #include "../Module.h"
 #include "MinecraftUIRenderContext.h"
 
-class Render : public Module {
+class RenderUI : public Module {
 public:
-	Render();
+	RenderUI();
 public:
 	virtual auto onEnable() -> void override;
 	virtual auto onDisable() -> void override;
