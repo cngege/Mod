@@ -22,14 +22,21 @@ private:
 	bool sideDirectionLeft = false;
 	//是否靠向屏幕上边,false表示靠向屏幕下边
 	bool sideDirectionTop = false;
+
+	// 渲染移除的玩家
+	bool renderRemovePlayer = false;
+	// 直接屏幕透视
+	bool xRay = false;
 public:
 	virtual auto onImGUIRender() -> void override;
 	virtual auto onstartLeaveGame(class Level*) -> void override;
 	virtual auto onPlayerTick(class Player*)->void override;		// 远程玩家tick不好使
+	virtual auto onDimensionChanged(class ClientInstance*) -> void override;
 	virtual auto onloadConfigFile(json& data) -> void override;
 	virtual auto onsaveConfigFile(json& data) -> void override;
 
 private:
+	vec2_t getMapPosition(vec3_t xdpos, vec2_t lprot);
 	//获取字符串中的第n个 单个字符
 	auto GetColorbyChar(const std::string&) -> ImColor;
 };

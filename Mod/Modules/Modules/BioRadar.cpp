@@ -7,9 +7,17 @@
 #include "ClientInstance.h"
 #include "RemotePlayer.h"
 #include "Level.h"
+#include <BlockSource.h>
+#include "Dimension.h"
+#include "Block.h"
+#include "BlockLegacy.h"
 
 BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显示屏上看到玩家和其他生物位置信息") {
 	setcontrolkeysbind({ VK_SHIFT });
+	AddBoolUIValue("渲染移除的玩家", &renderRemovePlayer);
+	AddBoolUIValue("屏幕透视", &xRay);
+
+
 	AddFloatUIValue("地图大小", &radarSide, 200, 1000, true);						//雷达地图边长 像素
 	AddIntUIValue("地图比例尺", &roomscale, 2, 6, true);					//雷达像素与游戏中距离的比例，比如2表示  雷达中2像素表示游戏中的一格
 	AddFloatUIValue("屏幕水平边距", &marginx, 0, 1000, true);
@@ -19,6 +27,9 @@ BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显�
 	AddButtonUIEvent("靠右", true, [this]() { this->sideDirectionLeft = false; });
 	AddButtonUIEvent("靠上", true, [this]() { this->sideDirectionTop = true; });
 	AddButtonUIEvent("靠下", true, [this]() { this->sideDirectionTop = false; });
+
+	AddButtonUIEvent("清除", false, [this]() { playerlist.clear(); });
+
 }
 
 struct BioRadar::PlayerMapInfo{
@@ -26,6 +37,8 @@ struct BioRadar::PlayerMapInfo{
 	float z;
 	ImColor color;						//应该显示的颜色
 	bool top;							//是否在本地玩家上面
+	vec3_t pos;
+	vec3_ti footBlockPos;
 	//int updatetick;
 };
 
@@ -57,7 +70,7 @@ auto BioRadar::onImGUIRender() -> void
 	RECT rect{};
 	//::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)
 	// ::GetWindowRect((HWND)ImGui::GetIO().ImeWindowHandle, (LPRECT)&rect) // 可以
-	if (::GetWindowRect((HWND)Game::WindowsHandle, (LPRECT)&rect)) {
+	if (::GetWindowRect((HWND)Game::ChildWindowsHandle, (LPRECT)&rect)) {
 		auto drawList = ImGui::GetForegroundDrawList();
 		float rectwidth = (float)(rect.right - rect.left);
 		float rectheight = (float)(rect.bottom - rect.top);
@@ -90,11 +103,20 @@ auto BioRadar::onImGUIRender() -> void
 		drawList->AddLine({ radarLeftTop.x + radarSide / 2 ,radarLeftTop.y }, { radarLeftTop.x + radarSide / 2 , radarLeftTop.y + radarSide }, ImColor(102, 153, 255, 200));
 		for (auto& kv : playerlist) {
 			if (kv.first->isValid()) {
+				// debug 在此计算向量关系
+				auto mappos = getMapPosition(kv.second.pos.sub(*lp->getPosition()),*lp->getRotationEx());
+				kv.second.x = mappos.x;
+				kv.second.z = mappos.y;
+
+
+				//防止玩家点跑出地图外
+				float remoteside = radarSide / (2 * roomscale);
+				float X = kv.second.x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
+				float Z = kv.second.z; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
+
+				
+
 				if (!kv.first->isRemovedEx()) {
-					//防止玩家点跑出地图外
-					float remoteside = radarSide / (2 * roomscale);
-					float X = kv.second.x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
-					float Z = kv.second.z; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
 					//在远程玩家位置在本地玩家之上时显示空心圆
 					if (kv.second.top) {
 						drawList->AddCircle({ radarLeftTop.x + (radarSide / 2) + X * roomscale, radarLeftTop.y + (radarSide / 2) + Z * roomscale }, 4, kv.second.color);
@@ -102,10 +124,62 @@ auto BioRadar::onImGUIRender() -> void
 					else {
 						drawList->AddCircleFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale, radarLeftTop.y + (radarSide / 2) + Z * roomscale }, 4, kv.second.color);
 					}
+
+					// 是否直接在屏幕绘制
+					if (xRay) {
+						ImColor yellow = ImColor(241, 196, 15, 255);
+						ImColor green = ImColor(30, 132, 73, 255);
+						// 画线 屏幕到00 -60 00
+						vec2_t out;
+						vec2_t fov = Game::Cinstance->getFov();
+
+						std::shared_ptr<glmatrixf> refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
+						if (refdef->OWorldToScreen(*lp->getPosition(), { kv.second.pos.x,kv.second.pos.y-1, kv.second.pos.z }, out, fov, {rectwidth,rectheight})) {
+							drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
+							drawList->AddCircle({ out.x, out.y }, 20, kv.second.color,0,1.5f);
+						}
+					}
 				}
 				else {
-					playerlist.erase(kv.first);
-					break;
+					if (renderRemovePlayer) {
+						//先判断下 玩家位置是不是有方框，如果没有方框就remove
+						BlockSource* bs = lp->getDimensionConst()->getBlockSourceEx();
+						if (!bs->getBlock((int)kv.second.footBlockPos.x, (int)kv.second.footBlockPos.y + 1, (int)kv.second.footBlockPos.z)->isAir()) {
+							//在远程玩家位置在本地玩家之上时显示空心
+							if (kv.second.top) {
+								drawList->AddRect({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
+									{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
+									kv.second.color);
+							}
+							else {
+								drawList->AddRectFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
+									{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
+									kv.second.color);
+							}
+						}
+						else {
+							playerlist.erase(kv.first);
+							break;
+						}
+
+						if (xRay) {
+							ImColor yellow = ImColor(241, 196, 15, 255);
+							ImColor green = ImColor(30, 132, 73, 255);
+							// 画线 屏幕到00 -60 00
+							vec2_t out;
+							vec2_t fov = Game::Cinstance->getFov();
+
+							std::shared_ptr<glmatrixf> refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
+							if (refdef->OWorldToScreen(*lp->getPosition(), { kv.second.pos.x,kv.second.pos.y - 1, kv.second.pos.z }, out, fov, { rectwidth,rectheight })) {
+								drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
+								drawList->AddRect({ out.x - 20, out.y - 20 },	{ out.x + 20, out.y + 20 },kv.second.color,0,0,1.5f);
+							}
+						}
+					}
+					else {
+						playerlist.erase(kv.first);
+						break;
+					}
 				}
 			}
 			else {
@@ -121,6 +195,27 @@ auto BioRadar::onstartLeaveGame(Level* _) -> void
 	playerlist.clear();
 }
 
+
+vec2_t BioRadar::getMapPosition(vec3_t xdpos, vec2_t lprot) {
+	//获取向量长度 也就是斜边长度
+	float vecLength = xdpos.magnitudexz();
+	//获取与原版等同的夹角
+	float deg = atan2f(-xdpos.x, xdpos.z) * 180 / PI;
+	//本地玩家转动视角后 计算远程玩家的视角 得到计算后的视角度数
+	float afterdeg = deg - lprot.y;
+	if (afterdeg > 180.f) {
+		afterdeg = afterdeg - 360.f;				// = -180.f + (afterdeg - 180.f)
+	}
+	else if (afterdeg < -180.f) {
+		afterdeg = afterdeg + 360.f;				// = 180.f + (afterdeg - (-180.f))
+	}
+	//斜边有了，夹角有了 然后算出新的x z值
+	float x = vecLength * sinf(afterdeg * PI / 180.f);
+	float z = -vecLength * cosf(afterdeg * PI / 180.f);
+	return { x, z };
+}
+
+
 auto BioRadar::onPlayerTick(Player* player)->void
 {
 	if (!isEnabled()) {
@@ -134,7 +229,32 @@ auto BioRadar::onPlayerTick(Player* player)->void
 	}
 	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 
-	if (lp && lp->isValid() && !player->isLocalPlayer()) {
+	if (lp && lp->isValid()) {
+		//获得本地玩家的位置视角相关信息
+		vec3_t* lpos = lp->getPosition();
+		vec2_t* lrot = lp->getRotationEx();
+		vec3_t* pos = player->getPosition();
+		//获得 对方玩家对本地玩家的相对位置 即本地玩家对远程玩家的空间向量
+		vec3_t xdpos = pos->sub(*lpos);
+
+		PlayerMapInfo pmi;
+		pmi.pos = *pos;
+		pmi.footBlockPos = player->getFootBlockPos();
+		//auto mappos = getMapPosition(xdpos, *lrot);
+
+		//pmi.x = mappos.x; pmi.z = mappos.y;
+
+		auto name = player->getNameTag()->to_string().substr(0, 3);  //章节号占两字节
+		pmi.color = GetColorbyChar(name);
+		pmi.top = xdpos.y > 0;
+		//pmi.updatetick = 0;
+
+		playerlist[player] = pmi;
+	}
+
+
+	return;
+	if (lp && lp->isValid()/* && !player->isLocalPlayer() && lp != player*/) {
 		//获得本地玩家的位置视角相关信息
 		vec3_t* lpos = lp->getPosition();
 		vec2_t* lrot = lp->getRotationEx();
@@ -165,6 +285,11 @@ auto BioRadar::onPlayerTick(Player* player)->void
 
 		playerlist[player] = pmi;
 	}
+}
+
+auto BioRadar::onDimensionChanged(ClientInstance* ci) -> void
+{
+	playerlist.clear();
 }
 
 auto BioRadar::onloadConfigFile(json& data) -> void

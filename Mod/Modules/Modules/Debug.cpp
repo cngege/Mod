@@ -15,6 +15,7 @@
 #include "RemotePlayer.h"
 #include "GameMode.h"
 #include "ItemStack.h"
+#include "BlockLegacy.h"
 
 
 #include "Logger.h"
@@ -39,13 +40,15 @@ float y_offset = 0.f;
 
 vec2_t outFov;
 
+vec3_ti renderBlockPos;
+
 int vtNum = 141;
 int pack = 85;
 
 #include "ActorMovementProxy.h"
 #include "BlockSource.h"
 #include "Block.h"
-
+#include "Dimension.h"
 Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	toggerConfig_Debug = ImGuiTogglePresets::RectangleStyle();
 	
@@ -70,12 +73,32 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 		if (lp != nullptr) {
 			
-			logF("Run");
-			bool v = lp->isFlying();
-			logF(v ? "isfly" : "nofly");
+			//logF("Run");
+			//bool v = lp->isFlying();
+			//logF(v ? "isfly" : "nofly");
 
-			lp->setCanFlyEx(true);
+			//lp->setCanFlyEx(true);
+			//BlockSource* bs = lp->getDimensionConst()->getBlockSourceEx();
+
+			//bool v1 = bs->getBlock(0,1,0)->isAirEx();
+			//bool v1 = lp->getDimensionBlockSource()->getBlock(0, 0, 0)->isAirEx();
+			//bool v2 = lp->getDimensionBlockSource()->getBlock(0, 1, 0)->isAirEx();
+			//logF("0 0 0 %s" , (v1 ? "is air" : "not air"));
+			//logF("0 1 0 " + v2 ? "is air" : "not air");
+			//logF("debug: block: %llX", bs->getBlock(0, 1, 0));
+			//logF("debug: BlockSource vt: %llX", *(uintptr_t*)bs);
+			auto pos = lp->getPosition();
+			if (pos->x < 0) renderBlockPos.x = (int)(pos->x - 1.f); else renderBlockPos.x = pos->x;
+			if (pos->y < 0) renderBlockPos.y = (int)(pos->y - 1.f); else renderBlockPos.y = pos->y;
+			if (pos->z < 0) renderBlockPos.z = (int)(pos->z - 1.f); else renderBlockPos.z = pos->z;
+
+			renderBlockPos.y -= 2;
+
+			BlockSource* bs = lp->getDimensionConst()->getBlockSourceEx();
+			logF("debug: blockid: %u", bs->getBlock(&renderBlockPos)->getBlockLegacy()->getBlockItemIdEx());
 		}
+
+		Game::Cinstance->getMinecraftGame();
 
 		// 函数定位码
 		// 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC 80 00 00 00 0F 29 74 24 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48
@@ -84,7 +107,8 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		//auto _GetTopScreenName = (GetTopScreenName)((*(uintptr_t**)Game::Cinstance)[vtNum] /*->VTable[141]*/);
 		//_GetTopScreenName(Game::Cinstance, &out);
 		//logF("_GetTopScreenName:%s ,%llX", out.c_str(), (*(uintptr_t**)Game::Cinstance)[vtNum]);
-		logF("_GetTopScreenName:%s", Game::Cinstance->getTopScreenName().c_str());
+		//logF("_GetTopScreenName:%s", Game::Cinstance->getTopScreenName().c_str());
+
 		});
 	AddButtonUIEvent("GetTopScreenName", true, [&]() {
 		std::mcstring out;
@@ -108,6 +132,9 @@ void RenderDebugBox() {
 	// 尝试世界到屏幕
 	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 	if (lp) {
+		ImColor yellow = ImColor(241, 196, 15, 255);
+		ImColor green = ImColor(30, 132, 73, 255);
+
 
 		vec3_t lpPos = *lp->getPosition();
 		lpPos.y += y_offset;
@@ -123,11 +150,11 @@ void RenderDebugBox() {
 		vec2_t fov = Game::Cinstance->getFov();
 		refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
 
-		vec3_t blockpos = { 0.f,-61.f,0.f };
+		vec3_t blockpos = renderBlockPos.toFloatVector();
 
 		if (refdef->OWorldToScreen(lpPos, { blockpos.x + 0.5f, blockpos.y + 1.f, blockpos.z + 0.5f }, out, fov, { rectwidth,rectheight })) {
 			auto drawList = ImGui::GetForegroundDrawList();
-			drawList->AddLine({ rectwidth / 2, 0 }, { out.x,out.y }, ImColor(241, 196, 15, 255));
+			drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
 
 
 			std::vector<vec3_t> offset = {
@@ -156,58 +183,58 @@ void RenderDebugBox() {
 
 			if (point[0] != vec2_t()) {
 				if (point[1] != vec2_t()) {
-					drawList->AddLine({ point[0].x, point[0].y }, { point[1].x,point[1].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[0].x, point[0].y }, { point[1].x,point[1].y }, yellow, linesize);
 				}
 				if (point[2] != vec2_t()) {
-					drawList->AddLine({ point[0].x, point[0].y }, { point[2].x,point[2].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[0].x, point[0].y }, { point[2].x,point[2].y }, yellow, linesize);
 				}
 				if (point[4] != vec2_t()) {
-					drawList->AddLine({ point[0].x, point[0].y }, { point[4].x,point[4].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[0].x, point[0].y }, { point[4].x,point[4].y }, yellow, linesize);
 				}
 			}
 
 			if (point[1] != vec2_t()) {
 				if (point[3] != vec2_t()) {
-					drawList->AddLine({ point[1].x, point[1].y }, { point[3].x,point[3].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[1].x, point[1].y }, { point[3].x,point[3].y }, yellow, linesize);
 				}
 				if (point[5] != vec2_t()) {
-					drawList->AddLine({ point[1].x, point[1].y }, { point[5].x,point[5].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[1].x, point[1].y }, { point[5].x,point[5].y }, yellow, linesize);
 				}
 			}
 
 			if (point[2] != vec2_t()) {
 				if (point[3] != vec2_t()) {
-					drawList->AddLine({ point[2].x, point[2].y }, { point[3].x,point[3].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[2].x, point[2].y }, { point[3].x,point[3].y }, yellow, linesize);
 				}
 				if (point[6] != vec2_t()) {
-					drawList->AddLine({ point[2].x, point[2].y }, { point[6].x,point[6].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[2].x, point[2].y }, { point[6].x,point[6].y }, yellow, linesize);
 				}
 			}
 
 			if (point[3] != vec2_t()) {
 				if (point[7] != vec2_t()) {
-					drawList->AddLine({ point[3].x, point[3].y }, { point[7].x,point[7].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[3].x, point[3].y }, { point[7].x,point[7].y }, yellow, linesize);
 				}
 			}
 
 			if (point[4] != vec2_t()) {
 				if (point[5] != vec2_t()) {
-					drawList->AddLine({ point[4].x, point[4].y }, { point[5].x,point[5].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[4].x, point[4].y }, { point[5].x,point[5].y }, yellow, linesize);
 				}
 				if (point[6] != vec2_t()) {
-					drawList->AddLine({ point[4].x, point[4].y }, { point[6].x,point[6].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[4].x, point[4].y }, { point[6].x,point[6].y }, yellow, linesize);
 				}
 			}
 
 			if (point[5] != vec2_t()) {
 				if (point[7] != vec2_t()) {
-					drawList->AddLine({ point[5].x, point[5].y }, { point[7].x,point[7].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[5].x, point[5].y }, { point[7].x,point[7].y }, yellow, linesize);
 				}
 			}
 
 			if (point[6] != vec2_t()) {
 				if (point[7] != vec2_t()) {
-					drawList->AddLine({ point[6].x, point[6].y }, { point[7].x,point[7].y }, ImColor(30, 132, 73, 255), linesize);
+					drawList->AddLine({ point[6].x, point[6].y }, { point[7].x,point[7].y }, yellow, linesize);
 				}
 			}
 
