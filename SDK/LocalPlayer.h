@@ -4,6 +4,7 @@
 
 //LocalPlayer::LocalPlayer
 //40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ?  48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 89 4D ? 4C 89 45 ? 48 8B DA
+
 class LocalPlayer : public Player {
 protected:
 	static uintptr_t** vfTables;
@@ -30,9 +31,18 @@ public:
 	auto isOnGround()->bool*;
 	//auto isValid()->bool;
 
+
+	// 函数
+	
+	/**
+	 * @brief 设置玩家视角朝向
+	 * @param viewAngles 朝向
+	 * @return
+	*/
+	auto LocalPlayerTurn(vec2_t* viewAngles) -> void;
 public:
 	//虚表函数
 	//auto setPos(vec3_t*)->__int64;									/*14*/
-	auto jumpFromGround()-> void*;										/*346*/
-	auto displayClientMessage(std::mcstring*)-> void*;					/*389*/
+	//auto jumpFromGround()-> void*;										/*346*/
+	//auto displayClientMessage(std::mcstring*)-> void*;					/*389*/
 };

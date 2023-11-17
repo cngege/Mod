@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Player.h"
 
-class RemotePlayer : public Player {
+class RemotePlayer : public Player { // 好像是继承自LocalPlayer
 protected:
 	static uintptr_t** vfTables;
 
