@@ -6,7 +6,8 @@ public:
 	vec3_t min;
 	vec3_t max;
 public:
-	AABB(vec3_t min, vec3_t max) : min(min), max(max) {};
+	AABB() {};
+	AABB(vec3_t _min, vec3_t _max) { min = _min; max = _max; };
 	AABB(const AABB& aabb);
 	auto getsize()->float;
 	auto isValid()->bool;

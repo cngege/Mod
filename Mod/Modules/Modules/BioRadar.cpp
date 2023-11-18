@@ -11,6 +11,7 @@
 #include "Dimension.h"
 #include "Block.h"
 #include "BlockLegacy.h"
+#include "AABB.h"
 
 #include "../Render/Render.h"
 
@@ -41,6 +42,7 @@ struct BioRadar::PlayerMapInfo{
 	bool top;							//是否在本地玩家上面
 	vec3_t pos;
 	vec3_ti footBlockPos;
+	AABB aabb;
 	//int updatetick;
 };
 
@@ -125,16 +127,19 @@ auto BioRadar::onImGUIRender() -> void
 
 					// 是否直接在屏幕绘制
 					if (xRay) {
-						ImColor yellow = ImColor(241, 196, 15, 255);
 						ImColor green = ImColor(30, 132, 73, 255);
 						// 画线 屏幕到00 -60 00
-						vec2_t out;
-						vec2_t fov = Game::Cinstance->getFov();
+						//vec2_t out;
+						//vec2_t fov = Game::Cinstance->getFov();
 
-						std::shared_ptr<glmatrixf> refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
-						if (refdef->OWorldToScreen(*lpPos, { kv.second.pos.x,kv.second.pos.y-1, kv.second.pos.z }, out, fov, {rectwidth,rectheight})) {
-							drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
-							drawList->AddCircle({ out.x, out.y }, 20, kv.second.color,0,1.5f);
+						//std::shared_ptr<glmatrixf> refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
+						//if (refdef->OWorldToScreen(*lpPos, { kv.second.pos.x,kv.second.pos.y-1, kv.second.pos.z }, out, fov, {rectwidth,rectheight})) {
+						//	drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
+						//	drawList->AddCircle({ out.x, out.y }, 20, kv.second.color,0,1.5f);
+						//}
+						auto a = Render::RenderAABB2D(kv.second.aabb, kv.second.color);
+						if (a) {
+							drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { a->x,a->y }, green);
 						}
 					}
 				}
@@ -171,7 +176,7 @@ auto BioRadar::onImGUIRender() -> void
 				ImColor yellow = ImColor(241, 196, 15, 255);
 				ImColor green = ImColor(30, 132, 73, 255);
 				// 画线 屏幕到00 -60 00
-				std::optional<vec2_t> centerPos = Render::RenderBlockBox(playerBlock, *lpPos);
+				std::optional<vec2_t> centerPos = Render::RenderBlockBox(playerBlock);
 				if (centerPos) {
 					drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, ImColor(255, 255, 255), 1.5f);
 				}
@@ -255,6 +260,7 @@ auto BioRadar::onPlayerTick(Player* player)->void
 		PlayerMapInfo pmi;
 		pmi.pos = *pos;
 		pmi.footBlockPos = player->getFootBlockPos();
+		pmi.aabb = *player->getAABB();
 		//auto mappos = getMapPosition(xdpos, *lrot);
 
 		//pmi.x = mappos.x; pmi.z = mappos.y;

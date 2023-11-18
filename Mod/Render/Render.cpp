@@ -4,12 +4,16 @@
 #include "imgui.h"
 #include "Game.h"
 #include "ClientInstance.h"
+#include "Player.h"
+#include "AABB.h"
 
 vec2_t Render::fov = vec2_t();
 vec2_t Render::screen = vec2_t();
+vec3_t Render::origin = vec3_t();
+
 std::shared_ptr<glmatrixf> Render::refdef = std::make_shared<glmatrixf>();
 
-std::optional<vec2_t> Render::RenderBlockBox(vec3_ti bPos, vec3_t lPos, ImColor boxColor, float linesize)
+std::optional<vec2_t> Render::RenderBlockBox(vec3_ti bPos,ImColor boxColor, float linesize)
 {
 	std::optional<vec2_t> ret;
 	vec2_t out;
@@ -23,10 +27,10 @@ std::optional<vec2_t> Render::RenderBlockBox(vec3_ti bPos, vec3_t lPos, ImColor 
 		{1,0,1},	//6
 		{1,1,1}		//7
 	};
-
+	//lPos = origin;
 	vec2_t point[8]{};
 	for (int i = 0; i < 8; i++) {
-		if (refdef->OWorldToScreen(lPos, { bPos.x + offset[i].x, bPos.y + offset[i].y, bPos.z + +offset[i].z }, out, fov, screen)) {
+		if (refdef->OWorldToScreen(origin, { bPos.x + offset[i].x, bPos.y + offset[i].y, bPos.z + +offset[i].z }, out, fov, screen)) {
 			point[i] = out;
 		}
 		else {
@@ -109,7 +113,67 @@ void Render::Updata()
 
 	if (Game::Cinstance) {
 		fov = Game::Cinstance->getFov();
-
 		refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
+
+		auto LevelRenderer = Game::Cinstance->getLevelRender();
+		if (LevelRenderer) {
+			auto* LevelRendererPlayer = LevelRenderer->getLevelRendererPlayer();
+			if (LevelRendererPlayer)
+				origin = LevelRendererPlayer->getCamPos();
+		}
 	}
+}
+
+//TODU 待完成
+std::optional<vec2_t> Render::RenderPlayerBox2D(Player player, ImColor boxColor, float linesize) {
+	//auto aabb = player.getAABB();
+
+	std::optional<vec2_t> ret;
+	vec3_t pos = *player.getPosition();
+	vec2_t out;
+
+	if (refdef->OWorldToScreen(origin, { pos.x,pos.y - 1, pos.z}, out, fov, screen)) {
+		//drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, boxColor);
+		auto drawList = ImGui::GetForegroundDrawList();
+		drawList->AddCircle({ out.x, out.y }, 20, boxColor, 0, linesize);
+		ret = out;
+	}
+	return ret;
+}
+
+//TODU 待完成
+std::optional<vec2_t> Render::RenderWorldBox2D(vec3_t pos, ImColor boxColor, float linesize) {
+	//auto aabb = player.getAABB();
+
+	std::optional<vec2_t> ret;
+	vec2_t out;
+
+	if (refdef->OWorldToScreen(origin, { pos.x,pos.y - 1, pos.z }, out, fov, screen)) {
+		//drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, boxColor);
+		auto drawList = ImGui::GetForegroundDrawList();
+		drawList->AddCircle({ out.x, out.y }, 20, boxColor, 0, linesize);
+		ret = out;
+	}
+	return ret;
+}
+
+//TODU 待完成
+std::optional<vec2_t> Render::RenderAABB2D(AABB aabb, ImColor boxColor, float linesize) {
+	//auto aabb = player.getAABB();
+
+	std::optional<vec2_t> ret;
+	vec2_t outmin;
+	vec2_t outmax;
+
+	if (refdef->OWorldToScreen(origin, { aabb.min.x,aabb.min.y, aabb.min.z }, outmin, fov, screen) &&
+		refdef->OWorldToScreen(origin, { aabb.max.x,aabb.max.y, aabb.max.z }, outmax, fov, screen)) {
+		auto drawList = ImGui::GetForegroundDrawList();
+
+		drawList->AddLine({ outmin.x, outmin.y }, { outmin.x, outmax.y }, boxColor, linesize);
+		drawList->AddLine({ outmin.x, outmin.y }, { outmax.x, outmin.y }, boxColor, linesize);
+		drawList->AddLine({ outmin.x, outmax.y }, { outmax.x, outmax.y }, boxColor, linesize);
+		drawList->AddLine({ outmax.x, outmin.y }, { outmax.x, outmax.y }, boxColor, linesize);
+		ret = outmin.add(outmax).div(2);
+	}
+	return ret;
 }

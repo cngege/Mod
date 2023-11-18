@@ -304,6 +304,7 @@
     <ClInclude Include="..\SDK\mcstring.h" />
     <ClInclude Include="..\SDK\MinecraftUIRenderContext.h" />
     <ClInclude Include="..\SDK\Mob.h" />
+    <ClInclude Include="..\SDK\Packet.h" />
     <ClInclude Include="..\SDK\Player.h" />
     <ClInclude Include="..\SDK\RemotePlayer.h" />
     <ClInclude Include="..\SDK\ServerPlayer.h" />
@@ -355,6 +356,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utils\config.h" />
     <ClInclude Include="Utils\Game.h" />
+    <ClInclude Include="Utils\HMath.h" />
     <ClInclude Include="Utils\http.hpp" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\Logger.h" />
@@ -383,6 +385,7 @@
     <ClCompile Include="..\SDK\LoopbackPacketSender.cpp" />
     <ClCompile Include="..\SDK\MinecraftUIRenderContext.cpp" />
     <ClCompile Include="..\SDK\Mob.cpp" />
+    <ClCompile Include="..\SDK\Packet.cpp" />
     <ClCompile Include="..\SDK\Player.cpp" />
     <ClCompile Include="..\SDK\RemotePlayer.cpp" />
     <ClCompile Include="..\SDK\ServerPlayer.cpp" />

@@ -407,6 +407,10 @@ void SignCode::AddSign(const char* sign, std::function<uintptr_t(uintptr_t)> han
 		validPtr = v;
 		if (handle != nullptr) {
 			v = handle(v);
+			if (v == 0) {
+				success = false;
+				return;
+			}
 		}
 	}
 }
@@ -425,6 +429,10 @@ void SignCode::AddSignCall(const char* sign, int offset, std::function<uintptr_t
 		v = Utils::FuncFromSigOffset(_v, offset);
 		if (handle != nullptr) {
 			v = handle(v);
+			if (v == 0) {
+				success = false;
+				return;
+			}
 		}
 	}
 }

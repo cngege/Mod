@@ -3,6 +3,8 @@
 #include "../Module.h"
 #include "imgui.h"
 
+class AABB;
+
 class BioRadar : public Module {
 public:
 	BioRadar();

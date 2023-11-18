@@ -57,7 +57,7 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 	AddBoolUIValue("GameModeAttack时使用物品", &GameMode_attack_UseItem);
 	AddBoolUIValue("显示Demo窗口", &ShowDemoForm);
 	AddBoolUIValue("显示字体选择", &ShowFontSelectForm);
-	AddBoolUIValue("尝试方框透视", &renderW2SDebugBox);
+	AddBoolUIValue("尝试方框透视(完成)", &renderW2SDebugBox);
 	AddBoolUIValue("显示常用指针", &ShowPtrList);
 	AddBoolUIValue("G健切换飞行状态", &CheckFlyStatus);
 	AddBoolUIValue("H健使用手中物品", &KeyUseItem);
@@ -130,124 +130,6 @@ Debug::Debug() : Module(0, "Debug", "开发者调试") {
 		});
 }
 
-#include "../Render/Render.h"
-void RenderDebugBox() {
-	// 尝试世界到屏幕
-	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
-	if (lp) {
-		ImColor yellow = ImColor(241, 196, 15, 255);
-		ImColor green = ImColor(30, 132, 73, 255);
-
-
-		vec3_t lpPos = *lp->getPosition();
-		lpPos.y += y_offset;
-
-		// 获取屏幕宽高
-		RECT rect{};
-		::GetWindowRect((HWND)Game::ChildWindowsHandle, (LPRECT)&rect);
-		float rectwidth = (float)(rect.right - rect.left);
-		float rectheight = (float)(rect.bottom - rect.top);
-
-		// 画线 屏幕到00 -60 00
-		vec2_t out;
-		vec2_t fov = Game::Cinstance->getFov();
-		refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
-
-		vec3_t blockpos = renderBlockPos.toFloatVector();
-
-		if (refdef->OWorldToScreen(lpPos, { blockpos.x + 0.5f, blockpos.y + 1.f, blockpos.z + 0.5f }, out, fov, { rectwidth,rectheight })) {
-			auto drawList = ImGui::GetForegroundDrawList();
-			//drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
-
-			auto centPos = Render::RenderBlockBox(blockpos, lpPos);
-			if (centPos) {
-				drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centPos->x,centPos->y }, green);
-			}
-			/*
-			std::vector<vec3_t> offset = {
-				{0,0,0},	//0
-				{0,1,0},	//1
-				{0,0,1},	//2
-				{0,1,1},	//3
-				{1,0,0},	//4
-				{1,1,0},	//5
-				{1,0,1},	//6
-				{1,1,1}		//7
-			};
-
-			vec2_t point[8]{};
-
-			for (int i = 0; i < 8; i++) {
-				if (refdef->OWorldToScreen(lpPos, { blockpos.x + offset[i].x, blockpos.y + offset[i].y, blockpos.z + +offset[i].z }, out, fov, { rectwidth,rectheight })) {
-					point[i] = out;
-				}
-				else {
-					point[i] = vec2_t();
-				}
-			}
-
-			float linesize = 1.5;
-
-			if (point[0] != vec2_t()) {
-				if (point[1] != vec2_t()) {
-					drawList->AddLine({ point[0].x, point[0].y }, { point[1].x,point[1].y }, yellow, linesize);
-				}
-				if (point[2] != vec2_t()) {
-					drawList->AddLine({ point[0].x, point[0].y }, { point[2].x,point[2].y }, yellow, linesize);
-				}
-				if (point[4] != vec2_t()) {
-					drawList->AddLine({ point[0].x, point[0].y }, { point[4].x,point[4].y }, yellow, linesize);
-				}
-			}
-
-			if (point[1] != vec2_t()) {
-				if (point[3] != vec2_t()) {
-					drawList->AddLine({ point[1].x, point[1].y }, { point[3].x,point[3].y }, yellow, linesize);
-				}
-				if (point[5] != vec2_t()) {
-					drawList->AddLine({ point[1].x, point[1].y }, { point[5].x,point[5].y }, yellow, linesize);
-				}
-			}
-
-			if (point[2] != vec2_t()) {
-				if (point[3] != vec2_t()) {
-					drawList->AddLine({ point[2].x, point[2].y }, { point[3].x,point[3].y }, yellow, linesize);
-				}
-				if (point[6] != vec2_t()) {
-					drawList->AddLine({ point[2].x, point[2].y }, { point[6].x,point[6].y }, yellow, linesize);
-				}
-			}
-
-			if (point[3] != vec2_t()) {
-				if (point[7] != vec2_t()) {
-					drawList->AddLine({ point[3].x, point[3].y }, { point[7].x,point[7].y }, yellow, linesize);
-				}
-			}
-
-			if (point[4] != vec2_t()) {
-				if (point[5] != vec2_t()) {
-					drawList->AddLine({ point[4].x, point[4].y }, { point[5].x,point[5].y }, yellow, linesize);
-				}
-				if (point[6] != vec2_t()) {
-					drawList->AddLine({ point[4].x, point[4].y }, { point[6].x,point[6].y }, yellow, linesize);
-				}
-			}
-
-			if (point[5] != vec2_t()) {
-				if (point[7] != vec2_t()) {
-					drawList->AddLine({ point[5].x, point[5].y }, { point[7].x,point[7].y }, yellow, linesize);
-				}
-			}
-
-			if (point[6] != vec2_t()) {
-				if (point[7] != vec2_t()) {
-					drawList->AddLine({ point[6].x, point[6].y }, { point[7].x,point[7].y }, yellow, linesize);
-				}
-			}
-			*/
-		}
-	}
-}
 
 void AddOffsetAndPrint(void* baseptr, int* offset, const char* tip) {
 	if (ImGui::Button((std::string("计算(X16)##") + std::to_string((uintptr_t)baseptr)).c_str())) {
@@ -396,7 +278,7 @@ void ShowPtr() {
 	ImGui::End();
 }
 
-
+#include "../Render/Render.h"
 auto Debug::onImGUIRender() -> void
 {
 	if (!isEnabled())
@@ -409,7 +291,10 @@ auto Debug::onImGUIRender() -> void
 		ImGui::ShowFontSelector("字体选择");
 	}
 	if (renderW2SDebugBox) {
-		RenderDebugBox();
+		//RenderDebugBox();
+		{
+			Render::RenderBlockBox(renderBlockPos);
+		}
 	}
 	if (ShowPtrList) {
 		ShowPtr();
@@ -438,7 +323,8 @@ auto Debug::onKeyUpdate(int key, bool isdown) -> void
 	}
 }
 
-auto Debug::onSendPackToServer(LoopbackPacketSender*, Packet*) -> bool
+#include "Packet.h"
+auto Debug::onSendPackToServer(LoopbackPacketSender* sender, Packet* packet) -> bool
 {
 	auto time = Utils::GetCuttentMillisecond();
 	
@@ -448,10 +334,10 @@ auto Debug::onSendPackToServer(LoopbackPacketSender*, Packet*) -> bool
 			LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
 			if (lp) {
 				if (!lp->isFlying()) return true;
-
 				//static int64_t sendTime = inttime; // 该发送消息的起始时间
 				//每发送50ms后 拦截50ms
-				if (inttime % 100 < pack) {
+				//屏蔽 144 PlayerAuthInputPacket
+				if (packet->getId() == 144 && inttime % 100 < pack) {
 					return false;
 				}
 

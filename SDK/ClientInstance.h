@@ -8,6 +8,40 @@
 #include "Utils.h"
 #include "Logger.h"
 
+class LevelRenderer {
+public:
+	// 从InGamePlayScreen::_renderItemInHand中获取 从LevelRenderer 到 LevelRendererPlayer的转换
+	// 搜索 "variable.bob_animation" 快速定位InGamePlayScreen::_renderItemInHand函数
+	class LevelRenderPlayer* getLevelRendererPlayer() {
+		// + 776 InGamePlayScreen::_renderItemInHand
+		static SignCode sign("getLevelRendererPlayer");
+		sign.AddSign("48 8B 88 ? ? ? ? F3 44 0F 10 81", [](uintptr_t v) { return v + 3; });
+		sign.AddSign("48 8B 88 ? ? ? ? E8 ? ? ? ? 0F 28 C8", [](uintptr_t v) { return v + 3; });
+		sign.AddSign("48 8B 88 ? ? ? ? E8 ? ? ? ? 90 48 85 DB 74 ? 48", [](uintptr_t v) { return v + 3; });
+		sign.AddSign("48 8B 90 ? ? ? ? F2 0F 10 82", [](uintptr_t v) { return v + 3; });
+		_ASSERT(sign);
+		auto offset = *reinterpret_cast<int*>(*sign);
+		return *reinterpret_cast<LevelRenderPlayer**>((uintptr_t)this + offset);
+	}
+
+
+};
+
+
+class LevelRenderPlayer {
+public:
+	//先拿到 LevelRendererPlayer 地址，然后看内存，人称视角移动相机，找相机位置，最后确定指针 确定偏移，然后找访问写入看偏移，找特征码
+	vec3_t& getCamPos() {
+		static SignCode sign("getCamPos");
+		sign.AddSign("F3 41 0F 11 87 ? ? ? ? F3 41 0F 11 8F ? ? ? ? F3", [](uintptr_t v) { return v + 5; });
+		sign.AddSign("F3 0F 11 87 ? ? ? ? F3 0F 11 8F ? ? ? ? F3 0F 11 97 ? ? ? ? F3", [](uintptr_t v) { return v + 4; });
+		
+		_ASSERT(sign);
+		//logF("*reinterpret_cast<int*>(*sign) %d", (uintptr_t)this + *reinterpret_cast<int*>(*sign));
+		return *(vec3_t*)((uintptr_t)this + *reinterpret_cast<int*>(*sign));//0x5E4
+	}
+};
+
 //From	https://github.com/NRGJobro/Horion-Open-SRC/blob/master/SDK/CClientInstance.h
 class ClientInstance {
 protected:
@@ -671,7 +705,7 @@ public:
 	}
 
 
-
+	class LevelRenderer* getLevelRender();
 
 
 	auto getTopScreenName() -> std::mcstring {
