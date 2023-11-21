@@ -10,6 +10,7 @@
 
 FastViewPerspective::FastViewPerspective() : Module(VK_F9, "FastViewPerspective", "快速预览第二人称视角") {
 	//setEnabled(true);
+	AddBoolUIValue("切换人称视角时隐藏自己", &hide);
 }
 
 auto FastViewPerspective::getBindKeyName()->std::string {
@@ -43,11 +44,18 @@ auto FastViewPerspective::getViewPerspective(int source) -> int
 	return source;
 }
 
+auto FastViewPerspective::Hide() -> bool
+{
+	return hide;
+}
+
 auto FastViewPerspective::onloadConfigFile(json& data)->void {
 	setEnabled(config::readDataFromJson<bool>(data, "enable", true));
 	ViewPerspective = config::readDataFromJson<int>(data, "ViewPerspective", 2);
+	hide = config::readDataFromJson<bool>(data, "Hide", false);
 }
 auto FastViewPerspective::onsaveConfigFile(json& data)->void {
 	data["enable"] = isEnabled();
 	data["ViewPerspective"] = ViewPerspective;
+	data["Hide"] = hide;
 }

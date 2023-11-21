@@ -808,7 +808,7 @@ auto Hook::SetVelocity(Actor* actor,vec3_t* kb)->void*
 auto Hook::Actor_isInvisible(Actor* _this) -> bool
 {
 	static FastViewPerspective* idy = Game::GetModuleManager()->GetModule<FastViewPerspective*>();
-	if (idy && idy->isEnabled() && idy->isToggle())
+	if (idy && idy->isEnabled() && idy->isToggle() && idy->Hide())
 	{
 		if (_this->isLocalPlayer()) {
 			return true;
@@ -1046,7 +1046,7 @@ auto Hook::KeyUpdate(__int64 key, int isdown)->void* {
 			io.AddKeyEvent(ImGuiMod_Super, KEY_DOWN(VK_APPS));
 
 			ImGuiKey imKey = ImGui_VirtualKeyToImGuiKey(key);
-			if (imKey != ImGuiKey_None) {
+			if (imKey != ImGuiKey_None && imKey != ImGuiKey_Tab) {//屏蔽TAB键切换焦点
 				//io.AddKeyEvent(imKey, isdown == 1);
 				ImGui_ImplUWP_AddKeyEvent(imKey, is_key_down, static_cast<int>(key), scancode);
 			}

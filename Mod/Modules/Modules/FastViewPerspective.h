@@ -7,11 +7,13 @@ public:
 
 private:
 	int ViewPerspective = 2;
+	bool hide = false;
 
 public:
 	auto isToggle()->bool;
 	auto getViewPerspective(int source) -> int;
-	
+	auto Hide() -> bool;
+
 public:
 	virtual auto getBindKeyName()->std::string override;
 	virtual auto onInternalImGUIRender() -> void override;
