@@ -1,5 +1,4 @@
-﻿#pragma execution_character_set("utf-8")
-#include "Game.h"
+﻿#include "Game.h"
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "Player.h"

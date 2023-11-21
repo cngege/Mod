@@ -23,4 +23,6 @@ public:
 	static std::optional<vec2_t> RenderWorldBox2D(vec3_t pos, ImColor boxColor = ImColor(241, 196, 15, 255), float linesize = 1.5f);
 
 	static std::optional<vec2_t> RenderAABB2D(class AABB aabb, ImColor boxColor = ImColor(241, 196, 15, 255), float linesize = 1.5f);
+
+	static std::optional<vec2_t> RenderAABB(class AABB aabb, ImColor boxColor = ImColor(241, 196, 15, 255), float linesize = 1.5f);
 };

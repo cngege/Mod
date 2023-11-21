@@ -111,15 +111,16 @@ void Render::Updata()
 	screen.x = (float)(rect.right - rect.left);
 	screen.y = (float)(rect.bottom - rect.top);
 
-	if (Game::Cinstance) {
-		fov = Game::Cinstance->getFov();
-		refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
-
+	if (Game::Cinstance && *(uintptr_t***)Game::Cinstance == ClientInstance::GetVFtables()) {
 		auto LevelRenderer = Game::Cinstance->getLevelRender();
 		if (LevelRenderer) {
-			auto* LevelRendererPlayer = LevelRenderer->getLevelRendererPlayer();
-			if (LevelRendererPlayer)
+			auto LevelRendererPlayer = LevelRenderer->getLevelRendererPlayer();
+			if (LevelRendererPlayer) {
+				fov = Game::Cinstance->getFov();
+				refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
 				origin = LevelRendererPlayer->getCamPos();
+			}
+				
 		}
 	}
 }
@@ -157,7 +158,6 @@ std::optional<vec2_t> Render::RenderWorldBox2D(vec3_t pos, ImColor boxColor, flo
 	return ret;
 }
 
-//TODU 待完成
 std::optional<vec2_t> Render::RenderAABB2D(AABB aabb, ImColor boxColor, float linesize) {
 	//auto aabb = player.getAABB();
 
@@ -174,6 +174,105 @@ std::optional<vec2_t> Render::RenderAABB2D(AABB aabb, ImColor boxColor, float li
 		drawList->AddLine({ outmin.x, outmax.y }, { outmax.x, outmax.y }, boxColor, linesize);
 		drawList->AddLine({ outmax.x, outmin.y }, { outmax.x, outmax.y }, boxColor, linesize);
 		ret = outmin.add(outmax).div(2);
+	}
+	return ret;
+}
+
+std::optional<vec2_t> Render::RenderAABB(AABB aabb, ImColor boxColor, float linesize) {
+	//auto aabb = player.getAABB();
+
+	std::optional<vec2_t> ret;
+	vec2_t out;
+
+	std::vector<vec3_t> offset = {
+		{0,0,0},	//0
+		{0,1,0},	//1
+		{0,0,1},	//2
+		{0,1,1},	//3
+		{1,0,0},	//4
+		{1,1,0},	//5
+		{1,0,1},	//6
+		{1,1,1}		//7
+	};
+	vec2_t point[8]{};
+
+	if (refdef->OWorldToScreen(origin, { aabb.min.x,aabb.min.y, aabb.min.z }, out, fov, screen)) {
+		point[0] = out;
+	}
+	if (refdef->OWorldToScreen(origin, { aabb.max.x,aabb.min.y, aabb.min.z }, out, fov, screen)) {
+		point[1] = out;
+	}
+	if (refdef->OWorldToScreen(origin, { aabb.max.x,aabb.min.y, aabb.max.z }, out, fov, screen)) {
+		point[2] = out;
+	}
+	if (refdef->OWorldToScreen(origin, { aabb.min.x,aabb.min.y, aabb.max.z }, out, fov, screen)) {
+		point[3] = out;
+	}
+
+	if (refdef->OWorldToScreen(origin, { aabb.min.x,aabb.max.y, aabb.min.z }, out, fov, screen)) {
+		point[4] = out;
+	}
+	if (refdef->OWorldToScreen(origin, { aabb.max.x,aabb.max.y, aabb.min.z }, out, fov, screen)) {
+		point[5] = out;
+	}
+	if (refdef->OWorldToScreen(origin, { aabb.max.x,aabb.max.y, aabb.max.z }, out, fov, screen)) {
+		point[6] = out;
+	}
+	if (refdef->OWorldToScreen(origin, { aabb.min.x,aabb.max.y, aabb.max.z }, out, fov, screen)) {
+		point[7] = out;
+	}
+
+	auto drawList = ImGui::GetForegroundDrawList();
+	if (point[0] != vec2_t()) {
+		if (point[1] != vec2_t()) {
+			drawList->AddLine({ point[0].x, point[0].y}, { point[1].x, point[1].y}, boxColor, linesize);
+		}
+		if (point[3] != vec2_t()) {
+			drawList->AddLine({ point[0].x, point[0].y }, { point[3].x, point[3].y }, boxColor, linesize);
+		}
+		if (point[4] != vec2_t()) {
+			drawList->AddLine({ point[0].x, point[0].y }, { point[4].x, point[4].y }, boxColor, linesize);
+		}
+	}
+	if (point[1] != vec2_t()) {
+		if (point[2] != vec2_t()) {
+			drawList->AddLine({ point[1].x, point[1].y }, { point[2].x, point[2].y }, boxColor, linesize);
+		}
+		if (point[5] != vec2_t()) {
+			drawList->AddLine({ point[1].x, point[1].y }, { point[5].x, point[5].y }, boxColor, linesize);
+		}
+	}
+	if (point[2] != vec2_t()) {
+		if (point[3] != vec2_t()) {
+			drawList->AddLine({ point[2].x, point[2].y }, { point[3].x, point[3].y }, boxColor, linesize);
+		}
+		if (point[6] != vec2_t()) {
+			drawList->AddLine({ point[2].x, point[2].y }, { point[6].x, point[6].y }, boxColor, linesize);
+		}
+	}
+	if (point[3] != vec2_t()) {
+		if (point[7] != vec2_t()) {
+			drawList->AddLine({ point[3].x, point[3].y }, { point[7].x, point[7].y }, boxColor, linesize);
+		}
+	}
+	if (point[4] != vec2_t()) {
+		if (point[5] != vec2_t()) {
+			drawList->AddLine({ point[4].x, point[4].y }, { point[5].x, point[5].y }, boxColor, linesize);
+		}
+		if (point[7] != vec2_t()) {
+			drawList->AddLine({ point[4].x, point[4].y }, { point[7].x, point[7].y }, boxColor, linesize);
+		}
+	}
+	if (point[6] != vec2_t()) {
+		if (point[5] != vec2_t()) {
+			drawList->AddLine({ point[6].x, point[6].y }, { point[5].x, point[5].y }, boxColor, linesize);
+		}
+		if (point[7] != vec2_t()) {
+			drawList->AddLine({ point[6].x, point[6].y }, { point[7].x, point[7].y }, boxColor, linesize);
+		}
+	}
+	if (point[0] != vec2_t() && point[6] != vec2_t()) {
+		ret = point[0].add(point[6]).div(2);
 	}
 	return ret;
 }
