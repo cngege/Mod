@@ -13,6 +13,9 @@ class Render {
 
 public:
 	static void Updata();
+
+	static vec2_t getScreen();
+
 	/**
 	 * @brief 绘制方块Box 返回一个屏幕上的位置
 	*/

@@ -9,7 +9,7 @@ auto Block::getBlockLegacy()->class BlockLegacy* {
 bool Block::isAir()
 {
 	auto blockLegay = getBlockLegacy();
-	_ASSERT(blockLegay,"方块获取BlockLegacy结果为空");
+	_ASSERT(blockLegay);
 	return blockLegay->isAir();
 }
 

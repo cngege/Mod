@@ -69,149 +69,133 @@ auto BioRadar::onImGUIRender() -> void
 	vec3_t* lpPos = lp->getPosition();
 	vec2_t* lpRot = lp->getRotationEx();
 
-	RECT rect{};
-	//::GetWindowRect((HWND)ImGui::GetMainViewport()->PlatformHandleRaw, (LPRECT)&rect)
-	// ::GetWindowRect((HWND)ImGui::GetIO().ImeWindowHandle, (LPRECT)&rect) // 可以
-	if (::GetWindowRect((HWND)Game::ChildWindowsHandle, (LPRECT)&rect)) {
-		auto drawList = ImGui::GetForegroundDrawList();
-		float rectwidth = (float)(rect.right - rect.left);
-		float rectheight = (float)(rect.bottom - rect.top);
-		//计算 靠向不同边的时候 雷达左上角的不同基础值
-		ImVec2 radarLeftTop(0,0);
-		if (sideDirectionLeft) {
-			radarLeftTop.x = marginx;
-			//左上
-			if (sideDirectionTop) {
-				radarLeftTop.y = marginy;
-			}
-			//左下
-			else {
-				radarLeftTop.y = rectheight - marginy - radarSide/*地图宽*/;
-			}
+	auto drawList = ImGui::GetForegroundDrawList();
+	float rectwidth = Render::getScreen().x;
+	float rectheight = Render::getScreen().y;
+	//计算 靠向不同边的时候 雷达左上角的不同基础值
+	ImVec2 radarLeftTop(0,0);
+	if (sideDirectionLeft) {
+		radarLeftTop.x = marginx;
+		//左上
+		if (sideDirectionTop) {
+			radarLeftTop.y = marginy;
 		}
+		//左下
 		else {
-			radarLeftTop.x = rectwidth - marginx - radarSide;
-			//右上
-			if (sideDirectionTop) {
-				radarLeftTop.y = marginy;
-			}
-			//右下
-			else {
-				radarLeftTop.y = rectheight - marginy - radarSide/*地图宽*/;
-			}
+			radarLeftTop.y = rectheight - marginy - radarSide/*地图宽*/;
 		}
-		drawList->AddRectFilled(radarLeftTop, { radarLeftTop.x + radarSide,radarLeftTop.y + radarSide }, ImColor(0, 0, 0, 100));
-		drawList->AddLine({ radarLeftTop.x ,radarLeftTop.y + radarSide / 2}, { radarLeftTop.x + radarSide , radarLeftTop.y + radarSide / 2 }, ImColor(102, 153, 255, 200));
-		drawList->AddLine({ radarLeftTop.x + radarSide / 2 ,radarLeftTop.y }, { radarLeftTop.x + radarSide / 2 , radarLeftTop.y + radarSide }, ImColor(102, 153, 255, 200));
-		for (auto& kv : playerlist) {
-			if (kv.first->isValid()) {
-				// debug 在此计算向量关系
-				auto mappos = getMapPosition(kv.second.pos.sub(*lpPos),*lpRot);
-				kv.second.x = mappos.x;
-				kv.second.z = mappos.y;
-
-
-				//防止玩家点跑出地图外
-				float remoteside = radarSide / (2 * roomscale);
-				float X = kv.second.x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
-				float Z = kv.second.z; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
-
-				
-
-				if (!kv.first->isRemovedEx()) {
-					//在远程玩家位置在本地玩家之上时显示空心圆
-					if (kv.second.top) {
-						drawList->AddCircle({ radarLeftTop.x + (radarSide / 2) + X * roomscale, radarLeftTop.y + (radarSide / 2) + Z * roomscale }, 4, kv.second.color);
-					}
-					else {
-						drawList->AddCircleFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale, radarLeftTop.y + (radarSide / 2) + Z * roomscale }, 4, kv.second.color);
-					}
-
-					// 是否直接在屏幕绘制
-					if (xRay) {
-						//ImColor green = ImColor(30, 132, 73, 255);
-						// 画线 屏幕到00 -60 00
-						//vec2_t out;
-						//vec2_t fov = Game::Cinstance->getFov();
-
-						//std::shared_ptr<glmatrixf> refdef = std::shared_ptr<glmatrixf>(Game::Cinstance->getGlmatrixf()->correct());
-						//if (refdef->OWorldToScreen(*lpPos, { kv.second.pos.x,kv.second.pos.y-1, kv.second.pos.z }, out, Game::Cinstance->getFov(), {rectwidth,rectheight})) {
-						//	drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { out.x,out.y }, green);
-						//	drawList->AddCircle({ out.x, out.y }, 20, kv.second.color,0,1.5f);
-						//}
-						auto a = Render::RenderAABB(kv.second.aabb, kv.second.color);
-						if (a) {
-							drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { a->x,a->y }, kv.second.color);
-						}
-					}
-				}
-				else {
-					// 玩家移除了 先存起来， 然后移除
-					if (renderRemovePlayer) {
-						std::lock_guard<std::mutex> guard(removePlayer_mutex);
-						PlayerMapInfo removePlayer = kv.second;
-						removePlyaerList.push_back(removePlayer);
-					}
-
-					playerlist.erase(kv.first);
-					break;
-
-				}
-			}
-			else {
-				playerlist.erase(kv.first);
-				break;
-			}
+	}
+	else {
+		radarLeftTop.x = rectwidth - marginx - radarSide;
+		//右上
+		if (sideDirectionTop) {
+			radarLeftTop.y = marginy;
 		}
-
-		//加锁
-		std::lock_guard<std::mutex> guard(removePlayer_mutex);
-		for (auto iter = removePlyaerList.begin(); iter != removePlyaerList.end(); ++iter) {
-			// 否则就绘制
-
-			if (xRay) {
-				// 画线 屏幕到00 -60 00
-				vec3_ti playerBlock = (*iter).footBlockPos;
-				playerBlock.y += 1;
-				std::optional<vec2_t> centerPos = Render::RenderBlockBox(playerBlock);
-				//std::optional<vec2_t> centerPos;
-				if (centerPos) {
-					drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, ImColor(241, 196, 15, 255), 1.5f);
-				}
-			}
-
+		//右下
+		else {
+			radarLeftTop.y = rectheight - marginy - radarSide/*地图宽*/;
+		}
+	}
+	drawList->AddRectFilled(radarLeftTop, { radarLeftTop.x + radarSide,radarLeftTop.y + radarSide }, ImColor(0, 0, 0, 100));
+	drawList->AddLine({ radarLeftTop.x ,radarLeftTop.y + radarSide / 2}, { radarLeftTop.x + radarSide , radarLeftTop.y + radarSide / 2 }, ImColor(102, 153, 255, 200));
+	drawList->AddLine({ radarLeftTop.x + radarSide / 2 ,radarLeftTop.y }, { radarLeftTop.x + radarSide / 2 , radarLeftTop.y + radarSide }, ImColor(102, 153, 255, 200));
+	for (auto& kv : playerlist) {
+		if (kv.first->isValid()) {
 			// debug 在此计算向量关系
-			auto mappos = getMapPosition((*iter).pos.sub(*lpPos), *lpRot);
-			//(*iter).x = mappos.x;
-			//(*iter).z = mappos.y;
+			auto mappos = getMapPosition(kv.second.pos.sub(*lpPos),*lpRot);
+			kv.second.x = mappos.x;
+			kv.second.z = mappos.y;
+
 
 			//防止玩家点跑出地图外
 			float remoteside = radarSide / (2 * roomscale);
-			float X = mappos.x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
-			float Z = mappos.y; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
+			float X = kv.second.x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
+			float Z = kv.second.z; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
 
-			if ((*iter).top) {
-				drawList->AddRect({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
-					{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
-					(*iter).color);
+				
+
+			if (!kv.first->isRemovedEx()) {
+				//在远程玩家位置在本地玩家之上时显示空心圆
+				if (kv.second.top) {
+					drawList->AddCircle({ radarLeftTop.x + (radarSide / 2) + X * roomscale, radarLeftTop.y + (radarSide / 2) + Z * roomscale }, 4, kv.second.color);
+				}
+				else {
+					drawList->AddCircleFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale, radarLeftTop.y + (radarSide / 2) + Z * roomscale }, 4, kv.second.color);
+				}
+
+				// 是否直接在屏幕绘制
+				if (xRay) {
+					auto a = Render::RenderAABB(kv.second.aabb, kv.second.color);
+					if (a) {
+						drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { a->x,a->y }, kv.second.color);
+					}
+				}
 			}
 			else {
-				drawList->AddRectFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
-					{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
-					(*iter).color);
+				// 玩家移除了 先存起来， 然后移除
+				if (renderRemovePlayer) {
+					std::lock_guard<std::mutex> guard(removePlayer_mutex);
+					PlayerMapInfo removePlayer = kv.second;
+					removePlyaerList.push_back(removePlayer);
+				}
+
+				playerlist.erase(kv.first);
+				break;
+
 			}
-			/**/
 		}
+		else {
+			playerlist.erase(kv.first);
+			break;
+		}
+	}
+
+	//加锁
+	std::lock_guard<std::mutex> guard(removePlayer_mutex);
+	for (auto iter = removePlyaerList.begin(); iter != removePlyaerList.end(); ++iter) {
+		// 否则就绘制
+
+		if (xRay) {
+			// 画线 屏幕到00 -60 00
+			vec3_ti playerBlock = (*iter).footBlockPos;
+			playerBlock.y += 1;
+			std::optional<vec2_t> centerPos = Render::RenderBlockBox(playerBlock);
+			//std::optional<vec2_t> centerPos;
+			if (centerPos) {
+				drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, ImColor(241, 196, 15, 255), 1.5f);
+			}
+		}
+
+		// debug 在此计算向量关系
+		auto mappos = getMapPosition((*iter).pos.sub(*lpPos), *lpRot);
+		//(*iter).x = mappos.x;
+		//(*iter).z = mappos.y;
+
+		//防止玩家点跑出地图外
+		float remoteside = radarSide / (2 * roomscale);
+		float X = mappos.x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
+		float Z = mappos.y; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
+
+		if ((*iter).top) {
+			drawList->AddRect({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
+				{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
+				(*iter).color);
+		}
+		else {
+			drawList->AddRectFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
+				{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
+				(*iter).color);
+		}
+		/**/
 	}
 }
 
 auto BioRadar::onstartLeaveGame(Level* _) -> void
 {
 	playerlist.clear();
-	{
-		std::lock_guard<std::mutex> guard(removePlayer_mutex);
-		removePlyaerList.clear();
-	}
+	
+	std::lock_guard<std::mutex> guard(removePlayer_mutex);
+	removePlyaerList.clear();
 }
 
 
@@ -260,8 +244,6 @@ auto BioRadar::onPlayerTick(Player* player)->void
 		pmi.pos = *pos;
 		pmi.footBlockPos = player->getFootBlockPos();
 		pmi.aabb = *player->getAABB();
-		//auto mappos = getMapPosition(xdpos, *lrot);
-
 		//pmi.x = mappos.x; pmi.z = mappos.y;
 
 		auto name = player->getNameTag()->to_string().substr(0, 3);  //章节号占两字节
@@ -280,7 +262,6 @@ auto BioRadar::onDimensionChanged(ClientInstance* ci) -> void
 		std::lock_guard<std::mutex> guard(removePlayer_mutex);
 		removePlyaerList.clear();
 	}
-	
 }
 
 auto BioRadar::onLevelTick(Level* level) -> void

@@ -125,6 +125,11 @@ void Render::Updata()
 	}
 }
 
+vec2_t Render::getScreen()
+{
+	return screen;
+}
+
 //TODU 待完成
 std::optional<vec2_t> Render::RenderPlayerBox2D(Player player, ImColor boxColor, float linesize) {
 	//auto aabb = player.getAABB();
