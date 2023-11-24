@@ -22,6 +22,7 @@
 #include "Modules/ChangeGameMode.h"
 #include "Modules/FreeCamera.h"
 #include "Modules/HundredTimesMoreDrops.h"
+#include "Modules/HivePeekABooXRay.h"
 
 #ifdef _DEBUG
 #include "Modules/Debug.h"
@@ -61,6 +62,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new FreeCamera()));
 	moduleList.push_back((Module*)(new ChangeGameMode()));
 	moduleList.push_back((Module*)(new HundredTimesMoreDrops()));
+	moduleList.push_back((Module*)(new HivePeekABooXRay()));
 #ifdef _DEBUG
 	moduleList.push_back((Module*)(new Debug()));
 #endif

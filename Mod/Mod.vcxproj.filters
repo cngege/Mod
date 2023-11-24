@@ -285,6 +285,9 @@
     <ClInclude Include="..\SDK\Packet.h">
       <Filter>SDK\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Modules\HivePeekABooXRay.h">
+      <Filter>Modules\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -493,6 +496,9 @@
     </ClCompile>
     <ClCompile Include="..\SDK\Packet.cpp">
       <Filter>SDK\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Modules\HivePeekABooXRay.cpp">
+      <Filter>Modules\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

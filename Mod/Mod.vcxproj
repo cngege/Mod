@@ -341,6 +341,7 @@
     <ClInclude Include="Modules\Modules\FreeCamera.h" />
     <ClInclude Include="Modules\Modules\GameTimeLock.h" />
     <ClInclude Include="Modules\Modules\HitBox.h" />
+    <ClInclude Include="Modules\Modules\HivePeekABooXRay.h" />
     <ClInclude Include="Modules\Modules\HiveTreasurePos.h" />
     <ClInclude Include="Modules\Modules\HundredTimesMoreDrops.h" />
     <ClInclude Include="Modules\Modules\InstantDestroy.h" />
@@ -417,6 +418,7 @@
     <ClCompile Include="Modules\Modules\FreeCamera.cpp" />
     <ClCompile Include="Modules\Modules\GameTimeLock.cpp" />
     <ClCompile Include="Modules\Modules\HitBox.cpp" />
+    <ClCompile Include="Modules\Modules\HivePeekABooXRay.cpp" />
     <ClCompile Include="Modules\Modules\HiveTreasurePos.cpp" />
     <ClCompile Include="Modules\Modules\HundredTimesMoreDrops.cpp" />
     <ClCompile Include="Modules\Modules\InstantDestroy.cpp" />
