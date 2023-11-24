@@ -640,6 +640,8 @@ public:
 			return Utils::FuncFromSigOffset(sig, callSigOffset);
 		return 0;
 	}
+
+	static std::optional<ImColor> GetColorbyChar(const std::string&);
 };
 
 

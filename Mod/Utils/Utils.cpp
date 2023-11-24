@@ -333,6 +333,58 @@ bool Utils::HelpCollapsingHeader(const char* label, const char* helpText, ImGuiT
 	return headerisopen;
 }
 
+std::optional<ImColor> Utils::GetColorbyChar(const std::string& colorchar)
+{
+	if (colorchar == "§0") {
+		return ImColor(0, 0, 0, 255);
+	}
+	else if (colorchar == "§1") {
+		return ImColor(51, 0, 255, 255);
+	}
+	else if (colorchar == "§2") {
+		return ImColor(0, 153, 0, 255);
+	}
+	else if (colorchar == "§3") {
+		return ImColor(102, 153, 153, 255);
+	}
+	else if (colorchar == "§4") {
+		return ImColor(204, 0, 0, 255);
+	}
+	else if (colorchar == "§5") {
+		return ImColor(153, 0, 204, 255);
+	}
+	else if (colorchar == "§6") {
+		return ImColor(255, 127, 0, 255);
+	}
+	else if (colorchar == "§7") {
+		return ImColor(204, 204, 204, 255);
+	}
+	else if (colorchar == "§8") {
+		return ImColor(153, 153, 153, 255);
+	}
+	else if (colorchar == "§9") {
+		return ImColor(102, 102, 255, 255);
+	}
+	else if (colorchar == "§a") {	//#33FF00
+		return ImColor(51, 255, 0, 255);
+	}
+	else if (colorchar == "§b") {
+		return ImColor(0, 255, 255, 255);
+	}
+	else if (colorchar == "§c") {
+		return ImColor(255, 102, 102, 255);
+	}
+	else if (colorchar == "§d") {
+		return ImColor(255, 0, 255, 255);
+	}
+	else if (colorchar == "§e") {
+		return ImColor(255, 255, 0, 255);
+	}
+	else {
+		return std::optional<ImColor>();
+	}
+}
+
 
 std::wstring Utils::GetRoamingFolderPath() {
 	ComPtr<IApplicationDataStatics> appDataStatics;
