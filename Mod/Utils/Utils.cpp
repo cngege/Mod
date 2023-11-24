@@ -333,7 +333,7 @@ bool Utils::HelpCollapsingHeader(const char* label, const char* helpText, ImGuiT
 	return headerisopen;
 }
 
-std::optional<ImColor> Utils::GetColorbyChar(const std::string& colorchar)
+ImColor Utils::GetColorbyChar(const std::string& colorchar)
 {
 	if (colorchar == "§0") {
 		return ImColor(0, 0, 0, 255);
@@ -381,7 +381,7 @@ std::optional<ImColor> Utils::GetColorbyChar(const std::string& colorchar)
 		return ImColor(255, 255, 0, 255);
 	}
 	else {
-		return std::optional<ImColor>();
+		return ImColor(255, 255, 255, 255);
 	}
 }
 

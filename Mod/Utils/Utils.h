@@ -641,7 +641,7 @@ public:
 		return 0;
 	}
 
-	static std::optional<ImColor> GetColorbyChar(const std::string&);
+	static struct ImColor GetColorbyChar(const std::string&);
 };
 
 
