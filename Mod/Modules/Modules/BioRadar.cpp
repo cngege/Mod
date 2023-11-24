@@ -6,23 +6,17 @@
 #include "LocalPlayer.h"
 #include "ClientInstance.h"
 #include "RemotePlayer.h"
-#include "Level.h"
-#include <BlockSource.h>
-#include "Dimension.h"
-#include "Block.h"
-#include "BlockLegacy.h"
-#include "AABB.h"
-
+//#include "Level.h"
+//#include "BlockSource.h"
+//#include "Dimension.h"
+//#include "Block.h"
+//#include "BlockLegacy.h"
+//#include "AABB.h"
+//
 #include "../Render/Render.h"
-
-std::mutex removePlayer_mutex;
 
 BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显示屏上看到玩家和其他生物位置信息") {
 	setcontrolkeysbind({ VK_SHIFT });
-	AddBoolUIValue("渲染移除的玩家", &renderRemovePlayer);
-	AddBoolUIValue("屏幕透视", &xRay);
-
-
 	AddFloatUIValue("地图大小", &radarSide, 200, 1000, true);						//雷达地图边长 像素
 	AddIntUIValue("地图比例尺", &roomscale, 2, 6, true);					//雷达像素与游戏中距离的比例，比如2表示  雷达中2像素表示游戏中的一格
 	AddFloatUIValue("屏幕水平边距", &marginx, 0, 1000, true);
@@ -33,7 +27,7 @@ BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显�
 	AddButtonUIEvent("靠上", true, [this]() { this->sideDirectionTop = true; });
 	AddButtonUIEvent("靠下", true, [this]() { this->sideDirectionTop = false; });
 
-	AddButtonUIEvent("清除", false, [this]() { playerlist.clear(); std::lock_guard<std::mutex> guard(removePlayer_mutex); removePlyaerList.clear(); });
+	
 
 }
 
@@ -43,8 +37,6 @@ struct BioRadar::PlayerMapInfo{
 	ImColor color;						//应该显示的颜色
 	bool top;							//是否在本地玩家上面
 	vec3_t pos;
-	vec3_ti footBlockPos;
-	AABB aabb;
 	//int updatetick;
 };
 
@@ -106,13 +98,10 @@ auto BioRadar::onImGUIRender() -> void
 			kv.second.x = mappos.x;
 			kv.second.z = mappos.y;
 
-
 			//防止玩家点跑出地图外
 			float remoteside = radarSide / (2 * roomscale);
 			float X = kv.second.x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
 			float Z = kv.second.z; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
-
-				
 
 			if (!kv.first->isRemovedEx()) {
 				//在远程玩家位置在本地玩家之上时显示空心圆
@@ -122,23 +111,8 @@ auto BioRadar::onImGUIRender() -> void
 				else {
 					drawList->AddCircleFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale, radarLeftTop.y + (radarSide / 2) + Z * roomscale }, 4, kv.second.color);
 				}
-
-				// 是否直接在屏幕绘制
-				if (xRay) {
-					auto a = Render::RenderAABB(kv.second.aabb, kv.second.color);
-					if (a) {
-						drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { a->x,a->y }, kv.second.color);
-					}
-				}
 			}
 			else {
-				// 玩家移除了 先存起来， 然后移除
-				if (renderRemovePlayer) {
-					std::lock_guard<std::mutex> guard(removePlayer_mutex);
-					PlayerMapInfo removePlayer = kv.second;
-					removePlyaerList.push_back(removePlayer);
-				}
-
 				playerlist.erase(kv.first);
 				break;
 
@@ -149,53 +123,11 @@ auto BioRadar::onImGUIRender() -> void
 			break;
 		}
 	}
-
-	//加锁
-	std::lock_guard<std::mutex> guard(removePlayer_mutex);
-	for (auto iter = removePlyaerList.begin(); iter != removePlyaerList.end(); ++iter) {
-		// 否则就绘制
-
-		if (xRay) {
-			// 画线 屏幕到00 -60 00
-			vec3_ti playerBlock = (*iter).footBlockPos;
-			playerBlock.y += 1;
-			std::optional<vec2_t> centerPos = Render::RenderBlockBox(playerBlock);
-			//std::optional<vec2_t> centerPos;
-			if (centerPos) {
-				drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, ImColor(241, 196, 15, 255), 1.5f);
-			}
-		}
-
-		// debug 在此计算向量关系
-		auto mappos = getMapPosition((*iter).pos.sub(*lpPos), *lpRot);
-		//(*iter).x = mappos.x;
-		//(*iter).z = mappos.y;
-
-		//防止玩家点跑出地图外
-		float remoteside = radarSide / (2 * roomscale);
-		float X = mappos.x; if (X > remoteside) { X = remoteside; } if (X < -remoteside) { X = -remoteside; }
-		float Z = mappos.y; if (Z > remoteside) { Z = remoteside; } if (Z < -remoteside) { Z = -remoteside; }
-
-		if ((*iter).top) {
-			drawList->AddRect({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
-				{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
-				(*iter).color);
-		}
-		else {
-			drawList->AddRectFilled({ radarLeftTop.x + (radarSide / 2) + X * roomscale - 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale - 3 },
-				{ radarLeftTop.x + (radarSide / 2) + X * roomscale + 3, radarLeftTop.y + (radarSide / 2) + Z * roomscale + 3 },
-				(*iter).color);
-		}
-		/**/
-	}
 }
 
 auto BioRadar::onstartLeaveGame(Level* _) -> void
 {
 	playerlist.clear();
-	
-	std::lock_guard<std::mutex> guard(removePlayer_mutex);
-	removePlyaerList.clear();
 }
 
 
@@ -235,15 +167,13 @@ auto BioRadar::onPlayerTick(Player* player)->void
 	if (lp && lp->isValid()) {
 		//获得本地玩家的位置视角相关信息
 		vec3_t* lpos = lp->getPosition();
-		vec2_t* lrot = lp->getRotationEx();
+		//vec2_t* lrot = lp->getRotationEx();
 		vec3_t* pos = player->getPosition();
 		//获得 对方玩家对本地玩家的相对位置 即本地玩家对远程玩家的空间向量
 		vec3_t xdpos = pos->sub(*lpos);
 
 		PlayerMapInfo pmi;
 		pmi.pos = *pos;
-		pmi.footBlockPos = player->getFootBlockPos();
-		pmi.aabb = *player->getAABB();
 		//pmi.x = mappos.x; pmi.z = mappos.y;
 
 		auto name = player->getNameTag()->to_string().substr(0, 3);  //章节号占两字节
@@ -258,35 +188,12 @@ auto BioRadar::onPlayerTick(Player* player)->void
 auto BioRadar::onDimensionChanged(ClientInstance* ci) -> void
 {
 	playerlist.clear();
-	{
-		std::lock_guard<std::mutex> guard(removePlayer_mutex);
-		removePlyaerList.clear();
-	}
 }
 
-auto BioRadar::onLevelTick(Level* level) -> void
-{
-	if (!isEnabled()) return;
-	if (!Game::Cinstance) return;
-	auto lp = Game::Cinstance->getCILocalPlayer();
-	if (!lp) return;
-
-	for (auto iter = removePlyaerList.begin(); iter != removePlyaerList.end(); ++iter)
-	{
-		auto dim = lp->getDimensionConst();
-		if (!dim) continue;
-		BlockSource* bs = dim->getBlockSourceEx();
-		if (!bs) continue;
-		vec3_ti playerBlock = (*iter).footBlockPos;
-		playerBlock.y += 1;
-
-		if (bs->getBlock(&playerBlock)->isAir()) {
-			std::lock_guard<std::mutex> guard(removePlayer_mutex);
-			removePlyaerList.erase(iter);
-			break;
-		}
-	}
-}
+//auto BioRadar::onLevelTick(Level* level) -> void
+//{
+//
+//}
 
 auto BioRadar::onloadConfigFile(json& data) -> void
 {
