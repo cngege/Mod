@@ -41,14 +41,14 @@ auto Player::getRotEx2()->vec2_t* {
 
 auto Player::getFootPos() -> vec3_ti
 {
-	vec3_ti footBlockPos;
+	vec3_ti footPos;
 	auto pos = getPosition();
-	if (pos->x < 0) footBlockPos.x = static_cast<int>(pos->x - 1.f); else footBlockPos.x = static_cast<int>(pos->x);
-	if (pos->y < 0) footBlockPos.y = static_cast<int>(pos->y - 1.f); else footBlockPos.y = static_cast<int>(pos->y);
-	if (pos->z < 0) footBlockPos.z = static_cast<int>(pos->z - 1.f); else footBlockPos.z = static_cast<int>(pos->z);
+	if (pos->x < 0) footPos.x = static_cast<int>(pos->x - 1.f); else footPos.x = static_cast<int>(pos->x);
+	if (pos->y < 0) footPos.y = static_cast<int>(pos->y - 1.f); else footPos.y = static_cast<int>(pos->y);
+	if (pos->z < 0) footPos.z = static_cast<int>(pos->z - 1.f); else footPos.z = static_cast<int>(pos->z);
 
-	footBlockPos.y -= 1;
-	return footBlockPos;
+	footPos.y -= 1;
+	return footPos;
 }
 
 auto Player::getFootBlockPos() -> vec3_ti
