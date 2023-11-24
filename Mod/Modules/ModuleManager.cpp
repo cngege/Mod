@@ -52,6 +52,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new RenderUI()));							/*INS*/
 	moduleList.push_back((Module*)(new NoKnockback()));						/*Ctrl+F4*/
 	moduleList.push_back((Module*)(new NoAttackFriend()));					/*SHIFT+F4*/
+	moduleList.push_back((Module*)(new HivePeekABooXRay()));				/*Ctrl+F6*/
 	moduleList.push_back((Module*)(new BioRadar()));						/*SHIFT+F6*/
 	moduleList.push_back((Module*)(new HiveTreasurePos()));					/*SHIFT+F7*/
 	moduleList.push_back((Module*)(new FastViewPerspective()));				/*(R) F9*/
@@ -62,7 +63,7 @@ auto ModuleManager::Init()->void {
 	moduleList.push_back((Module*)(new FreeCamera()));
 	moduleList.push_back((Module*)(new ChangeGameMode()));
 	moduleList.push_back((Module*)(new HundredTimesMoreDrops()));
-	moduleList.push_back((Module*)(new HivePeekABooXRay()));
+	
 #ifdef _DEBUG
 	moduleList.push_back((Module*)(new Debug()));
 #endif

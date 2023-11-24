@@ -13,7 +13,8 @@
 
 std::mutex removePlayer_mutex2;
 
-HivePeekABooXRay::HivePeekABooXRay() : Module(0, "HivePeekABooXRay", "TheHive躲猫猫专用透视") {
+HivePeekABooXRay::HivePeekABooXRay() : Module(VK_F6, "HivePeekABooXRay", "TheHive躲猫猫专用透视") {
+	setcontrolkeysbind({ VK_CONTROL });
 	AddBoolUIValue("从玩家名称中计算颜色", &colorFromName);
 	AddBoolUIValue("启用中心线", &hasLine);
 	AddBoolUIValue("中心线的颜色跟随玩家", &lineColorFromPlayer);
