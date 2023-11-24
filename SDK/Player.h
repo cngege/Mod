@@ -31,6 +31,7 @@ public:
 	//ret->x 表示竖直方向的值
 	auto getRotEx2()->vec2_t*;
 
+	auto getFootPos() -> vec3_ti;
 	auto getFootBlockPos() -> vec3_ti;
 
 	auto getAbilitiesComponent() -> void*;
