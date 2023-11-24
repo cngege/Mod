@@ -45,7 +45,12 @@ struct ButtonUIEvent
 	std::function<void()> et;
 };
 
-
+struct ImColor;
+struct ColorUIValue
+{
+	std::string name;
+	ImColor* value = nullptr;
+};
 
 
 class Module
@@ -65,6 +70,7 @@ private:
 	std::vector<IntUIValue> intUIValue = std::vector<IntUIValue>();
 	std::vector<FloatUIValue> floatUIValue = std::vector<FloatUIValue>();
 	std::vector<BoolUIValue> boolUIValue = std::vector<BoolUIValue>();
+	std::vector<ColorUIValue> colorUIValue = std::vector<ColorUIValue>();
 	std::vector<ButtonUIEvent> buttonUIEvent = std::vector<ButtonUIEvent>();
 
 public:
@@ -74,11 +80,13 @@ protected:
 	void AddIntUIValue(std::string name, int* defautvalue_ptr, int minvalue, int maxvalue, bool slider = true, float speed = 1.f);
 	void AddFloatUIValue(std::string name, float* defautvalue_ptr, float minvalue, float maxvalue, bool slider = true, float speed = 0.05f);
 	void AddBoolUIValue(std::string name, bool* defautvalue_ptr);
+	void AddColorUIValue(std::string name, ImColor* defautvalue_ptr);
 	void AddButtonUIEvent(std::string name, bool sameline, std::function<void()> et);
 public:
 	std::vector<IntUIValue> GetIntUIValue();
 	std::vector<FloatUIValue> GetFloatUIValue();
 	std::vector<BoolUIValue> GetBoolUIValue();
+	std::vector<ColorUIValue> GetColorUIValue();
 	std::vector<ButtonUIEvent> GetButtonUIEvent();
 public:
 	virtual int getKeybind();

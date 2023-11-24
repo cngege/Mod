@@ -9,10 +9,10 @@ private:
 	bool colorFromName = true;
 	bool hasLine = true;
 	bool lineColorFromPlayer = true;
-	ImColor playerBoxColor;
-	ImColor playerLineColor;
-	ImColor blockBoxColor;
-	ImColor blockLineColor;
+	ImColor playerBoxColor = ImColor(255, 255, 255, 255);
+	ImColor playerLineColor = ImColor(255, 255, 255, 255);
+	ImColor blockBoxColor = ImColor(241, 196, 15, 255);
+	ImColor blockLineColor = ImColor(241, 196, 15, 255);
 
 	
 	struct PlayerMapInfo;

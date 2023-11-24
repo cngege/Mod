@@ -49,6 +49,14 @@ auto Module::AddBoolUIValue(std::string name, bool* defautvalue_ptr)->void {
 	boolUIValue.push_back(_boolUIValue);
 }
 
+void Module::AddColorUIValue(std::string name, ImColor* defautvalue_ptr)
+{
+	ColorUIValue _colorUIValue;
+	_colorUIValue.name = name;
+	_colorUIValue.value = defautvalue_ptr;
+	colorUIValue.push_back(_colorUIValue);
+}
+
 auto Module::AddButtonUIEvent(std::string name, bool sameline, std::function<void()> et)->void {
 	ButtonUIEvent _buttonUIEvent;
 	_buttonUIEvent.name = name;
@@ -67,6 +75,10 @@ auto Module::GetFloatUIValue()->std::vector<FloatUIValue> {
 
 auto Module::GetBoolUIValue()->std::vector<BoolUIValue> {
 	return boolUIValue;
+}
+
+auto Module::GetColorUIValue()->std::vector<ColorUIValue> {
+	return colorUIValue;
 }
 
 auto Module::GetButtonUIEvent()->std::vector<ButtonUIEvent> {

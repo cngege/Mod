@@ -17,6 +17,11 @@ HivePeekABooXRay::HivePeekABooXRay() : Module(0, "HivePeekABooXRay", "TheHive躲
 	AddBoolUIValue("从玩家名称中计算颜色", &colorFromName);
 	AddBoolUIValue("启用中心线", &hasLine);
 	AddBoolUIValue("中心线的颜色跟随玩家", &lineColorFromPlayer);
+	//Color
+	AddColorUIValue("玩家的方块颜色", &playerBoxColor);
+	AddColorUIValue("玩家的中心线颜色", &playerLineColor);
+	AddColorUIValue("玩家变成的方块颜色", &blockBoxColor);
+	AddColorUIValue("方块的中心线颜色", &blockLineColor);
 
 	AddButtonUIEvent("清除", false, [this]() { playerlist.clear(); std::lock_guard<std::mutex> guard(removePlayer_mutex2); removePlyaerList.clear(); });
 }
@@ -31,6 +36,7 @@ struct HivePeekABooXRay::PlayerMapInfo {
 
 auto HivePeekABooXRay::onImGUIRender() -> void
 {
+	if (!isEnabled()) return;
 	auto drawList = ImGui::GetForegroundDrawList();
 	float rectwidth = Render::getScreen().x;
 	float rectheight = Render::getScreen().y;
@@ -39,9 +45,17 @@ auto HivePeekABooXRay::onImGUIRender() -> void
 
 		if (kv.first->isValid()) {
 			if (!kv.first->isRemovedEx()) {
-				auto centerPos = Render::RenderAABB(kv.second.aabb, kv.second.color);
+				ImColor boxColor = kv.second.color;
+				if (!colorFromName) {
+					boxColor = playerBoxColor;
+				}
+				auto centerPos = Render::RenderAABB(kv.second.aabb, boxColor);
 				if (centerPos && hasLine) {
-					drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, kv.second.color);
+					ImColor lineColor = kv.second.color;
+					if (!lineColorFromPlayer) {
+						lineColor = playerLineColor;
+					}
+					drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, lineColor);
 				}
 			}
 			else {
@@ -58,11 +72,16 @@ auto HivePeekABooXRay::onImGUIRender() -> void
 		}
 	}
 
+	// 绘制变成方块的玩家
 	std::lock_guard<std::mutex> guard(removePlayer_mutex2);
 	for (auto iter = removePlyaerList.begin(); iter != removePlyaerList.end(); ++iter) {
-		std::optional<vec2_t> centerPos = Render::RenderBlockBox((*iter).footPos);
+		std::optional<vec2_t> centerPos = Render::RenderBlockBox((*iter).footPos, blockBoxColor);
 		if (centerPos && hasLine) {
-			drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, ImColor(241, 196, 15, 255), 1.5f);
+			ImColor lineColor = blockLineColor;
+			if (lineColorFromPlayer) {
+				lineColor = blockBoxColor;
+			}
+			drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, blockLineColor, 1.5f);
 		}
 	}
 }

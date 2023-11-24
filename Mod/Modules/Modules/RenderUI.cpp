@@ -1,5 +1,7 @@
 ﻿#include "RenderUI.h"
 #include <string>
+#include "ClientInstance.h"
+
 #include "../ModuleManager.h"
 #include "../../Utils/Game.h"
 #include "../../Loader.h"
@@ -58,58 +60,6 @@ auto RenderUI::onKeyUpdate(int key, bool isDown) -> void
 	}
 }
 
-auto RenderUI::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
-	//return;
-	//if (isEnabled()) {
-	//	//画面板 功能列表
-	//	UIColor bgcolor = UIColor(0,0,0,80);
-	//	UIColor textcolor1 = UIColor(255, 255, 255);
-	//	UIColor textcolor2 = UIColor(160, 160, 160);
-
-	//	float ltX = x + 5.f;
-	//	float ltY = y + 5.f;						//绘制文字左上角Y值的位置
-	//	float textlineheight = 8.f * fontsize;		//下一行的偏移量
-
-	//	auto mcount = Game::GetModuleManager()->GetAllModule().size();
-
-	//	ctx->Fillshape(vec2_t(x, ltY - 5.f), vec2_t(200.f, mcount* (textlineheight + 5.f) + 5.f), bgcolor);
-	//	
-	//	for (auto pMod : Game::GetModuleManager()->GetAllModule()) {
-	//		if (pMod->GetKeyMode() == KeyMode::Switch) {
-	//			// 如果这个模块是有开关状态的切换模式
-	//			std::string showText = pMod->getModuleName() + " ";
-	//			if (pMod->getBindKeyName() != "") {
-	//				showText += "[" + pMod->getBindKeyName() + "]  ";
-	//			}
-	//			showText += pMod->isEnabled() ? "[ON]" : "[OFF]";
-	//			ctx->Drawtext(vec2_t(ltX, ltY), &showText, pMod->isEnabled()? textcolor1 : textcolor2, fontsize);
-	//			ltY += textlineheight + 5.f;
-	//		}
-	//		else if (pMod->GetKeyMode() == KeyMode::Trigger) {
-	//			// 如果这个模块是点击快捷键触发的
-	//			std::string showText = pMod->getModuleName() + " ";
-	//			if (pMod->getBindKeyName() != "") {
-	//				showText += "[" + pMod->getBindKeyName() + "]  ";
-	//			}
-	//			showText += "[Trigger]";
-	//			ctx->Drawtext(vec2_t(ltX, ltY), &showText, textcolor2, fontsize);
-	//			ltY += textlineheight + 5.f;
-	//		}
-	//		else if (pMod->GetKeyMode() == KeyMode::Hold) {
-	//			// 如果这个模块是长按开启，松开关闭模式
-	//			std::string showText = pMod->getModuleName() + " ";
-	//			if (pMod->getBindKeyName() != "") {
-	//				showText += "[" + pMod->getBindKeyName() + "]  ";
-	//			}
-	//			showText += pMod->isEnabled() ? "[HoldON]" : "[HoldOFF]";
-	//			ctx->Drawtext(vec2_t(ltX, ltY), &showText, pMod->isEnabled() ? textcolor1 : textcolor2, fontsize);
-	//			ltY += textlineheight + 5.f;
-	//		}
-	//	}
-	//	ctx->flushText(0);
-	//}
-}
-
 auto RenderUI::onImGUIRender()->void {
 	if (!isEnabled()) {
 		return;
@@ -151,6 +101,13 @@ auto RenderUI::onImGUIRender()->void {
 				for (auto& boolval : mod->GetBoolUIValue()) {
 					ImGui::Toggle(boolval.name.c_str(), boolval.value, toggerConfig);
 				}
+
+				//ColorUIValue
+				for (auto& colorval : mod->GetColorUIValue()) {
+					//ImGui::Toggle(colorval.name.c_str(), boolval.value, toggerConfig);
+					ImGui::ColorEdit4(colorval.name.c_str(), (float*)colorval.value);
+				}
+
 				//ButtonUI
 				for (auto& buttonet : mod->GetButtonUIEvent()) {
 					if (buttonet.sameline) {
