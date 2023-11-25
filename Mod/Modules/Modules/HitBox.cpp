@@ -33,19 +33,52 @@ auto HitBox::onPlayerSightTick(Player* player)->void {
 	//}
 	//判断是否是玩家 大写锁定
 	static NoAttackFriend* noAttackFriend = Game::GetModuleManager()->GetModule<NoAttackFriend*>();
-	//if (actor->isPlayer()) {
-		if (isEnabled()) {
-			if (noAttackFriend->isEnabled() && noAttackFriend->IsFriend(player)) {
-				player->resetHitBox();
-			}
-			else {
-				player->setHitBox(vec2_t(width, height));
+
+	//playerlist
+	if (isEnabled()) {
+		for (auto& kv : playerlist) {
+			if (kv.first == player) {
+				return;
 			}
 		}
-		else {
-			player->resetHitBox();
+		if (noAttackFriend && noAttackFriend->isEnabled() && noAttackFriend->IsFriend(player)) {
+			return;
 		}
+		playerlist[player] = player->getHitBox();
+		player->setHitBox(vec2_t(width, height));
+	}
+	else {
+		for (auto& kv : playerlist) {
+			if (kv.first == player) {
+				player->setHitBox(kv.second);
+				playerlist.erase(kv.first);
+				return;
+			}
+		}
+	}
+
+
+	//if (isEnabled()) {
+	//	if (noAttackFriend->isEnabled() && noAttackFriend->IsFriend(player)) {
+	//		player->resetHitBox();
+	//	}
+	//	else {
+	//		player->setHitBox(vec2_t(width, height));
+	//	}
 	//}
+	//else {
+	//	player->resetHitBox();
+	//}
+}
+
+auto HitBox::onstartLeaveGame(Level* _) -> void
+{
+	playerlist.clear();
+}
+
+auto HitBox::onDimensionChanged(ClientInstance* _) -> void
+{
+	playerlist.clear();
 }
 
 auto HitBox::onloadConfigFile(json& data)->void {

@@ -273,7 +273,7 @@
       <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).dll C:\Users\CNGEGE\Desktop\</Command>
+      <Command>copy /y $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).dll C:\Users\CNGEGE\Desktop\$(ProjectName).Release.dll</Command>
       <Message>将生成的dll文件复制到桌面</Message>
     </PostBuildEvent>
     <ResourceCompile>
