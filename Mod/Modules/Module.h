@@ -117,7 +117,6 @@ public:
 	virtual void onRemotePlayerTick(class RemotePlayer*);
 	virtual void onLevelTick(class Level*);
 	virtual void onstartLeaveGame(class Level*);
-	virtual void onRenderDetour(class MinecraftUIRenderContext*);
 	virtual void onImGUIRender();
 	virtual void onInternalImGUIRender();
 	virtual bool onSendMessage(std::mcstring*);

@@ -285,14 +285,6 @@ auto ModuleManager::onstartLeaveGame(Level* level) -> void
 	}
 }
 
-auto ModuleManager::onRenderDetour(MinecraftUIRenderContext* ctx)->void {
-	if (!IsInitialized())
-		return;
-	for (auto pMod : moduleList) {
-		pMod->onRenderDetour(ctx);
-	}
-}
-
 
 auto ModuleManager::onImGUIRender()->void {
 	if (!IsInitialized())

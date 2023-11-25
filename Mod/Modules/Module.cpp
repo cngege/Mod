@@ -222,8 +222,6 @@ auto Module::onLevelTick(Level* level)->void{}
 
 auto Module::onstartLeaveGame(Level* level)->void{}
 
-auto Module::onRenderDetour(MinecraftUIRenderContext* ctx)->void {}
-
 auto Module::onImGUIRender()->void {}
 
 auto Module::onInternalImGUIRender()->void {}

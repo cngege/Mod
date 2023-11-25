@@ -333,7 +333,7 @@ bool Utils::HelpCollapsingHeader(const char* label, const char* helpText, ImGuiT
 	return headerisopen;
 }
 
-uintptr_t Utils::getFunFromSigAndCall(const char* funSig, const char* callSig, int callSigOffset = 1) {
+uintptr_t Utils::getFunFromSigAndCall(const char* funSig, const char* callSig, int callSigOffset) {
 	auto sig = FindSignature(funSig);
 	if (sig)
 		return sig;

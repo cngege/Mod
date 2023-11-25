@@ -37,7 +37,6 @@ public:
 	auto onRemotePlayerTick(class RemotePlayer*)->void;
 	auto onLevelTick(class Level*)->void;
 	auto onstartLeaveGame(class Level*) -> void;
-	auto onRenderDetour(class MinecraftUIRenderContext*)->void;
 	auto onImGUIRender()->void;
 	auto onSendMessage(std::mcstring*)->bool;
 	auto onSendPacketToServer(class LoopbackPacketSender*, class Packet*) -> bool;
