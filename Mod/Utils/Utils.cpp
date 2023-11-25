@@ -333,6 +333,16 @@ bool Utils::HelpCollapsingHeader(const char* label, const char* helpText, ImGuiT
 	return headerisopen;
 }
 
+uintptr_t Utils::getFunFromSigAndCall(const char* funSig, const char* callSig, int callSigOffset = 1) {
+	auto sig = FindSignature(funSig);
+	if (sig)
+		return sig;
+	sig = FindSignature(callSig);
+	if (sig)
+		return Utils::FuncFromSigOffset(sig, callSigOffset);
+	return 0;
+}
+
 ImColor Utils::GetColorbyChar(const std::string& colorchar)
 {
 	if (colorchar == "§0") {
