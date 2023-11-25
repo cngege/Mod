@@ -27,8 +27,6 @@ BioRadar::BioRadar() : Module(VK_F6, "BioRadar", "生物雷达-可在雷达显�
 	AddButtonUIEvent("靠上", true, [this]() { this->sideDirectionTop = true; });
 	AddButtonUIEvent("靠下", true, [this]() { this->sideDirectionTop = false; });
 
-	
-
 }
 
 struct BioRadar::PlayerMapInfo{
@@ -37,35 +35,35 @@ struct BioRadar::PlayerMapInfo{
 	ImColor color;						//应该显示的颜色
 	bool top;							//是否在本地玩家上面
 	vec3_t pos;
-	//int updatetick;
 };
+
+
+
+
 
 auto BioRadar::onImGUIRender() -> void
 {
-	if (!isEnabled()) {
-		return;
-	}
-	if (!Game::Cinstance) {
-		return;
-	}
-
+	if (!isEnabled()) return;
+	if (!Game::Cinstance) return;
 	LocalPlayer* lp = Game::Cinstance->getCILocalPlayer();
-	if (!lp)
-	{
-		return;
-	}
-	if (!lp->isValid()) {
-		return;
-	}
+	if (!lp || !lp->isValid()) return;
 
 	vec3_t* lpPos = lp->getPosition();
 	vec2_t* lpRot = lp->getRotationEx();
 
-	auto drawList = ImGui::GetForegroundDrawList();
-	float rectwidth = Render::getScreen().x;
-	float rectheight = Render::getScreen().y;
 	//计算 靠向不同边的时候 雷达左上角的不同基础值
-	ImVec2 radarLeftTop(0,0);
+	ImVec2 radarLeftTop = getRadarLeftTop(Render::getScreen());
+	renderMapBg(radarLeftTop);
+	drawListPlayer(*lpPos, *lpRot, radarLeftTop);
+}
+
+auto BioRadar::onstartLeaveGame(Level* _) -> void
+{
+	playerlist.clear();
+}
+
+ImVec2 BioRadar::getRadarLeftTop(vec2_t screen) {
+	ImVec2 radarLeftTop(0, 0);
 	if (sideDirectionLeft) {
 		radarLeftTop.x = marginx;
 		//左上
@@ -74,27 +72,36 @@ auto BioRadar::onImGUIRender() -> void
 		}
 		//左下
 		else {
-			radarLeftTop.y = rectheight - marginy - radarSide/*地图宽*/;
+			radarLeftTop.y = screen.y - marginy - radarSide/*地图宽*/;
 		}
 	}
 	else {
-		radarLeftTop.x = rectwidth - marginx - radarSide;
+		radarLeftTop.x = screen.x - marginx - radarSide;
 		//右上
 		if (sideDirectionTop) {
 			radarLeftTop.y = marginy;
 		}
 		//右下
 		else {
-			radarLeftTop.y = rectheight - marginy - radarSide/*地图宽*/;
+			radarLeftTop.y = screen.y - marginy - radarSide/*地图宽*/;
 		}
 	}
+	return radarLeftTop;
+}
+
+void BioRadar::renderMapBg(ImVec2 radarLeftTop) {
+	auto drawList = ImGui::GetForegroundDrawList();
 	drawList->AddRectFilled(radarLeftTop, { radarLeftTop.x + radarSide,radarLeftTop.y + radarSide }, ImColor(0, 0, 0, 100));
-	drawList->AddLine({ radarLeftTop.x ,radarLeftTop.y + radarSide / 2}, { radarLeftTop.x + radarSide , radarLeftTop.y + radarSide / 2 }, ImColor(102, 153, 255, 200));
+	drawList->AddLine({ radarLeftTop.x ,radarLeftTop.y + radarSide / 2 }, { radarLeftTop.x + radarSide , radarLeftTop.y + radarSide / 2 }, ImColor(102, 153, 255, 200));
 	drawList->AddLine({ radarLeftTop.x + radarSide / 2 ,radarLeftTop.y }, { radarLeftTop.x + radarSide / 2 , radarLeftTop.y + radarSide }, ImColor(102, 153, 255, 200));
+}
+
+void BioRadar::drawListPlayer(vec3_t lpPos, vec2_t lpRot, ImVec2 radarLeftTop) {
+	auto drawList = ImGui::GetForegroundDrawList();
 	for (auto& kv : playerlist) {
 		if (kv.first->isValid()) {
 			// debug 在此计算向量关系
-			auto mappos = getMapPosition(kv.second.pos.sub(*lpPos),*lpRot);
+			auto mappos = getMapPosition(kv.second.pos.sub(lpPos), lpRot);
 			kv.second.x = mappos.x;
 			kv.second.z = mappos.y;
 
@@ -124,12 +131,6 @@ auto BioRadar::onImGUIRender() -> void
 		}
 	}
 }
-
-auto BioRadar::onstartLeaveGame(Level* _) -> void
-{
-	playerlist.clear();
-}
-
 
 vec2_t BioRadar::getMapPosition(vec3_t xdpos, vec2_t lprot) {
 	//获取向量长度 也就是斜边长度
@@ -177,7 +178,7 @@ auto BioRadar::onPlayerTick(Player* player)->void
 		//pmi.x = mappos.x; pmi.z = mappos.y;
 
 		auto name = player->getNameTag()->to_string().substr(0, 3);  //章节号占两字节
-		pmi.color = GetColorbyChar(name);
+		pmi.color = Utils::GetColorbyChar(name);
 		pmi.top = xdpos.y > 0;
 		//pmi.updatetick = 0;
 
@@ -190,10 +191,6 @@ auto BioRadar::onDimensionChanged(ClientInstance* ci) -> void
 	playerlist.clear();
 }
 
-//auto BioRadar::onLevelTick(Level* level) -> void
-//{
-//
-//}
 
 auto BioRadar::onloadConfigFile(json& data) -> void
 {
@@ -217,54 +214,3 @@ auto BioRadar::onsaveConfigFile(json& data) -> void
 	data["sideDirectionTop"] = sideDirectionTop;
 }
 
-auto BioRadar::GetColorbyChar(const std::string& colorchar)-> ImColor
-{
-	if (colorchar == "§0") {
-		return ImColor(0, 0, 0, 255);
-	}
-	else if (colorchar == "§1") {
-		return ImColor(51, 0, 255, 255);
-	}
-	else if (colorchar == "§2") {
-		return ImColor(0, 153, 0, 255);
-	}
-	else if (colorchar == "§3") {
-		return ImColor(102, 153, 153, 255);
-	}
-	else if (colorchar == "§4") {
-		return ImColor(204, 0, 0, 255);
-	}
-	else if (colorchar == "§5") {
-		return ImColor(153, 0, 204, 255);
-	}
-	else if (colorchar == "§6") {
-		return ImColor(255, 127, 0, 255);
-	}
-	else if (colorchar == "§7") {
-		return ImColor(204, 204, 204, 255);
-	}
-	else if (colorchar == "§8") {
-		return ImColor(153, 153, 153, 255);
-	}
-	else if (colorchar == "§9") {
-		return ImColor(102, 102, 255, 255);
-	}
-	else if (colorchar == "§a") {	//#33FF00
-		return ImColor(51, 255, 0, 255);
-	}
-	else if (colorchar == "§b") {
-		return ImColor(0, 255, 255, 255);
-	}
-	else if (colorchar == "§c") {
-		return ImColor(255, 102, 102, 255);
-	}
-	else if (colorchar == "§d") {
-		return ImColor(255, 0, 255, 255);
-	}
-	else if (colorchar == "§e") {
-		return ImColor(255, 255, 0, 255);
-	}
-	else {
-		return ImColor(255, 255, 255, 255);
-	}
-}

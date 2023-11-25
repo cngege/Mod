@@ -118,13 +118,6 @@ auto Player::teleportTo(vec3_t* pos, bool a1, unsigned int a2, unsigned int a3)-
 	GetVFtableFun<void,Player*, vec3_t*,bool, unsigned int, unsigned int>(26)(this,pos,a1,a2,a3);
 }
 
-/*
-// 检查版本 1.20 找不到
-auto Player::displayChatMessage(TextHolder* a1)->__int64{
-	return GetVFtableFun<__int64, Player*, TextHolder*, TextHolder*>(77)(this, a1, a2);
-}
-*/
-
 // 检查版本 1.20.30
 auto Player::getSelectedItem()->ItemStack*
 {

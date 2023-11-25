@@ -26,7 +26,7 @@ auto HitBox::onPlayerSightTick(Player* player)->void {
 	static NoAttackFriend* noAttackFriend = Game::GetModuleManager()->GetModule<NoAttackFriend*>();
 
 	if (isEnabled()) {
-		if (playerlist.find(player)!=playerlist.end()) {
+		if (playerlist.find(player)==playerlist.end()) {
 			if (noAttackFriend && noAttackFriend->isEnabled() && noAttackFriend->IsFriend(player)) {
 				return;
 			}

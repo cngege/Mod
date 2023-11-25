@@ -21,6 +21,18 @@ private:
 
 public:
 	HivePeekABooXRay();
+private:
+	/**
+	 * @brief 处理玩家列表,渲染透视，处理移除的玩家到 removePlyaerList
+	 * @param screen 
+	*/
+	void handlePlayerList(vec2_t screen);
+
+	/**
+	 * @brief 渲染方块
+	 * @param screen 
+	*/
+	void renderBlock(vec2_t screen);
 
 public:
 	virtual auto onImGUIRender() -> void override;

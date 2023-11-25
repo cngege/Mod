@@ -39,52 +39,9 @@ auto HivePeekABooXRay::onImGUIRender() -> void
 {
 	if (!isEnabled()) return;
 	auto drawList = ImGui::GetForegroundDrawList();
-	float rectwidth = Render::getScreen().x;
-	float rectheight = Render::getScreen().y;
-
-	for (auto& kv : playerlist) {
-
-		if (kv.first->isValid()) {
-			if (!kv.first->isRemovedEx()) {
-				ImColor boxColor = kv.second.color;
-				if (!colorFromName) {
-					boxColor = playerBoxColor;
-				}
-				auto centerPos = Render::RenderAABB(kv.second.aabb, boxColor);
-				if (centerPos && hasLine) {
-					ImColor lineColor = kv.second.color;
-					if (!lineColorFromPlayer) {
-						lineColor = playerLineColor;
-					}
-					drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, lineColor);
-				}
-			}
-			else {
-				std::lock_guard<std::mutex> guard(removePlayer_mutex2);
-				PlayerMapInfo removePlayer = kv.second;
-				removePlyaerList.push_back(removePlayer);
-				playerlist.erase(kv.first);
-				break;
-			}
-		}
-		else {
-			playerlist.erase(kv.first);
-			break;
-		}
-	}
-
-	// 绘制变成方块的玩家
-	std::lock_guard<std::mutex> guard(removePlayer_mutex2);
-	for (auto iter = removePlyaerList.begin(); iter != removePlyaerList.end(); ++iter) {
-		std::optional<vec2_t> centerPos = Render::RenderBlockBox((*iter).footPos, blockBoxColor);
-		if (centerPos && hasLine) {
-			ImColor lineColor = blockLineColor;
-			if (lineColorFromPlayer) {
-				lineColor = blockBoxColor;
-			}
-			drawList->AddLine({ rectwidth / 2, rectheight / 2 }, { centerPos->x,centerPos->y }, blockLineColor, 1.5f);
-		}
-	}
+	auto screen = Render::getScreen();
+	handlePlayerList(screen);
+	renderBlock(screen);
 }
 
 auto HivePeekABooXRay::onstartLeaveGame(Level*) -> void
@@ -168,3 +125,51 @@ auto HivePeekABooXRay::onsaveConfigFile(json& data) -> void
 	data["enable"] = isEnabled();
 }
 
+void HivePeekABooXRay::handlePlayerList(vec2_t screen) {
+	auto drawList = ImGui::GetForegroundDrawList();
+	for (auto& kv : playerlist) {
+
+		if (kv.first->isValid()) {
+			if (!kv.first->isRemovedEx()) {
+				ImColor boxColor = kv.second.color;
+				if (!colorFromName) {
+					boxColor = playerBoxColor;
+				}
+				auto centerPos = Render::RenderAABB(kv.second.aabb, boxColor);
+				if (centerPos && hasLine) {
+					ImColor lineColor = kv.second.color;
+					if (!lineColorFromPlayer) {
+						lineColor = playerLineColor;
+					}
+					drawList->AddLine({ screen.x / 2, screen.y / 2 }, { centerPos->x,centerPos->y }, lineColor);
+				}
+			}
+			else {
+				std::lock_guard<std::mutex> guard(removePlayer_mutex2);
+				PlayerMapInfo removePlayer = kv.second;
+				removePlyaerList.push_back(removePlayer);
+				playerlist.erase(kv.first);
+				break;
+			}
+		}
+		else {
+			playerlist.erase(kv.first);
+			break;
+		}
+	}
+}
+
+void HivePeekABooXRay::renderBlock(vec2_t screen) {
+	auto drawList = ImGui::GetForegroundDrawList();
+	std::lock_guard<std::mutex> guard(removePlayer_mutex2);
+	for (auto iter = removePlyaerList.begin(); iter != removePlyaerList.end(); ++iter) {
+		std::optional<vec2_t> centerPos = Render::RenderBlockBox((*iter).footPos, blockBoxColor);
+		if (centerPos && hasLine) {
+			ImColor lineColor = blockLineColor;
+			if (lineColorFromPlayer) {
+				lineColor = blockBoxColor;
+			}
+			drawList->AddLine({ screen.x / 2, screen.y / 2 }, { centerPos->x,centerPos->y }, blockLineColor, 1.5f);
+		}
+	}
+}

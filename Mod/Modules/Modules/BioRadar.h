@@ -27,12 +27,29 @@ public:
 	virtual auto onstartLeaveGame(class Level*) -> void override;
 	virtual auto onPlayerTick(class Player*)->void override;		// 远程玩家tick不好使
 	virtual auto onDimensionChanged(class ClientInstance*) -> void override;
-	//virtual auto onLevelTick(Level* level) -> void override;
 	virtual auto onloadConfigFile(json& data) -> void override;
 	virtual auto onsaveConfigFile(json& data) -> void override;
 
 private:
+
+	void renderMapBg(struct ImVec2 radarLeftTop);
+
+	/**
+	 * @brief 处理列表中的玩家绘制,或移除
+	 * @param lpPos 本地玩家位置
+	 * @param lpRot 本地玩家视角
+	 * @param radarLeftTop 地图的左上角位置
+	 * @return 
+	*/
+	void drawListPlayer(vec3_t lpPos, vec2_t lpRot, struct ImVec2 radarLeftTop);
+
+	struct ImVec2 getRadarLeftTop(vec2_t screen);
+
+	/**
+	 * @brief 根据玩家向量和玩家视角计算该玩家应该在地图上显示的位置
+	 * @param xdpos 本地玩家到目标玩家的向量
+	 * @param lprot 本地玩家的视角
+	 * @return 应该在小地图上显示的位置
+	*/
 	vec2_t getMapPosition(vec3_t xdpos, vec2_t lprot);
-	//获取字符串中的第n个 单个字符
-	auto GetColorbyChar(const std::string&) -> ImColor;
 };
