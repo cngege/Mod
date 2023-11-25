@@ -22,30 +22,18 @@ auto HitBox::onPlayerSightTick(Player* player)->void {
 	if (!player->isPlayer()) {
 		return;
 	}
-	//if (actor->isLocalPlayer()) {
-	//	return;
-	//}
-	//if (Game::localplayer == nullptr) {
-	//	return;
-	//}
-	//if (actor == (Actor*)Game::localplayer) {
-	//	return;
-	//}
 	//判断是否是玩家 大写锁定
 	static NoAttackFriend* noAttackFriend = Game::GetModuleManager()->GetModule<NoAttackFriend*>();
 
-	//playerlist
 	if (isEnabled()) {
-		for (auto& kv : playerlist) {
-			if (kv.first == player) {
+		if (playerlist.find(player)!=playerlist.end()) {
+			if (noAttackFriend && noAttackFriend->isEnabled() && noAttackFriend->IsFriend(player)) {
 				return;
 			}
+			playerlist[player] = player->getHitBox();
+			player->setHitBox(vec2_t(width, height));
 		}
-		if (noAttackFriend && noAttackFriend->isEnabled() && noAttackFriend->IsFriend(player)) {
-			return;
-		}
-		playerlist[player] = player->getHitBox();
-		player->setHitBox(vec2_t(width, height));
+
 	}
 	else {
 		for (auto& kv : playerlist) {
@@ -57,18 +45,6 @@ auto HitBox::onPlayerSightTick(Player* player)->void {
 		}
 	}
 
-
-	//if (isEnabled()) {
-	//	if (noAttackFriend->isEnabled() && noAttackFriend->IsFriend(player)) {
-	//		player->resetHitBox();
-	//	}
-	//	else {
-	//		player->setHitBox(vec2_t(width, height));
-	//	}
-	//}
-	//else {
-	//	player->resetHitBox();
-	//}
 }
 
 auto HitBox::onstartLeaveGame(Level* _) -> void
