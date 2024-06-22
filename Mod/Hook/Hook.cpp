@@ -92,6 +92,7 @@ ClientInstanceOnDimensionChanged ClientInstanceOnDimensionChangedCall;
 using BlockPlayerDestroy = char*(__fastcall*)(Block* block, Player* player, vec3_ti pos);
 BlockPlayerDestroy blockPlayerDestroyCall;
 
+//__int64 __fastcall sub_1427EB8D0(__int64 a1, __int64 a2, __int64 a3, __int64 a4)
 char* Block_playerDestroy(Block* block, Player* player, vec3_ti pos) {
 	//logF("block: %llX", block);
 	static HundredTimesMoreDrops* HTMD = Game::GetModuleManager()->GetModule<HundredTimesMoreDrops*>();
@@ -158,7 +159,7 @@ auto Hook::init() -> void
 	//Block::playerDestroy
 	{
 		// 这就是本函数
-		const char* memcode_call = "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E8 4C 8B FA 48 8B F1 0F";
+		const char* memcode_call = "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC ? 48 8B F9 49 8B";
 		// 这是函数的调用者
 		const char* memcode_offset = "E8 ? ? ? ? 48 8B 47 ? 48 8B 90 ? ? ? ? 80 BA ? ? ? ? ? 75 ? 48 8B 8A";
 
